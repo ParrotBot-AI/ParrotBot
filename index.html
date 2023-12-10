@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Home</title>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
+  <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body>
+  <div id="app">
+    <nav class="fixed top-0 z-50 w-full bg-emerald-900 border-b border-gray-200  ">
+      <div class="px-3 py-3 lg:px-5 lg:pl-3">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center justify-start">
+            <button v-on:click="isMenuOpen = !isMenuOpen" aria-controls="logo-sidebar" type="button"
+              class="inline-flex items-center p-2 text-sm text-white rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200">
+              <span class="sr-only">Open sidebar</span>
+              <i class="material-symbols-outlined">menu</i>
+            </button>
+            <a href="https://parrotbot.net" class="flex ml-2 md:mr-24">
+              <img src="assets/img/logo-text.png" class="h-10" />
+              <!-- <span class="self-center text-lg font-semibold sm:text-xl whitespace-nowrap text-cyan-800">鹦鹉智学</span> -->
+            </a>
+          </div>
+          <div class="flex items-center">
+            <div class="flex items-center ml-3">
+              <div>
+                <button type="button" v-on:click="isUserMenuOpen = !isUserMenuOpen"
+                  class="z-50 relative flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 "
+                  aria-expanded="false">
+                  <span class="sr-only">Open user menu</span>
+                  <img class="w-8 h-8 rounded-full" src="assets/img/user.png" alt="user photo">
+                </button>
+              </div>
+              <div :class="{ 'opacity-0 scale-y-50 transform -translate-y-20': !isUserMenuOpen }"
+                class="transition-all scale-y-100 absolute opacity-1 right-0 top-9 translate-y-0 z-40 my-4 text-base list-none bg-white divide-y divide-gray-300 rounded-md mr-2 shadow-lg  ">
+                <div class="px-4 py-3 text-sm font-medium text-gray-900 truncate " role="none">
+                  <p class="font-semibold text-base" role="none">
+                    Welcome, {{ userData.uid }}
+                  </p>
+                  <p class="mt-4" role="none">
+                    FREE DEMO USER
+                  </p>
+                  <p role="none">
+                    {{ userData.quota }} free essay left
+                  </p>
+                </div>
+                <ul class="py-1 text-gray-700 text-sm" role="none">
+                  <li>
+                    <a href="index.html" class="transition-all block w-full text-left px-4 py-2 hover:bg-gray-200"
+                      role="menuitem">
+                      <i class="material-symbols-outlined mr-2 inline-block align-middle">team_dashboard</i>
+                      <span class="inline-block align-middle">Dashboard</span>
+                    </a>
+                  </li>
+                  <li>
+                    <button v-on:click="signOut"
+                      class="transition-all block w-full text-left px-4 py-2 hover:bg-gray-200" role="menuitem">
+                      <i class="material-symbols-outlined mr-2 inline-block align-middle">logout</i>
+                      <span class="inline-block align-middle">Sign out</span>
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <aside id="logo-sidebar" :class="{ '-translate-x-full': !isMenuOpen }"
+      class="fixed top-0 shadow-2xl left-0 z-40 w-64 h-screen pt-16 transition-transform bg-emerald-700 border-r border-gray-200 sm:translate-x-0  "
+      aria-label="Sidebar">
+      <div class="h-full px-3 py-4 overflow-y-auto ">
+        <div class="space-y-2 font-medium">
+          <div v-for="item of menuItems">
+            <a :href="item.href"
+              class="transition-all flex items-center p-2 rounded-lg hover:bg-gray-200 hover:text-black"
+              :class="{ 'bg-white text-black': item.selected, 'text-white': !item.selected }">
+              <i class="material-symbols-outlined">{{ item.icon }}</i>
+              <span class="flex-1 ml-3 whitespace-nowrap font-semibold">{{ item.name }}</span>
+              <!-- <span class="inline-flex items-center justify-center px-2 ml-3 text-sm font-medium text-gray-800 bg-gray-200 rounded-full  ">Pro</span> -->
+            </a>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <div class="p-6 sm:ml-64 mt-16 gap-y-6 flex-col flex">
+      <section class="bg-emerald-50 border-2 border-emerald-200 shadow-lg rounded-lg p-6 flex-row flex items-center">
+        <img src="assets/img/graduation-cap_1f393.png" class="h-32 flex-none hidden md:flex" />
+        <div class="flex-1 md:ml-6">
+          <h1 class="font-bold text-2xl text-emerald-900">Welcome to Parrot!</h1>
+          <div class="text-lg">Some description or you can put some announcement here or something idk</div>
+          <div class="sm:flex-row flex-col flex justify-start mt-4 space-y-1 space-x-0 sm:space-y-0 sm:space-x-2">
+            <a href="essay-new.html" class="bg-emerald-800 font-semibold text-white p-2 hover:bg-gray-200 hover:text-black flex transition cursor-pointer rounded-md space-x-2">
+              <i class="material-symbols-outlined">edit_note</i>
+              <span class="flex-1 ml-3 whitespace-nowrap font-semibold">Start Essay Practice</span>
+            </a>
+            <a href="topic.html" class="bg-slate-300 font-semibold text-black p-2 hover:bg-gray-200 hover:text-black flex transition cursor-pointer rounded-md space-x-2">
+              <i class="material-symbols-outlined">travel_explore</i>
+              <span class="flex-1 ml-3 whitespace-nowrap font-semibold">Explore Topics</span>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <div class="flex-row flex space-x-4">
+        <div class="flex-1 flex-col space-y-4">
+          <div class="rounded-md shadow-md overflow-hidden">
+            <div class="p-3 font-semibold text-lg bg-slate-200 text-black">Recent Essays</div>
+            <div class="p-3 flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-1 border-t-2 border-t-slate-200">
+              <div class="flex-grow">
+                <div class="font-semibold">What do you think is the future of work?</div>
+                <div>Version 1 • 11 / 25 marks • 10/12/2023</div>
+                <div></div>
+              </div>
+              <div class="flex-none">
+                <a href="create.html" class="bg-emerald-100 font-semibold text-black py-1 px-3 hover:bg-gray-200 hover:text-black flex transition cursor-pointer rounded-md space-x-2 text-sm">
+                  <i class="material-symbols-outlined">forum</i>
+                  <span class="flex-1 whitespace-nowrap font-semibold">Review Feedback</span>
+                </a>
+              </div>
+            </div>
+            <div class="p-3 flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-1 border-t-2 border-t-slate-200">
+              <div class="flex-grow">
+                Something about machine learning Something about machine learning Something about machine learning Something about machine learning Something about machine learning Something about machine learning Something about machine learning Something about machine learning 
+              </div>
+              <div class="flex-none">
+                <a href="create.html" class="bg-emerald-100 font-semibold text-black py-1 px-3 hover:bg-gray-200 hover:text-black flex transition cursor-pointer rounded-md space-x-2 text-sm">
+                  <i class="material-symbols-outlined">forum</i>
+                  <span class="flex-1 whitespace-nowrap font-semibold">Review Feedback</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const { createApp, ref } = Vue
+    const API_PREFIX = "/api";
+    const PARROT = "5ea4bff4-8b1b-453f";
+
+    createApp({
+      data() {
+        return {
+          userData: {},
+          isMenuOpen: false,
+          isUserMenuOpen: false,
+          menuItems: [
+            {
+              name: "Home",
+              icon: "home",
+              selected: true,
+              href: "index.html",
+            },
+            {
+              name: "My Essays",
+              icon: "assignment",
+              selected: false,
+              href: "essay-list.html",
+            },
+            {
+              name: "New Essay Practice",
+              icon: "edit_note",
+              selected: false,
+              href: "essay-new.html",
+            },
+            {
+              name: "My Topics",
+              icon: "crossword",
+              selected: false,
+              href: "topic.html",
+            },
+          ],
+        };
+      },
+      async mounted() {
+        if (localStorage.getItem("session")) {
+          let res;
+          
+          res = await fetch(`${API_PREFIX}/account/checkToken`, {
+            headers: {
+              authorization: localStorage.getItem("session"),
+              parrot: PARROT,
+            },
+          }).then(res => res.json());
+
+          if (res.error) location.href = "login.html";
+          else {
+            this.userData = res.data;
+          }
+        }
+        else {
+          location.href = "login.html";
+        }
+      },
+      methods: {
+        async signOut() {
+          localStorage.clear();
+          location.href = "login.html";
+        },
+      }
+    }).mount('#app')
+  </script>
+</body>
+
+</html>
