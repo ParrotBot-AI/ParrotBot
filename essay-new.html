@@ -2,16 +2,16 @@
 <html>
 
 <head>
-  <title>Auth Test</title>
+  <title>New Essay | 鹦鹉智学</title>
 
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css">
+  <link rel="stylesheet" href="assets/css/notyf.min.css">
   <link rel="stylesheet"
     href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 
-  <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
+  <script src="assets/js/notyf.min.js"></script>
   <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
 
@@ -116,18 +116,22 @@
 
               <div v-for="topic of topicList.bookmark"
                 :class="{ 'bg-emerald-600 text-white': selectedTopic == topic.id }"
-                class="p-3 flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-2 border-t-2 border-t-slate-200">
+                class="relative p-3 flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 border-t-2 border-t-slate-200">
                 <i class="material-symbols-outlined sm:inline hidden">bookmark</i>
-                <div class="block">
+                <div class="flex-grow">
                   <div class="font-semibold">{{ topic.prompt }}</div>
                   <div class="text-sm" v-if="!topic.essayTimestamp">Unattempted</div>
                   <div class="text-sm" v-if="topic.essayTimestamp">Version {{ topic.essayVersion }} • {{ new Date(topic.essayTimestamp).toLocaleString() }}</div>
+
+                  <details class="block">
+                    <summary class="w-min whitespace-nowrap px-2 py-1 cursor-pointer font-semibold text-xs mt-2 bg-slate-200 text-black">Full Prompt</summary>
+                    <div class="px-2 py-1 whitespace-pre-wrap bg-slate-300 text-black">{{ topic.promptFull }}</div>
+                  </details>
                 </div>
 
-                <div class="flex-grow"></div>
-                <div class="flex-none">
+                <div class="flex-none sm:float-right sm:absolute sm:right-3">
                   <button v-if="selectedTopic !== topic.id"
-                    v-on:click="selectedTopic = topic.id; topicText = topic.prompt"
+                    v-on:click="selectedTopic = topic.id; topicText = topic.promptFull"
                     class="bg-emerald-100 font-semibold text-black py-1 px-3 hover:bg-gray-200 hover:text-black flex transition cursor-pointer rounded-md space-x-2 text-sm">
                     <i class="material-symbols-outlined">edit_note</i>
                     <span class="flex-1 whitespace-nowrap font-semibold">
@@ -149,16 +153,21 @@
 
               <div v-for="topic of topicList.unattempted"
                 :class="{ 'bg-emerald-600 text-white': selectedTopic == topic.id }"
-                class="p-3 flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-2 border-t-2 border-t-slate-200">
+                class="relative p-3 flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 border-t-2 border-t-slate-200">
                 <i class="material-symbols-outlined sm:inline hidden">draft</i>
                 <div class="block">
                   <div class="font-semibold">{{ topic.prompt }}</div>
+
+                  <details class="block">
+                    <summary class="w-min whitespace-nowrap px-2 py-1 cursor-pointer font-semibold text-xs mt-2 bg-slate-200 text-black">Full Prompt</summary>
+                    <div class="px-2 py-1 whitespace-pre-wrap bg-slate-300 text-black">{{ topic.promptFull }}</div>
+                  </details>
                 </div>
 
                 <div class="flex-grow"></div>
-                <div class="flex-none">
+                <div class="flex-none sm:float-right sm:absolute sm:right-3">
                   <button v-if="selectedTopic !== topic.id"
-                    v-on:click="selectedTopic = topic.id; topicText = topic.prompt"
+                    v-on:click="selectedTopic = topic.id; topicText = topic.promptFull"
                     class="bg-emerald-100 font-semibold text-black py-1 px-3 hover:bg-gray-200 hover:text-black flex transition cursor-pointer rounded-md space-x-2 text-sm">
                     <i class="material-symbols-outlined">edit_note</i>
                     <span class="flex-1 whitespace-nowrap font-semibold">Select</span>
@@ -177,17 +186,22 @@
 
               <div v-for="topic of topicList.attempted"
                 :class="{ 'bg-emerald-600 text-white': selectedTopic == topic.id }"
-                class="p-3 flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-2 border-t-2 border-t-slate-200">
+                class="relative p-3 flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 border-t-2 border-t-slate-200">
                 <i class="material-symbols-outlined sm:inline hidden">task</i>
                 <div class="block">
                   <div class="font-semibold">{{ topic.prompt }}</div>
                   <div class="text-sm">Version {{ topic.essayVersion }} • {{ new Date(topic.essayTimestamp).toLocaleString() }}</div>
+
+                  <details class="block">
+                    <summary class="w-min whitespace-nowrap px-2 py-1 cursor-pointer font-semibold text-xs mt-2 bg-slate-200 text-black">Full Prompt</summary>
+                    <div class="px-2 py-1 whitespace-pre-wrap bg-slate-300 text-black">{{ topic.promptFull }}</div>
+                  </details>
                 </div>
 
                 <div class="flex-grow"></div>
-                <div class="flex-none">
+                <div class="flex-none sm:float-right sm:absolute sm:right-3">
                   <button v-if="selectedTopic !== topic.id"
-                    v-on:click="selectedTopic = topic.id; topicText = topic.prompt"
+                    v-on:click="selectedTopic = topic.id; topicText = topic.promptFull"
                     class="bg-emerald-100 font-semibold text-black py-1 px-3 hover:bg-gray-200 hover:text-black flex transition cursor-pointer rounded-md space-x-2 text-sm">
                     <i class="material-symbols-outlined">edit_note</i>
                     <span class="flex-1 whitespace-nowrap font-semibold">New Essay Version</span>
@@ -209,7 +223,7 @@
               <label for="countries" class="block text-sm text-gray-900 font-semibold">Time Limit</label>
               <select id="countries" v-model="selectedTime"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5      ">
-                <option value="45" selected>45 minutes</option>
+                <option value="10" selected>10 minutes</option>
                 <option value="0">Unlimited</option>
               </select>
             </div>
@@ -229,44 +243,48 @@
         <span class="flex-1 ml-3 whitespace-nowrap font-semibold">Essay Practice</span>
       </h1>
 
-      <div class="flex-col flex space-y-4">
-        <div class="flex-col md:flex-row space-y-2 md:space-y-0 space-x-0 md:space-x-2 flex">
-          <div class="basis-1/3 rounded-md shadow-md overflow-hidden">
-            <div class="p-3 font-semibold text-lg bg-slate-200 text-black">Test</div>
+      <div class="flex-col flex space-y-4 relative">
+        <div class="flex-col md:flex-row space-y-2 md:space-y-0 space-x-0 md:space-x-2 flex items-start">
+          <div class="basis-1/2 rounded-md shadow-md overflow-hidden">
+            <div class="p-3 font-semibold text-lg bg-slate-200 text-black">
+              Test Info
+            </div>
             <div class="p-3">
-              <div class="font-semibold">Topic</div>
-              <div>{{ topicText }}</div>
-
-              <div class="font-semibold mt-4">Start Time</div>
+              <div class="font-semibold">Start Time</div>
               <div>{{ (new Date(startTime)).toLocaleString() }}</div>
 
-              <div class="font-semibold mt-4">Time</div>
+              <div class="mt-2">
+                <button v-on:click="cancelEssay" class="font-semibold text-sm bg-red-200 rounded-md transition-all items-center hover:bg-slate-200 flex space-x-1 py-1 px-2">
+                  <i class="material-symbols-outlined">close</i>
+                  <span>Cancel &amp; Discard Essay</span>
+                </button>
+              </div>
+
+              <div class="font-semibold mt-2">Topic</div>
+              <div class="whitespace-pre-wrap">{{ topicText }}</div>
+            </div>
+          </div>
+
+          <div class="basis-1/2 rounded-md shadow-md overflow-hidden sm:sticky sm:top-16">
+            <div class="p-3 font-semibold text-lg bg-slate-200 text-black">
               <span v-if="selectedTime !== 0 && timeLeft < 0">
                 <span class="text-red-700 font-semibold">TIME UP</span> (extra time: 
               </span>
               <span v-if="selectedTime == 0">Unlimited time (</span>
               <span>
                 {{
-                  (Math.floor(Math.abs(timeLeft) / 1000) > 60) ?
-                    (Math.floor(Math.abs(timeLeft) / 60000) + " minutes") :
-                    (Math.floor(Math.abs(timeLeft) / 1000) + " seconds")
+                  (Math.floor(Math.abs(timeLeft) / 60000) + " minutes ") + 
+                  Math.floor((Math.floor(Math.abs(timeLeft - Math.floor(timeLeft / 60000) * 60000)) / 1000)) + " seconds"
                 }}
               </span>
               <span v-if="selectedTime !== 0 && timeLeft < 0">)</span>
               <span v-if="selectedTime == 0"> elapsed)</span>
               <span v-if="selectedTime != 0 && timeLeft > 0"> left</span>
-
-              <div class="mt-4">
-                <button v-on:click="cancelEssay" class="font-semibold text-sm bg-red-200 rounded-md transition-all items-center hover:bg-slate-200 flex space-x-1 py-1 px-2">
-                  <i class="material-symbols-outlined">close</i>
-                  <span>Cancel &amp; Discard Essay</span>
-                </button>
-              </div>
             </div>
-          </div>
 
-          <div class="basis-2/3 rounded-md shadow-md overflow-hidden">
-            <div class="p-3 font-semibold text-lg bg-slate-200 text-black">Essay ({{ wordCount }} words)</div>
+            <div class="p-3 font-semibold">
+              Response ({{ wordCount }} words)
+            </div>
 
             <div class="p-3">
               <div class="h-96 text-base" id="quill"></div>
@@ -278,7 +296,7 @@
           :class="{ 'bg-green-700 transition-all text-white hover:bg-black': !essayBtnLoading, 'bg-green-100 text-gray-500 cursor-not-allowed': essayBtnLoading }"
           class="w-full font-semibold focus:ring-4 focus:outline-none focus:ring-primary-300 rounded-lg text-sm px-5 py-2.5 text-center">
           <span v-if="!essayBtnLoading">Submit Essay</span>
-          <span v-if="essayBtnLoading">Submitting...</span>
+          <span v-if="essayBtnLoading">Please wait, we are grading your essay (this usually takes less than 30 seconds).</span>
         </button>
       </div>
     </form>
@@ -306,7 +324,7 @@
 
           timeLeft: 0,
           selectedTopic: -1,
-          selectedTime: "45",
+          selectedTime: "10",
           topicText: "",
           currentEssay: "",
           startTime: 0,
@@ -335,12 +353,12 @@
               selected: true,
               href: "essay-new.html",
             },
-            {
-              name: "My Topics",
-              icon: "crossword",
-              selected: false,
-              href: "topic.html",
-            },
+            // {
+            //   name: "My Topics",
+            //   icon: "crossword",
+            //   selected: false,
+            //   href: "topic.html",
+            // },
           ],
         };
       },
@@ -375,6 +393,8 @@
         async submitEssay(event) {
           event.preventDefault();
 
+          this.essayBtnLoading = true;
+
           let res;
           res = await fetch(`${API_PREFIX}/essay/submitAttempt`, {
             method: "post",
@@ -395,13 +415,22 @@
             localStorage.removeItem("testEssay");
             location.href = "essay-list.html";
           }
+          else {
+            if (res.error == "quota") {
+              notyf.error({
+                message: 'Quota exceeded, please contact us.',
+                duration: 5000,
+              });
+              this.essayBtnLoading = false;
+            }
+          }
         },
         async syncTime() {
           if (this.state !== 1) return;
 
-          if (this.selectedTime == "45") {
-            const endTime = this.startTime + (45 * 60 * 1000);
-            this.timeLeft = endTime - this.startTime;
+          if (this.selectedTime == "10") {
+            const endTime = this.startTime + (10 * 60 * 1000);
+            this.timeLeft = endTime - (new Date()).getTime();
           }
           else if (this.selectedTime == "0") {
             this.timeLeft = (new Date()).getTime() - this.startTime;
@@ -487,7 +516,9 @@
           }
 
           initQuill();
-          requestAnimationFrame(this.syncTime);
+          setTimeout(() => {
+            requestAnimationFrame(this.syncTime);
+          }, 1000);
         },
         async setTestValues(event) {
           event.preventDefault();
