@@ -50,13 +50,13 @@
                 class="transition-all scale-y-100 absolute opacity-1 right-0 top-9 translate-y-0 z-40 my-4 text-base list-none bg-white divide-y divide-gray-300 rounded-md mr-2 shadow-lg  ">
                 <div class="px-4 py-3 text-sm font-medium text-gray-900 truncate " role="none">
                   <p class="font-semibold text-base" role="none">
-                    欢迎, {{ userData.uid }}
+                    Welcome, {{ userData.uid }}
                   </p>
                   <p class="mt-4" role="none">
-                    免费DEMO用户
+                    FREE DEMO USER
                   </p>
                   <p role="none">
-                    还剩：{{ userData.quota }} 篇写作
+                    {{ userData.quota }} free essay left
                   </p>
                 </div>
                 <ul class="py-1 text-gray-700 text-sm" role="none">
@@ -64,14 +64,14 @@
                     <a href="index.html" class="transition-all block w-full text-left px-4 py-2 hover:bg-gray-200"
                       role="menuitem">
                       <i class="material-symbols-outlined mr-2 inline-block align-middle">team_dashboard</i>
-                      <span class="inline-block align-middle">仪表盘</span>
+                      <span class="inline-block align-middle">Dashboard</span>
                     </a>
                   </li>
                   <li>
                     <button v-on:click="signOut"
                       class="transition-all block w-full text-left px-4 py-2 hover:bg-gray-200" role="menuitem">
                       <i class="material-symbols-outlined mr-2 inline-block align-middle">logout</i>
-                      <span class="inline-block align-middle">退出</span>
+                      <span class="inline-block align-middle">Sign out</span>
                     </button>
                   </li>
                 </ul>
@@ -103,16 +103,16 @@
     <form v-on:submit="setTestValues" v-if="state === 0" class="p-6 sm:ml-64 mt-16 space-y-4 flex-col flex">
       <h1 class="text-emerald-900 font-semibold flex flex-row space-x-2 text-2xl items-center">
         <i class="material-symbols-outlined">edit_note</i>
-        <span class="flex-1 ml-3 whitespace-nowrap font-semibold">新建写作</span>
+        <span class="flex-1 ml-3 whitespace-nowrap font-semibold">New Essay Practice</span>
       </h1>
 
       <div class="flex-row flex space-x-4">
         <div class="flex-1 flex-col space-y-4">
           <div class="rounded-md shadow-md overflow-hidden">
-            <div class="p-3 font-semibold text-lg bg-slate-200 text-black">1. 选写作主题</div>
+            <div class="p-3 font-semibold text-lg bg-slate-200 text-black">1. Choose Topic</div>
 
             <details open>
-              <summary class="cursor-pointer bg-slate-100 px-3 py-1 font-semibold text-sm uppercase text-slate-700">我的收藏主题</summary>
+              <summary class="cursor-pointer bg-slate-100 px-3 py-1 font-semibold text-sm uppercase text-slate-700">My Bookmarked Topics</summary>
 
               <div v-for="topic of topicList.bookmark"
                 :class="{ 'bg-emerald-600 text-white': selectedTopic == topic.id }"
@@ -124,7 +124,7 @@
                   <div class="text-sm" v-if="topic.essayTimestamp">Version {{ topic.essayVersion }} • {{ new Date(topic.essayTimestamp).toLocaleString() }}</div>
 
                   <details class="block">
-                    <summary class="w-min whitespace-nowrap px-2 py-1 cursor-pointer font-semibold text-xs mt-2 bg-slate-200 text-black">查看完全主题</summary>
+                    <summary class="w-min whitespace-nowrap px-2 py-1 cursor-pointer font-semibold text-xs mt-2 bg-slate-200 text-black">Full Prompt</summary>
                     <div class="px-2 py-1 whitespace-pre-wrap bg-slate-300 text-black">{{ topic.promptFull }}</div>
                   </details>
                 </div>
@@ -135,21 +135,21 @@
                     class="bg-emerald-100 font-semibold text-black py-1 px-3 hover:bg-gray-200 hover:text-black flex transition cursor-pointer rounded-md space-x-2 text-sm">
                     <i class="material-symbols-outlined">edit_note</i>
                     <span class="flex-1 whitespace-nowrap font-semibold">
-                      <span v-if="!topic.essayTimestamp">选择</span>
-                      <span v-if="topic.essayTimestamp">重新尝试</span>
+                      <span v-if="!topic.essayTimestamp">Select</span>
+                      <span v-if="topic.essayTimestamp">New Essay Version</span>
                     </span>
                   </button>
                   <div v-if="selectedTopic == topic.id"
                     class="text-white font-semibold flex items-center space-x-2 cursor-default text-sm">
                     <i class="material-symbols-outlined">check</i>
-                    <span class="flex-1 whitespace-nowrap font-semibold">已选</span>
+                    <span class="flex-1 whitespace-nowrap font-semibold">Selected</span>
                   </div>
                 </div>
               </div>
             </details>
 
             <details open>
-              <summary class="cursor-pointer bg-slate-100 px-3 py-1 font-semibold text-sm uppercase text-slate-700">未完成主题</summary>
+              <summary class="cursor-pointer bg-slate-100 px-3 py-1 font-semibold text-sm uppercase text-slate-700">Unattempted Topics</summary>
 
               <div v-for="topic of topicList.unattempted"
                 :class="{ 'bg-emerald-600 text-white': selectedTopic == topic.id }"
@@ -159,7 +159,7 @@
                   <div class="font-semibold">{{ topic.prompt }}</div>
 
                   <details class="block">
-                    <summary class="w-min whitespace-nowrap px-2 py-1 cursor-pointer font-semibold text-xs mt-2 bg-slate-200 text-black">查看完全主题</summary>
+                    <summary class="w-min whitespace-nowrap px-2 py-1 cursor-pointer font-semibold text-xs mt-2 bg-slate-200 text-black">Full Prompt</summary>
                     <div class="px-2 py-1 whitespace-pre-wrap bg-slate-300 text-black">{{ topic.promptFull }}</div>
                   </details>
                 </div>
@@ -170,19 +170,19 @@
                     v-on:click="selectedTopic = topic.id; topicText = topic.promptFull"
                     class="bg-emerald-100 font-semibold text-black py-1 px-3 hover:bg-gray-200 hover:text-black flex transition cursor-pointer rounded-md space-x-2 text-sm">
                     <i class="material-symbols-outlined">edit_note</i>
-                    <span class="flex-1 whitespace-nowrap font-semibold">选择</span>
+                    <span class="flex-1 whitespace-nowrap font-semibold">Select</span>
                   </button>
                   <div v-if="selectedTopic == topic.id"
                     class="text-white font-semibold flex items-center space-x-2 cursor-default text-sm">
                     <i class="material-symbols-outlined">check</i>
-                    <span class="flex-1 whitespace-nowrap font-semibold">已选</span>
+                    <span class="flex-1 whitespace-nowrap font-semibold">Selected</span>
                   </div>
                 </div>
               </div>
             </details>
 
             <details>
-              <summary class="cursor-pointer bg-slate-100 px-3 py-1 font-semibold text-sm uppercase text-slate-700">已完成主题</summary>
+              <summary class="cursor-pointer bg-slate-100 px-3 py-1 font-semibold text-sm uppercase text-slate-700">Attempted Topics</summary>
 
               <div v-for="topic of topicList.attempted"
                 :class="{ 'bg-emerald-600 text-white': selectedTopic == topic.id }"
@@ -193,7 +193,7 @@
                   <div class="text-sm">Version {{ topic.essayVersion }} • {{ new Date(topic.essayTimestamp).toLocaleString() }}</div>
 
                   <details class="block">
-                    <summary class="w-min whitespace-nowrap px-2 py-1 cursor-pointer font-semibold text-xs mt-2 bg-slate-200 text-black">查看完全主题</summary>
+                    <summary class="w-min whitespace-nowrap px-2 py-1 cursor-pointer font-semibold text-xs mt-2 bg-slate-200 text-black">Full Prompt</summary>
                     <div class="px-2 py-1 whitespace-pre-wrap bg-slate-300 text-black">{{ topic.promptFull }}</div>
                   </details>
                 </div>
@@ -204,12 +204,12 @@
                     v-on:click="selectedTopic = topic.id; topicText = topic.promptFull"
                     class="bg-emerald-100 font-semibold text-black py-1 px-3 hover:bg-gray-200 hover:text-black flex transition cursor-pointer rounded-md space-x-2 text-sm">
                     <i class="material-symbols-outlined">edit_note</i>
-                    <span class="flex-1 whitespace-nowrap font-semibold">重新尝试</span>
+                    <span class="flex-1 whitespace-nowrap font-semibold">New Essay Version</span>
                   </button>
                   <div v-if="selectedTopic == topic.id"
                     class="text-white font-semibold flex items-center space-x-2 cursor-default text-sm">
                     <i class="material-symbols-outlined">check</i>
-                    <span class="flex-1 whitespace-nowrap font-semibold">已选</span>
+                    <span class="flex-1 whitespace-nowrap font-semibold">Selected</span>
                   </div>
                 </div>
               </div>
@@ -217,21 +217,21 @@
           </div>
 
           <div class="rounded-md shadow-md overflow-hidden">
-            <div class="p-3 font-semibold text-lg bg-slate-200 text-black">2. 选择时间</div>
+            <div class="p-3 font-semibold text-lg bg-slate-200 text-black">2. Setup Test</div>
 
             <div class="flex flex-col space-y-2 p-3">
-              <label for="countries" class="block text-sm text-gray-900 font-semibold">时间限</label>
+              <label for="countries" class="block text-sm text-gray-900 font-semibold">Time Limit</label>
               <select id="countries" v-model="selectedTime"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5      ">
-                <option value="10" selected>10分钟</option>
-                <option value="0">无限</option>
+                <option value="10" selected>10 minutes</option>
+                <option value="0">Unlimited</option>
               </select>
             </div>
           </div>
 
           <button type="submit"
             class="bg-green-700 transition-all text-white hover:bg-black w-full font-semibold focus:ring-4 focus:outline-none focus:ring-primary-300 rounded-lg px-5 py-2.5 text-center">
-            <span>开始写作</span>
+            <span>Start Writing</span>
           </button>
         </div>
       </div>
@@ -240,27 +240,27 @@
     <form v-on:submit="submitEssay" v-if="state === 1" class="p-6 sm:ml-64 mt-16 space-y-4 flex-col flex">
       <h1 class="text-emerald-900 font-semibold flex flex-row space-x-2 text-2xl items-center">
         <i class="material-symbols-outlined">edit_note</i>
-        <span class="flex-1 ml-3 whitespace-nowrap font-semibold">写作练习</span>
+        <span class="flex-1 ml-3 whitespace-nowrap font-semibold">Essay Practice</span>
       </h1>
 
       <div class="flex-col flex space-y-4 relative">
         <div class="flex-col md:flex-row space-y-2 md:space-y-0 space-x-0 md:space-x-2 flex items-start">
           <div class="basis-1/2 rounded-md shadow-md overflow-hidden">
             <div class="p-3 font-semibold text-lg bg-slate-200 text-black">
-              写作信息
+              Test Info
             </div>
             <div class="p-3">
-              <div class="font-semibold">开始时间</div>
+              <div class="font-semibold">Start Time</div>
               <div>{{ (new Date(startTime)).toLocaleString() }}</div>
 
               <div class="mt-2">
                 <button v-on:click="cancelEssay" class="font-semibold text-sm bg-red-200 rounded-md transition-all items-center hover:bg-slate-200 flex space-x-1 py-1 px-2">
                   <i class="material-symbols-outlined">close</i>
-                  <span>取消写作</span>
+                  <span>Cancel &amp; Discard Essay</span>
                 </button>
               </div>
 
-              <div class="font-semibold mt-2">主题</div>
+              <div class="font-semibold mt-2">Topic</div>
               <div class="whitespace-pre-wrap">{{ topicText }}</div>
             </div>
           </div>
@@ -268,22 +268,22 @@
           <div class="basis-1/2 rounded-md shadow-md overflow-hidden sm:sticky sm:top-16">
             <div class="p-3 font-semibold text-lg bg-slate-200 text-black">
               <span v-if="selectedTime !== 0 && timeLeft < 0">
-                <span class="text-red-700 font-semibold">时间到了！</span> (多余时间: 
+                <span class="text-red-700 font-semibold">TIME UP</span> (extra time: 
               </span>
-              <span v-if="selectedTime == 0">无限时间 (已过：</span>
-              <span v-if="selectedTime != 0 && timeLeft > 0"> 还剩：</span>
+              <span v-if="selectedTime == 0">Unlimited time (</span>
               <span>
                 {{
-                  (Math.floor(Math.abs(timeLeft) / 60000) + " 分 ") + 
-                  Math.floor((Math.floor(Math.abs(timeLeft - Math.floor(timeLeft / 60000) * 60000)) / 1000)) + " 秒"
+                  (Math.floor(Math.abs(timeLeft) / 60000) + " minutes ") + 
+                  Math.floor((Math.floor(Math.abs(timeLeft - Math.floor(timeLeft / 60000) * 60000)) / 1000)) + " seconds"
                 }}
               </span>
               <span v-if="selectedTime !== 0 && timeLeft < 0">)</span>
-              <span v-if="selectedTime == 0"> )</span>
+              <span v-if="selectedTime == 0"> elapsed)</span>
+              <span v-if="selectedTime != 0 && timeLeft > 0"> left</span>
             </div>
 
             <div class="p-3 font-semibold">
-              字数： {{ wordCount }}
+              Response ({{ wordCount }} words)
             </div>
 
             <div class="p-3">
@@ -295,8 +295,8 @@
         <button type="submit" :disabled="essayBtnLoading"
           :class="{ 'bg-green-700 transition-all text-white hover:bg-black': !essayBtnLoading, 'bg-green-100 text-gray-500 cursor-not-allowed': essayBtnLoading }"
           class="w-full font-semibold focus:ring-4 focus:outline-none focus:ring-primary-300 rounded-lg text-sm px-5 py-2.5 text-center">
-          <span v-if="!essayBtnLoading">提交写作</span>
-          <span v-if="essayBtnLoading">请稍等，正在评估（需要30秒左右）.</span>
+          <span v-if="!essayBtnLoading">Submit Essay</span>
+          <span v-if="essayBtnLoading">Please wait, we are grading your essay (this usually takes less than 30 seconds).</span>
         </button>
       </div>
     </form>
@@ -335,22 +335,22 @@
           isMenuOpen: false,
           isUserMenuOpen: false,
           menuItems: [
-          {
-              name: "首页",
+            {
+              name: "Home",
               icon: "home",
-              selected: true,
+              selected: false,
               href: "index.html",
             },
             {
-              name: "我的写作",
+              name: "My Essays",
               icon: "assignment",
               selected: false,
               href: "essay-list.html",
             },
             {
-              name: "新建写作",
+              name: "New Essay Practice",
               icon: "edit_note",
-              selected: false,
+              selected: true,
               href: "essay-new.html",
             },
             // {

@@ -2,17 +2,23 @@
 <html>
 
 <head>
-  <title>My Essays | 鹦鹉智学</title>
+  <title>Essay Feedback | 鹦鹉智学</title>
 
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <link rel="stylesheet" href="assets/css/notyf.min.css">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 
   <script src="assets/js/notyf.min.js"></script>
   <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
+
+  <script src="assets/js/mark.js"></script>
+  <script src="assets/tippy/popper.js"></script>
+  <script src="assets/tippy/tippy.js"></script>
+  <link rel="stylesheet" href="assets/tippy/tippy.css" />
 </head>
 
 <body>
@@ -45,13 +51,13 @@
                 class="transition-all scale-y-100 absolute opacity-1 right-0 top-9 translate-y-0 z-40 my-4 text-base list-none bg-white divide-y divide-gray-300 rounded-md mr-2 shadow-lg  ">
                 <div class="px-4 py-3 text-sm font-medium text-gray-900 truncate " role="none">
                   <p class="font-semibold text-base" role="none">
-                    欢迎, {{ userData.uid }}
+                    Welcome, {{ userData.uid }}
                   </p>
                   <p class="mt-4" role="none">
-                    免费DEMO用户
+                    FREE DEMO USER
                   </p>
                   <p role="none">
-                    还剩：{{ userData.quota }} 篇写作
+                    {{ userData.quota }} free essay left
                   </p>
                 </div>
                 <ul class="py-1 text-gray-700 text-sm" role="none">
@@ -59,14 +65,14 @@
                     <a href="index.html" class="transition-all block w-full text-left px-4 py-2 hover:bg-gray-200"
                       role="menuitem">
                       <i class="material-symbols-outlined mr-2 inline-block align-middle">team_dashboard</i>
-                      <span class="inline-block align-middle">仪表盘</span>
+                      <span class="inline-block align-middle">Dashboard</span>
                     </a>
                   </li>
                   <li>
                     <button v-on:click="signOut"
                       class="transition-all block w-full text-left px-4 py-2 hover:bg-gray-200" role="menuitem">
                       <i class="material-symbols-outlined mr-2 inline-block align-middle">logout</i>
-                      <span class="inline-block align-middle">退出</span>
+                      <span class="inline-block align-middle">Sign out</span>
                     </button>
                   </li>
                 </ul>
@@ -98,30 +104,24 @@
     <div class="p-6 sm:ml-64 mt-16 gap-y-6 flex-col flex">
       <h1 class="text-emerald-900 font-semibold flex flex-row space-x-2 text-2xl items-center">
         <i class="material-symbols-outlined">assignment</i>
-        <span class="flex-1 ml-3 whitespace-nowrap font-semibold">我的写作</span>
+        <span class="flex-1 ml-3 whitespace-nowrap font-semibold">Essay Feedback for "{{ prompt }}"</span>
       </h1>
-      <div>在这查看作文的反馈</div>
+      <div class="whitespace-pre-wrap">{{ promptFull }}</div>
 
       <div>
         <div v-for="essay of essays"
           class="p-3 flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-3 border-t-2 border-t-slate-200">
-          <i class="material-symbols-outlined sm:inline hidden">assignment</i>
+          <!-- <i class="material-symbols-outlined sm:inline hidden">assignment</i> -->
           <div class="block">
-            <div class="font-semibold">{{ essay.prompt }}</div>
-            <div class="text-sm text-slate-600">版本 {{ essay.version }} • {{ new Date(essay.timestamp).toLocaleString() }}</div>
-            <div>{{ essay.preview }}...</div>
+            <div class="font-semibold">{{ essay.prompt }} ({{ essay.score ? essay.score : "Being graded" }})</div>
+            <div class="text-sm text-slate-600">Version {{ essay.version }} • {{ new
+              Date(essay.timestamp).toLocaleString() }}</div>
+            <div class="whitespace-pre-wrap">{{ essay.extra ? essay.extra : "Essay" }}</div>
+            <div v-html="essay.rendered"></div> <!-- TODO: use SaferHTML function -->
           </div>
 
           <div class="flex-grow"></div>
           <div class="flex-none">
-            <a
-              :href="`essay-feedback.html#${essay.topicId}.${essay.id}`"
-              class="bg-emerald-100 font-semibold text-black py-1 px-3 hover:bg-gray-200 hover:text-black flex transition cursor-pointer rounded-md space-x-2 text-sm">
-              <i class="material-symbols-outlined">forum</i>
-              <span class="flex-1 whitespace-nowrap font-semibold">
-                <span>查看反馈</span>
-              </span>
-            </a>
             <!-- <button
               v-on:click="selectedTopic = topic.id; topicText = topic.promptFull"
               class="bg-emerald-100 font-semibold text-black py-1 px-3 hover:bg-gray-200 hover:text-black flex transition cursor-pointer rounded-md space-x-2 text-sm">
@@ -141,6 +141,22 @@
     const API_PREFIX = "/api";
     const PARROT = "5ea4bff4-8b1b-453f";
 
+    function SaferHTML(templateData) {
+      var s = templateData[0];
+      for (var i = 1; i < arguments.length; i++) {
+        var arg = String(arguments[i]);
+
+        // Escape special characters in the substitution.
+        s += arg.replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;");
+
+        // Don't escape special characters in the template.
+        s += templateData[i];
+      }
+      return s;
+    }
+
     createApp({
       data() {
         return {
@@ -148,23 +164,27 @@
           isMenuOpen: false,
           isUserMenuOpen: false,
 
+          version: 0,
+          prompt: "Loading...",
+          promptFull: "Loading...",
+
           essays: [],
 
           menuItems: [
-          {
-              name: "首页",
+            {
+              name: "Home",
               icon: "home",
-              selected: true,
+              selected: false,
               href: "index.html",
             },
             {
-              name: "我的写作",
+              name: "My Essays",
               icon: "assignment",
-              selected: false,
+              selected: true,
               href: "essay-list.html",
             },
             {
-              name: "新建写作",
+              name: "New Essay Practice",
               icon: "edit_note",
               selected: false,
               href: "essay-new.html",
@@ -181,7 +201,7 @@
       async mounted() {
         if (localStorage.getItem("session")) {
           let res;
-          
+
           res = await fetch(`${API_PREFIX}/account/checkToken`, {
             headers: {
               authorization: localStorage.getItem("session"),
@@ -194,17 +214,24 @@
             this.userData = res.data;
           }
 
-          this.getEssaySummaries();
+          if (location.hash.length < 2) {
+            location.href = "essay-list.html";
+            return;
+          }
+
+          this.version = location.hash.split(".")[1];
+
+          this.getEssayDetails();
         }
         else {
           location.href = "login.html";
         }
       },
       methods: {
-        async getEssaySummaries() {
+        async getEssayDetails() {
           let res;
 
-          res = await fetch(`${API_PREFIX}/essay/essaySummary`, {
+          res = await fetch(`${API_PREFIX}/essay/essayDetails/${location.hash.split(".")[0].substring(1)}`, {
             headers: {
               authorization: localStorage.getItem("session"),
               parrot: PARROT,
@@ -213,7 +240,47 @@
 
           if (res.error) location.href = "login.html";
           else {
-            this.essays = res.data;
+            this.prompt = res.data.prompt;
+            this.promptFull = res.data.promptFull;
+
+            for (const essay of res.data.attempts) {
+              const el = document.createElement("div");
+              el.innerText = essay.content;
+
+              essay.feedback = JSON.parse(essay.inferenceResult == "pending" ? "{}" : essay.inferenceResult);
+              let i = 1;
+
+              if (essay.feedback.Score) {
+                essay.score = essay.feedback.Score;
+              }
+
+              if (essay.feedback["Additional Text"]) {
+                essay.extra = essay.feedback["Additional Text"];
+              }
+
+              const mkInst = new Mark(el);
+              while (essay.feedback[i.toString()]) {
+                mkInst.mark(essay.feedback[i.toString()][0], {
+                  separateWordSearch: false,
+                  each(el) {
+                    el.innerHTML += SaferHTML`<div class="font-semibold" style="background-color: white;">${essay.feedback[i.toString()][1]}</div><br>`;
+                    el.setAttribute("data-tippy-content", SaferHTML`${essay.feedback[i.toString()][1]}`)
+                    el.style.cursor = "help";
+                    // el.title = essay.feedback[i.toString()][1];
+                  },
+                })
+
+                i++;
+              }
+
+              essay.rendered = el.outerHTML;
+            }
+
+            this.essays = res.data.attempts;
+            
+            setTimeout(() => {
+              tippy("[data-tippy-content]");
+            }, 1000);
           }
         },
         async signOut() {

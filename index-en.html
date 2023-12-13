@@ -2,7 +2,7 @@
 <html>
 
 <head>
-  <title>My Essays | 鹦鹉智学</title>
+  <title>Home | 鹦鹉智学</title>
 
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -45,13 +45,13 @@
                 class="transition-all scale-y-100 absolute opacity-1 right-0 top-9 translate-y-0 z-40 my-4 text-base list-none bg-white divide-y divide-gray-300 rounded-md mr-2 shadow-lg  ">
                 <div class="px-4 py-3 text-sm font-medium text-gray-900 truncate " role="none">
                   <p class="font-semibold text-base" role="none">
-                    欢迎, {{ userData.uid }}
+                    Welcome, {{ userData.uid }}
                   </p>
                   <p class="mt-4" role="none">
-                    免费DEMO用户
+                    FREE DEMO USER
                   </p>
                   <p role="none">
-                    还剩：{{ userData.quota }} 篇写作
+                    {{ userData.quota }} free essay left
                   </p>
                 </div>
                 <ul class="py-1 text-gray-700 text-sm" role="none">
@@ -59,14 +59,14 @@
                     <a href="index.html" class="transition-all block w-full text-left px-4 py-2 hover:bg-gray-200"
                       role="menuitem">
                       <i class="material-symbols-outlined mr-2 inline-block align-middle">team_dashboard</i>
-                      <span class="inline-block align-middle">仪表盘</span>
+                      <span class="inline-block align-middle">Dashboard</span>
                     </a>
                   </li>
                   <li>
                     <button v-on:click="signOut"
                       class="transition-all block w-full text-left px-4 py-2 hover:bg-gray-200" role="menuitem">
                       <i class="material-symbols-outlined mr-2 inline-block align-middle">logout</i>
-                      <span class="inline-block align-middle">退出</span>
+                      <span class="inline-block align-middle">Sign out</span>
                     </button>
                   </li>
                 </ul>
@@ -96,43 +96,55 @@
     </aside>
 
     <div class="p-6 sm:ml-64 mt-16 gap-y-6 flex-col flex">
-      <h1 class="text-emerald-900 font-semibold flex flex-row space-x-2 text-2xl items-center">
-        <i class="material-symbols-outlined">assignment</i>
-        <span class="flex-1 ml-3 whitespace-nowrap font-semibold">我的写作</span>
-      </h1>
-      <div>在这查看作文的反馈</div>
-
-      <div>
-        <div v-for="essay of essays"
-          class="p-3 flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-3 border-t-2 border-t-slate-200">
-          <i class="material-symbols-outlined sm:inline hidden">assignment</i>
-          <div class="block">
-            <div class="font-semibold">{{ essay.prompt }}</div>
-            <div class="text-sm text-slate-600">版本 {{ essay.version }} • {{ new Date(essay.timestamp).toLocaleString() }}</div>
-            <div>{{ essay.preview }}...</div>
-          </div>
-
-          <div class="flex-grow"></div>
-          <div class="flex-none">
-            <a
-              :href="`essay-feedback.html#${essay.topicId}.${essay.id}`"
-              class="bg-emerald-100 font-semibold text-black py-1 px-3 hover:bg-gray-200 hover:text-black flex transition cursor-pointer rounded-md space-x-2 text-sm">
-              <i class="material-symbols-outlined">forum</i>
-              <span class="flex-1 whitespace-nowrap font-semibold">
-                <span>查看反馈</span>
-              </span>
-            </a>
-            <!-- <button
-              v-on:click="selectedTopic = topic.id; topicText = topic.promptFull"
-              class="bg-emerald-100 font-semibold text-black py-1 px-3 hover:bg-gray-200 hover:text-black flex transition cursor-pointer rounded-md space-x-2 text-sm">
+      <section class="bg-emerald-50 border-2 border-emerald-200 shadow-lg rounded-lg p-6 flex-row flex items-center">
+        <img src="assets/img/graduation-cap_1f393.png" class="h-32 flex-none hidden md:flex" />
+        <div class="flex-1 md:ml-6">
+          <h1 class="font-bold text-2xl text-emerald-900">Welcome to Parrot!</h1>
+          <div class="text-lg">Some description or you can put some announcement here or something idk</div>
+          <div class="sm:flex-row flex-col flex justify-start mt-4 space-y-1 space-x-0 sm:space-y-0 sm:space-x-2">
+            <a href="essay-new.html" class="bg-emerald-800 font-semibold text-white p-2 hover:bg-gray-200 hover:text-black flex transition cursor-pointer rounded-md space-x-2">
               <i class="material-symbols-outlined">edit_note</i>
-              <span class="flex-1 whitespace-nowrap font-semibold">
-                <span>New Version</span>
-              </span>
-            </button> -->
+              <span class="flex-1 ml-3 whitespace-nowrap font-semibold">Start Essay Practice</span>
+            </a>
+            <!-- <a href="topic.html" class="bg-slate-300 font-semibold text-black p-2 hover:bg-gray-200 hover:text-black flex transition cursor-pointer rounded-md space-x-2">
+              <i class="material-symbols-outlined">travel_explore</i>
+              <span class="flex-1 ml-3 whitespace-nowrap font-semibold">Explore Topics</span>
+            </a> -->
           </div>
         </div>
-      </div>
+      </section>
+
+      <!-- <div class="flex-row flex space-x-4">
+        <div class="flex-1 flex-col space-y-4">
+          <div class="rounded-md shadow-md overflow-hidden">
+            <div class="p-3 font-semibold text-lg bg-slate-200 text-black">Recent Essays</div>
+            <div class="p-3 flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-1 border-t-2 border-t-slate-200">
+              <div class="flex-grow">
+                <div class="font-semibold">What do you think is the future of work?</div>
+                <div>Version 1 • 11 / 25 marks • 10/12/2023</div>
+                <div></div>
+              </div>
+              <div class="flex-none">
+                <a href="create.html" class="bg-emerald-100 font-semibold text-black py-1 px-3 hover:bg-gray-200 hover:text-black flex transition cursor-pointer rounded-md space-x-2 text-sm">
+                  <i class="material-symbols-outlined">forum</i>
+                  <span class="flex-1 whitespace-nowrap font-semibold">Review Feedback</span>
+                </a>
+              </div>
+            </div>
+            <div class="p-3 flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-1 border-t-2 border-t-slate-200">
+              <div class="flex-grow">
+                Something about machine learning Something about machine learning Something about machine learning Something about machine learning Something about machine learning Something about machine learning Something about machine learning Something about machine learning 
+              </div>
+              <div class="flex-none">
+                <a href="create.html" class="bg-emerald-100 font-semibold text-black py-1 px-3 hover:bg-gray-200 hover:text-black flex transition cursor-pointer rounded-md space-x-2 text-sm">
+                  <i class="material-symbols-outlined">forum</i>
+                  <span class="flex-1 whitespace-nowrap font-semibold">Review Feedback</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div> -->
     </div>
   </div>
 
@@ -147,24 +159,21 @@
           userData: {},
           isMenuOpen: false,
           isUserMenuOpen: false,
-
-          essays: [],
-
           menuItems: [
-          {
-              name: "首页",
+            {
+              name: "Home",
               icon: "home",
               selected: true,
               href: "index.html",
             },
             {
-              name: "我的写作",
+              name: "My Essays",
               icon: "assignment",
               selected: false,
               href: "essay-list.html",
             },
             {
-              name: "新建写作",
+              name: "New Essay Practice",
               icon: "edit_note",
               selected: false,
               href: "essay-new.html",
@@ -193,29 +202,12 @@
           else {
             this.userData = res.data;
           }
-
-          this.getEssaySummaries();
         }
         else {
           location.href = "login.html";
         }
       },
       methods: {
-        async getEssaySummaries() {
-          let res;
-
-          res = await fetch(`${API_PREFIX}/essay/essaySummary`, {
-            headers: {
-              authorization: localStorage.getItem("session"),
-              parrot: PARROT,
-            },
-          }).then(res => res.json());
-
-          if (res.error) location.href = "login.html";
-          else {
-            this.essays = res.data;
-          }
-        },
         async signOut() {
           localStorage.clear();
           location.href = "login.html";

@@ -51,13 +51,13 @@
                 class="transition-all scale-y-100 absolute opacity-1 right-0 top-9 translate-y-0 z-40 my-4 text-base list-none bg-white divide-y divide-gray-300 rounded-md mr-2 shadow-lg  ">
                 <div class="px-4 py-3 text-sm font-medium text-gray-900 truncate " role="none">
                   <p class="font-semibold text-base" role="none">
-                    Welcome, {{ userData.uid }}
+                    欢迎, {{ userData.uid }}
                   </p>
                   <p class="mt-4" role="none">
-                    FREE DEMO USER
+                    免费DEMO用户
                   </p>
                   <p role="none">
-                    {{ userData.quota }} free essay left
+                    还剩：{{ userData.quota }} 篇写作
                   </p>
                 </div>
                 <ul class="py-1 text-gray-700 text-sm" role="none">
@@ -65,14 +65,14 @@
                     <a href="index.html" class="transition-all block w-full text-left px-4 py-2 hover:bg-gray-200"
                       role="menuitem">
                       <i class="material-symbols-outlined mr-2 inline-block align-middle">team_dashboard</i>
-                      <span class="inline-block align-middle">Dashboard</span>
+                      <span class="inline-block align-middle">仪表盘</span>
                     </a>
                   </li>
                   <li>
                     <button v-on:click="signOut"
                       class="transition-all block w-full text-left px-4 py-2 hover:bg-gray-200" role="menuitem">
                       <i class="material-symbols-outlined mr-2 inline-block align-middle">logout</i>
-                      <span class="inline-block align-middle">Sign out</span>
+                      <span class="inline-block align-middle">退出</span>
                     </button>
                   </li>
                 </ul>
@@ -104,13 +104,13 @@
     <div class="p-6 sm:ml-64 pt-24 gap-y-6 flex-col flex sm:h-screen overflow-hidden">
       <h1 class="text-emerald-900 font-semibold flex flex-row space-x-2 text-2xl items-center flex-none">
         <i class="material-symbols-outlined">assignment</i>
-        <span class="flex-1 ml-3 whitespace-nowrap font-semibold">Essay Feedback for "{{ prompt }}"</span>
+        <span class="flex-1 ml-3 whitespace-nowrap font-semibold">{{ prompt }} 写作反馈</span>
       </h1>
 
       <select v-model="selectedEssay" class="bg-green-100 p-2 border-green-700 border-2 rounded-md cursor-pointer flex-none">
-        <option value="all">All Versions</option>
+        <option value="all">全部版本</option>
         <option v-for="essay of essays" :value="essay.id">
-          <span>Version {{ essay.version }} • {{ essay.score ? essay.score : "Being graded" }} • {{ new Date(essay.timestamp).toLocaleString() }}</span>
+          <span>版本 {{ essay.version }} • {{ essay.score ? essay.score : "正在批改" }} • {{ new Date(essay.timestamp).toLocaleString() }}</span>
         </option>
       </select>
 
@@ -122,11 +122,11 @@
             :class="{ 'flex': selectedEssay == essay.id || selectedEssay == 'all', 'hidden': selectedEssay != essay.id && selectedEssay != 'all' }"
             class="p-3 flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-3 border-t-2 border-t-slate-200">
             <div class="flex flex-col space-y-2 w-full">
-              <div class="font-semibold">{{ essay.prompt }} ({{ essay.score ? essay.score : "Being graded" }})</div>
-              <div class="text-sm text-slate-600">Version {{ essay.version }} • {{ new Date(essay.timestamp).toLocaleString() }} • Hover over hightlights to view comments</div>
+              <div class="font-semibold">{{ essay.prompt }} ({{ essay.score ? essay.score : "正在批改" }})</div>
+              <div class="text-sm text-slate-600">版本 {{ essay.version }} • {{ new Date(essay.timestamp).toLocaleString() }} • 悬停在亮的句子上查看评论</div>
               <details>
-                <summary class="bg-slate-200 p-2 cursor-pointer font-semibold text-sm">Grader's Comments</summary>
-                <div class="whitespace-pre-wrap bg-slate-100 p-2">{{ essay.extra ? essay.extra : "Essay" }}</div>
+                <summary class="bg-slate-200 p-2 cursor-pointer font-semibold text-sm">评论</summary>
+                <div class="whitespace-pre-wrap bg-slate-100 p-2">{{ essay.extra ? essay.extra : "等待评论。。。" }}</div>
               </details>
               <div v-html="essay.rendered"></div>
             </div>
@@ -170,26 +170,26 @@
 
           selectedEssay: "all",
 
-          prompt: "Loading...",
-          promptFull: "Loading...",
+          prompt: "正在加载...",
+          promptFull: "正在加载...",
 
           essays: [],
 
           menuItems: [
-            {
-              name: "Home",
+          {
+              name: "首页",
               icon: "home",
-              selected: false,
+              selected: true,
               href: "index.html",
             },
             {
-              name: "My Essays",
+              name: "我的写作",
               icon: "assignment",
-              selected: true,
+              selected: false,
               href: "essay-list.html",
             },
             {
-              name: "New Essay Practice",
+              name: "新建写作",
               icon: "edit_note",
               selected: false,
               href: "essay-new.html",
