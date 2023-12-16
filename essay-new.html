@@ -338,7 +338,7 @@
           {
               name: "首页",
               icon: "home",
-              selected: true,
+              selected: false,
               href: "index.html",
             },
             {
@@ -350,15 +350,15 @@
             {
               name: "新建写作",
               icon: "edit_note",
-              selected: false,
+              selected: true,
               href: "essay-new.html",
             },
-            // {
-            //   name: "My Topics",
-            //   icon: "crossword",
-            //   selected: false,
-            //   href: "topic.html",
-            // },
+            {
+              name: "写作主题",
+              icon: "topic",
+              selected: false,
+              href: "essay-topic.html",
+            },
           ],
         };
       },
@@ -466,6 +466,15 @@
 
               if (topic.essayTimestamp !== null) this.topicList.attempted.push(topic);
               else this.topicList.unattempted.push(topic);
+
+              if (location.hash.substring(1) && topic.id == location.hash.substring(1)) {
+                this.selectedTopic = parseInt(location.hash.substring(1));
+                this.topicText = topic.promptFull;
+                notyf.success({
+                  message: `Topic '${topic.prompt}'' selected for practice.`,
+                  duration: 3000,
+                });
+              }
             }
           }
         },

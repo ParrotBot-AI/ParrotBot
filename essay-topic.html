@@ -13,6 +13,8 @@
   <script src="assets/js/notyf.min.js"></script>
   <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
+
+  <script src="assets/js/flexsearch.bundle.js"></script>
 </head>
 
 <body>
@@ -95,7 +97,7 @@
       </div>
     </aside>
 
-    <div class="p-6 sm:ml-64 mt-16 gap-y-6 flex-col flex">
+    <div class="p-6 sm:ml-64 mt-16 gap-y-4 flex-col flex">
       <h1 class="text-emerald-900 font-semibold flex flex-row space-x-2 text-2xl items-center">
         <i class="material-symbols-outlined">topic</i>
         <span class="flex-1 ml-3 whitespace-nowrap font-semibold">My Topics</span>
@@ -107,14 +109,13 @@
           <div class="absolute inset-y-0 start-0 flex items-center p-2.5 pointer-events-none">
             <i class="material-symbols-outlined">search</i>
           </div>
-          <input placeholder="Search Topics" type="text" id="input-group-1" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5">
+          <input v-model="topicSearch" v-on:keyup="searchTopics" placeholder="Search Topics" type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5">
         </div>
 
         <details open>
           <summary class="cursor-pointer bg-slate-100 px-3 py-1 font-semibold text-sm uppercase text-slate-700">My Bookmarked Topics</summary>
 
           <div v-for="topic of topicList.bookmark"
-            :class="{ 'bg-emerald-600 text-white': selectedTopic == topic.id }"
             class="relative p-3 flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 border-t-2 border-t-slate-200">
             <i class="material-symbols-outlined sm:inline hidden">bookmark</i>
             <div class="flex-grow">
@@ -128,30 +129,35 @@
               </details>
             </div>
 
-            <div class="flex-none sm:float-right sm:absolute sm:right-3">
-              <button v-if="selectedTopic !== topic.id"
-                v-on:click="selectedTopic = topic.id; topicText = topic.promptFull"
+            <div class="flex-none sm:float-right sm:absolute sm:right-3 flex flex-row space-x-2">
+              <a
+                :href="`essay-new.html#${topic.id}`"
                 class="bg-emerald-100 font-semibold text-black py-1 px-3 hover:bg-gray-200 hover:text-black flex transition cursor-pointer rounded-md space-x-2 text-sm">
                 <i class="material-symbols-outlined">edit_note</i>
-                <span class="flex-1 whitespace-nowrap font-semibold">
-                  <span v-if="!topic.essayTimestamp">Select</span>
-                  <span v-if="topic.essayTimestamp">New Essay Version</span>
-                </span>
+                <span class="flex-1 whitespace-nowrap font-semibold">New Essay</span>
+              </a>
+              <button :class="{ 'bg-emerald-100': topic.bookmarkUser == null, 'bg-red-100': topic.bookmarkUser !== null }"
+                v-on:click="toggleBookmark(topic);"
+                class=" font-semibold text-black py-1 px-3 hover:bg-gray-200 hover:text-black flex transition cursor-pointer rounded-md space-x-2 text-sm">
+                <i class="material-symbols-outlined">{{ topic.bookmarkUser == null ? "bookmark_add" : "bookmark_remove" }}</i>
               </button>
-              <div v-if="selectedTopic == topic.id"
-                class="text-white font-semibold flex items-center space-x-2 cursor-default text-sm">
-                <i class="material-symbols-outlined">check</i>
-                <span class="flex-1 whitespace-nowrap font-semibold">Selected</span>
-              </div>
             </div>
           </div>
         </details>
 
         <details open>
-          <summary class="cursor-pointer bg-slate-100 px-3 py-1 font-semibold text-sm uppercase text-slate-700">Unattempted Topics</summary>
+          <summary class="cursor-pointer bg-slate-100 px-3 py-1 font-semibold text-sm uppercase text-slate-700">
+            Unattempted Topics
+          </summary>
+
+          <div class="bg-slate-200 px-3 py-1 text-sm">
+            <label class="cursor-pointer">
+              <input type="checkbox" v-model="unattemptedIncludeBookmark" />
+              Display bookmarked topics
+            </label>
+          </div>
 
           <div v-for="topic of topicList.unattempted"
-            :class="{ 'bg-emerald-600 text-white': selectedTopic == topic.id }"
             class="relative p-3 flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 border-t-2 border-t-slate-200">
             <i class="material-symbols-outlined sm:inline hidden">draft</i>
             <div class="block">
@@ -164,18 +170,18 @@
             </div>
 
             <div class="flex-grow"></div>
-            <div class="flex-none sm:float-right sm:absolute sm:right-3">
-              <button v-if="selectedTopic !== topic.id"
-                v-on:click="selectedTopic = topic.id; topicText = topic.promptFull"
+            <div class="flex-none sm:float-right sm:absolute sm:right-3 flex flex-row space-x-2">
+              <a
+                :href="`essay-new.html#${topic.id}`"
                 class="bg-emerald-100 font-semibold text-black py-1 px-3 hover:bg-gray-200 hover:text-black flex transition cursor-pointer rounded-md space-x-2 text-sm">
                 <i class="material-symbols-outlined">edit_note</i>
-                <span class="flex-1 whitespace-nowrap font-semibold">Select</span>
+                <span class="flex-1 whitespace-nowrap font-semibold">New Essay</span>
+              </a>
+              <button :class="{ 'bg-emerald-100': topic.bookmarkUser == null, 'bg-red-100': topic.bookmarkUser !== null }"
+                v-on:click="toggleBookmark(topic);"
+                class=" font-semibold text-black py-1 px-3 hover:bg-gray-200 hover:text-black flex transition cursor-pointer rounded-md space-x-2 text-sm">
+                <i class="material-symbols-outlined">{{ topic.bookmarkUser == null ? "bookmark_add" : "bookmark_remove" }}</i>
               </button>
-              <div v-if="selectedTopic == topic.id"
-                class="text-white font-semibold flex items-center space-x-2 cursor-default text-sm">
-                <i class="material-symbols-outlined">check</i>
-                <span class="flex-1 whitespace-nowrap font-semibold">Selected</span>
-              </div>
             </div>
           </div>
         </details>
@@ -184,7 +190,6 @@
           <summary class="cursor-pointer bg-slate-100 px-3 py-1 font-semibold text-sm uppercase text-slate-700">Attempted Topics</summary>
 
           <div v-for="topic of topicList.attempted"
-            :class="{ 'bg-emerald-600 text-white': selectedTopic == topic.id }"
             class="relative p-3 flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 border-t-2 border-t-slate-200">
             <i class="material-symbols-outlined sm:inline hidden">task</i>
             <div class="block">
@@ -198,18 +203,18 @@
             </div>
 
             <div class="flex-grow"></div>
-            <div class="flex-none sm:float-right sm:absolute sm:right-3">
-              <button v-if="selectedTopic !== topic.id"
-                v-on:click="selectedTopic = topic.id; topicText = topic.promptFull"
+            <div class="flex-none sm:float-right sm:absolute sm:right-3 flex flex-row space-x-2">
+              <a
+                :href="`essay-new.html#${topic.id}`"
                 class="bg-emerald-100 font-semibold text-black py-1 px-3 hover:bg-gray-200 hover:text-black flex transition cursor-pointer rounded-md space-x-2 text-sm">
                 <i class="material-symbols-outlined">edit_note</i>
-                <span class="flex-1 whitespace-nowrap font-semibold">New Essay Version</span>
+                <span class="flex-1 whitespace-nowrap font-semibold">New Version</span>
+              </a>
+              <button :class="{ 'bg-emerald-100': topic.bookmarkUser == null, 'bg-red-100': topic.bookmarkUser !== null }"
+                v-on:click="toggleBookmark(topic);"
+                class=" font-semibold text-black py-1 px-3 hover:bg-gray-200 hover:text-black flex transition cursor-pointer rounded-md space-x-2 text-sm">
+                <i class="material-symbols-outlined">{{ topic.bookmarkUser == null ? "bookmark_add" : "bookmark_remove" }}</i>
               </button>
-              <div v-if="selectedTopic == topic.id"
-                class="text-white font-semibold flex items-center space-x-2 cursor-default text-sm">
-                <i class="material-symbols-outlined">check</i>
-                <span class="flex-1 whitespace-nowrap font-semibold">Selected</span>
-              </div>
             </div>
           </div>
         </details>
@@ -220,7 +225,12 @@
   <script>
     const { createApp, ref } = Vue
     const API_PREFIX = "/api";
+    const notyf = new Notyf();
     const PARROT = "5ea4bff4-8b1b-453f";
+
+    const index = FlexSearch.Index({
+      tokenize: 'forward',
+    });
 
     createApp({
       data() {
@@ -229,11 +239,16 @@
           isMenuOpen: false,
           isUserMenuOpen: false,
 
-          topicList: {
-            bookmark: [],
-            attempted: [],
-            unattempted: [],
-          },
+          unattemptedIncludeBookmark: false,
+          topicSearch: "",
+          searchMatchedIndices: [],
+
+          rawTopicList: [],
+          // topicList: {
+          //   bookmark: [],
+          //   attempted: [],
+          //   unattempted: [],
+          // },
 
           menuItems: [
             {
@@ -256,12 +271,24 @@
             },
             {
               name: "My Topics",
-              icon: "crossword",
+              icon: "topic",
               selected: true,
-              href: "topic.html",
+              href: "essay-topic.html",
             },
           ],
         };
+      },
+      computed: {
+        topicList() {
+          return {
+            bookmark: this.rawTopicList.filter(i => i.bookmarkUser !== null && (this.topicSearch.trim() == "" || this.searchMatchedIndices.includes(i.id))),
+            attempted: this.rawTopicList.filter(i => i.essayTimestamp !== null && (this.topicSearch.trim() == "" || this.searchMatchedIndices.includes(i.id))),
+            unattempted: this.rawTopicList.filter(i => {
+              if (this.unattemptedIncludeBookmark) return i.essayTimestamp == null && (this.topicSearch.trim() == "" || this.searchMatchedIndices.includes(i.id));
+              else return i.essayTimestamp == null && i.bookmarkUser == null && (this.topicSearch.trim() == "" || this.searchMatchedIndices.includes(i.id));
+            }),
+          };
+        },
       },
       async mounted() {
         if (localStorage.getItem("session")) {
@@ -286,6 +313,45 @@
         }
       },
       methods: {
+        async searchTopics() {
+          const res = index.search(this.topicSearch, 10);
+          this.searchMatchedIndices = res;
+          console.log(res);
+        },
+        async toggleBookmark(topic) {
+          let res, endpoint;
+
+          if (topic.bookmarkUser == null) {
+            topic.bookmarkUser = true;
+            endpoint = "addTopicBookmark";
+          }
+          else {
+            topic.bookmarkUser = null;
+            endpoint = "deleteTopicBookmark";
+          }
+
+          res = await fetch(`${API_PREFIX}/essay/${endpoint}`, {
+            method: "post",
+            body: JSON.stringify({
+              topicId: topic.id,
+            }),
+            headers: {
+              authorization: localStorage.getItem("session"),
+              parrot: PARROT,
+              "content-type": "application/json",
+            },
+          }).then(res => res.json());
+
+          if (res.error) {
+            this.getTopicSummaries();
+          }
+          else {
+            notyf.success({
+              message: 'Bookmark edited!',
+              duration: 1000,
+            });
+          }
+        },
         async getTopicSummaries() {
           let res;
 
@@ -298,11 +364,10 @@
 
           if (res.error) location.href = "login.html";
           else {
+            this.rawTopicList = res.data;
             for (const topic of res.data) {
-              if (topic.bookmarkUser !== null) this.topicList.bookmark.push(topic);
-
-              if (topic.essayTimestamp !== null) this.topicList.attempted.push(topic);
-              else this.topicList.unattempted.push(topic);
+              index.add(topic.id, topic.prompt + " " + topic.promptFull);
+              console.log(topic.prompt + " " + topic.promptFull);
             }
           }
         },
