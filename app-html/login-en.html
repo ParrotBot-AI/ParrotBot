@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Login</title>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="assets/css/notyf.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
+  <script src="assets/js/notyf.min.js"></script>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <script src="assets/js/phone.js"></script>
+</head>
+
+<body>
+  <div id="app">
+    <form class="bg-gray-50 " v-on:submit="attemptSubmit">
+      <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
+        <div class="w-full bg-white rounded-lg shadow  md:mt-0 sm:max-w-md xl:p-0  ">
+          <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
+            <a href="#" class="flex flex-col items-center mb-2 font-semibold">
+              <img class="w-24 h-24 mr-2 rounded-lg mb-6 shadow-lg" src="assets/img/logo2.png" alt="logo">
+              <div class="text-3xl text-gray-900 ">Welcome to Parrot!</div>
+              <div class="text-md text-center text-gray-600 mt-2">Simple TOEFL test prep companion</div>
+            </a>
+
+            <form class="space-y-4 md:space-y-6" action="#">
+              <div>
+                <label class="block mb-2 text-sm font-semibold text-gray-900 ">Phone Number (no spaces)</label>
+                <div class="flex">
+                  <!-- <input type="text" v-model="" pattern="\+[0-9]{2,3}" title="Phone number country code" placeholder="+86" required
+                    class="transition-all flex-none font-semibold w-16 bg-green-100 border border-gray-300 text-gray-900 sm:text-sm rounded-s-lg focus:ring-primary-600 focus:border-primary-600 block p-2.5 border-r-0 focus:bg-green-50"> -->
+                  <input type="tel" v-model="enter.tel"
+                    class="transition-all flex-grow bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 focus:bg-green-50"
+                    placeholder="+861065529988" required>
+                </div>
+              </div>
+
+              <div>
+                <label for="password" class="block mb-2 text-sm font-semibold text-gray-900 ">Password</label>
+                <input type="password" v-model="enter.password" placeholder="••••••••"
+                  class="transition-all bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 focus:bg-green-50      "
+                  required="">
+              </div>
+
+              <button type="submit" :disabled="enter.btnDisable"
+                :class="{ 'bg-green-700 transition-all text-white hover:bg-black': !enter.btnDisable, 'bg-green-100 text-gray-500 cursor-not-allowed': enter.btnDisable }"
+                class="w-full font-semibold focus:ring-4 focus:outline-none focus:ring-primary-300 rounded-lg text-sm px-5 py-2.5 text-center   ">
+                <span v-if="enter.btnDisable">{{ enter.btnDisableMsg }}</span>
+                <span v-if="!enter.btnDisable">Login / Sign Up</span>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </form>
+
+    <form :class="{ 'flex': phoneDialogOpen, 'hidden': !phoneDialogOpen }" v-on:submit="attemptVerify"
+      class="overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-modal md:h-full"
+      style="background-color: rgba(0, 0, 0, 0.5);">
+      <div class="relative p-4 w-full max-w-2xl h-full md:h-auto">
+        <div class="relative p-4 bg-white rounded-lg shadow  sm:p-5">
+          <div class="flex justify-between items-center pb-4 mb-4 rounded-t border-b sm:mb-5 ">
+            <h3 class="text-lg font-semibold text-gray-900 ">
+              Phone Number Verification
+            </h3>
+          </div>
+
+          <form action="#">
+            <div class="grid gap-4 mb-4 sm:grid-cols-2">
+              <div class="sm:col-span-2">
+                <label class="block text-sm text-gray-900 font-semibold">To keep your account secure,
+                  enter the 6-digit SMS code sent to {{ enter.tel }}.</label>
+                <input v-model="verify.otp"
+                  class="my-4 block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500"
+                  placeholder="SMS Code (6 digits)"></textarea>
+                <!-- <a class="text-blue-700 underline cursor-pointer text-sm" v-on:click="attemptSubmit">Resend code</a> -->
+              </div>
+            </div>
+
+            <button type="submit" :disabled="verify.btnDisable"
+              :class="{ 'bg-green-700 transition-all text-white hover:bg-black': !verify.btnDisable, 'bg-green-100 text-gray-500 cursor-not-allowed': verify.btnDisable }"
+              class="w-full font-semibold focus:ring-4 focus:outline-none focus:ring-primary-300 rounded-lg text-sm px-5 py-2.5 text-center">
+              <span>Verify</span>
+            </button>
+
+            <div class="flex flex-row space-x-4 mt-4 text-sm">
+              <a class="text-blue-700 underline cursor-pointer" v-on:click="changeTel">Change phone number</a>
+              <a class="text-blue-700 underline cursor-pointer" href="assistance.html">Get assistance</a>
+            </div>
+          </form>
+        </div>
+      </div>
+  </div>
+  </form>
+
+  <script>
+    if (localStorage.getItem("session")) {
+      // validate session
+
+    }
+
+    const { createApp, ref } = Vue
+    const API_PREFIX = "/api";
+    const notyf = new Notyf();
+    const PARROT = "5ea4bff4-8b1b-453f";
+
+    createApp({
+      data() {
+        return {
+          enter: {
+            password: "",
+            tel: "",
+            btnDisable: false,
+            btnDisableMsg: null,
+            error: null,
+          },
+          verify: {
+            otp: "",
+            btnDisable: false,
+            phoneDialogOpen: false,
+          }
+        };
+      },
+      methods: {
+        async changeTel(event) {
+          location.reload();
+        },
+        async attemptVerify(event) {
+          event.preventDefault();
+
+          this.verify.btnDisable = true;
+
+          let res;
+
+          res = await fetch(`${API_PREFIX}/account/verify`, {
+            method: "post",
+            headers: {
+              "parrot": PARROT,
+              "content-type": "application/json",
+            },
+            body: JSON.stringify({
+              otp: this.verify.otp,
+              tel: this.enter.tel,
+              password: this.enter.password,
+            }),
+          }).then(res => res.json());
+
+          if (res.error) {
+            notyf.error({
+              message: 'Wrong OTP. Please try again.',
+              duration: 5000,
+            });
+            this.verify.btnDisable = false;
+            return;
+          }
+
+          if (res.type === "token-issue") {
+            localStorage.setItem("session", res.data.token);
+            this.enter.btnDisableMsg = "Login success. Redirecting...";
+            location.href = "index.html";
+          }
+        },
+        async attemptSubmit(event) {
+          event.preventDefault();
+
+          if (!libphonenumber.isValidPhoneNumber(this.enter.tel)) {
+            notyf.error({
+              message: "Invalid phone number.",
+              duration: 5000,
+            });
+            return;
+          }
+
+          this.enter.btnDisableMsg = "Loading...";
+          this.enter.btnDisable = true;
+
+          let res;
+
+          res = await fetch(`${API_PREFIX}/account/enter`, {
+            method: "post",
+            headers: {
+              "parrot": PARROT,
+              "content-type": "application/json",
+            },
+            body: JSON.stringify({
+              tel: this.enter.tel,
+              password: this.enter.password,
+            }),
+          }).then(res => res.json());
+
+          if (res.error) {
+            if (res.error === "user") {
+              notyf.error({
+                message: 'Wrong user ID or password',
+                duration: 5000,
+              });
+            }
+            else if (res.error === "not-added") {
+              notyf.error({
+                message: "Phone number not allowed. Please contact us.",
+                duration: 5000,
+              });
+            }
+            this.enter.btnDisable = false;
+            return;
+          }
+
+          if (res.type === "token-issue") {
+            localStorage.setItem("session", res.data.token);
+            this.enter.btnDisableMsg = "Login success. Redirecting...";
+            location.href = "index.html";
+          }
+          else {
+            this.phoneDialogOpen = true;
+            this.enter.btnDisableMsg = "Please verify your phone number.";
+          }
+        },
+      }
+    }).mount('#app');
+  </script>
+</body>
+
+</html>

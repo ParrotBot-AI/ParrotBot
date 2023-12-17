@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>My Essays | 鹦鹉智学</title>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="assets/css/notyf.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
+  <script src="assets/js/notyf.min.js"></script>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body>
+  <div id="app">
+    <nav class="fixed top-0 z-50 w-full bg-emerald-900 border-b border-gray-200  ">
+      <div class="px-3 py-3 lg:px-5 lg:pl-3">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center justify-start">
+            <button v-on:click="isMenuOpen = !isMenuOpen" aria-controls="logo-sidebar" type="button"
+              class="inline-flex items-center p-2 text-sm text-white rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200">
+              <span class="sr-only">Open sidebar</span>
+              <i class="material-symbols-outlined">menu</i>
+            </button>
+            <a href="https://parrotbot.net" class="flex ml-2 md:mr-24">
+              <img src="assets/img/logo-text.png" class="h-10" />
+              <!-- <span class="self-center text-lg font-semibold sm:text-xl whitespace-nowrap text-cyan-800">鹦鹉智学</span> -->
+            </a>
+          </div>
+          <div class="flex items-center">
+            <div class="flex items-center ml-3">
+              <div>
+                <button type="button" v-on:click="isUserMenuOpen = !isUserMenuOpen"
+                  class="z-50 relative flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 "
+                  aria-expanded="false">
+                  <span class="sr-only">Open user menu</span>
+                  <img class="w-8 h-8 rounded-full" src="assets/img/user.png" alt="user photo">
+                </button>
+              </div>
+              <div :class="{ 'opacity-0 scale-y-50 transform -translate-y-20 pointer-events-none': !isUserMenuOpen }"
+                class="transition-all scale-y-100 absolute opacity-1 right-0 top-9 translate-y-0 z-40 my-4 text-base list-none bg-white divide-y divide-gray-300 rounded-md mr-2 shadow-lg  ">
+                <div class="px-4 py-3 text-sm font-medium text-gray-900 truncate " role="none">
+                  <p class="font-semibold text-base" role="none">
+                    欢迎, {{ userData.uid }}
+                  </p>
+                  <p class="mt-4" role="none">
+                    免费DEMO用户
+                  </p>
+                  <p role="none">
+                    还剩：{{ userData.quota }} 篇写作
+                  </p>
+                </div>
+                <ul class="py-1 text-gray-700 text-sm" role="none">
+                  <li>
+                    <a href="index.html" class="transition-all block w-full text-left px-4 py-2 hover:bg-gray-200"
+                      role="menuitem">
+                      <i class="material-symbols-outlined mr-2 inline-block align-middle">team_dashboard</i>
+                      <span class="inline-block align-middle">仪表盘</span>
+                    </a>
+                  </li>
+                  <li>
+                    <button v-on:click="signOut"
+                      class="transition-all block w-full text-left px-4 py-2 hover:bg-gray-200" role="menuitem">
+                      <i class="material-symbols-outlined mr-2 inline-block align-middle">logout</i>
+                      <span class="inline-block align-middle">退出</span>
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <aside id="logo-sidebar" :class="{ '-translate-x-full': !isMenuOpen }"
+      class="fixed top-0 shadow-2xl left-0 z-40 w-64 h-screen pt-16 transition-transform bg-emerald-700 border-r border-gray-200 sm:translate-x-0  "
+      aria-label="Sidebar">
+      <div class="h-full px-3 py-4 overflow-y-auto ">
+        <div class="space-y-2 font-medium">
+          <div v-for="item of menuItems">
+            <a :href="item.href"
+              class="transition-all flex items-center p-2 rounded-lg hover:bg-gray-200 hover:text-black"
+              :class="{ 'bg-white text-black': item.selected, 'text-white': !item.selected }">
+              <i class="material-symbols-outlined">{{ item.icon }}</i>
+              <span class="flex-1 ml-3 whitespace-nowrap font-semibold">{{ item.name }}</span>
+              <!-- <span class="inline-flex items-center justify-center px-2 ml-3 text-sm font-medium text-gray-800 bg-gray-200 rounded-full  ">Pro</span> -->
+            </a>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <div class="p-6 sm:ml-64 mt-16 gap-y-6 flex-col flex">
+      <h1 class="text-emerald-900 font-semibold flex flex-row space-x-2 text-2xl items-center">
+        <i class="material-symbols-outlined">assignment</i>
+        <span class="flex-1 ml-3 whitespace-nowrap font-semibold">我的写作</span>
+      </h1>
+      <div>在这查看作文的反馈</div>
+
+      <div>
+        <div v-for="essay of essays"
+          class="p-3 flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-3 border-t-2 border-t-slate-200">
+          <i class="material-symbols-outlined sm:inline hidden">assignment</i>
+          <div class="block">
+            <div class="font-semibold">{{ essay.prompt }}</div>
+            <div class="text-sm text-slate-600">版本 {{ essay.version }} • {{ new Date(essay.timestamp).toLocaleString() }}</div>
+            <div>{{ essay.preview }}...</div>
+          </div>
+
+          <div class="flex-grow"></div>
+          <div class="flex-none">
+            <a
+              :href="`essay-feedback.html#${essay.topicId}.${essay.id}`"
+              class="bg-emerald-100 font-semibold text-black py-1 px-3 hover:bg-gray-200 hover:text-black flex transition cursor-pointer rounded-md space-x-2 text-sm">
+              <i class="material-symbols-outlined">forum</i>
+              <span class="flex-1 whitespace-nowrap font-semibold">
+                <span>查看反馈</span>
+              </span>
+            </a>
+            <!-- <button
+              v-on:click="selectedTopic = topic.id; topicText = topic.promptFull"
+              class="bg-emerald-100 font-semibold text-black py-1 px-3 hover:bg-gray-200 hover:text-black flex transition cursor-pointer rounded-md space-x-2 text-sm">
+              <i class="material-symbols-outlined">edit_note</i>
+              <span class="flex-1 whitespace-nowrap font-semibold">
+                <span>New Version</span>
+              </span>
+            </button> -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const { createApp, ref } = Vue
+    const API_PREFIX = "/api";
+    const PARROT = "5ea4bff4-8b1b-453f";
+
+    createApp({
+      data() {
+        return {
+          userData: {},
+          isMenuOpen: false,
+          isUserMenuOpen: false,
+
+          essays: [],
+
+          menuItems: [
+          {
+              name: "首页",
+              icon: "home",
+              selected: false,
+              href: "index.html",
+            },
+            {
+              name: "我的写作",
+              icon: "assignment",
+              selected: true,
+              href: "essay-list.html",
+            },
+            {
+              name: "新建写作",
+              icon: "edit_note",
+              selected: false,
+              href: "essay-new.html",
+            },
+            {
+              name: "写作主题",
+              icon: "topic",
+              selected: false,
+              href: "essay-topic.html",
+            },
+          ],
+        };
+      },
+      async mounted() {
+        if (localStorage.getItem("session")) {
+          let res;
+          
+          res = await fetch(`${API_PREFIX}/account/checkToken`, {
+            headers: {
+              authorization: localStorage.getItem("session"),
+              parrot: PARROT,
+            },
+          }).then(res => res.json());
+
+          if (res.error) location.href = "login.html";
+          else {
+            this.userData = res.data;
+          }
+
+          this.getEssaySummaries();
+        }
+        else {
+          location.href = "login.html";
+        }
+      },
+      methods: {
+        async getEssaySummaries() {
+          let res;
+
+          res = await fetch(`${API_PREFIX}/essay/essaySummary`, {
+            headers: {
+              authorization: localStorage.getItem("session"),
+              parrot: PARROT,
+            },
+          }).then(res => res.json());
+
+          if (res.error) location.href = "login.html";
+          else {
+            this.essays = res.data;
+          }
+        },
+        async signOut() {
+          localStorage.clear();
+          location.href = "login.html";
+        },
+      }
+    }).mount('#app')
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Essay Feedback | 鹦鹉智学</title>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="assets/css/notyf.min.css">
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
+  <script src="assets/js/notyf.min.js"></script>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <script src="assets/js/mark.js"></script>
+  <script src="assets/tippy/popper.js"></script>
+  <script src="assets/tippy/tippy.js"></script>
+  <link rel="stylesheet" href="assets/tippy/tippy.css" />
+</head>
+
+<body>
+  <div id="app">
+    <nav class="fixed top-0 z-50 w-full bg-emerald-900 border-b border-gray-200  ">
+      <div class="px-3 py-3 lg:px-5 lg:pl-3">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center justify-start">
+            <button v-on:click="isMenuOpen = !isMenuOpen" aria-controls="logo-sidebar" type="button"
+              class="inline-flex items-center p-2 text-sm text-white rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200">
+              <span class="sr-only">Open sidebar</span>
+              <i class="material-symbols-outlined">menu</i>
+            </button>
+            <a href="https://parrotbot.net" class="flex ml-2 md:mr-24">
+              <img src="assets/img/logo-text.png" class="h-10" />
+              <!-- <span class="self-center text-lg font-semibold sm:text-xl whitespace-nowrap text-cyan-800">鹦鹉智学</span> -->
+            </a>
+          </div>
+          <div class="flex items-center">
+            <div class="flex items-center ml-3">
+              <div>
+                <button type="button" v-on:click="isUserMenuOpen = !isUserMenuOpen"
+                  class="z-50 relative flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 "
+                  aria-expanded="false">
+                  <span class="sr-only">Open user menu</span>
+                  <img class="w-8 h-8 rounded-full" src="assets/img/user.png" alt="user photo">
+                </button>
+              </div>
+              <div :class="{ 'opacity-0 scale-y-50 transform -translate-y-20 pointer-events-none': !isUserMenuOpen }"
+                class="transition-all scale-y-100 absolute opacity-1 right-0 top-9 translate-y-0 z-40 my-4 text-base list-none bg-white divide-y divide-gray-300 rounded-md mr-2 shadow-lg  ">
+                <div class="px-4 py-3 text-sm font-medium text-gray-900 truncate " role="none">
+                  <p class="font-semibold text-base" role="none">
+                    欢迎, {{ userData.uid }}
+                  </p>
+                  <p class="mt-4" role="none">
+                    免费DEMO用户
+                  </p>
+                  <p role="none">
+                    还剩：{{ userData.quota }} 篇写作
+                  </p>
+                </div>
+                <ul class="py-1 text-gray-700 text-sm" role="none">
+                  <li>
+                    <a href="index.html" class="transition-all block w-full text-left px-4 py-2 hover:bg-gray-200"
+                      role="menuitem">
+                      <i class="material-symbols-outlined mr-2 inline-block align-middle">team_dashboard</i>
+                      <span class="inline-block align-middle">仪表盘</span>
+                    </a>
+                  </li>
+                  <li>
+                    <button v-on:click="signOut"
+                      class="transition-all block w-full text-left px-4 py-2 hover:bg-gray-200" role="menuitem">
+                      <i class="material-symbols-outlined mr-2 inline-block align-middle">logout</i>
+                      <span class="inline-block align-middle">退出</span>
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <aside id="logo-sidebar" :class="{ '-translate-x-full': !isMenuOpen }"
+      class="fixed top-0 shadow-2xl left-0 z-40 w-64 h-screen pt-16 transition-transform bg-emerald-700 border-r border-gray-200 sm:translate-x-0  "
+      aria-label="Sidebar">
+      <div class="h-full px-3 py-4 overflow-y-auto ">
+        <div class="space-y-2 font-medium">
+          <div v-for="item of menuItems">
+            <a :href="item.href"
+              class="transition-all flex items-center p-2 rounded-lg hover:bg-gray-200 hover:text-black"
+              :class="{ 'bg-white text-black': item.selected, 'text-white': !item.selected }">
+              <i class="material-symbols-outlined">{{ item.icon }}</i>
+              <span class="flex-1 ml-3 whitespace-nowrap font-semibold">{{ item.name }}</span>
+              <!-- <span class="inline-flex items-center justify-center px-2 ml-3 text-sm font-medium text-gray-800 bg-gray-200 rounded-full  ">Pro</span> -->
+            </a>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <div class="p-6 sm:ml-64 pt-24 gap-y-6 flex-col flex sm:h-screen overflow-hidden">
+      <h1 class="text-emerald-900 font-semibold flex flex-row space-x-2 text-2xl items-center flex-none">
+        <i class="material-symbols-outlined">assignment</i>
+        <span class="flex-1 ml-3 whitespace-nowrap font-semibold">{{ prompt }} 写作反馈</span>
+      </h1>
+
+      <select v-model="selectedEssay" class="bg-green-100 p-2 border-green-700 border-2 rounded-md cursor-pointer flex-none">
+        <option value="all">全部版本</option>
+        <option v-for="essay of essays" :value="essay.id">
+          <span>版本 {{ essay.version }} • {{ essay.score ? essay.score : "正在批改" }} • {{ new Date(essay.timestamp).toLocaleString() }}</span>
+        </option>
+      </select>
+
+      <div class="flex-1 sm:flex sm:flex-row items-start min-h-0">
+        <div class="whitespace-pre-wrap bg-slate-200 p-2 basis-1/2 overflow-y-scroll h-full">{{ promptFull }}</div>
+
+        <div class="basis-1/2 overflow-y-scroll h-full justify-stretch">
+          <div v-for="essay of essays"
+            :class="{ 'flex': selectedEssay == essay.id || selectedEssay == 'all', 'hidden': selectedEssay != essay.id && selectedEssay != 'all' }"
+            class="p-3 flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-3 border-t-2 border-t-slate-200">
+            <div class="flex flex-col space-y-2 w-full">
+              <div class="font-semibold">{{ essay.prompt }} ({{ essay.score ? essay.score : "正在批改" }})</div>
+              <div class="text-sm text-slate-600">版本 {{ essay.version }} • {{ new Date(essay.timestamp).toLocaleString() }} • 悬停在亮的句子上查看评论</div>
+              <details>
+                <summary class="bg-slate-200 p-2 cursor-pointer font-semibold text-sm">评论</summary>
+                <div class="whitespace-pre-wrap bg-slate-100 p-2">{{ essay.extra ? essay.extra : "等待评论。。。" }}</div>
+              </details>
+              <div v-html="essay.rendered"></div>
+            </div>
+  
+            <div class="flex-grow"></div>
+            <div class="flex-none">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const { createApp, ref } = Vue
+    const API_PREFIX = "/api";
+    const PARROT = "5ea4bff4-8b1b-453f";
+
+    function SaferHTML(templateData) {
+      var s = templateData[0];
+      for (var i = 1; i < arguments.length; i++) {
+        var arg = String(arguments[i]);
+
+        // Escape special characters in the substitution.
+        s += arg.replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;");
+
+        // Don't escape special characters in the template.
+        s += templateData[i];
+      }
+      return s;
+    }
+
+    createApp({
+      data() {
+        return {
+          userData: {},
+          isMenuOpen: false,
+          isUserMenuOpen: false,
+
+          selectedEssay: "all",
+
+          prompt: "正在加载...",
+          promptFull: "正在加载...",
+
+          essays: [],
+
+          menuItems: [
+          {
+              name: "首页",
+              icon: "home",
+              selected: false,
+              href: "index.html",
+            },
+            {
+              name: "我的写作",
+              icon: "assignment",
+              selected: true,
+              href: "essay-list.html",
+            },
+            {
+              name: "新建写作",
+              icon: "edit_note",
+              selected: false,
+              href: "essay-new.html",
+            },
+            {
+              name: "My Topics",
+              icon: "crossword",
+              selected: false,
+              href: "essay-topic.html",
+            },
+          ],
+        };
+      },
+      async mounted() {
+        if (localStorage.getItem("session")) {
+          let res;
+
+          res = await fetch(`${API_PREFIX}/account/checkToken`, {
+            headers: {
+              authorization: localStorage.getItem("session"),
+              parrot: PARROT,
+            },
+          }).then(res => res.json());
+
+          if (res.error) location.href = "login.html";
+          else {
+            this.userData = res.data;
+          }
+
+          if (location.hash.length < 2) {
+            location.href = "essay-list.html";
+            return;
+          }
+
+          this.version = location.hash.split(".")[1];
+
+          this.getEssayDetails();
+        }
+        else {
+          location.href = "login.html";
+        }
+      },
+      methods: {
+        async getEssayDetails() {
+          let res;
+
+          res = await fetch(`${API_PREFIX}/essay/essayDetails/${location.hash.split(".")[0].substring(1)}`, {
+            headers: {
+              authorization: localStorage.getItem("session"),
+              parrot: PARROT,
+            },
+          }).then(res => res.json());
+
+          if (res.error) location.href = "login.html";
+          else {
+            this.prompt = res.data.prompt;
+            this.promptFull = res.data.promptFull;
+
+            this.selectedEssay = location.hash.split(".")[1];
+
+            for (const essay of res.data.attempts) {
+              const el = document.createElement("div");
+              el.innerText = essay.content;
+
+              essay.feedback = JSON.parse(essay.inferenceResult == "pending" ? "{}" : essay.inferenceResult);
+              let i = 1;
+
+              if (essay.feedback.Score) {
+                essay.score = essay.feedback.Score;
+              }
+
+              if (essay.feedback["Additional Text"]) {
+                essay.extra = essay.feedback["Additional Text"];
+              }
+
+              const mkInst = new Mark(el);
+              while (essay.feedback[i.toString()]) {
+                mkInst.mark(essay.feedback[i.toString()][0], {
+                  separateWordSearch: false,
+                  each(el) {
+                    // el.innerHTML += SaferHTML`<div class="font-semibold" style="background-color: white;">${essay.feedback[i.toString()][1]}</div><br>`;
+                    el.setAttribute("data-tippy-content", SaferHTML`${essay.feedback[i.toString()][1]}`)
+                    el.style.cursor = "help";
+                    // el.title = essay.feedback[i.toString()][1];
+                  },
+                })
+
+                i++;
+              }
+
+              essay.rendered = el.outerHTML;
+            }
+
+            this.essays = res.data.attempts;
+            
+            setTimeout(() => {
+              tippy("[data-tippy-content]", {
+                interactive: true,
+              });
+            }, 1000);
+          }
+        },
+        async signOut() {
+          localStorage.clear();
+          location.href = "login.html";
+        },
+      }
+    }).mount('#app')
+  </script>
+</body>
+
+</html>
