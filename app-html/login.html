@@ -67,15 +67,14 @@
         <div class="relative p-4 bg-white rounded-lg shadow  sm:p-5">
           <div class="flex justify-between items-center pb-4 mb-4 rounded-t border-b sm:mb-5 ">
             <h3 class="text-lg font-semibold text-gray-900 ">
-              Phone Number Verification
+              手机号1验证
             </h3>
           </div>
 
           <form action="#">
             <div class="grid gap-4 mb-4 sm:grid-cols-2">
               <div class="sm:col-span-2">
-                <label class="block text-sm text-gray-900 font-semibold">To keep your account secure,
-                  enter the 6-digit SMS code sent to {{ enter.tel }}.</label>
+                <label class="block text-sm text-gray-900 font-semibold">为了保证账号的安全，请输入发到 {{ enter.tel }} 的验证码。</label>
                 <input v-model="verify.otp"
                   class="my-4 block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500"
                   placeholder="SMS Code (6 digits)"></textarea>
@@ -90,8 +89,8 @@
             </button>
 
             <div class="flex flex-row space-x-4 mt-4 text-sm">
-              <a class="text-blue-700 underline cursor-pointer" v-on:click="changeTel">Change phone number</a>
-              <a class="text-blue-700 underline cursor-pointer" href="assistance.html">Get assistance</a>
+              <a class="text-blue-700 underline cursor-pointer" v-on:click="changeTel">编辑手机号</a>
+              <a class="text-blue-700 underline cursor-pointer" href="assistance.html">获得帮助</a>
             </div>
           </form>
         </div>
@@ -153,7 +152,7 @@
 
           if (res.error) {
             notyf.error({
-              message: 'Wrong OTP. Please try again.',
+              message: '验证码错误。请重试。',
               duration: 5000,
             });
             this.verify.btnDisable = false;
@@ -162,7 +161,7 @@
 
           if (res.type === "token-issue") {
             localStorage.setItem("session", res.data.token);
-            this.enter.btnDisableMsg = "Login success. Redirecting...";
+            this.enter.btnDisableMsg = "登陆成功！重定向中。。。";
             location.href = "index.html";
           }
         },
@@ -171,13 +170,13 @@
 
           if (!libphonenumber.isValidPhoneNumber(this.enter.tel)) {
             notyf.error({
-              message: "Invalid phone number.",
+              message: "电话号码错误。请重试。",
               duration: 5000,
             });
             return;
           }
 
-          this.enter.btnDisableMsg = "Loading...";
+          this.enter.btnDisableMsg = "加载中。。。";
           this.enter.btnDisable = true;
 
           let res;
@@ -197,13 +196,13 @@
           if (res.error) {
             if (res.error === "user") {
               notyf.error({
-                message: 'Wrong user ID or password',
+                message: '用户名字或密码错误。请重试。',
                 duration: 5000,
               });
             }
             else if (res.error === "not-added") {
               notyf.error({
-                message: "Phone number not allowed. Please contact us.",
+                message: "手机号无被注册。请联系我们。",
                 duration: 5000,
               });
             }
@@ -213,12 +212,12 @@
 
           if (res.type === "token-issue") {
             localStorage.setItem("session", res.data.token);
-            this.enter.btnDisableMsg = "Login success. Redirecting...";
+            this.enter.btnDisableMsg = "登陆成功！重定向中。。。";
             location.href = "index.html";
           }
           else {
             this.phoneDialogOpen = true;
-            this.enter.btnDisableMsg = "Please verify your phone number.";
+            this.enter.btnDisableMsg = "请验证手机号。";
           }
         },
       }

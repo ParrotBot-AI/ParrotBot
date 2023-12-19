@@ -120,8 +120,8 @@
                 <i class="material-symbols-outlined sm:inline hidden">bookmark</i>
                 <div class="flex-grow">
                   <div class="font-semibold">{{ topic.prompt }}</div>
-                  <div class="text-sm" v-if="!topic.essayTimestamp">Unattempted</div>
-                  <div class="text-sm" v-if="topic.essayTimestamp">Version {{ topic.essayVersion }} • {{ new Date(topic.essayTimestamp).toLocaleString() }}</div>
+                  <div class="text-sm" v-if="!topic.essayTimestamp">未完成</div>
+                  <div class="text-sm" v-if="topic.essayTimestamp">版本 {{ topic.essayVersion }} • {{ new Date(topic.essayTimestamp).toLocaleString() }}</div>
 
                   <details class="block">
                     <summary class="w-min whitespace-nowrap px-2 py-1 cursor-pointer font-semibold text-xs mt-2 bg-slate-200 text-black">查看完全主题</summary>
@@ -190,7 +190,7 @@
                 <i class="material-symbols-outlined sm:inline hidden">task</i>
                 <div class="block">
                   <div class="font-semibold">{{ topic.prompt }}</div>
-                  <div class="text-sm">Version {{ topic.essayVersion }} • {{ new Date(topic.essayTimestamp).toLocaleString() }}</div>
+                  <div class="text-sm">版本 {{ topic.essayVersion }} • {{ new Date(topic.essayTimestamp).toLocaleString() }}</div>
 
                   <details class="block">
                     <summary class="w-min whitespace-nowrap px-2 py-1 cursor-pointer font-semibold text-xs mt-2 bg-slate-200 text-black">查看完全主题</summary>
@@ -426,7 +426,7 @@
           else {
             if (res.error == "quota") {
               notyf.error({
-                message: 'Quota exceeded, please contact us.',
+                message: '配额超限，请联系我们。',
                 duration: 5000,
               });
               this.essayBtnLoading = false;
@@ -479,7 +479,7 @@
                 this.selectedTopic = parseInt(location.hash.substring(1));
                 this.topicText = topic.promptFull;
                 notyf.success({
-                  message: `Topic '${topic.prompt}'' selected for practice.`,
+                  message: `主题 '${topic.prompt}''  已被选为练习题。`,
                   duration: 3000,
                 });
               }
@@ -491,7 +491,7 @@
           localStorage.removeItem("testValues");
           localStorage.removeItem("testEssay");
           notyf.error({
-            message: 'Essay practice cancelled.',
+            message: '写作练习已取消。',
             duration: 5000,
           });
           location.reload();
@@ -523,7 +523,7 @@
                     [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
                   ],
                 },
-                placeholder: "Write essay here...",
+                placeholder: "在这完成写作...",
                 theme: 'snow',
                 formats: ['bold', 'italic', 'underline', 'strike', 'header', 'indent', 'font']
               });
@@ -542,7 +542,7 @@
 
           if (this.selectedTopic == -1) {
             notyf.error({
-              message: 'Select a topic first.',
+              message: '请选好练习主题。',
               duration: 5000,
             });
             return;
