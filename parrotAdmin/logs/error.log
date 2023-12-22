@@ -1,0 +1,884 @@
+[2023-12-18 13:53:43,530][dvadmin.utils.exception.CustomExceptionHandler():66] [ERROR] Traceback (most recent call last):
+  File "/usr/local/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/usr/local/lib/python3.8/site-packages/rest_framework_simplejwt/views.py", line 43, in post
+    serializer.is_valid(raise_exception=True)
+  File "/usr/local/lib/python3.8/site-packages/rest_framework/serializers.py", line 227, in is_valid
+    self._validated_data = self.run_validation(self.initial_data)
+  File "/usr/local/lib/python3.8/site-packages/rest_framework/serializers.py", line 429, in run_validation
+    value = self.validate(value)
+  File "/parrotAdmin/dvadmin/system/views/login.py", line 79, in validate
+    id=self.initial_data["captchaKey"]
+KeyError: 'captchaKey'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/usr/local/lib/python3.8/site-packages/rest_framework_simplejwt/views.py", line 43, in post
+    serializer.is_valid(raise_exception=True)
+  File "/usr/local/lib/python3.8/site-packages/rest_framework/serializers.py", line 227, in is_valid
+    self._validated_data = self.run_validation(self.initial_data)
+  File "/usr/local/lib/python3.8/site-packages/rest_framework/serializers.py", line 429, in run_validation
+    value = self.validate(value)
+  File "/parrotAdmin/dvadmin/system/views/login.py", line 79, in validate
+    id=self.initial_data["captchaKey"]
+KeyError: 'captchaKey'
+[2023-12-18 14:04:39,171][dvadmin.utils.exception.CustomExceptionHandler():66] [ERROR] Traceback (most recent call last):
+  File "/usr/local/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/usr/local/lib/python3.8/site-packages/rest_framework_simplejwt/views.py", line 43, in post
+    serializer.is_valid(raise_exception=True)
+  File "/usr/local/lib/python3.8/site-packages/rest_framework/serializers.py", line 227, in is_valid
+    self._validated_data = self.run_validation(self.initial_data)
+  File "/usr/local/lib/python3.8/site-packages/rest_framework/serializers.py", line 429, in run_validation
+    value = self.validate(value)
+  File "/parrotAdmin/dvadmin/system/views/login.py", line 79, in validate
+    id=self.initial_data["captchaKey"]
+KeyError: 'captchaKey'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/usr/local/lib/python3.8/site-packages/rest_framework_simplejwt/views.py", line 43, in post
+    serializer.is_valid(raise_exception=True)
+  File "/usr/local/lib/python3.8/site-packages/rest_framework/serializers.py", line 227, in is_valid
+    self._validated_data = self.run_validation(self.initial_data)
+  File "/usr/local/lib/python3.8/site-packages/rest_framework/serializers.py", line 429, in run_validation
+    value = self.validate(value)
+  File "/parrotAdmin/dvadmin/system/views/login.py", line 79, in validate
+    id=self.initial_data["captchaKey"]
+KeyError: 'captchaKey'
+[2023-12-18 14:05:49,248][dvadmin.utils.exception.CustomExceptionHandler():66] [ERROR] Traceback (most recent call last):
+  File "/usr/local/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/usr/local/lib/python3.8/site-packages/rest_framework_simplejwt/views.py", line 43, in post
+    serializer.is_valid(raise_exception=True)
+  File "/usr/local/lib/python3.8/site-packages/rest_framework/serializers.py", line 227, in is_valid
+    self._validated_data = self.run_validation(self.initial_data)
+  File "/usr/local/lib/python3.8/site-packages/rest_framework/serializers.py", line 429, in run_validation
+    value = self.validate(value)
+  File "/parrotAdmin/dvadmin/system/views/login.py", line 79, in validate
+    id=self.initial_data["captchaKey"]
+KeyError: 'captchaKey'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/usr/local/lib/python3.8/site-packages/rest_framework_simplejwt/views.py", line 43, in post
+    serializer.is_valid(raise_exception=True)
+  File "/usr/local/lib/python3.8/site-packages/rest_framework/serializers.py", line 227, in is_valid
+    self._validated_data = self.run_validation(self.initial_data)
+  File "/usr/local/lib/python3.8/site-packages/rest_framework/serializers.py", line 429, in run_validation
+    value = self.validate(value)
+  File "/parrotAdmin/dvadmin/system/views/login.py", line 79, in validate
+    id=self.initial_data["captchaKey"]
+KeyError: 'captchaKey'
+[2023-12-18 14:06:15,077][dvadmin.utils.exception.CustomExceptionHandler():66] [ERROR] Traceback (most recent call last):
+  File "/usr/local/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/usr/local/lib/python3.8/site-packages/rest_framework_simplejwt/views.py", line 43, in post
+    serializer.is_valid(raise_exception=True)
+  File "/usr/local/lib/python3.8/site-packages/rest_framework/serializers.py", line 227, in is_valid
+    self._validated_data = self.run_validation(self.initial_data)
+  File "/usr/local/lib/python3.8/site-packages/rest_framework/serializers.py", line 429, in run_validation
+    value = self.validate(value)
+  File "/parrotAdmin/dvadmin/system/views/login.py", line 79, in validate
+    id=self.initial_data["captchaKey"]
+KeyError: 'captchaKey'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/usr/local/lib/python3.8/site-packages/rest_framework_simplejwt/views.py", line 43, in post
+    serializer.is_valid(raise_exception=True)
+  File "/usr/local/lib/python3.8/site-packages/rest_framework/serializers.py", line 227, in is_valid
+    self._validated_data = self.run_validation(self.initial_data)
+  File "/usr/local/lib/python3.8/site-packages/rest_framework/serializers.py", line 429, in run_validation
+    value = self.validate(value)
+  File "/parrotAdmin/dvadmin/system/views/login.py", line 79, in validate
+    id=self.initial_data["captchaKey"]
+KeyError: 'captchaKey'
+[2023-12-18 14:10:22,567][dvadmin.utils.exception.CustomExceptionHandler():66] [ERROR] Traceback (most recent call last):
+  File "/usr/local/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/usr/local/lib/python3.8/site-packages/rest_framework_simplejwt/views.py", line 43, in post
+    serializer.is_valid(raise_exception=True)
+  File "/usr/local/lib/python3.8/site-packages/rest_framework/serializers.py", line 227, in is_valid
+    self._validated_data = self.run_validation(self.initial_data)
+  File "/usr/local/lib/python3.8/site-packages/rest_framework/serializers.py", line 429, in run_validation
+    value = self.validate(value)
+  File "/parrotAdmin/dvadmin/system/views/login.py", line 79, in validate
+    id=self.initial_data["captchaKey"]
+KeyError: 'captchaKey'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/usr/local/lib/python3.8/site-packages/rest_framework_simplejwt/views.py", line 43, in post
+    serializer.is_valid(raise_exception=True)
+  File "/usr/local/lib/python3.8/site-packages/rest_framework/serializers.py", line 227, in is_valid
+    self._validated_data = self.run_validation(self.initial_data)
+  File "/usr/local/lib/python3.8/site-packages/rest_framework/serializers.py", line 429, in run_validation
+    value = self.validate(value)
+  File "/parrotAdmin/dvadmin/system/views/login.py", line 79, in validate
+    id=self.initial_data["captchaKey"]
+KeyError: 'captchaKey'
+[2023-12-18 14:12:05,677][dvadmin.utils.exception.CustomExceptionHandler():66] [ERROR] Traceback (most recent call last):
+  File "/usr/local/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/usr/local/lib/python3.8/site-packages/rest_framework_simplejwt/views.py", line 43, in post
+    serializer.is_valid(raise_exception=True)
+  File "/usr/local/lib/python3.8/site-packages/rest_framework/serializers.py", line 227, in is_valid
+    self._validated_data = self.run_validation(self.initial_data)
+  File "/usr/local/lib/python3.8/site-packages/rest_framework/serializers.py", line 429, in run_validation
+    value = self.validate(value)
+  File "/parrotAdmin/dvadmin/system/views/login.py", line 79, in validate
+    id=self.initial_data["captchaKey"]
+KeyError: 'captchaKey'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/usr/local/lib/python3.8/site-packages/rest_framework_simplejwt/views.py", line 43, in post
+    serializer.is_valid(raise_exception=True)
+  File "/usr/local/lib/python3.8/site-packages/rest_framework/serializers.py", line 227, in is_valid
+    self._validated_data = self.run_validation(self.initial_data)
+  File "/usr/local/lib/python3.8/site-packages/rest_framework/serializers.py", line 429, in run_validation
+    value = self.validate(value)
+  File "/parrotAdmin/dvadmin/system/views/login.py", line 79, in validate
+    id=self.initial_data["captchaKey"]
+KeyError: 'captchaKey'
+[2023-12-18 14:12:45,503][dvadmin.utils.exception.CustomExceptionHandler():66] [ERROR] Traceback (most recent call last):
+  File "/usr/local/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/usr/local/lib/python3.8/site-packages/rest_framework_simplejwt/views.py", line 43, in post
+    serializer.is_valid(raise_exception=True)
+  File "/usr/local/lib/python3.8/site-packages/rest_framework/serializers.py", line 227, in is_valid
+    self._validated_data = self.run_validation(self.initial_data)
+  File "/usr/local/lib/python3.8/site-packages/rest_framework/serializers.py", line 429, in run_validation
+    value = self.validate(value)
+  File "/parrotAdmin/dvadmin/system/views/login.py", line 79, in validate
+    id=self.initial_data["captchaKey"]
+KeyError: 'captchaKey'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/usr/local/lib/python3.8/site-packages/rest_framework_simplejwt/views.py", line 43, in post
+    serializer.is_valid(raise_exception=True)
+  File "/usr/local/lib/python3.8/site-packages/rest_framework/serializers.py", line 227, in is_valid
+    self._validated_data = self.run_validation(self.initial_data)
+  File "/usr/local/lib/python3.8/site-packages/rest_framework/serializers.py", line 429, in run_validation
+    value = self.validate(value)
+  File "/parrotAdmin/dvadmin/system/views/login.py", line 79, in validate
+    id=self.initial_data["captchaKey"]
+KeyError: 'captchaKey'
+[2023-12-18 14:12:51,687][dvadmin.utils.exception.CustomExceptionHandler():66] [ERROR] Traceback (most recent call last):
+  File "/usr/local/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/usr/local/lib/python3.8/site-packages/rest_framework_simplejwt/views.py", line 43, in post
+    serializer.is_valid(raise_exception=True)
+  File "/usr/local/lib/python3.8/site-packages/rest_framework/serializers.py", line 227, in is_valid
+    self._validated_data = self.run_validation(self.initial_data)
+  File "/usr/local/lib/python3.8/site-packages/rest_framework/serializers.py", line 429, in run_validation
+    value = self.validate(value)
+  File "/parrotAdmin/dvadmin/system/views/login.py", line 79, in validate
+    id=self.initial_data["captchaKey"]
+KeyError: 'captchaKey'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/usr/local/lib/python3.8/site-packages/rest_framework_simplejwt/views.py", line 43, in post
+    serializer.is_valid(raise_exception=True)
+  File "/usr/local/lib/python3.8/site-packages/rest_framework/serializers.py", line 227, in is_valid
+    self._validated_data = self.run_validation(self.initial_data)
+  File "/usr/local/lib/python3.8/site-packages/rest_framework/serializers.py", line 429, in run_validation
+    value = self.validate(value)
+  File "/parrotAdmin/dvadmin/system/views/login.py", line 79, in validate
+    id=self.initial_data["captchaKey"]
+KeyError: 'captchaKey'
+[2023-12-18 14:13:07,604][dvadmin.utils.exception.CustomExceptionHandler():66] [ERROR] Traceback (most recent call last):
+  File "/usr/local/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/usr/local/lib/python3.8/site-packages/rest_framework_simplejwt/views.py", line 43, in post
+    serializer.is_valid(raise_exception=True)
+  File "/usr/local/lib/python3.8/site-packages/rest_framework/serializers.py", line 227, in is_valid
+    self._validated_data = self.run_validation(self.initial_data)
+  File "/usr/local/lib/python3.8/site-packages/rest_framework/serializers.py", line 429, in run_validation
+    value = self.validate(value)
+  File "/parrotAdmin/dvadmin/system/views/login.py", line 79, in validate
+    id=self.initial_data["captchaKey"]
+KeyError: 'captchaKey'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/usr/local/lib/python3.8/site-packages/rest_framework_simplejwt/views.py", line 43, in post
+    serializer.is_valid(raise_exception=True)
+  File "/usr/local/lib/python3.8/site-packages/rest_framework/serializers.py", line 227, in is_valid
+    self._validated_data = self.run_validation(self.initial_data)
+  File "/usr/local/lib/python3.8/site-packages/rest_framework/serializers.py", line 429, in run_validation
+    value = self.validate(value)
+  File "/parrotAdmin/dvadmin/system/views/login.py", line 79, in validate
+    id=self.initial_data["captchaKey"]
+KeyError: 'captchaKey'
+[2023-12-18 14:13:46,955][dvadmin.utils.exception.CustomExceptionHandler():66] [ERROR] Traceback (most recent call last):
+  File "/usr/local/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/usr/local/lib/python3.8/site-packages/rest_framework_simplejwt/views.py", line 43, in post
+    serializer.is_valid(raise_exception=True)
+  File "/usr/local/lib/python3.8/site-packages/rest_framework/serializers.py", line 227, in is_valid
+    self._validated_data = self.run_validation(self.initial_data)
+  File "/usr/local/lib/python3.8/site-packages/rest_framework/serializers.py", line 429, in run_validation
+    value = self.validate(value)
+  File "/parrotAdmin/dvadmin/system/views/login.py", line 79, in validate
+    id=self.initial_data["captchaKey"]
+KeyError: 'captchaKey'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/usr/local/lib/python3.8/site-packages/rest_framework_simplejwt/views.py", line 43, in post
+    serializer.is_valid(raise_exception=True)
+  File "/usr/local/lib/python3.8/site-packages/rest_framework/serializers.py", line 227, in is_valid
+    self._validated_data = self.run_validation(self.initial_data)
+  File "/usr/local/lib/python3.8/site-packages/rest_framework/serializers.py", line 429, in run_validation
+    value = self.validate(value)
+  File "/parrotAdmin/dvadmin/system/views/login.py", line 79, in validate
+    id=self.initial_data["captchaKey"]
+KeyError: 'captchaKey'
+[2023-12-18 14:15:28,003][dvadmin.utils.exception.CustomExceptionHandler():66] [ERROR] Traceback (most recent call last):
+  File "/usr/local/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/usr/local/lib/python3.8/site-packages/rest_framework_simplejwt/views.py", line 43, in post
+    serializer.is_valid(raise_exception=True)
+  File "/usr/local/lib/python3.8/site-packages/rest_framework/serializers.py", line 227, in is_valid
+    self._validated_data = self.run_validation(self.initial_data)
+  File "/usr/local/lib/python3.8/site-packages/rest_framework/serializers.py", line 429, in run_validation
+    value = self.validate(value)
+  File "/parrotAdmin/dvadmin/system/views/login.py", line 79, in validate
+    id=self.initial_data["captchaKey"]
+KeyError: 'captchaKey'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/usr/local/lib/python3.8/site-packages/rest_framework_simplejwt/views.py", line 43, in post
+    serializer.is_valid(raise_exception=True)
+  File "/usr/local/lib/python3.8/site-packages/rest_framework/serializers.py", line 227, in is_valid
+    self._validated_data = self.run_validation(self.initial_data)
+  File "/usr/local/lib/python3.8/site-packages/rest_framework/serializers.py", line 429, in run_validation
+    value = self.validate(value)
+  File "/parrotAdmin/dvadmin/system/views/login.py", line 79, in validate
+    id=self.initial_data["captchaKey"]
+KeyError: 'captchaKey'
+[2023-12-19 20:20:44,694][dvadmin.utils.exception.CustomExceptionHandler():66] [ERROR] Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/utils/viewset.py", line 75, in create
+    self.perform_create(serializer)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/mixins.py", line 24, in perform_create
+    serializer.save()
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/user.py", line 113, in save
+    data.post.set(self.initial_data.get("post", []))
+AttributeError: 'Users' object has no attribute 'post'
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/utils/viewset.py", line 75, in create
+    self.perform_create(serializer)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/mixins.py", line 24, in perform_create
+    serializer.save()
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/user.py", line 113, in save
+    data.post.set(self.initial_data.get("post", []))
+AttributeError: 'Users' object has no attribute 'post'
+[2023-12-19 20:37:11,525][daphne.server.application_checker():290] [ERROR] Exception inside application: Single thread executor already being used, would deadlock
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/channels/staticfiles.py", line 40, in __call__
+    return await self.staticfiles_handler_class()(
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/channels/staticfiles.py", line 56, in __call__
+    return await super().__call__(scope, receive, send)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/channels/http.py", line 198, in __call__
+    await self.handle(scope, async_to_sync(send), body_stream)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/asgiref/sync.py", line 403, in __call__
+    raise RuntimeError(
+RuntimeError: Single thread executor already being used, would deadlock
+[2023-12-19 20:37:11,528][django.channels.server.log_action():160] [ERROR] [35;1mHTTP GET /static/rest_framework/js/default.js 500 [0.49, 127.0.0.1:57196][0m
+[2023-12-19 22:44:00,529][dvadmin.utils.exception.CustomExceptionHandler():66] [ERROR] Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 497, in dispatch
+    self.initial(request, *args, **kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 415, in initial
+    self.check_permissions(request)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 332, in check_permissions
+    if not permission.has_permission(request, self):
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/utils/permission.py", line 59, in has_permission
+    print(self.allowed_url)
+AttributeError: 'CustomPermission' object has no attribute 'allowed_url'
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 497, in dispatch
+    self.initial(request, *args, **kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 415, in initial
+    self.check_permissions(request)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 332, in check_permissions
+    if not permission.has_permission(request, self):
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/utils/permission.py", line 59, in has_permission
+    print(self.allowed_url)
+AttributeError: 'CustomPermission' object has no attribute 'allowed_url'
+[2023-12-19 22:57:07,587][dvadmin.utils.exception.CustomExceptionHandler():66] [ERROR] Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/fields/__init__.py", line 1823, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: 'string'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/utils/viewset.py", line 78, in create
+    return DetailResponse(data=serializer.data, msg="新增成功")
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 555, in data
+    ret = super().data
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 253, in data
+    self._data = self.to_representation(self.instance)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_restql/mixins.py", line 149, in to_representation
+    return super().to_representation(instance)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 522, in to_representation
+    ret[field.field_name] = field.to_representation(attribute)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/fields.py", line 1838, in to_representation
+    return method(value)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/utils/serializers.py", line 34, in get_modifier_name
+    Users.objects.filter(id=instance.modifier)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/manager.py", line 85, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/query.py", line 941, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/query.py", line 961, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/query.py", line 968, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/sql/query.py", line 1416, in add_q
+    clause, _ = self._add_q(q_object, self.used_aliases)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/sql/query.py", line 1435, in _add_q
+    child_clause, needed_inner = self.build_filter(
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/sql/query.py", line 1370, in build_filter
+    condition = self.build_lookup(lookups, col, value)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/sql/query.py", line 1216, in build_lookup
+    lookup = lookup_class(lhs, rhs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/lookups.py", line 25, in __init__
+    self.rhs = self.get_prep_lookup()
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/lookups.py", line 77, in get_prep_lookup
+    return self.lhs.output_field.get_prep_value(self.rhs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/fields/__init__.py", line 1825, in get_prep_value
+    raise e.__class__(
+ValueError: Field 'id' expected a number but got 'string'.
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/fields/__init__.py", line 1823, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: 'string'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/utils/viewset.py", line 78, in create
+    return DetailResponse(data=serializer.data, msg="新增成功")
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 555, in data
+    ret = super().data
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 253, in data
+    self._data = self.to_representation(self.instance)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_restql/mixins.py", line 149, in to_representation
+    return super().to_representation(instance)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 522, in to_representation
+    ret[field.field_name] = field.to_representation(attribute)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/fields.py", line 1838, in to_representation
+    return method(value)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/utils/serializers.py", line 34, in get_modifier_name
+    Users.objects.filter(id=instance.modifier)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/manager.py", line 85, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/query.py", line 941, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/query.py", line 961, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/query.py", line 968, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/sql/query.py", line 1416, in add_q
+    clause, _ = self._add_q(q_object, self.used_aliases)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/sql/query.py", line 1435, in _add_q
+    child_clause, needed_inner = self.build_filter(
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/sql/query.py", line 1370, in build_filter
+    condition = self.build_lookup(lookups, col, value)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/sql/query.py", line 1216, in build_lookup
+    lookup = lookup_class(lhs, rhs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/lookups.py", line 25, in __init__
+    self.rhs = self.get_prep_lookup()
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/lookups.py", line 77, in get_prep_lookup
+    return self.lhs.output_field.get_prep_value(self.rhs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/fields/__init__.py", line 1825, in get_prep_value
+    raise e.__class__(
+ValueError: Field 'id' expected a number but got 'string'.
+[2023-12-19 22:57:39,449][dvadmin.utils.exception.CustomExceptionHandler():66] [ERROR] Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/fields/__init__.py", line 1823, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: 'string'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/utils/viewset.py", line 78, in create
+    return DetailResponse(data=serializer.data, msg="新增成功")
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 555, in data
+    ret = super().data
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 253, in data
+    self._data = self.to_representation(self.instance)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_restql/mixins.py", line 149, in to_representation
+    return super().to_representation(instance)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 522, in to_representation
+    ret[field.field_name] = field.to_representation(attribute)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/fields.py", line 1838, in to_representation
+    return method(value)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/utils/serializers.py", line 34, in get_modifier_name
+    Users.objects.filter(id=instance.modifier)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/manager.py", line 85, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/query.py", line 941, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/query.py", line 961, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/query.py", line 968, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/sql/query.py", line 1416, in add_q
+    clause, _ = self._add_q(q_object, self.used_aliases)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/sql/query.py", line 1435, in _add_q
+    child_clause, needed_inner = self.build_filter(
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/sql/query.py", line 1370, in build_filter
+    condition = self.build_lookup(lookups, col, value)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/sql/query.py", line 1216, in build_lookup
+    lookup = lookup_class(lhs, rhs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/lookups.py", line 25, in __init__
+    self.rhs = self.get_prep_lookup()
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/lookups.py", line 77, in get_prep_lookup
+    return self.lhs.output_field.get_prep_value(self.rhs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/fields/__init__.py", line 1825, in get_prep_value
+    raise e.__class__(
+ValueError: Field 'id' expected a number but got 'string'.
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/fields/__init__.py", line 1823, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: 'string'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/utils/viewset.py", line 78, in create
+    return DetailResponse(data=serializer.data, msg="新增成功")
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 555, in data
+    ret = super().data
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 253, in data
+    self._data = self.to_representation(self.instance)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_restql/mixins.py", line 149, in to_representation
+    return super().to_representation(instance)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 522, in to_representation
+    ret[field.field_name] = field.to_representation(attribute)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/fields.py", line 1838, in to_representation
+    return method(value)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/utils/serializers.py", line 34, in get_modifier_name
+    Users.objects.filter(id=instance.modifier)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/manager.py", line 85, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/query.py", line 941, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/query.py", line 961, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/query.py", line 968, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/sql/query.py", line 1416, in add_q
+    clause, _ = self._add_q(q_object, self.used_aliases)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/sql/query.py", line 1435, in _add_q
+    child_clause, needed_inner = self.build_filter(
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/sql/query.py", line 1370, in build_filter
+    condition = self.build_lookup(lookups, col, value)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/sql/query.py", line 1216, in build_lookup
+    lookup = lookup_class(lhs, rhs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/lookups.py", line 25, in __init__
+    self.rhs = self.get_prep_lookup()
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/lookups.py", line 77, in get_prep_lookup
+    return self.lhs.output_field.get_prep_value(self.rhs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/fields/__init__.py", line 1825, in get_prep_value
+    raise e.__class__(
+ValueError: Field 'id' expected a number but got 'string'.
+[2023-12-19 23:00:04,173][dvadmin.utils.exception.CustomExceptionHandler():66] [ERROR] Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/fields/__init__.py", line 1823, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: 'string'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/utils/viewset.py", line 78, in create
+    return DetailResponse(data=serializer.data, msg="新增成功")
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 555, in data
+    ret = super().data
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 253, in data
+    self._data = self.to_representation(self.instance)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_restql/mixins.py", line 149, in to_representation
+    return super().to_representation(instance)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 522, in to_representation
+    ret[field.field_name] = field.to_representation(attribute)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/fields.py", line 1838, in to_representation
+    return method(value)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/utils/serializers.py", line 34, in get_modifier_name
+    Users.objects.filter(id=instance.modifier)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/manager.py", line 85, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/query.py", line 941, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/query.py", line 961, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/query.py", line 968, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/sql/query.py", line 1416, in add_q
+    clause, _ = self._add_q(q_object, self.used_aliases)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/sql/query.py", line 1435, in _add_q
+    child_clause, needed_inner = self.build_filter(
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/sql/query.py", line 1370, in build_filter
+    condition = self.build_lookup(lookups, col, value)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/sql/query.py", line 1216, in build_lookup
+    lookup = lookup_class(lhs, rhs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/lookups.py", line 25, in __init__
+    self.rhs = self.get_prep_lookup()
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/lookups.py", line 77, in get_prep_lookup
+    return self.lhs.output_field.get_prep_value(self.rhs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/fields/__init__.py", line 1825, in get_prep_value
+    raise e.__class__(
+ValueError: Field 'id' expected a number but got 'string'.
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/fields/__init__.py", line 1823, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: 'string'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/utils/viewset.py", line 78, in create
+    return DetailResponse(data=serializer.data, msg="新增成功")
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 555, in data
+    ret = super().data
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 253, in data
+    self._data = self.to_representation(self.instance)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_restql/mixins.py", line 149, in to_representation
+    return super().to_representation(instance)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 522, in to_representation
+    ret[field.field_name] = field.to_representation(attribute)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/fields.py", line 1838, in to_representation
+    return method(value)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/utils/serializers.py", line 34, in get_modifier_name
+    Users.objects.filter(id=instance.modifier)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/manager.py", line 85, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/query.py", line 941, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/query.py", line 961, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/query.py", line 968, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/sql/query.py", line 1416, in add_q
+    clause, _ = self._add_q(q_object, self.used_aliases)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/sql/query.py", line 1435, in _add_q
+    child_clause, needed_inner = self.build_filter(
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/sql/query.py", line 1370, in build_filter
+    condition = self.build_lookup(lookups, col, value)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/sql/query.py", line 1216, in build_lookup
+    lookup = lookup_class(lhs, rhs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/lookups.py", line 25, in __init__
+    self.rhs = self.get_prep_lookup()
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/lookups.py", line 77, in get_prep_lookup
+    return self.lhs.output_field.get_prep_value(self.rhs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/fields/__init__.py", line 1825, in get_prep_value
+    raise e.__class__(
+ValueError: Field 'id' expected a number but got 'string'.
+[2023-12-19 23:01:54,904][dvadmin.utils.exception.CustomExceptionHandler():66] [ERROR] Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/fields/__init__.py", line 1823, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: ''
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/utils/viewset.py", line 78, in create
+    return DetailResponse(data=serializer.data, msg="新增成功")
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 555, in data
+    ret = super().data
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 253, in data
+    self._data = self.to_representation(self.instance)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_restql/mixins.py", line 149, in to_representation
+    return super().to_representation(instance)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 522, in to_representation
+    ret[field.field_name] = field.to_representation(attribute)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/fields.py", line 1838, in to_representation
+    return method(value)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/utils/serializers.py", line 34, in get_modifier_name
+    Users.objects.filter(id=instance.modifier)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/manager.py", line 85, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/query.py", line 941, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/query.py", line 961, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/query.py", line 968, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/sql/query.py", line 1416, in add_q
+    clause, _ = self._add_q(q_object, self.used_aliases)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/sql/query.py", line 1435, in _add_q
+    child_clause, needed_inner = self.build_filter(
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/sql/query.py", line 1370, in build_filter
+    condition = self.build_lookup(lookups, col, value)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/sql/query.py", line 1216, in build_lookup
+    lookup = lookup_class(lhs, rhs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/lookups.py", line 25, in __init__
+    self.rhs = self.get_prep_lookup()
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/lookups.py", line 77, in get_prep_lookup
+    return self.lhs.output_field.get_prep_value(self.rhs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/fields/__init__.py", line 1825, in get_prep_value
+    raise e.__class__(
+ValueError: Field 'id' expected a number but got ''.
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/fields/__init__.py", line 1823, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: ''
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/utils/viewset.py", line 78, in create
+    return DetailResponse(data=serializer.data, msg="新增成功")
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 555, in data
+    ret = super().data
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 253, in data
+    self._data = self.to_representation(self.instance)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_restql/mixins.py", line 149, in to_representation
+    return super().to_representation(instance)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 522, in to_representation
+    ret[field.field_name] = field.to_representation(attribute)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/fields.py", line 1838, in to_representation
+    return method(value)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/utils/serializers.py", line 34, in get_modifier_name
+    Users.objects.filter(id=instance.modifier)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/manager.py", line 85, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/query.py", line 941, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/query.py", line 961, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/query.py", line 968, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/sql/query.py", line 1416, in add_q
+    clause, _ = self._add_q(q_object, self.used_aliases)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/sql/query.py", line 1435, in _add_q
+    child_clause, needed_inner = self.build_filter(
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/sql/query.py", line 1370, in build_filter
+    condition = self.build_lookup(lookups, col, value)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/sql/query.py", line 1216, in build_lookup
+    lookup = lookup_class(lhs, rhs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/lookups.py", line 25, in __init__
+    self.rhs = self.get_prep_lookup()
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/lookups.py", line 77, in get_prep_lookup
+    return self.lhs.output_field.get_prep_value(self.rhs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/fields/__init__.py", line 1825, in get_prep_value
+    raise e.__class__(
+ValueError: Field 'id' expected a number but got ''.
+[2023-12-21 12:31:57,485][daphne.server.listen_error():160] [CRITICAL] Listen failure: Couldn't listen on 127.0.0.1:8000: [Errno 48] Address already in use.
+[2023-12-21 15:50:57,406][daphne.server.application_checker():290] [ERROR] Exception inside application: [Errno 61] Connect call failed ('127.0.0.1', 6380)
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/channels/staticfiles.py", line 44, in __call__
+    return await self.application(scope, receive, send)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/channels/routing.py", line 71, in __call__
+    return await application(scope, receive, send)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/channels/sessions.py", line 47, in __call__
+    return await self.inner(dict(scope, cookies=cookies), receive, send)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/channels/sessions.py", line 263, in __call__
+    return await self.inner(wrapper.scope, receive, wrapper.send)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/channels/auth.py", line 185, in __call__
+    return await super().__call__(scope, receive, send)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/channels/middleware.py", line 26, in __call__
+    return await self.inner(scope, receive, send)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/channels/routing.py", line 150, in __call__
+    return await application(
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/channels/consumer.py", line 94, in app
+    return await consumer(scope, receive, send)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/channels/consumer.py", line 58, in __call__
+    await await_many_dispatch(
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/channels/utils.py", line 51, in await_many_dispatch
+    await dispatch(result)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/channels/consumer.py", line 73, in dispatch
+    await handler(message)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/channels/generic/websocket.py", line 173, in websocket_connect
+    await self.connect()
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/application/websocketConfig.py", line 64, in connect
+    await self.channel_layer.group_add(
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/channels_redis/core.py", line 641, in group_add
+    async with self.connection(self.consistent_hash(group)) as connection:
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/channels_redis/core.py", line 862, in __aenter__
+    self.conn = await self.pool.pop()
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/channels_redis/core.py", line 93, in pop
+    conn = await self.create_conn(loop)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/channels_redis/core.py", line 79, in create_conn
+    return await aioredis.create_redis_pool(**kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/aioredis/commands/__init__.py", line 188, in create_redis_pool
+    pool = await create_pool(address, db=db,
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/aioredis/pool.py", line 58, in create_pool
+    await pool._fill_free(override_min=False)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/aioredis/pool.py", line 383, in _fill_free
+    conn = await self._create_new_connection(self._address)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/aioredis/connection.py", line 111, in create_connection
+    reader, writer = await asyncio.wait_for(open_connection(
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/asyncio/tasks.py", line 455, in wait_for
+    return await fut
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/aioredis/stream.py", line 23, in open_connection
+    transport, _ = await get_event_loop().create_connection(
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/asyncio/base_events.py", line 1025, in create_connection
+    raise exceptions[0]
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/asyncio/base_events.py", line 1010, in create_connection
+    sock = await self._connect_sock(
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/asyncio/base_events.py", line 924, in _connect_sock
+    await self.sock_connect(sock, address)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/asyncio/selector_events.py", line 496, in sock_connect
+    return await fut
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/asyncio/selector_events.py", line 528, in _sock_connect_cb
+    raise OSError(err, f'Connect call failed {address}')
+ConnectionRefusedError: [Errno 61] Connect call failed ('127.0.0.1', 6380)
+[2023-12-22 15:26:36,559][dvadmin.utils.exception.CustomExceptionHandler():66] [ERROR] Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin_sms/views/send_sms.py", line 28, in post
+    if len(phone) != 11:
+TypeError: object of type 'NoneType' has no len()
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin_sms/views/send_sms.py", line 28, in post
+    if len(phone) != 11:
+TypeError: object of type 'NoneType' has no len()
+[2023-12-22 15:28:26,360][dvadmin.utils.exception.CustomExceptionHandler():66] [ERROR] Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin_sms/views/send_sms.py", line 28, in post
+    if len(phone) != 11:
+TypeError: object of type 'NoneType' has no len()
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin_sms/views/send_sms.py", line 28, in post
+    if len(phone) != 11:
+TypeError: object of type 'NoneType' has no len()
+[2023-12-22 15:29:19,066][dvadmin.utils.exception.CustomExceptionHandler():66] [ERROR] Traceback (most recent call last):
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin_sms/api/alibaba_cloud.py", line 39, in send_sms
+    res = client.send_sms_with_options(send_sms_request, runtime)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/alibabacloud_dysmsapi20170525/client.py", line 2833, in send_sms_with_options
+    self.call_api(params, req, runtime)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/alibabacloud_tea_openapi/client.py", line 1799, in call_api
+    return self.do_request(params, request, runtime)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/alibabacloud_tea_openapi/client.py", line 1320, in do_request
+    raise e
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/alibabacloud_tea_openapi/client.py", line 1266, in do_request
+    raise TeaException({
+Tea.exceptions.TeaException: Error: InvalidAccessKeyId.NotFound code: 404, Specified access key is not found. request id: 7D68D0BA-3344-59B7-A062-5D08D05EB791 Response: {'RequestId': '7D68D0BA-3344-59B7-A062-5D08D05EB791', 'Message': 'Specified access key is not found.', 'Recommend': 'https://api.aliyun.com/troubleshoot?q=InvalidAccessKeyId.NotFound&product=Dysmsapi&requestId=7D68D0BA-3344-59B7-A062-5D08D05EB791', 'HostId': 'dysmsapi.aliyuncs.com', 'Code': 'InvalidAccessKeyId.NotFound', 'statusCode': 404}
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin_sms/views/send_sms.py", line 46, in post
+    status, msg = send_sms(phone=phone, code=code, send_type="mobilelogin")
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin_sms/utils.py", line 37, in send_sms
+    return sample.send_sms(
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin_sms/api/alibaba_cloud.py", line 46, in send_sms
+    return False, UtilClient.assert_as_string(error)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/alibabacloud_tea_util/client.py", line 332, in assert_as_string
+    raise ValueError(f'{value} is not a str')
+ValueError: Error: InvalidAccessKeyId.NotFound code: 404, Specified access key is not found. request id: 7D68D0BA-3344-59B7-A062-5D08D05EB791 Response: {'RequestId': '7D68D0BA-3344-59B7-A062-5D08D05EB791', 'Message': 'Specified access key is not found.', 'Recommend': 'https://api.aliyun.com/troubleshoot?q=InvalidAccessKeyId.NotFound&product=Dysmsapi&requestId=7D68D0BA-3344-59B7-A062-5D08D05EB791', 'HostId': 'dysmsapi.aliyuncs.com', 'Code': 'InvalidAccessKeyId.NotFound', 'statusCode': 404} is not a str
+Traceback (most recent call last):
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin_sms/api/alibaba_cloud.py", line 39, in send_sms
+    res = client.send_sms_with_options(send_sms_request, runtime)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/alibabacloud_dysmsapi20170525/client.py", line 2833, in send_sms_with_options
+    self.call_api(params, req, runtime)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/alibabacloud_tea_openapi/client.py", line 1799, in call_api
+    return self.do_request(params, request, runtime)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/alibabacloud_tea_openapi/client.py", line 1320, in do_request
+    raise e
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/alibabacloud_tea_openapi/client.py", line 1266, in do_request
+    raise TeaException({
+Tea.exceptions.TeaException: Error: InvalidAccessKeyId.NotFound code: 404, Specified access key is not found. request id: 7D68D0BA-3344-59B7-A062-5D08D05EB791 Response: {'RequestId': '7D68D0BA-3344-59B7-A062-5D08D05EB791', 'Message': 'Specified access key is not found.', 'Recommend': 'https://api.aliyun.com/troubleshoot?q=InvalidAccessKeyId.NotFound&product=Dysmsapi&requestId=7D68D0BA-3344-59B7-A062-5D08D05EB791', 'HostId': 'dysmsapi.aliyuncs.com', 'Code': 'InvalidAccessKeyId.NotFound', 'statusCode': 404}
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin_sms/views/send_sms.py", line 46, in post
+    status, msg = send_sms(phone=phone, code=code, send_type="mobilelogin")
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin_sms/utils.py", line 37, in send_sms
+    return sample.send_sms(
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin_sms/api/alibaba_cloud.py", line 46, in send_sms
+    return False, UtilClient.assert_as_string(error)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/alibabacloud_tea_util/client.py", line 332, in assert_as_string
+    raise ValueError(f'{value} is not a str')
+ValueError: Error: InvalidAccessKeyId.NotFound code: 404, Specified access key is not found. request id: 7D68D0BA-3344-59B7-A062-5D08D05EB791 Response: {'RequestId': '7D68D0BA-3344-59B7-A062-5D08D05EB791', 'Message': 'Specified access key is not found.', 'Recommend': 'https://api.aliyun.com/troubleshoot?q=InvalidAccessKeyId.NotFound&product=Dysmsapi&requestId=7D68D0BA-3344-59B7-A062-5D08D05EB791', 'HostId': 'dysmsapi.aliyuncs.com', 'Code': 'InvalidAccessKeyId.NotFound', 'statusCode': 404} is not a str
+[2023-12-22 15:30:43,642][dvadmin.utils.exception.CustomExceptionHandler():66] [ERROR] Traceback (most recent call last):
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin_sms/api/alibaba_cloud.py", line 39, in send_sms
+    res = client.send_sms_with_options(send_sms_request, runtime)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/alibabacloud_dysmsapi20170525/client.py", line 2833, in send_sms_with_options
+    self.call_api(params, req, runtime)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/alibabacloud_tea_openapi/client.py", line 1799, in call_api
+    return self.do_request(params, request, runtime)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/alibabacloud_tea_openapi/client.py", line 1320, in do_request
+    raise e
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/alibabacloud_tea_openapi/client.py", line 1266, in do_request
+    raise TeaException({
+Tea.exceptions.TeaException: Error: InvalidAccessKeyId.NotFound code: 404, Specified access key is not found. request id: 5C2BF00A-CA01-529E-BBB0-E19E1A5943CC Response: {'RequestId': '5C2BF00A-CA01-529E-BBB0-E19E1A5943CC', 'Message': 'Specified access key is not found.', 'Recommend': 'https://api.aliyun.com/troubleshoot?q=InvalidAccessKeyId.NotFound&product=Dysmsapi&requestId=5C2BF00A-CA01-529E-BBB0-E19E1A5943CC', 'HostId': 'dysmsapi.aliyuncs.com', 'Code': 'InvalidAccessKeyId.NotFound', 'statusCode': 404}
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin_sms/views/send_sms.py", line 47, in post
+    status, msg = send_sms(phone=phone, code=code, send_type="mobilelogin")
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin_sms/utils.py", line 37, in send_sms
+    return sample.send_sms(
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin_sms/api/alibaba_cloud.py", line 46, in send_sms
+    return False, UtilClient.assert_as_string(error)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/alibabacloud_tea_util/client.py", line 332, in assert_as_string
+    raise ValueError(f'{value} is not a str')
+ValueError: Error: InvalidAccessKeyId.NotFound code: 404, Specified access key is not found. request id: 5C2BF00A-CA01-529E-BBB0-E19E1A5943CC Response: {'RequestId': '5C2BF00A-CA01-529E-BBB0-E19E1A5943CC', 'Message': 'Specified access key is not found.', 'Recommend': 'https://api.aliyun.com/troubleshoot?q=InvalidAccessKeyId.NotFound&product=Dysmsapi&requestId=5C2BF00A-CA01-529E-BBB0-E19E1A5943CC', 'HostId': 'dysmsapi.aliyuncs.com', 'Code': 'InvalidAccessKeyId.NotFound', 'statusCode': 404} is not a str
+Traceback (most recent call last):
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin_sms/api/alibaba_cloud.py", line 39, in send_sms
+    res = client.send_sms_with_options(send_sms_request, runtime)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/alibabacloud_dysmsapi20170525/client.py", line 2833, in send_sms_with_options
+    self.call_api(params, req, runtime)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/alibabacloud_tea_openapi/client.py", line 1799, in call_api
+    return self.do_request(params, request, runtime)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/alibabacloud_tea_openapi/client.py", line 1320, in do_request
+    raise e
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/alibabacloud_tea_openapi/client.py", line 1266, in do_request
+    raise TeaException({
+Tea.exceptions.TeaException: Error: InvalidAccessKeyId.NotFound code: 404, Specified access key is not found. request id: 5C2BF00A-CA01-529E-BBB0-E19E1A5943CC Response: {'RequestId': '5C2BF00A-CA01-529E-BBB0-E19E1A5943CC', 'Message': 'Specified access key is not found.', 'Recommend': 'https://api.aliyun.com/troubleshoot?q=InvalidAccessKeyId.NotFound&product=Dysmsapi&requestId=5C2BF00A-CA01-529E-BBB0-E19E1A5943CC', 'HostId': 'dysmsapi.aliyuncs.com', 'Code': 'InvalidAccessKeyId.NotFound', 'statusCode': 404}
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin_sms/views/send_sms.py", line 47, in post
+    status, msg = send_sms(phone=phone, code=code, send_type="mobilelogin")
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin_sms/utils.py", line 37, in send_sms
+    return sample.send_sms(
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin_sms/api/alibaba_cloud.py", line 46, in send_sms
+    return False, UtilClient.assert_as_string(error)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/alibabacloud_tea_util/client.py", line 332, in assert_as_string
+    raise ValueError(f'{value} is not a str')
+ValueError: Error: InvalidAccessKeyId.NotFound code: 404, Specified access key is not found. request id: 5C2BF00A-CA01-529E-BBB0-E19E1A5943CC Response: {'RequestId': '5C2BF00A-CA01-529E-BBB0-E19E1A5943CC', 'Message': 'Specified access key is not found.', 'Recommend': 'https://api.aliyun.com/troubleshoot?q=InvalidAccessKeyId.NotFound&product=Dysmsapi&requestId=5C2BF00A-CA01-529E-BBB0-E19E1A5943CC', 'HostId': 'dysmsapi.aliyuncs.com', 'Code': 'InvalidAccessKeyId.NotFound', 'statusCode': 404} is not a str

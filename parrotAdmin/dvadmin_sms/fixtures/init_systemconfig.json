@@ -1,0 +1,303 @@
+[
+  {
+    "title": "短信服务",
+    "key": "sms",
+    "value": null,
+    "sort": 10,
+    "status": true,
+    "data_options": null,
+    "form_item_type": 0,
+    "rule": null,
+    "placeholder": null,
+    "setting": null,
+    "children": [
+      {
+        "title": "是否启用短信",
+        "key": "is_enabled",
+        "value": true,
+        "sort": 1,
+        "status": true,
+        "data_options": null,
+        "form_item_type": 9,
+        "rule": [
+          {
+            "message": "必填项不能为空",
+            "required": true
+          }
+        ],
+        "placeholder": "是否启用短信",
+        "setting": null,
+        "children": []
+      },
+      {
+        "title": "是否使用语音短信",
+        "key": "is_voice_sms",
+        "value": false,
+        "sort": 2,
+        "status": false,
+        "data_options": null,
+        "form_item_type": 9,
+        "rule": [
+          {
+            "message": "必填项不能为空",
+            "required": true
+          }
+        ],
+        "placeholder": "",
+        "setting": null,
+        "children": []
+      },
+      {
+        "title": "短信发送频率(秒/次)",
+        "key": "frequency",
+        "value": 60,
+        "sort": 3,
+        "status": true,
+        "data_options": null,
+        "form_item_type": 10,
+        "rule": [
+          {
+            "message": "必填项不能为空",
+            "required": true
+          }
+        ],
+        "placeholder": "请输入短信发送频率",
+        "setting": null,
+        "children": []
+      },
+      {
+        "title": "短信服务商",
+        "key": "provider",
+        "value": "huawei",
+        "sort": 4,
+        "status": false,
+        "data_options": null,
+        "form_item_type": 6,
+        "rule": [
+          {
+            "message": "必填项不能为空",
+            "required": true
+          }
+        ],
+        "placeholder": "请选择",
+        "setting": "sms_provider",
+        "children": []
+      },
+      {
+        "title": "(腾讯)短信应用ID",
+        "key": "sms_sdk_app_id",
+        "value": "xxx",
+        "sort": 5,
+        "status": false,
+        "data_options": null,
+        "form_item_type": 0,
+        "rule": [
+          {
+            "message": "必填项不能为空",
+            "required": true
+          }
+        ],
+        "placeholder": "请输入短信应用ID",
+        "setting": null,
+        "children": []
+      },{
+        "title": "应用AppID",
+        "key": "app_id",
+        "value": "lt7Klp06gISA42uy1ClA5uVI020v",
+        "sort": 6,
+        "status": false,
+        "data_options": null,
+        "form_item_type": 0,
+        "rule": [
+          {
+            "message": "必填项不能为空",
+            "required": true
+          }
+        ],
+        "placeholder": "请输入应用AppID",
+        "setting": null,
+        "children": []
+      },
+      {
+        "title": "应用AppKEY",
+        "key": "app_key",
+        "value": "prDEfZRWYlupUsBdp9e0ZRQnPIUd",
+        "sort": 7,
+        "status": false,
+        "data_options": null,
+        "form_item_type": 0,
+        "rule": [
+          {
+            "message": "必填项不能为空",
+            "required": true
+          }
+        ],
+        "placeholder": "请输入应用AppKEY",
+        "setting": null,
+        "children": []
+      },
+      {
+        "title": "语音短信AppID",
+        "key": "voice_app_id",
+        "value": "xxx",
+        "sort": 8,
+        "status": false,
+        "data_options": null,
+        "form_item_type": 0,
+        "rule": [],
+        "placeholder": "请输入语音短信AppID",
+        "setting": null,
+        "children": []
+      },
+      {
+        "title": "语音短信AppKEY",
+        "key": "voice_app_key",
+        "value": "xxx",
+        "sort": 9,
+        "status": false,
+        "data_options": null,
+        "form_item_type": 0,
+        "rule": [],
+        "placeholder": "请输入语音短信AppKEY",
+        "setting": null,
+        "children": []
+      },
+      {
+        "title": "短信签名",
+        "key": "signature",
+        "value": "华为云短信测试",
+        "sort": 10,
+        "status": true,
+        "data_options": null,
+        "form_item_type": 0,
+        "rule": [
+          {
+            "message": "必填项不能为空",
+            "required": true
+          }
+        ],
+        "placeholder": "请输入短信签名",
+        "setting": null,
+        "children": []
+      },
+      {
+        "title": "短信模板",
+        "key": "template",
+        "value": [
+          {
+            "key": "register",
+            "title": "注册",
+            "value": "1362037"
+          },
+          {
+            "key": "mobilelogin",
+            "title": "手机号登录",
+            "value": "6b268b26ac7542fe9906165e95412aa4"
+          },
+          {
+            "key": "changemobile",
+            "title": "变更手机号",
+            "value": "1362037"
+          },
+          {
+            "key": "resetpwd",
+            "title": "重置密码",
+            "value": "1362037"
+          },
+          {
+            "key": "changepwd",
+            "title": "更改密码",
+            "value": "1362037"
+          }
+        ],
+        "sort": 11,
+        "status": false,
+        "data_options": null,
+        "form_item_type": 11,
+        "rule": [],
+        "placeholder": null,
+        "setting": null,
+        "children": [
+          {
+            "title": "注册",
+            "key": "register",
+            "value": "1362037",
+            "sort": 1,
+            "status": true,
+            "data_options": null,
+            "form_item_type": 0,
+            "rule": null,
+            "placeholder": null,
+            "setting": null,
+            "children": []
+          },
+          {
+            "title": "手机号登录",
+            "key": "mobilelogin",
+            "value": "1362037",
+            "sort": 2,
+            "status": true,
+            "data_options": null,
+            "form_item_type": 0,
+            "rule": null,
+            "placeholder": null,
+            "setting": null,
+            "children": []
+          },
+          {
+            "title": "变更手机号",
+            "key": "changemobile",
+            "value": "1362037",
+            "sort": 3,
+            "status": true,
+            "data_options": null,
+            "form_item_type": 0,
+            "rule": null,
+            "placeholder": null,
+            "setting": null,
+            "children": []
+          },
+          {
+            "title": "重置密码",
+            "key": "resetpwd",
+            "value": "1362037",
+            "sort": 4,
+            "status": true,
+            "data_options": null,
+            "form_item_type": 0,
+            "rule": null,
+            "placeholder": null,
+            "setting": null,
+            "children": []
+          },
+          {
+            "title": "更改密码",
+            "key": "changepwd",
+            "value": "1362037",
+            "sort": 5,
+            "status": true,
+            "data_options": null,
+            "form_item_type": 0,
+            "rule": null,
+            "placeholder": null,
+            "setting": null,
+            "children": []
+          }
+        ]
+      },
+      {
+        "title": "测试白名单手机号",
+        "key": "test_white_list",
+        "value": "13111111111,",
+        "sort": 12,
+        "status": false,
+        "data_options": null,
+        "form_item_type": 3,
+        "rule": [],
+        "placeholder": "请输入手机号，测试不会真实发送手机号，输入多个通过逗号分割。测试发送验证码为: 999999",
+        "setting": null,
+        "children": []
+      }
+    ]
+  }
+]

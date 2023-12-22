@@ -1,0 +1,48 @@
+[
+  {
+    "label": "短信服务商",
+    "value": "sms_provider",
+    "parent": null,
+    "type": 0,
+    "color": null,
+    "is_value": false,
+    "status": true,
+    "sort": 9,
+    "remark": null,
+    "children": [
+      {
+        "label": "阿里云",
+        "value": "aliyun",
+        "type": 0,
+        "color": "primary",
+        "is_value": true,
+        "status": true,
+        "sort": 2,
+        "remark": null,
+        "children": []
+      },
+      {
+        "label": "腾讯云",
+        "value": "tencent",
+        "type": 0,
+        "color": "primary",
+        "is_value": true,
+        "status": true,
+        "sort": 3,
+        "remark": null,
+        "children": []
+      },
+      {
+        "label": "华为云",
+        "value": "huawei",
+        "type": 0,
+        "color": "primary",
+        "is_value": true,
+        "status": true,
+        "sort": 1,
+        "remark": null,
+        "children": []
+      }
+    ]
+  }
+]
