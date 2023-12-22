@@ -47,13 +47,13 @@
                 class="transition-all scale-y-100 absolute opacity-1 right-0 top-9 translate-y-0 z-40 my-4 text-base list-none bg-white divide-y divide-gray-300 rounded-md mr-2 shadow-lg  ">
                 <div class="px-4 py-3 text-sm font-medium text-gray-900 truncate " role="none">
                   <p class="font-semibold text-base" role="none">
-                    欢迎, {{ userData.uid }}
+                    Welcome, {{ userData.uid }}
                   </p>
                   <p class="mt-4" role="none">
-                    免费DEMO用户
+                    FREE DEMO USER
                   </p>
                   <p role="none">
-                    还剩：{{ userData.quota }} 篇写作
+                    {{ userData.quota }} free essay left
                   </p>
                 </div>
                 <ul class="py-1 text-gray-700 text-sm" role="none">
@@ -61,14 +61,14 @@
                     <a href="index.html" class="transition-all block w-full text-left px-4 py-2 hover:bg-gray-200"
                       role="menuitem">
                       <i class="material-symbols-outlined mr-2 inline-block align-middle">team_dashboard</i>
-                      <span class="inline-block align-middle">仪表盘</span>
+                      <span class="inline-block align-middle">Dashboard</span>
                     </a>
                   </li>
                   <li>
                     <button v-on:click="signOut"
                       class="transition-all block w-full text-left px-4 py-2 hover:bg-gray-200" role="menuitem">
                       <i class="material-symbols-outlined mr-2 inline-block align-middle">logout</i>
-                      <span class="inline-block align-middle">退出</span>
+                      <span class="inline-block align-middle">Sign out</span>
                     </button>
                   </li>
                 </ul>
@@ -100,9 +100,9 @@
     <div class="p-6 sm:ml-64 mt-16 gap-y-4 flex-col flex">
       <h1 class="text-emerald-900 font-semibold flex flex-row space-x-2 text-2xl items-center">
         <i class="material-symbols-outlined">topic</i>
-        <span class="flex-1 ml-3 whitespace-nowrap font-semibold">写作主题</span>
+        <span class="flex-1 ml-3 whitespace-nowrap font-semibold">My Topics</span>
       </h1>
-      <div>管理写作主题</div>
+      <div>Manage and browse the list of topics here.</div>
 
       <div>
         <div class="relative mb-4">
@@ -113,15 +113,15 @@
         </div>
 
         <details open>
-          <summary class="cursor-pointer bg-slate-100 px-3 py-1 font-semibold text-sm uppercase text-slate-700">我的收藏主题</summary>
+          <summary class="cursor-pointer bg-slate-100 px-3 py-1 font-semibold text-sm uppercase text-slate-700">My Bookmarked Topics</summary>
 
           <div v-for="topic of topicList.bookmark"
             class="relative p-3 flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 border-t-2 border-t-slate-200">
             <i class="material-symbols-outlined sm:inline hidden">bookmark</i>
             <div class="flex-grow">
               <div class="font-semibold">{{ topic.prompt }}</div>
-              <div class="text-sm" v-if="!topic.essayTimestamp">未完成</div>
-              <div class="text-sm" v-if="topic.essayTimestamp">版本 {{ topic.essayVersion }} • {{ new Date(topic.essayTimestamp).toLocaleString() }}</div>
+              <div class="text-sm" v-if="!topic.essayTimestamp">Unattempted</div>
+              <div class="text-sm" v-if="topic.essayTimestamp">Version {{ topic.essayVersion }} • {{ new Date(topic.essayTimestamp).toLocaleString() }}</div>
 
               <details class="block">
                 <summary class="w-min whitespace-nowrap px-2 py-1 cursor-pointer font-semibold text-xs mt-2 bg-slate-200 text-black">Full Prompt</summary>
@@ -134,7 +134,7 @@
                 :href="`essay-new.html#${topic.id}`"
                 class="bg-emerald-100 font-semibold text-black py-1 px-3 hover:bg-gray-200 hover:text-black flex transition cursor-pointer rounded-md space-x-2 text-sm">
                 <i class="material-symbols-outlined">edit_note</i>
-                <span class="flex-1 whitespace-nowrap font-semibold">新建写作</span>
+                <span class="flex-1 whitespace-nowrap font-semibold">New Essay</span>
               </a>
               <button :class="{ 'bg-emerald-100': topic.bookmarkUser == null, 'bg-red-100': topic.bookmarkUser !== null }"
                 v-on:click="toggleBookmark(topic);"
@@ -147,13 +147,13 @@
 
         <details open>
           <summary class="cursor-pointer bg-slate-100 px-3 py-1 font-semibold text-sm uppercase text-slate-700">
-            未完成主题
+            Unattempted Topics
           </summary>
 
           <div class="bg-slate-200 px-3 py-1 text-sm">
             <label class="cursor-pointer">
               <input type="checkbox" v-model="unattemptedIncludeBookmark" />
-              显示收藏主题
+              Display bookmarked topics
             </label>
           </div>
 
@@ -162,39 +162,6 @@
             <i class="material-symbols-outlined sm:inline hidden">draft</i>
             <div class="block">
               <div class="font-semibold">{{ topic.prompt }}</div>
-
-              <details class="block">
-                <summary class="w-min whitespace-nowrap px-2 py-1 cursor-pointer font-semibold text-xs mt-2 bg-slate-200 text-black">查看完全主题</summary>
-                <div class="px-2 py-1 whitespace-pre-wrap bg-slate-300 text-black">{{ topic.promptFull }}</div>
-              </details>
-            </div>
-
-            <div class="flex-grow"></div>
-            <div class="flex-none sm:float-right sm:absolute sm:right-3 flex flex-row space-x-2">
-              <a
-                :href="`essay-new.html#${topic.id}`"
-                class="bg-emerald-100 font-semibold text-black py-1 px-3 hover:bg-gray-200 hover:text-black flex transition cursor-pointer rounded-md space-x-2 text-sm">
-                <i class="material-symbols-outlined">edit_note</i>
-                <span class="flex-1 whitespace-nowrap font-semibold">新建写作</span>
-              </a>
-              <button :class="{ 'bg-emerald-100': topic.bookmarkUser == null, 'bg-red-100': topic.bookmarkUser !== null }"
-                v-on:click="toggleBookmark(topic);"
-                class=" font-semibold text-black py-1 px-3 hover:bg-gray-200 hover:text-black flex transition cursor-pointer rounded-md space-x-2 text-sm">
-                <i class="material-symbols-outlined">{{ topic.bookmarkUser == null ? "bookmark_add" : "bookmark_remove" }}</i>
-              </button>
-            </div>
-          </div>
-        </details>
-
-        <details>
-          <summary class="cursor-pointer bg-slate-100 px-3 py-1 font-semibold text-sm uppercase text-slate-700">已完成主题</summary>
-
-          <div v-for="topic of topicList.attempted"
-            class="relative p-3 flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 border-t-2 border-t-slate-200">
-            <i class="material-symbols-outlined sm:inline hidden">task</i>
-            <div class="block">
-              <div class="font-semibold">{{ topic.prompt }}</div>
-              <div class="text-sm">版本 {{ topic.essayVersion }} • {{ new Date(topic.essayTimestamp).toLocaleString() }}</div>
 
               <details class="block">
                 <summary class="w-min whitespace-nowrap px-2 py-1 cursor-pointer font-semibold text-xs mt-2 bg-slate-200 text-black">Full Prompt</summary>
@@ -208,7 +175,40 @@
                 :href="`essay-new.html#${topic.id}`"
                 class="bg-emerald-100 font-semibold text-black py-1 px-3 hover:bg-gray-200 hover:text-black flex transition cursor-pointer rounded-md space-x-2 text-sm">
                 <i class="material-symbols-outlined">edit_note</i>
-                <span class="flex-1 whitespace-nowrap font-semibold">新建版本</span>
+                <span class="flex-1 whitespace-nowrap font-semibold">New Essay</span>
+              </a>
+              <button :class="{ 'bg-emerald-100': topic.bookmarkUser == null, 'bg-red-100': topic.bookmarkUser !== null }"
+                v-on:click="toggleBookmark(topic);"
+                class=" font-semibold text-black py-1 px-3 hover:bg-gray-200 hover:text-black flex transition cursor-pointer rounded-md space-x-2 text-sm">
+                <i class="material-symbols-outlined">{{ topic.bookmarkUser == null ? "bookmark_add" : "bookmark_remove" }}</i>
+              </button>
+            </div>
+          </div>
+        </details>
+
+        <details>
+          <summary class="cursor-pointer bg-slate-100 px-3 py-1 font-semibold text-sm uppercase text-slate-700">Attempted Topics</summary>
+
+          <div v-for="topic of topicList.attempted"
+            class="relative p-3 flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 border-t-2 border-t-slate-200">
+            <i class="material-symbols-outlined sm:inline hidden">task</i>
+            <div class="block">
+              <div class="font-semibold">{{ topic.prompt }}</div>
+              <div class="text-sm">Version {{ topic.essayVersion }} • {{ new Date(topic.essayTimestamp).toLocaleString() }}</div>
+
+              <details class="block">
+                <summary class="w-min whitespace-nowrap px-2 py-1 cursor-pointer font-semibold text-xs mt-2 bg-slate-200 text-black">Full Prompt</summary>
+                <div class="px-2 py-1 whitespace-pre-wrap bg-slate-300 text-black">{{ topic.promptFull }}</div>
+              </details>
+            </div>
+
+            <div class="flex-grow"></div>
+            <div class="flex-none sm:float-right sm:absolute sm:right-3 flex flex-row space-x-2">
+              <a
+                :href="`essay-new.html#${topic.id}`"
+                class="bg-emerald-100 font-semibold text-black py-1 px-3 hover:bg-gray-200 hover:text-black flex transition cursor-pointer rounded-md space-x-2 text-sm">
+                <i class="material-symbols-outlined">edit_note</i>
+                <span class="flex-1 whitespace-nowrap font-semibold">New Version</span>
               </a>
               <button :class="{ 'bg-emerald-100': topic.bookmarkUser == null, 'bg-red-100': topic.bookmarkUser !== null }"
                 v-on:click="toggleBookmark(topic);"
@@ -251,26 +251,26 @@
           // },
 
           menuItems: [
-          {
-              name: "首页",
+            {
+              name: "Home",
               icon: "home",
               selected: false,
               href: "index.html",
             },
             {
-              name: "我的写作",
+              name: "My Essays",
               icon: "assignment",
               selected: false,
               href: "essay-list.html",
             },
             {
-              name: "新建写作",
+              name: "New Essay Practice",
               icon: "edit_note",
               selected: false,
               href: "essay-new.html",
             },
             {
-              name: "写作主题",
+              name: "My Topics",
               icon: "topic",
               selected: true,
               href: "essay-topic.html",
@@ -347,7 +347,7 @@
           }
           else {
             notyf.success({
-              message: '收藏状态已编辑!',
+              message: 'Bookmark edited!',
               duration: 1000,
             });
           }

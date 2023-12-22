@@ -123,9 +123,9 @@
             class="p-3 flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-3 border-t-2 border-t-slate-200">
             <div class="flex flex-col space-y-2 w-full">
               <div class="font-semibold">{{ essay.prompt }} ({{ essay.score ? essay.score : "正在批改" }})</div>
-              <div class="text-sm text-slate-600">版本 {{ essay.version }} • {{ new Date(essay.timestamp).toLocaleString() }} • 悬停在亮的句子上查看评论</div>
+              <div class="text-sm text-slate-600">版本 {{ essay.version }} • {{ new Date(essay.timestamp).toLocaleString() }} • <b>悬停在亮的句子上查看评论</b></div>
               <details>
-                <summary class="bg-slate-200 p-2 cursor-pointer font-semibold text-sm">评论</summary>
+                <summary class="bg-slate-200 p-2 cursor-pointer font-semibold text-sm">评论（点击查看评论）</summary>
                 <div class="whitespace-pre-wrap bg-slate-100 p-2">{{ essay.extra ? essay.extra : "等待评论。。。" }}</div>
               </details>
               <div v-html="essay.rendered"></div>
