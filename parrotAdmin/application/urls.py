@@ -64,6 +64,7 @@ urlpatterns = (
             ),
             re_path(r'api/sms/', include('dvadmin_sms.urls')),
             path("admin/", admin.site.urls),
+            path(r'api/dvadmin_celery/', include('dvadmin_celery.urls')),
             path(
                 "",
                 schema_view.with_ui("swagger", cache_timeout=0),

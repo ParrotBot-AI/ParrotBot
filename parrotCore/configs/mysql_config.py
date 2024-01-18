@@ -2,14 +2,15 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
+from sqlalchemy_utils import database_exists, create_database
 
 MYSQL_SETTINGS = {
-    "predict": {
+    "core": {
         "HOST": "localhost",
         "PORT": 3306,
         "USERNAME": "root",
         "PASSWORD": "Mysql-60003",
-        "DB": "Prediction_manage",
+        "DB": "core",
         "CONNECTOR": "pymysql"
     }
 }
@@ -23,17 +24,22 @@ def get_db_session_sql(db) -> Session:
     return sessionmaker(ENGINES[db], autocommit=False)()
 
 
-DB_URI_CORPUS = get_db_uri(**MYSQL_SETTINGS["predict"])
+DB_URI = get_db_uri(**MYSQL_SETTINGS["core"])
 
 ENGINES = {
-    "predict": create_engine(DB_URI_CORPUS,
-                             max_overflow=-1,
-                             pool_pre_ping=True,
-                            pool_recycle=3600)
+    "core": create_engine(
+        DB_URI,
+        max_overflow=-1,
+        pool_pre_ping=True,
+        pool_recycle=3600)
 }
 
+if not database_exists(ENGINES['core'].url):
+    create_database(ENGINES['core'].url)
+    print(f"Database Created: {database_exists(ENGINES['core'].url)}")
+
 BASES = {
-    "predict": declarative_base(ENGINES["predict"])
+    "core": declarative_base(ENGINES["core"])
 }
 
 

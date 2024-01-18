@@ -21,14 +21,14 @@
           :style="{ width: asideCollapse ? asideWidthCollapse : asideWidth }"
           flex-box="0"
         >
-          <!-- <img
+          <img
             v-if="asideCollapse"
             :src="`${$baseUrl}image/theme/${themeActiveSetting.name}/logo/icon-only.png`"
           />
           <img
             v-else
             :src="`${$baseUrl}image/theme/${themeActiveSetting.name}/logo/all.png`"
-          /> -->
+          />
         </router-link>
         <div class="toggle-aside-btn" @click="handleToggleAside" flex-box="0">
           <d2-icon name="bars" />
@@ -43,7 +43,7 @@
           <d2-header-theme />
           <d2-header-message />
           <d2-header-size />
-          <!-- <d2-header-locales /> -->
+          <d2-header-locales />
           <d2-header-color />
           <d2-header-user />
         </div>

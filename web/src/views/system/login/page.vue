@@ -1,19 +1,17 @@
 <template>
   <div
     class="w3l-signinform"
-    :style="{background:'white', backgroundSize: '100% 100%' }"
+    :style="{background:'url(' +(loginBackground || require('@/assets/image/bg.jpg')) +') no-repeat center', backgroundSize: '100% 100%' }"
   >
-     <!-- 'url(' +(loginBackground || require('@/assets/image/bg.jpg')) +') no-repeat center' -->
     <!-- container -->
     <div class="wrapper">
       <!-- main content -->
       <div class="w3l-form-info">
         <!-- logo -->
-        
+        <img class="page-login--logo" :src="siteLogo" width="300"/>
         <div class="w3_info">
-          <!-- <h2 style="text-align: center">{{ siteName || processTitle }}</h2> -->
+          <h2 style="text-align: center">{{ siteName || processTitle }}</h2>
           <el-card shadow="always" class="card">
-            <!-- <img class="page-login--logo" :src="siteLogo" width="300"/> -->
             <el-tabs v-model="activeName">
               <el-tab-pane label="账号密码登录" name="first" stretch>
                 <span slot="label"><span style="margin: 30px">账号密码登录</span></span>
@@ -71,12 +69,25 @@
                     </el-input>
                   </el-form-item>
                 </el-form>
-                <button class="btn btn-primary btn-block" style="padding: 10px 10px;" @click="submit">登录</button>
+                <el-row v-if="isTenant && isPublic">
+                  <el-col :span="11">
+                    <button class="btn btn-primary btn-block" style="padding: 10px 10px;" @click="submit">登录</button>
+                  </el-col>
+                  <el-col :span="11" :offset="2">
+                    <button
+                      class="btn btn-primary btn-block"
+                      style="padding: 10px 10px;background-color: #409eff;color: #fff;"
+                      @click="$router.push('/register')">
+                      免费试用
+                    </button>
+                  </el-col>
+                </el-row>
+                <button v-else class="btn btn-primary btn-block" style="padding: 10px 10px;" @click="submit">登录</button>
                 <component v-if="componentTag" :is="componentTag"></component>
               </el-tab-pane>
             </el-tabs>
           </el-card>
-          <!-- <el-button
+          <el-button
             class="page-login--quick"
             size="default"
             type="success"
@@ -84,10 +95,10 @@
             v-if="$env === 'development'"
           >
             快速选择用户登录（限dev环境）
-          </el-button> -->
+          </el-button>
           <!-- footer -->
           <div class="footer">
-            <!-- <p class="page-login--content-footer-locales">
+            <p class="page-login--content-footer-locales">
               <a
                 v-for="language in $languages"
                 :key="language.value"
@@ -96,8 +107,8 @@
               >
                 {{ language.label }}
               </a>
-            </p> -->
-            <p>Copyright &copy; {{ '2023 鹦鹉智学 版权所有' }}</p>
+            </p>
+            <p>Copyright &copy; {{ copyright }}</p>
             <p>
               <a href="https://beian.miit.gov.cn" target="_blank">{{
                 keepRecord

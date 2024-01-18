@@ -19,6 +19,7 @@ from dvadmin.utils.serializers import CustomModelSerializer
 from dvadmin.utils.validator import CustomUniqueValidator
 from dvadmin.utils.viewset import CustomModelViewSet
 from dvadmin.utils.image_tools import save_new_avatar, separate_avatar_field
+from dvadmin_sms.utils import get_sms_code
 import logging
 
 logger = logging.getLogger(__name__)
@@ -377,8 +378,28 @@ class UserViewSet(CustomModelViewSet):
         """
         密码重置
         """
-        instance = Users.objects.filter(id=pk).first()
         data = request.data
+
+        # 验证sms/email
+        choice = data.get("type")
+        if choice == 'sms':
+            # sms check #
+            code = data.get("code")
+            phone = data.get("phone")
+            valid_code = get_sms_code(phone)
+            if valid_code:
+                if not code == valid_code:
+                    pass
+                else:
+                    return ErrorResponse(msg="验证码错误")
+            else:
+                return ErrorResponse(msg="验证码已过期，请重新请求")
+
+        # email check
+        elif choice == 'email':
+            return ErrorResponse(msg="该功能暂未开通")
+
+        instance = Users.objects.filter(id=pk).first()
         new_pwd = data.get("newPassword")
         new_pwd2 = data.get("newPassword2")
         if instance:

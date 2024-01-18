@@ -7,7 +7,7 @@ from application import settings
 plugins_url_patterns = [
     {"re_path": r'api/sms/', "include": "dvadmin_sms.urls"},
 ]
-# app 配置
+# apps 配置
 apps = ['dvadmin_sms']
 
 # ================================================= #

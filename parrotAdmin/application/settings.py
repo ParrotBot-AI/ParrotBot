@@ -61,6 +61,9 @@ INSTALLED_APPS = [
     "drf_yasg",
     "captcha",
     'channels',
+    'django_celery_beat',
+    'django_celery_results',
+    'dvadmin_celery',
 ]
 
 MIDDLEWARE = [
@@ -398,6 +401,21 @@ TABLE_PREFIX = locals().get('TABLE_PREFIX', "")
 SYSTEM_CONFIG = {}
 # 字典配置
 DICTIONARY_CONFIG = {}
+
+# Cache 配置
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": locals().get('REDIS_URL', "") + f"/{locals().get('REDIS_DATABASE', '')['cache']}",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    }
+}
+
+BROKER_URL = f"{locals().get('REDIS_URL', '')}/{locals().get('REDIS_DATABASE', '')['broker']}"
+CELERY_RESULT_BACKEND = 'django-db' # celery结果存储到数据库中
+CELERYBEAT_SCHEDULER = 'django_celery_beat.schedulers.DatabaseScheduler'  # Backend数据库
 
 # ================================================= #
 # ******************** 插件配置 ******************** #

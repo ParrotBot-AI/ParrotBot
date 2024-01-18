@@ -63,9 +63,7 @@ class CustomModelSerializer(DynamicFieldsMixin, ModelSerializer):
 
     def create(self, validated_data):
         if self.request:
-            print('here')
             if str(self.request.user) != "AnonymousUser":
-                print('here1')
                 if self.modifier_field_id in self.fields.fields:
                     validated_data[self.modifier_field_id] = self.get_request_user_id()
                 if self.creator_field_id in self.fields.fields:

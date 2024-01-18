@@ -27,7 +27,7 @@ class CustomSwaggerAutoSchema(SwaggerAutoSchema):
 
     def get_summary_and_description(self):
         summary_and_description = super().get_summary_and_description()
-        summary = get_summary(self.__dict__.get('view').__doc__)
+        summary = get_summary(self.__dict__.get('views').__doc__)
         description = summary_and_description[1]
         return summary,description
 

@@ -8,13 +8,13 @@ logger = get_general_logger(name='manager', path=abspath('logs'))
 
 
 class DataApi(ServiceManager):
-    name = 'o1_back_data_api'
-    file = 'data_api.py'
+    name = 'ParrotCore'
+    file = 'core_web.py'
     dir_path = abspath('services')
 
 
 SERVICES_MAP = {
-    'o1_back_data_api': DataApi
+    'ParrotCore': DataApi
 }
 
 

@@ -9,6 +9,7 @@ from django.core.cache import cache
 from application import dispatch
 from dvadmin_sms.api.alibaba_cloud import AliBabaCloudSample
 from dvadmin_sms.api.tencent_cloud import TencentCloudSample
+from dvadmin_sms.api.huawei_cloud import HuaweiCloudSample
 from dvadmin.utils.validator import CustomValidationError
 
 
@@ -51,7 +52,15 @@ def send_sms(phone, code, send_type="mobilelogin"):
                                template_param=str(code),
                                sms_sdk_app_id=dispatch.get_system_config_values("sms.sms_sdk_app_id"))
     elif provider == 'huawei':
-        sample = None
+        sample = HuaweiCloudSample(
+            access_key_id=dispatch.get_system_config_values("sms.app_id"),
+            access_key_secret=dispatch.get_system_config_values("sms.app_key")
+        )
+        return sample.send_sms(sign_name=dispatch.get_system_config_values("sms.signature") or '鹦鹉智学',
+                               template_code=template_code,
+                               phone_numbers=phone,
+                               template_param=str(code),
+                               sms_sdk_app_id=dispatch.get_system_config_values("sms.sms_sdk_app_id"))
 
     return False, "无效短信服务商"
 

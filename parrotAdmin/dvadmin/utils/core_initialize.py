@@ -19,7 +19,6 @@ class CoreInitialize:
     reset = False
     request = request
     file_path = None
-
     def __init__(self, reset=False, creator_id=None, app=None):
         """
         reset: 是否重置初始化数据

@@ -1,4 +1,4 @@
-<!-- <template>
+<template>
   <el-card
     shadow="hover"
     :header="config?.showHeader?.value ? '版本信息' : ''"
@@ -10,7 +10,7 @@
       <p style="margin-top: 5px;">最新版本 {{ ver }}</p>
     </div>
   </el-card>
-</template> -->
+</template>
 
 <script>
 import { mapState } from 'vuex'

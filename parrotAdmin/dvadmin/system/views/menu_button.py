@@ -40,7 +40,7 @@ class MenuButtonInitSerializer(CustomModelSerializer):
 
 class MenuButtonCreateUpdateSerializer(CustomModelSerializer):
     """
-    初始化菜单按钮-序列化器
+    菜单按键创建更新按钮-序列化器
     """
 
     class Meta:

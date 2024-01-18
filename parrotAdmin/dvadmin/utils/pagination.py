@@ -24,7 +24,7 @@ class CustomPagination(PageNumberPagination):
     def paginate_queryset(self, queryset, request, view=None):
         """
         Paginate a queryset if required, either returning a
-        page object, or `None` if pagination is not configured for this view.
+        page object, or `None` if pagination is not configured for this views.
         """
         empty = True
 

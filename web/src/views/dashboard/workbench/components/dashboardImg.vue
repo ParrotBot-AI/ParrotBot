@@ -1,8 +1,8 @@
-<!-- <template>
+<template>
   <el-card shadow="never" class="item-background">
     <img :src="config.src.value || '/image/card/tencent.jpg'" @click="Jump()" class="img-style">
   </el-card>
-</template> -->
+</template>
 
 <script>
 export default {

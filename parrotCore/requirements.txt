@@ -43,3 +43,4 @@ blinker>=1.6.2
 importlib-metadata>=3.6.0
 pillow
 openpyxl
+sqlalchemy_utils

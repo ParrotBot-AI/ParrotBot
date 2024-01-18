@@ -16,6 +16,7 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.token_blacklist.models import OutstandingToken
 from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 from django.conf import settings
@@ -26,11 +27,12 @@ from dvadmin.utils.json_response import ErrorResponse, DetailResponse
 from dvadmin.utils.request_util import save_login_log
 from dvadmin.utils.serializers import CustomModelSerializer
 from dvadmin.utils.validator import CustomValidationError
+from dvadmin_sms.utils import get_sms_code
 
 
 class CaptchaView(APIView):
     authentication_classes = []
-    permission_classes = []
+    permission_classes = [AllowAny]
 
     @swagger_auto_schema(
         responses={"200": openapi.Response("获取成功")},
@@ -70,67 +72,121 @@ class LoginSerializer(TokenObtainPairSerializer):
     default_error_messages = {"no_active_account": _("账号/密码错误")}
 
     def validate(self, attrs):
+        # captcha = self.initial_data.get("captcha", None)
+        # if dispatch.get_system_config_values("base.captcha_state"):
+        #     if captcha is None:
+        #         raise CustomValidationError("验证码不能为空")
+        #     self.image_code = CaptchaStore.objects.filter(
+        #         id=self.initial_data["captchaKey"]
+        #     ).first()
+        #     five_minute_ago = datetime.now() - timedelta(hours=0, minutes=5, seconds=0)
+        #     if self.image_code and five_minute_ago > self.image_code.expiration:
+        #         self.image_code and self.image_code.delete()
+        #         raise CustomValidationError("验证码过期")
+        #     else:
+        #         if self.image_code and (
+        #                 self.image_code.response == captcha
+        #                 or self.image_code.challenge == captcha
+        #         ):
+        #             self.image_code and self.image_code.delete()
+        #         else:
+        #             self.image_code and self.image_code.delete()
+        #             raise CustomValidationError("图片验证码错误")
 
-        captcha = self.initial_data.get("captcha", None)
-        if dispatch.get_system_config_values("base.captcha_state"):
-            if captcha is None:
-                raise CustomValidationError("验证码不能为空")
-            self.image_code = CaptchaStore.objects.filter(
-                id=self.initial_data["captchaKey"]
-            ).first()
-            five_minute_ago = datetime.now() - timedelta(hours=0, minutes=5, seconds=0)
-            if self.image_code and five_minute_ago > self.image_code.expiration:
-                self.image_code and self.image_code.delete()
-                raise CustomValidationError("验证码过期")
-            else:
-                if self.image_code and (
-                        self.image_code.response == captcha
-                        or self.image_code.challenge == captcha
-                ):
-                    self.image_code and self.image_code.delete()
+        try:
+            type = self.initial_data.get("type", None)
+            # sms 方式登录
+            if type == 'sms':
+                phone = self.initial_data.get("phone", None)
+                code = self.initial_data.get('code', None)
+                login_code = get_sms_code(phone)
+                if login_code:
+                    if login_code == code:
+                        # to do, find phone number
+                        user_phone = Users.objects.filter(phone=phone)
+                        if user_phone.count() == 1:
+                            data = super().validate(attrs)
+                            data["name"] = user_phone.name
+                            data["userId"] = user_phone.id
+                            data["avatar"] = user_phone.avatar
+                            data['user_type'] = user_phone.user_type
+                            dept = getattr(user_phone, 'dept', None)
+                            if dept:
+                                data['dept_info'] = {
+                                    'dept_id': dept.id,
+                                    'dept_name': dept.name,
+                                }
+                            role = getattr(user_phone, 'role', None)
+                            if role:
+                                data['role_info'] = role.values('id', 'name', 'key')
+                            request = self.context.get("request")
+                            request.user = user_phone
+                            # 记录登录日志
+                            save_login_log(request=request)
+                            # 是否开启单点登录
+                            if dispatch.get_system_config_values("base.single_login"):
+                                # 将之前登录用户的token加入黑名单
+                                user = Users.objects.filter(id=user_phone.id).values('last_token').first()
+                                last_token = user.get('last_token')
+                                if last_token:
+                                    try:
+                                        token = RefreshToken(last_token)
+                                        token.blacklist()
+                                    except:
+                                        pass
+                                # 将最新的token保存到用户表
+                                Users.objects.filter(id=self.user.id).update(last_token=data.get('refresh'))
+                            return {"code": 2000, "msg": "请求成功", "data": data}
+
+                        else:
+                            raise CustomValidationError("手机号码检索重复，请联系管理员")
+                    else:
+                        raise CustomValidationError("验证码不匹配, 请重新发送")
                 else:
-                    self.image_code and self.image_code.delete()
-                    raise CustomValidationError("图片验证码错误")
-        data = super().validate(attrs)
-        data["name"] = self.user.name
-        data["userId"] = self.user.id
-        data["avatar"] = self.user.avatar
-        data['user_type'] = self.user.user_type
-        dept = getattr(self.user, 'dept', None)
-        if dept:
-            data['dept_info'] = {
-                'dept_id': dept.id,
-                'dept_name': dept.name,
+                    raise CustomValidationError("验证码未找到或已过期，请重新发送")
+            elif type == 'account':
+                data = super().validate(attrs)
+                data["name"] = self.user.name
+                data["userId"] = self.user.id
+                data["avatar"] = self.user.avatar
+                data['user_type'] = self.user.user_type
+                dept = getattr(self.user, 'dept', None)
+                if dept:
+                    data['dept_info'] = {
+                        'dept_id': dept.id,
+                        'dept_name': dept.name,
+                    }
+                role = getattr(self.user, 'role', None)
+                if role:
+                    data['role_info'] = role.values('id', 'name', 'key')
+                request = self.context.get("request")
+                request.user = self.user
+                # 记录登录日志
+                save_login_log(request=request)
+                # 是否开启单点登录
+                if dispatch.get_system_config_values("base.single_login"):
+                    # 将之前登录用户的token加入黑名单
+                    user = Users.objects.filter(id=self.user.id).values('last_token').first()
+                    last_token = user.get('last_token')
+                    if last_token:
+                        try:
+                            token = RefreshToken(last_token)
+                            token.blacklist()
+                        except:
+                            pass
+                    # 将最新的token保存到用户表
+                    Users.objects.filter(id=self.user.id).update(last_token=data.get('refresh'))
+                return {"code": 2000, "msg": "请求成功", "data": data}
 
-            }
-        role = getattr(self.user, 'role', None)
-        if role:
-            data['role_info'] = role.values('id', 'name', 'key')
-        request = self.context.get("request")
-        request.user = self.user
-        # 记录登录日志
-        save_login_log(request=request)
-        # 是否开启单点登录
-        if dispatch.get_system_config_values("base.single_login"):
-            # 将之前登录用户的token加入黑名单
-            user = Users.objects.filter(id=self.user.id).values('last_token').first()
-            last_token = user.get('last_token')
-            if last_token:
-                try:
-                    token = RefreshToken(last_token)
-                    token.blacklist()
-                except:
-                    pass
-            # 将最新的token保存到用户表
-            Users.objects.filter(id=self.user.id).update(last_token=data.get('refresh'))
-        return {"code": 2000, "msg": "请求成功", "data": data}
+
+        except:
+            raise CustomValidationError("登录认证失败")
 
 
 class CustomTokenRefreshView(TokenRefreshView):
     """
     自定义token刷新
     """
-
     def post(self, request, *args, **kwargs):
         refresh_token = request.data.get("refresh")
         try:

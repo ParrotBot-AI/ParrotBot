@@ -33,7 +33,7 @@ export default {
   theme: {
     list: [
       {
-        title: '经典',
+        title: 'd2admin 经典',
         name: 'd2',
         preview: 'image/theme/d2/preview@2x.png'
       },
@@ -55,13 +55,13 @@ export default {
       {
         title: '简约线条',
         name: 'line',
-        // backgroundImage: 'image/theme/line/bg.jpg',
+        backgroundImage: 'image/theme/line/bg.jpg',
         preview: 'image/theme/line/preview@2x.jpg'
       },
       {
         title: '流星',
         name: 'star',
-        // backgroundImage: 'image/theme/star/bg.jpg',
+        backgroundImage: 'image/theme/star/bg.jpg',
         preview: 'image/theme/star/preview@2x.jpg'
       },
       {

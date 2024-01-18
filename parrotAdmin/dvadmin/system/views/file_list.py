@@ -27,7 +27,7 @@ class FileSerializer(CustomModelSerializer):
         if self.request.query_params.get('prefix'):
             if settings.ENVIRONMENT in ['local']:
                 prefix = 'http://127.0.0.1:8000'
-            elif settings.ENVIRONMENT in ['test']:
+            elif settings.ENVIRONMENT in ['test]:
                 prefix = 'http://{host}/api'.format(host=self.request.get_host())
             else:
                 prefix = 'https://{host}/api'.format(host=self.request.get_host())

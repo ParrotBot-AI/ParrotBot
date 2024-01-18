@@ -32,12 +32,12 @@ class Command(BaseCommand):
             reset = False
         signals.pre_init_complete.send(sender=None, msg='开始初始化', data={"reset": reset})
         for app in settings.INSTALLED_APPS:
-            signals.detail_init_complete.send(sender=None, msg='初始化中', data={"app": app, "reset": reset})
+            signals.detail_init_complete.send(sender=None, msg='初始化中', data={"apps": app, "reset": reset})
             try:
                 exec(
                     f"""
 from {app}.fixtures.initialize import Initialize
-Initialize(reset={reset},app="{app}").run()
+Initialize(reset={reset},apps="{app}").run()
                 """
                 )
             except ModuleNotFoundError:

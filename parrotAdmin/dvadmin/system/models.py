@@ -178,6 +178,15 @@ class Menu(CoreModel):
         (1, "是"),
     )
     is_link = models.BooleanField(default=False, verbose_name="是否外链", help_text="是否外链")
+    micro_service = models.ForeignKey(
+        to="MicroServiceRegister",
+        db_constraint=False,
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        verbose_name="关联微服务",
+        help_text="关联微服务",
+    )
     is_catalog = models.BooleanField(default=False, verbose_name="是否目录", help_text="是否目录")
     web_path = models.CharField(max_length=128, verbose_name="路由地址", null=True, blank=True, help_text="路由地址")
     component = models.CharField(max_length=128, verbose_name="组件地址", null=True, blank=True, help_text="组件地址")
@@ -289,6 +298,15 @@ class OperationLog(CoreModel):
                                      help_text="响应状态码")
     request_os = models.CharField(max_length=64, verbose_name="操作系统", null=True, blank=True, help_text="操作系统")
     json_result = models.TextField(verbose_name="返回信息", null=True, blank=True, help_text="返回信息")
+    micro_service = models.ForeignKey(
+        to="MicroServiceRegister",
+        db_constraint=False,
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        verbose_name="关联微服务",
+        help_text="关联微服务",
+    )
     status = models.BooleanField(default=False, verbose_name="响应状态", help_text="响应状态")
 
     class Meta:
@@ -495,7 +513,7 @@ class LoginLog(CoreModel):
         (3, "微信扫码登录"),
         (4, "飞书扫码登录"),
         (5, "钉钉扫码登录"),
-        (6, "短信登录")
+        (6, "短信登录"),
     )
     username = models.CharField(max_length=150, verbose_name="登录用户名", null=True, blank=True,
                                 help_text="登录用户名")
@@ -555,3 +573,27 @@ class MessageCenterTargetUser(CoreModel):
         db_table = table_prefix + "message_center_target_user"
         verbose_name = "消息中心目标用户表"
         verbose_name_plural = verbose_name
+
+
+# ====================== Service detection and management ====================== #
+class MicroServiceRegister(CoreModel):
+    name = models.CharField(null=False, max_length=50, verbose_name="服务名称", help_text="服务名称")
+    host = models.CharField(null=False, max_length=50, verbose_name="服务ip", help_text="服务ip")
+    port = models.IntegerField(null=False, verbose_name="服务端口号", help_text="服务端口号")
+    method = models.CharField(null='GET', max_length=5, verbose_name="请求方法", help_text="请求方法")
+    heartBeatApi = models.CharField(null=False, max_length=50, verbose_name="心跳检测api", help_text="心跳检测api")
+    frequency = models.IntegerField(null=False, verbose_name="心跳检测频率", help_text="心跳检测频率")
+    STATUS_CHOICES = (
+        (0, "关闭"),
+        (1, "开启"),
+        (2, "重启")
+    )
+    status = models.IntegerField(choices=STATUS_CHOICES, default=1, verbose_name="服务状态", help_text="服务状态")
+    API_Key = models.CharField(null=False, max_length=50, verbose_name="服务专属apikey", help_text="服务专属apikey")
+
+    class Meta:
+        db_table = table_prefix + "mircoservice_register"
+        verbose_name = "微服务注册"
+        verbose_name_plural = verbose_name
+        ordering = ("-create_datetime",)
+

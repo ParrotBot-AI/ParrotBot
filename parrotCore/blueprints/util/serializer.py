@@ -11,3 +11,7 @@ class Serializer(object):
     @staticmethod
     def serialize_list(l, res=None):
         return [Serializer.serialize(m, res) for m in l]
+
+    @staticmethod
+    def serialize_dic(dic, res=None):
+        return Serializer.serialize(dic, res)

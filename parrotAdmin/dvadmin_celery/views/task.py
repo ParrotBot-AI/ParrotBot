@@ -16,14 +16,11 @@ from dvadmin.utils.serializers import CustomModelSerializer
 from dvadmin.utils.viewset import CustomModelViewSet
 from dvadmin.utils.json_response import SuccessResponse, ErrorResponse
 
-
-CrontabSchedule.__str__ = lambda self : '{0} {1} {2} {3} {4} {5}'.format(
-            cronexp(self.minute), cronexp(self.hour),
-            cronexp(self.day_of_month), cronexp(self.month_of_year),
-            cronexp(self.day_of_week), str(self.timezone)
-        )
-
-
+CrontabSchedule.__str__ = lambda self: '{0} {1} {2} {3} {4} {5}'.format(
+    cronexp(self.minute), cronexp(self.hour),
+    cronexp(self.day_of_month), cronexp(self.month_of_year),
+    cronexp(self.day_of_week), str(self.timezone)
+)
 
 
 def get_job_list():
@@ -41,21 +38,21 @@ for ele in [i for i in dir(tasks) if i.startswith('task__')]:
     task_list.append('{app}.tasks.' + ele)
     task_dict_list.append(task_dict)
                 """)
-        except ImportError :
+        except ImportError:
             pass
     return {'task_list': task_list, 'task_dict_list': task_dict_list}
 
 
-#将cron表达式进行解析
+# 将cron表达式进行解析
 def CronSlpit(cron):
     cron = cron.split(" ")
     result = {
         # "second":cron[0],
-        "minute":cron[0],
-        "hour":cron[1],
-        "day":cron[2],
-        "month":cron[3],
-        "week":cron[4]
+        "minute": cron[0],
+        "hour": cron[1],
+        "day": cron[2],
+        "month": cron[3],
+        "week": cron[4]
     }
     return result
 
@@ -82,6 +79,7 @@ class CeleryTaskModelViewSet(CustomModelViewSet):
     queryset = PeriodicTask.objects.exclude(name="celery.backend_cleanup")
     serializer_class = PeriodicTasksSerializer
     filter_fields = ['name', 'task', 'enabled']
+
     # permission_classes = []
     # authentication_classes = []
 
@@ -135,7 +133,7 @@ class CeleryTaskModelViewSet(CustomModelViewSet):
             serializer = self.get_serializer(data=body_data, request=request)
             res = serializer.is_valid()
             if not res:
-                raise APIException({"msg":f"添加失败，已经有一个名为 {body_data['name']} 的任务了"}, code=4000)
+                raise APIException({"msg": f"添加失败，已经有一个名为 {body_data['name']} 的任务了"}, code=4000)
             self.perform_create(serializer)
             result = serializer.data
             return SuccessResponse(msg="添加成功", data=result)
@@ -148,7 +146,7 @@ class CeleryTaskModelViewSet(CustomModelViewSet):
         self.perform_destroy(instance)
         return SuccessResponse(data=[], msg="删除成功")
 
-    def update_status(self,request, *args, **kwargs):
+    def update_status(self, request, *args, **kwargs):
         """开始/暂停任务"""
         instance = self.get_object()
         body_data = request.data

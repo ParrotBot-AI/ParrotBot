@@ -28,9 +28,21 @@ TABLE_PREFIX = "parrot_"
 # ================================================= #
 # ******** redis配置，无redis 可不进行配置  ******** #
 # ================================================= #
-REDIS_PASSWORD = 'parrot-redis'
+
+
+# dev 环境
+REDIS_PASSWORD = 'corpus-admin'
 REDIS_HOST = '127.0.0.1'
-REDIS_URL = f'redis://:{REDIS_PASSWORD or ""}@{REDIS_HOST}:6380'
+REDIS_URL = f'redis://:{REDIS_PASSWORD or ""}@{REDIS_HOST}:6379'
+REDIS_DATABASE ={
+    "cache": 1,
+    'broker':2
+}
+
+# prod 环境
+# REDIS_PASSWORD = 'parrot-redis'
+# REDIS_HOST = '127.0.0.1'
+# REDIS_URL = f'redis://:{REDIS_PASSWORD or ""}@{REDIS_HOST}:6380'
 # ================================================= #
 # ****************** 功能 启停  ******************* #
 # ================================================= #
@@ -51,4 +63,7 @@ ENVIRONMENT = "local"  # 环境，test 测试环境;prod线上环境;local本地
 ALLOWED_HOSTS = ["*"]
 # 系统配置存放位置：redis/memory(默认)
 DISPATCH_DB_TYPE = 'redis'
-
+# 微服务secret_key
+m_secret_key = "this_is_microservice_secrete_key_@3924098"
+# user secret_key
+u_secret_key = "this_is_user_secrete_key_$aslisldh"

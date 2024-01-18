@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-PROJECT_NAME = 'prediction'
+PROJECT_NAME = 'parrotCore'
 VERSION = '0.0.1'
 
 setup(name=PROJECT_NAME,
