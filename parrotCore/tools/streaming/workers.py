@@ -19,7 +19,7 @@ def account_register(user_id=None):
     else:
         print(f"Create account {user_id} failed.")
 
-
-if __name__ == "__main__":
+def main():
     print("开始监听....")
     core_worker.listen(listen_name='broker')
+
