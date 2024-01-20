@@ -17,7 +17,7 @@ class CustomBackend(ModelBackend):
     Django原生认证方式
     """
 
-    def authenticate(self, request, username=None, password=None, **kwargs):
+    def authenticate(self, request, username=None, password=None, mobile=None, **kwargs):
         msg = '%s 正在使用本地登录...' % username
         logger.info(msg)
         if username is None:
@@ -27,13 +27,19 @@ class CustomBackend(ModelBackend):
         except UserModel.DoesNotExist:
             UserModel().set_password(password)
         else:
-            verify_password = check_password(password, user.password)
-            if not verify_password:
-                password = hashlib.md5(password.encode(encoding='UTF-8')).hexdigest()
-                verify_password = check_password(password, user.password)
-            if verify_password:
+            if mobile:
                 if self.user_can_authenticate(user):
                     user.last_login = timezone.now()
                     user.save()
                     return user
-                raise CustomValidationError("当前用户已被禁用，请联系管理员!")
+            elif password:
+                verify_password = check_password(password, user.password)
+                if not verify_password:
+                    password = hashlib.md5(password.encode(encoding='UTF-8')).hexdigest()
+                    verify_password = check_password(password, user.password)
+                if verify_password:
+                    if self.user_can_authenticate(user):
+                        user.last_login = timezone.now()
+                        user.save()
+                        return user
+                    raise CustomValidationError("当前用户已被禁用，请联系管理员!")

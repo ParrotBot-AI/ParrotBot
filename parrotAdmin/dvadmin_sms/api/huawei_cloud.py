@@ -24,7 +24,7 @@ class HuaweiCloudSample:
         # huawei sms 服务url
         self.url = 'https://smsapi.cn-north-4.myhuaweicloud.com:443/sms/batchSendSms/v1'
 
-    def buildWSSEHeader(appKey, appSecret) -> str:
+    def buildWSSEHeader(self, appKey, appSecret) -> str:
         '''
         构造X-WSSE参数值
         @param appKey: string

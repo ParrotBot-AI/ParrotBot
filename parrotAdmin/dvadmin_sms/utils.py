@@ -59,8 +59,7 @@ def send_sms(phone, code, send_type="mobilelogin"):
         return sample.send_sms(sign_name=dispatch.get_system_config_values("sms.signature") or '鹦鹉智学',
                                template_code=template_code,
                                phone_numbers=phone,
-                               template_param=str(code),
-                               sms_sdk_app_id=dispatch.get_system_config_values("sms.sms_sdk_app_id"))
+                               template_param=str(code))
 
     return False, "无效短信服务商"
 

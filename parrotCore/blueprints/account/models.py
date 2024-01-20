@@ -23,7 +23,7 @@ class Users(BASES['core']):
     school = Column(String(30), nullable=True)
     region = Column(String(20), nullable=True)
     task_complete = Column(Integer, default=0)
-    vacab_level = Column(String(6), nullable=True)
+    vocab_level = Column(String(6), nullable=True)
     total_study_days = Column(Integer, default=0)
     create_time = Column(DateTime)
     last_update_time = Column(DateTime)
@@ -45,7 +45,8 @@ class Accounts(BASES['core']):
 
     id = Column(Integer, autoincrement=True, primary_key=True)
     user_id = Column(Integer, ForeignKey('Users.id', ondelete='CASCADE'), nullable=False)
-    exam_id = Column(Integer, ForeignKey('Exams.id', ondelete='CASCADE'), nullable=False)
+    exam_id = Column(Integer, nullable=False)
+    # exam_id = Column(Integer, ForeignKey('Exams.id', ondelete='CASCADE'), nullable=False)
     create_time = Column(DateTime)
     last_update_time = Column(DateTime)
     last_request_time = Column(DateTime)

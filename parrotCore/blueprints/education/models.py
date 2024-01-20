@@ -53,7 +53,7 @@ class Exams(BASES['core']):
     max_score = Column(Integer, nullable=True)
     is_active = Column(Boolean, default=True)
     is_current_use = Column(Boolean, default=True)
-    # father_exam = Column(Integer, nullable=False, defualt=-1)
+    # father_exam = Column(Integer, nullable=False, default=-1)
     no_patterns = Column(Integer, nullable=True)
     create_time = Column(DateTime)
     last_update_time = Column(DateTime)

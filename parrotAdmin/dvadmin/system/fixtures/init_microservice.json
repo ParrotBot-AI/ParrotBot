@@ -7,5 +7,23 @@
         "frequency": 3600,
         "status": 1,
         "API_key": "parrotAdmin"
+    },
+    {
+        "name": "ParrotCore",
+        "host": "localhost",
+        "port": 8000,
+        "heartBeatApi": "/api/system/ParrotCore/heartbeat",
+        "frequency": 3600,
+        "status": 1,
+        "API_key": ""
+    },
+    {
+        "name": "ParrotGpt",
+        "host": "localhost",
+        "port": 8000,
+        "heartBeatApi": "/api/system/ParrotGpt/heartbeat",
+        "frequency": 3600,
+        "status": 1,
+        "API_key": ""
     }
 ]

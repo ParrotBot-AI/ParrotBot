@@ -2,12 +2,23 @@ import time
 import redis
 import simplejson as json
 import ast
-from configs.redis_config import REDIS_SETTINGS
+from conf.env import (
+    REDIS_PASSWORD,
+    REDIS_HOST,
+    REDIS_PORT,
+    REDIS_DATABASE
+)
+
+
+
 
 
 class RedisWrapper(object):
 
-    def __init__(self, setting_name='core_cache'):
+    def __init__(self, setting_name='cache'):
+        REDIS_SETTINGS = {}
+        for key in REDIS_DATABASE.keys():
+            REDIS_SETTINGS[key] ={'host': REDIS_HOST,'port': REDIS_PORT,'db': REDIS_DATABASE[key], 'password': REDIS_PASSWORD}
 
         DEFAULT_SETTING = REDIS_SETTINGS[setting_name]
 

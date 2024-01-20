@@ -9,6 +9,7 @@ from rest_framework import serializers
 from dvadmin.utils.json_response import ErrorResponse, DetailResponse
 from django.db.models import F, CharField, Value, ExpressionWrapper
 from django.db.models.functions import Cast, Concat
+from dvadmin.utils.stream_controllers import AdminStream
 from rest_framework.decorators import action
 from django.core.cache import cache
 import random
@@ -64,6 +65,14 @@ class MicroServiceRegisterViewSet(CustomModelViewSet):
     create_serializer_class = MicroServiceCreateUpdateSerializer
     update_serializer_class = MicroServiceCreateUpdateSerializer
     extra_filter_backends = []
+
+    @action(methods=["GET"], detail=False, permission_classes=[])
+    def test_streaming(self, request):
+        """
+        测试streaming
+        """
+        AdminStream.admin_action("account_register", test=str(True), core=str(True))
+        return DetailResponse(msg='OK', data={})
 
     @action(methods=["GET"], detail=False, permission_classes=[])
     def get_service_permission_code(self, request):

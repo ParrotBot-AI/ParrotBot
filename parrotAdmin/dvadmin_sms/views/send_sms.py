@@ -32,17 +32,26 @@ class SmsSendSmsView(APIView):
             4: 'resetpwd'
         }
         send_type = sms_type[int(request.data.get('type'))]
-        code = 1222
-        frequency = 50
+        # code = 1222
+        # frequency = 50
 
         # 验证手机是否在注册用户中
-        if send_type != 'register':
+        if send_type == 'mobilelogin':
+            try:
+                user = Users.objects.filter(mobile=phone).first()
+                if not user:
+                    send_type = 'register'
+            except:
+                return ErrorResponse(msg=f"手机号未找到")
+
+        if send_type == 'changemobile' or send_type == 'resetpwd':
             try:
                 user = Users.objects.get(mobile=phone)
                 if not user:
                     return ErrorResponse(msg=f"手机号未找到")
             except:
                 return ErrorResponse(msg=f"手机号未找到")
+
 
         # 校验手机号是否正确
         if len(phone) != 11:

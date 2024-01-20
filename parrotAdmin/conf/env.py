@@ -31,13 +31,16 @@ TABLE_PREFIX = "parrot_"
 
 
 # dev 环境
-REDIS_PASSWORD = 'corpus-admin'
+REDIS_PASSWORD = 'test'
 REDIS_HOST = '127.0.0.1'
-REDIS_URL = f'redis://:{REDIS_PASSWORD or ""}@{REDIS_HOST}:6379'
-REDIS_DATABASE ={
+REDIS_PORT = 6379
+REDIS_DATABASE = {
+    'test': 0,
     "cache": 1,
-    'broker':2
+    'broker': 2
 }
+REDIS_URL = f'redis://:{REDIS_PASSWORD or ""}@{REDIS_HOST}:{REDIS_PORT}'
+
 
 # prod 环境
 # REDIS_PASSWORD = 'parrot-redis'

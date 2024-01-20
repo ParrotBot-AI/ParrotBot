@@ -1,20 +1,26 @@
 REDIS_SETTINGS = {
-  'p_image': {
+  'test': {
     'host': '127.0.0.1',
     'port': 6379,
-    'db': 4,
-    'password': 'corpus-admin'
+    'db': 0,
+    'password': 'test'
   },
-  'p_lock': {
+  'broker': {
+    'host': '127.0.0.1',
+    'port': 6379,
+    'db': 2,
+    'password': 'test'
+  },
+  'core_broker': {
     'host': '127.0.0.1',
     'port': 6379,
     'db': 3,
-    'password': 'corpus-admin'
+    'password': 'test'
   },
-  'p_content':{
+  'core_cache':{
     'host': '127.0.0.1',
     'port': 6379,
-    'db': 5,
-    'password': 'corpus-admin'
+    'db': 4,
+    'password': 'test'
   }
 }

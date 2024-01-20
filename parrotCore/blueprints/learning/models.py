@@ -87,7 +87,7 @@ class TaskAccount(BASES['core']):
     __tablename__ = "TaskAccounts"
 
     id = Column(Integer, autoincrement=True, primary_key=True)
-    account_id = Column(Integer, ForeignKey('Accounts.id', ondelete='CASCADE'), nullable=False)
+    account_id = Column(Integer, nullable=False)
     task_id = Column(Integer, ForeignKey('Tasks.id', ondelete='CASCADE'), nullable=False)
     is_active = Column(Boolean, default=True)
     is_complete = Column(Boolean, default=False)

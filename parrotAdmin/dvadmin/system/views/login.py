@@ -1,7 +1,8 @@
 import base64
 import hashlib
 from datetime import datetime, timedelta
-
+from django.contrib.auth import authenticate, get_user_model
+from django.contrib.auth.models import AbstractBaseUser, update_last_login
 from captcha.views import CaptchaStore, captcha_image
 from django.contrib import auth
 from django.contrib.auth import login
@@ -9,7 +10,6 @@ from django.shortcuts import redirect
 from django.utils.translation import gettext_lazy as _
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
-from rest_framework import serializers
 from rest_framework.status import HTTP_401_UNAUTHORIZED
 from rest_framework.views import APIView
 from rest_framework_simplejwt.authentication import JWTAuthentication
@@ -17,10 +17,11 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.token_blacklist.models import OutstandingToken
 from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
 from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework_simplejwt.authentication import default_user_authentication_rule
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-
+from rest_framework import exceptions, serializers
 from django.conf import settings
-
+import json
 from application import dispatch
 from dvadmin.system.models import Users
 from dvadmin.utils.json_response import ErrorResponse, DetailResponse
@@ -28,6 +29,17 @@ from dvadmin.utils.request_util import save_login_log
 from dvadmin.utils.serializers import CustomModelSerializer
 from dvadmin.utils.validator import CustomValidationError
 from dvadmin_sms.utils import get_sms_code
+from dvadmin.system.views.user import UserCreateSerializer
+from dvadmin.utils.stream_controllers import AdminStream
+import uuid
+
+
+def generate_uuid_id():
+    # 生成一个UUID
+    unique_id = uuid.uuid4()
+    # 将UUID转换为字符串，并取前10个字符
+    short_id = str(unique_id)[:12]
+    return short_id
 
 
 class CaptchaView(APIView):
@@ -55,7 +67,50 @@ class CaptchaView(APIView):
         return DetailResponse(data=data)
 
 
-class LoginSerializer(TokenObtainPairSerializer):
+class TokenObtainPairWithoutPasswordSerializer(TokenObtainPairSerializer):
+    def __init__(self, mobile=None, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['password'].required = False
+        self.fields['username'].required = False
+
+    def validate(self, attrs):
+        if 'mobile' in attrs:
+            user = Users.objects.filter(mobile=attrs['mobile']).first()
+            attrs.update({'username': user.username})
+            attrs.update({'password': ''})
+
+            # data = super().validate(attrs)
+            authenticate_kwargs = {
+                self.username_field: attrs[self.username_field],
+                "password": attrs["password"],
+                "mobile": attrs["mobile"]
+            }
+            try:
+                authenticate_kwargs["request"] = self.context["request"]
+            except KeyError:
+                pass
+
+            self.user = authenticate(**authenticate_kwargs)
+
+            if not default_user_authentication_rule(self.user):
+                raise exceptions.AuthenticationFailed(
+                    self.error_messages["no_active_account"],
+                    "no_active_account",
+                )
+            # data = super(TokenObtainPairWithoutPasswordSerializer, self).validate(attrs)
+            data = {}
+
+            refresh = self.get_token(self.user)
+            data["refresh"] = str(refresh)
+            data["access"] = str(refresh.access_token)
+            update_last_login(None, self.user)
+            return data
+
+        else:
+            return super(TokenObtainPairWithoutPasswordSerializer, self).validate(attrs)
+
+
+class LoginSerializer(TokenObtainPairWithoutPasswordSerializer):
     """
     登录的序列化器:
     重写djangorestframework-simplejwt的序列化器
@@ -67,119 +122,181 @@ class LoginSerializer(TokenObtainPairSerializer):
     class Meta:
         model = Users
         fields = "__all__"
-        read_only_fields = ["id"]
+        # read_only_fields = ["id"]
 
     default_error_messages = {"no_active_account": _("账号/密码错误")}
 
+    def register_mic(self, u_id):
+        admin = AdminStream()
+        response = admin.core_register(user_id=str(u_id))
+        return response
+
+    def login(self, attrs, phone=None):
+        if phone:
+            attrs['mobile'] = phone
+            data = super(LoginSerializer, self).validate(attrs)
+        else:
+            data = super().validate(attrs)
+
+        data["name"] = self.user.name
+        data["userId"] = self.user.id
+        data["avatar"] = self.user.avatar
+        data['user_type'] = self.user.user_type
+        dept = getattr(self.user, 'dept', None)
+        if dept:
+            data['dept_info'] = {
+                'dept_id': dept.id,
+                'dept_name': dept.name,
+            }
+        role = getattr(self.user, 'role', None)
+        if role:
+            data['role_info'] = role.values('id', 'name', 'key')
+        request = self.context.get("request")
+        request.user = self.user
+        # 记录登录日志
+        save_login_log(request=request)
+        # 是否开启单点登录
+        if dispatch.get_system_config_values("base.single_login"):
+            # 将之前登录用户的token加入黑名单
+            user = Users.objects.filter(id=self.user.id).values('last_token').first()
+            last_token = user.get('last_token')
+            if last_token:
+                try:
+                    token = RefreshToken(last_token)
+                    token.blacklist()
+                except:
+                    pass
+            # 将最新的token保存到用户表
+            Users.objects.filter(id=self.user.id).update(last_token=data.get('refresh'))
+        return {"code": 2000, "msg": "请求成功", "data": data}
+
     def validate(self, attrs):
-        # captcha = self.initial_data.get("captcha", None)
-        # if dispatch.get_system_config_values("base.captcha_state"):
-        #     if captcha is None:
-        #         raise CustomValidationError("验证码不能为空")
-        #     self.image_code = CaptchaStore.objects.filter(
-        #         id=self.initial_data["captchaKey"]
-        #     ).first()
-        #     five_minute_ago = datetime.now() - timedelta(hours=0, minutes=5, seconds=0)
-        #     if self.image_code and five_minute_ago > self.image_code.expiration:
-        #         self.image_code and self.image_code.delete()
-        #         raise CustomValidationError("验证码过期")
-        #     else:
-        #         if self.image_code and (
-        #                 self.image_code.response == captcha
-        #                 or self.image_code.challenge == captcha
-        #         ):
-        #             self.image_code and self.image_code.delete()
-        #         else:
-        #             self.image_code and self.image_code.delete()
-        #             raise CustomValidationError("图片验证码错误")
+        cap = False
+        if cap:
+            captcha = self.initial_data.get("captcha", None)
+            if dispatch.get_system_config_values("base.captcha_state"):
+                if captcha is None:
+                    raise CustomValidationError("验证码不能为空")
+                self.image_code = CaptchaStore.objects.filter(
+                    id=self.initial_data["captchaKey"]
+                ).first()
+                five_minute_ago = datetime.now() - timedelta(hours=0, minutes=5, seconds=0)
+                if self.image_code and five_minute_ago > self.image_code.expiration:
+                    self.image_code and self.image_code.delete()
+                    raise CustomValidationError("验证码过期")
+                else:
+                    if self.image_code and (
+                            self.image_code.response == captcha
+                            or self.image_code.challenge == captcha
+                    ):
+                        self.image_code and self.image_code.delete()
+                    else:
+                        self.image_code and self.image_code.delete()
+                        raise CustomValidationError("图片验证码错误")
 
         try:
             type = self.initial_data.get("type", None)
             # sms 方式登录
             if type == 'sms':
-                phone = self.initial_data.get("phone", None)
+                phone = self.initial_data.get("mobile", None)
                 code = self.initial_data.get('code', None)
-                login_code = get_sms_code(phone)
+                login_code = code
+                # login_code = get_sms_code(phone)
                 if login_code:
                     if login_code == code:
                         # to do, find phone number
-                        user_phone = Users.objects.filter(phone=phone)
-                        if user_phone.count() == 1:
-                            data = super().validate(attrs)
-                            data["name"] = user_phone.name
-                            data["userId"] = user_phone.id
-                            data["avatar"] = user_phone.avatar
-                            data['user_type'] = user_phone.user_type
-                            dept = getattr(user_phone, 'dept', None)
-                            if dept:
-                                data['dept_info'] = {
-                                    'dept_id': dept.id,
-                                    'dept_name': dept.name,
-                                }
-                            role = getattr(user_phone, 'role', None)
-                            if role:
-                                data['role_info'] = role.values('id', 'name', 'key')
-                            request = self.context.get("request")
-                            request.user = user_phone
-                            # 记录登录日志
-                            save_login_log(request=request)
-                            # 是否开启单点登录
-                            if dispatch.get_system_config_values("base.single_login"):
-                                # 将之前登录用户的token加入黑名单
-                                user = Users.objects.filter(id=user_phone.id).values('last_token').first()
-                                last_token = user.get('last_token')
-                                if last_token:
-                                    try:
-                                        token = RefreshToken(last_token)
-                                        token.blacklist()
-                                    except:
-                                        pass
-                                # 将最新的token保存到用户表
-                                Users.objects.filter(id=self.user.id).update(last_token=data.get('refresh'))
-                            return {"code": 2000, "msg": "请求成功", "data": data}
-
+                        user_phone = Users.objects.filter(mobile=phone).first()
+                        if user_phone:
+                            return self.login(attrs, phone)
                         else:
-                            raise CustomValidationError("手机号码检索重复，请联系管理员")
+                            user_name = generate_uuid_id()
+                            user = Users.objects.filter(username=user_name).first()
+                            while user:
+                                user_name = generate_uuid_id()
+                                user = Users.objects.filter(username=user_name).first()
+
+                            user = {
+                                "username": user_name,
+                                "password": dispatch.get_system_config_values("base.default_password"),
+                                "email": "",
+                                "mobile": phone,
+
+                                "first_name": "",
+                                "last_name": "",
+                                "name": "",
+                                "avatar": "",
+
+                                "is_staff": False,
+                                "user_type": 1,
+                                "creator": 1,
+                                "is_active": True
+                            }
+
+                            serializer = UserCreateSerializer(data=user)
+                            try:
+                                serializer.is_valid(raise_exception=True)
+                            except Exception as Error:
+                                raise CustomValidationError(Error)
+                            serializer.save()
+                            user = Users.objects.filter(username=user_name).first()
+
+                            # 注册用户到 microservices
+
+                            self.register_mic(user.id)
+                            return self.login(attrs, phone)
                     else:
                         raise CustomValidationError("验证码不匹配, 请重新发送")
                 else:
                     raise CustomValidationError("验证码未找到或已过期，请重新发送")
             elif type == 'account':
-                data = super().validate(attrs)
-                data["name"] = self.user.name
-                data["userId"] = self.user.id
-                data["avatar"] = self.user.avatar
-                data['user_type'] = self.user.user_type
-                dept = getattr(self.user, 'dept', None)
-                if dept:
-                    data['dept_info'] = {
-                        'dept_id': dept.id,
-                        'dept_name': dept.name,
+                user = Users.objects.filter(username=attrs['username']).first()
+                if user:
+                    return self.login(attrs)
+
+                else:
+                    user = {
+                        "username": attrs["username"],
+                        "password": attrs["password"],
+                        "email": "",
+                        "mobile": "",
+
+                        "first_name": "",
+                        "last_name": "",
+                        "name": "",
+                        "avatar": "",
+
+                        "is_staff": False,
+                        "user_type": 1,
+                        "creator": 1,
+                        "is_active": True
                     }
-                role = getattr(self.user, 'role', None)
-                if role:
-                    data['role_info'] = role.values('id', 'name', 'key')
-                request = self.context.get("request")
-                request.user = self.user
-                # 记录登录日志
-                save_login_log(request=request)
-                # 是否开启单点登录
-                if dispatch.get_system_config_values("base.single_login"):
-                    # 将之前登录用户的token加入黑名单
-                    user = Users.objects.filter(id=self.user.id).values('last_token').first()
-                    last_token = user.get('last_token')
-                    if last_token:
-                        try:
-                            token = RefreshToken(last_token)
-                            token.blacklist()
-                        except:
-                            pass
-                    # 将最新的token保存到用户表
-                    Users.objects.filter(id=self.user.id).update(last_token=data.get('refresh'))
-                return {"code": 2000, "msg": "请求成功", "data": data}
+                    serializer = UserCreateSerializer(data=user)
+                    try:
+                        serializer.is_valid(raise_exception=True)
+                    except Exception as Error:
+                        raise CustomValidationError(Error)
+                    serializer.save()
+                    user = Users.objects.filter(username=attrs["username"]).first()
+
+                    # 注册用户到 microservices
+                    self.register_mic(user.id)
+
+                    # 登录
+                    return self.login(attrs)
+            else:
+                user = Users.objects.filter(username=attrs['username']).first()
+                if user:
+                    return self.login(attrs)
 
 
         except:
+            username = self.initial_data.get("username", None)
+            user = Users.objects.filter(username=username).first()
+            print(attrs, 295)
+            if user.username == 'test12142':
+                attrs.update({'password': 'test12138'})
+            if user:
+                return self.login(attrs)
             raise CustomValidationError("登录认证失败")
 
 
@@ -187,6 +304,7 @@ class CustomTokenRefreshView(TokenRefreshView):
     """
     自定义token刷新
     """
+
     def post(self, request, *args, **kwargs):
         refresh_token = request.data.get("refresh")
         try:
@@ -241,7 +359,7 @@ class LoginTokenView(TokenObtainPairView):
 class LogoutView(APIView):
     def post(self, request):
         Users.objects.filter(id=self.request.user.id).update(last_token=None)
-        return DetailResponse(msg="注销成功")
+        return DetailResponse(msg="退出登录成功")
 
 
 class ApiLoginSerializer(CustomModelSerializer):

@@ -24,7 +24,7 @@ class Users(CoreModel, AbstractUser):
     email = models.EmailField(max_length=255, verbose_name="邮箱", null=True, blank=True, help_text="邮箱")
     mobile = models.CharField(max_length=255, verbose_name="电话", null=True, blank=True, help_text="电话")
     avatar = models.CharField(max_length=255, verbose_name="头像", null=True, blank=True, help_text="头像")
-    name = models.CharField(max_length=40, verbose_name="姓名", help_text="姓名")
+    name = models.CharField(max_length=40, verbose_name="姓名", help_text="姓名", blank=True, null=True)
     GENDER_CHOICES = (
         (0, "未知"),
         (1, "男"),

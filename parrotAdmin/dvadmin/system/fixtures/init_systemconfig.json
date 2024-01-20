@@ -35,7 +35,7 @@
                 "parent": 10,
                 "title": "创建用户默认密码",
                 "key": "default_password",
-                "value": "admin123456",
+                "value": "parrot123456",
                 "sort": 2,
                 "status": true,
                 "data_options": null,

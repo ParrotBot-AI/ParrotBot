@@ -21,7 +21,6 @@ class crudController:
         #     'amount': INIT_CASH,
         #     'is_locked': False
         # }
-        record = None
         with db_session('core') as session:
             if restrict_field:
                 old_record = (
@@ -37,6 +36,8 @@ class crudController:
                     merged_dict = {**default_dic, **create_params}
                     record = model(**merged_dict)
                     session.add(record)
+                else:
+                    return False, "已存在"
 
             else:
                 default_dic = {
@@ -52,10 +53,10 @@ class crudController:
 
             try:
                 session.commit()
-                return True
+                return True, ""
             except Exception as e:
                 session.rollback()
-                return str(e)
+                return False, str(e)
 
     def _retrieve(self, model, restrict_field, restrict_value, callback_function=None):  # "id", 5
         with db_session('core') as session:

@@ -59,8 +59,13 @@ class TaskController(crudController):
 if __name__ == "__main__":
     account_id = 4
     flow = TaskController()
-    pprint(flow.fetch_account_tasks(account_id=account_id, active=True))
+    # pprint(flow.fetch_account_tasks(account_id=account_id, active=True))
     print()
-    pprint(flow.fetch_module_chains(task_id=1, module_id=1))
-    print()
+    # pprint(flow.fetch_module_chains(task_id=1))
+    # print()
     pprint(flow._retrieve(model=Modules, restrict_field='id', restrict_value=2))
+    if DATABASE_SELECTION == 'postgre':
+        from configs.postgre_config import BASES
+    elif DATABASE_SELECTION == 'mysql':
+        from configs.mysql_config import BASES
+    print(BASES['core'].metadata.tables.keys())

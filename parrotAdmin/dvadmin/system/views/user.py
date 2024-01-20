@@ -20,8 +20,12 @@ from dvadmin.utils.validator import CustomUniqueValidator
 from dvadmin.utils.viewset import CustomModelViewSet
 from dvadmin.utils.image_tools import save_new_avatar, separate_avatar_field
 from dvadmin_sms.utils import get_sms_code
-import logging
+from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
+from dvadmin.utils.request_util import save_login_log
+from dvadmin.utils.validator import CustomValidationError
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
+import logging
 logger = logging.getLogger(__name__)
 
 
@@ -102,6 +106,13 @@ class UserCreateSerializer(CustomModelSerializer):
         validators=[
             CustomUniqueValidator(queryset=Users.objects.all(), message="账号必须唯一")
         ],
+    )
+    mobile = serializers.CharField(
+        max_length=50,
+        validators=[
+            CustomUniqueValidator(queryset=Users.objects.all(), message="手机号必须唯一")
+        ],
+        allow_blank=True
     )
     password = serializers.CharField(
         required=False,
@@ -254,7 +265,6 @@ class UserViewSet(CustomModelViewSet):
     retrieve:单例
     destroy:删除
     """
-    logger.info('here')
     queryset = Users.objects.exclude(is_superuser=1).all()
     serializer_class = UserSerializer
     create_serializer_class = UserCreateSerializer
@@ -411,3 +421,5 @@ class UserViewSet(CustomModelViewSet):
                 return DetailResponse(data=None, msg="修改成功")
         else:
             return ErrorResponse(msg="未获取到用户")
+
+    # views for user
