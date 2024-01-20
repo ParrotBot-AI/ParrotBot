@@ -21,4 +21,5 @@ def account_register(user_id=None):
 
 
 if __name__ == "__main__":
+    print("开始监听....")
     core_worker.listen(listen_name='broker')
