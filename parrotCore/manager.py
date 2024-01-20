@@ -12,9 +12,15 @@ class DataApi(ServiceManager):
     file = 'core_web.py'
     dir_path = abspath('services')
 
+class Streaming(ServiceManager):
+    name = 'ParrotCoreStream'
+    file = 'core_web.py'
+    dir_path = abspath('services')
+
 
 SERVICES_MAP = {
-    'ParrotCore': DataApi
+    'ParrotCore': DataApi,
+    'ParrotCoreStream': Streaming,
 }
 
 

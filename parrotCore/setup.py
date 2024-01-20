@@ -55,6 +55,8 @@ setup(name=PROJECT_NAME,
           'python-dateutil>=2.8.1',
           'blinker>=1.6.2',
           'importlib-metadata>=3.6.0',
+          'sqlalchemy_utils',
+
       ],
       zip_safe=False
       )
