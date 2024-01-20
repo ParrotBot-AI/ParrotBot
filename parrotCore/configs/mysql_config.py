@@ -4,10 +4,12 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
 from sqlalchemy_utils import database_exists, create_database
 
+MYSQL_PORT_DEV = 19782
+
 MYSQL_SETTINGS = {
     "core": {
         "HOST": "localhost",
-        "PORT": 3306,
+        "PORT": MYSQL_PORT_DEV,
         "USERNAME": "root",
         "PASSWORD": "Mysql-60003",
         "DB": "core",
