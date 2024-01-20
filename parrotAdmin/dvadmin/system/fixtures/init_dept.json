@@ -30,6 +30,17 @@
                 "status": true,
                 "parent": 3,
                 "children": []
+            },
+            {
+                "name": "外部用户",
+                "key": "",
+                "sort": 3,
+                "owner": "",
+                "phone": "",
+                "email": "",
+                "status": true,
+                "parent": 1,
+                "children": []
             }
         ]
     }

@@ -22,6 +22,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from rest_framework import exceptions, serializers
 from django.conf import settings
 import json
+import re
 from application import dispatch
 from dvadmin.system.models import Users
 from dvadmin.utils.json_response import ErrorResponse, DetailResponse
@@ -241,16 +242,23 @@ class LoginSerializer(TokenObtainPairWithoutPasswordSerializer):
                             user = Users.objects.filter(username=user_name).first()
 
                             # 注册用户到 microservices
-
                             self.register_mic(user.id)
+
                             return self.login(attrs, phone)
                     else:
                         raise CustomValidationError("验证码不匹配, 请重新发送")
                 else:
                     raise CustomValidationError("验证码未找到或已过期，请重新发送")
             elif type == 'account':
-                user = Users.objects.filter(username=attrs['username']).first()
+                pattern = r'^\d{11}$'
+                user = None
+                if re.match(pattern, attrs['username']):
+                    user = Users.objects.filter(mobile=attrs['username']).first()
+                else:
+                    user = Users.objects.filter(username=attrs['username']).first()
+
                 if user:
+                    attrs.update({'username': user.username})
                     return self.login(attrs)
 
                 else:
@@ -270,6 +278,7 @@ class LoginSerializer(TokenObtainPairWithoutPasswordSerializer):
                         "creator": 1,
                         "is_active": True
                     }
+
                     serializer = UserCreateSerializer(data=user)
                     try:
                         serializer.is_valid(raise_exception=True)
