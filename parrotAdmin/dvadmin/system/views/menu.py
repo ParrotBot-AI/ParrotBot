@@ -8,13 +8,38 @@
 """
 from rest_framework import serializers
 from rest_framework.decorators import action
-
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from dvadmin.system.models import Menu, MenuButton
 from dvadmin.system.views.menu_button import MenuButtonInitSerializer
 from dvadmin.utils.json_response import SuccessResponse
 from dvadmin.utils.serializers import CustomModelSerializer
 from dvadmin.utils.viewset import CustomModelViewSet
 
+
+class UserMenuSerializer(CustomModelSerializer):
+    """
+    菜单表的简单序列化器
+    """
+    menuPermission = serializers.SerializerMethodField(read_only=True)
+    hasChild = serializers.SerializerMethodField()
+
+    def get_hasChild(self, instance):
+        hasChild = Menu.objects.filter(parent=instance.id)
+        if hasChild:
+            return True
+        return False
+
+    def get_menuPermission(self, instance):
+        queryset = instance.menuPermission.order_by('-name').values_list('name', flat=True)
+        if queryset:
+            return queryset
+        else:
+            return None
+
+    class Meta:
+        model = Menu
+        fields = ['id', 'name', 'icon', 'is_catalog', 'web_path', 'parent', 'hasChild', 'menuPermission']
+        read_only_fields = ["id"]
 
 class MenuSerializer(CustomModelSerializer):
     """
@@ -169,6 +194,37 @@ class MenuViewSet(CustomModelViewSet):
     filter_fields = ['parent', 'name', 'status', 'is_link', 'visible', 'cache', 'is_catalog']
 
     # extra_filter_backends = []
+    @action(methods=['GET'], detail=False, permission_classes=[])
+    def user_menu(self, request, **kwargs):
+        """用于前端获取当前角色的路由(用户端)"""
+
+        menu_id = request.data.get("menu_id")
+        if menu_id:
+            queryset = self.queryset.filter(status=1, user_use=1, visible=1, parent_id=menu_id).all()
+            serializer = UserMenuSerializer(queryset, many=True, request=request)
+            data = serializer.data
+            return SuccessResponse(data=data, total=len(data), msg="获取成功")
+        else:
+            # 直接跳过考试层
+            queryset = self.queryset.filter(status=1, user_use=1, visible=1, name='托福').first()
+            tuofu_id = queryset.id
+            queryset = self.queryset.filter(status=1, user_use=1, visible=1, parent_id=tuofu_id).all()
+            # queryset = self.queryset.filter(status=1, user_use=1, visible=1, parent__isnull=True).all()
+            serializer = UserMenuSerializer(queryset, many=True, request=request)
+            data = serializer.data
+            return SuccessResponse(data=data, total=len(data), msg="获取成功")
+
+
+        # if not kwargs["id"]:
+        #     queryset = self.queryset.filter(status=1, user_use=1, visible=1, parent__isnull=True).all()
+        #     serializer = UserMenuSerializer(queryset, many=True, request=request)
+        #     data = serializer.data
+        #     return SuccessResponse(data=data, total=len(data), msg="获取成功")
+        # else:
+        #     queryset = self.queryset.filter(status=1, is_user=1, visible=1, parent_id=kwargs["id"]).all()
+        #     serializer = UserMenuSerializer(queryset, many=True, request=request)
+        #     data = serializer.data
+        #     return SuccessResponse(data=data, total=len(data), msg="获取成功")
 
     @action(methods=['GET'], detail=False, permission_classes=[])
     def web_router(self, request):

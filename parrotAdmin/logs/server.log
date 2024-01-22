@@ -8425,3 +8425,1657 @@ RuntimeError: You called this URL via PUT, but the URL doesn't end in a slash an
 [2024-01-21 01:53:25,244][uvicorn.error.startup():48] [INFO] Waiting for application startup.
 [2024-01-21 01:53:25,246][uvicorn.error.main():96] [INFO] ASGI 'lifespan' protocol appears unsupported.
 [2024-01-21 01:53:25,248][uvicorn.error.startup():62] [INFO] Application startup complete.
+[2024-01-21 07:28:42,807][django.request.log_response():224] [ERROR] Internal Server Error: /api/login/
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.8/site-packages/asgiref/sync.py", line 472, in thread_handler
+    raise exc_info[1]
+  File "/usr/local/lib/python3.8/site-packages/django/core/handlers/exception.py", line 38, in inner
+    response = await get_response(request)
+  File "/usr/local/lib/python3.8/site-packages/django/core/handlers/base.py", line 219, in _get_response_async
+    callback, callback_args, callback_kwargs = self.resolve_request(request)
+  File "/usr/local/lib/python3.8/site-packages/django/core/handlers/base.py", line 290, in resolve_request
+    resolver_match = resolver.resolve(request.path_info)
+  File "/usr/local/lib/python3.8/site-packages/django/urls/resolvers.py", line 560, in resolve
+    for pattern in self.url_patterns:
+  File "/usr/local/lib/python3.8/site-packages/django/utils/functional.py", line 48, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/usr/local/lib/python3.8/site-packages/django/urls/resolvers.py", line 602, in url_patterns
+    patterns = getattr(self.urlconf_module, "urlpatterns", self.urlconf_module)
+  File "/usr/local/lib/python3.8/site-packages/django/utils/functional.py", line 48, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/usr/local/lib/python3.8/site-packages/django/urls/resolvers.py", line 595, in urlconf_module
+    return import_module(self.urlconf_name)
+  File "/usr/local/lib/python3.8/importlib/__init__.py", line 127, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1014, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 991, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 975, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 671, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 843, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/parrotAdmin/application/urls.py", line 29, in <module>
+    from dvadmin.system.views.login import (
+  File "/parrotAdmin/dvadmin/system/views/login.py", line 32, in <module>
+    from dvadmin_sms.utils import get_sms_code
+  File "/parrotAdmin/dvadmin_sms/utils.py", line 10, in <module>
+    from dvadmin_sms.api.alibaba_cloud import AliBabaCloudSample
+  File "/parrotAdmin/dvadmin_sms/api/alibaba_cloud.py", line 3, in <module>
+    from alibabacloud_dysmsapi20170525.client import Client as Dysmsapi20170525Client
+ModuleNotFoundError: No module named 'alibabacloud_dysmsapi20170525'
+[2024-01-21 07:28:42,825][uvicorn.access.send():499] [INFO] 177.8.0.1:42838 - "POST /api/login/ HTTP/1.1" 500
+[2024-01-21 07:29:19,043][django.request.log_response():224] [ERROR] Internal Server Error: /api/login/
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.8/site-packages/asgiref/sync.py", line 472, in thread_handler
+    raise exc_info[1]
+  File "/usr/local/lib/python3.8/site-packages/django/core/handlers/exception.py", line 38, in inner
+    response = await get_response(request)
+  File "/usr/local/lib/python3.8/site-packages/django/core/handlers/base.py", line 219, in _get_response_async
+    callback, callback_args, callback_kwargs = self.resolve_request(request)
+  File "/usr/local/lib/python3.8/site-packages/django/core/handlers/base.py", line 290, in resolve_request
+    resolver_match = resolver.resolve(request.path_info)
+  File "/usr/local/lib/python3.8/site-packages/django/urls/resolvers.py", line 560, in resolve
+    for pattern in self.url_patterns:
+  File "/usr/local/lib/python3.8/site-packages/django/utils/functional.py", line 48, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/usr/local/lib/python3.8/site-packages/django/urls/resolvers.py", line 602, in url_patterns
+    patterns = getattr(self.urlconf_module, "urlpatterns", self.urlconf_module)
+  File "/usr/local/lib/python3.8/site-packages/django/utils/functional.py", line 48, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/usr/local/lib/python3.8/site-packages/django/urls/resolvers.py", line 595, in urlconf_module
+    return import_module(self.urlconf_name)
+  File "/usr/local/lib/python3.8/importlib/__init__.py", line 127, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1014, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 991, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 975, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 671, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 843, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/parrotAdmin/application/urls.py", line 29, in <module>
+    from dvadmin.system.views.login import (
+  File "/parrotAdmin/dvadmin/system/views/login.py", line 32, in <module>
+    from dvadmin_sms.utils import get_sms_code
+  File "/parrotAdmin/dvadmin_sms/utils.py", line 10, in <module>
+    from dvadmin_sms.api.alibaba_cloud import AliBabaCloudSample
+  File "/parrotAdmin/dvadmin_sms/api/alibaba_cloud.py", line 3, in <module>
+    from alibabacloud_dysmsapi20170525.client import Client as Dysmsapi20170525Client
+ModuleNotFoundError: No module named 'alibabacloud_dysmsapi20170525'
+[2024-01-21 07:29:19,055][uvicorn.access.send():499] [INFO] 177.8.0.1:50928 - "POST /api/login/ HTTP/1.1" 500
+[2024-01-21 07:29:41,019][django.request.log_response():224] [ERROR] Internal Server Error: /api/login/
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.8/site-packages/asgiref/sync.py", line 472, in thread_handler
+    raise exc_info[1]
+  File "/usr/local/lib/python3.8/site-packages/django/core/handlers/exception.py", line 38, in inner
+    response = await get_response(request)
+  File "/usr/local/lib/python3.8/site-packages/django/core/handlers/base.py", line 219, in _get_response_async
+    callback, callback_args, callback_kwargs = self.resolve_request(request)
+  File "/usr/local/lib/python3.8/site-packages/django/core/handlers/base.py", line 290, in resolve_request
+    resolver_match = resolver.resolve(request.path_info)
+  File "/usr/local/lib/python3.8/site-packages/django/urls/resolvers.py", line 560, in resolve
+    for pattern in self.url_patterns:
+  File "/usr/local/lib/python3.8/site-packages/django/utils/functional.py", line 48, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/usr/local/lib/python3.8/site-packages/django/urls/resolvers.py", line 602, in url_patterns
+    patterns = getattr(self.urlconf_module, "urlpatterns", self.urlconf_module)
+  File "/usr/local/lib/python3.8/site-packages/django/utils/functional.py", line 48, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/usr/local/lib/python3.8/site-packages/django/urls/resolvers.py", line 595, in urlconf_module
+    return import_module(self.urlconf_name)
+  File "/usr/local/lib/python3.8/importlib/__init__.py", line 127, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1014, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 991, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 975, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 671, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 843, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/parrotAdmin/application/urls.py", line 29, in <module>
+    from dvadmin.system.views.login import (
+  File "/parrotAdmin/dvadmin/system/views/login.py", line 32, in <module>
+    from dvadmin_sms.utils import get_sms_code
+  File "/parrotAdmin/dvadmin_sms/utils.py", line 10, in <module>
+    from dvadmin_sms.api.alibaba_cloud import AliBabaCloudSample
+  File "/parrotAdmin/dvadmin_sms/api/alibaba_cloud.py", line 3, in <module>
+    from alibabacloud_dysmsapi20170525.client import Client as Dysmsapi20170525Client
+ModuleNotFoundError: No module named 'alibabacloud_dysmsapi20170525'
+[2024-01-21 07:29:41,037][uvicorn.access.send():499] [INFO] 177.8.0.1:53356 - "POST /api/login/ HTTP/1.1" 500
+[2024-01-21 07:40:16,877][django.request.log_response():224] [ERROR] Internal Server Error: /api/login/
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.8/site-packages/asgiref/sync.py", line 472, in thread_handler
+    raise exc_info[1]
+  File "/usr/local/lib/python3.8/site-packages/django/core/handlers/exception.py", line 38, in inner
+    response = await get_response(request)
+  File "/usr/local/lib/python3.8/site-packages/django/core/handlers/base.py", line 219, in _get_response_async
+    callback, callback_args, callback_kwargs = self.resolve_request(request)
+  File "/usr/local/lib/python3.8/site-packages/django/core/handlers/base.py", line 290, in resolve_request
+    resolver_match = resolver.resolve(request.path_info)
+  File "/usr/local/lib/python3.8/site-packages/django/urls/resolvers.py", line 560, in resolve
+    for pattern in self.url_patterns:
+  File "/usr/local/lib/python3.8/site-packages/django/utils/functional.py", line 48, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/usr/local/lib/python3.8/site-packages/django/urls/resolvers.py", line 602, in url_patterns
+    patterns = getattr(self.urlconf_module, "urlpatterns", self.urlconf_module)
+  File "/usr/local/lib/python3.8/site-packages/django/utils/functional.py", line 48, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/usr/local/lib/python3.8/site-packages/django/urls/resolvers.py", line 595, in urlconf_module
+    return import_module(self.urlconf_name)
+  File "/usr/local/lib/python3.8/importlib/__init__.py", line 127, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1014, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 991, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 975, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 671, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 843, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/parrotAdmin/application/urls.py", line 29, in <module>
+    from dvadmin.system.views.login import (
+  File "/parrotAdmin/dvadmin/system/views/login.py", line 32, in <module>
+    from dvadmin_sms.utils import get_sms_code
+  File "/parrotAdmin/dvadmin_sms/utils.py", line 10, in <module>
+    from dvadmin_sms.api.alibaba_cloud import AliBabaCloudSample
+  File "/parrotAdmin/dvadmin_sms/api/alibaba_cloud.py", line 3, in <module>
+    from alibabacloud_dysmsapi20170525.client import Client as Dysmsapi20170525Client
+ModuleNotFoundError: No module named 'alibabacloud_dysmsapi20170525'
+[2024-01-21 07:40:16,890][uvicorn.access.send():499] [INFO] 177.8.0.1:45896 - "POST /api/login/ HTTP/1.1" 500
+[2024-01-21 07:40:17,198][django.request.log_response():224] [ERROR] Internal Server Error: /api/login/
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.8/site-packages/asgiref/sync.py", line 472, in thread_handler
+    raise exc_info[1]
+  File "/usr/local/lib/python3.8/site-packages/django/core/handlers/exception.py", line 38, in inner
+    response = await get_response(request)
+  File "/usr/local/lib/python3.8/site-packages/django/core/handlers/base.py", line 219, in _get_response_async
+    callback, callback_args, callback_kwargs = self.resolve_request(request)
+  File "/usr/local/lib/python3.8/site-packages/django/core/handlers/base.py", line 290, in resolve_request
+    resolver_match = resolver.resolve(request.path_info)
+  File "/usr/local/lib/python3.8/site-packages/django/urls/resolvers.py", line 560, in resolve
+    for pattern in self.url_patterns:
+  File "/usr/local/lib/python3.8/site-packages/django/utils/functional.py", line 48, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/usr/local/lib/python3.8/site-packages/django/urls/resolvers.py", line 602, in url_patterns
+    patterns = getattr(self.urlconf_module, "urlpatterns", self.urlconf_module)
+  File "/usr/local/lib/python3.8/site-packages/django/utils/functional.py", line 48, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/usr/local/lib/python3.8/site-packages/django/urls/resolvers.py", line 595, in urlconf_module
+    return import_module(self.urlconf_name)
+  File "/usr/local/lib/python3.8/importlib/__init__.py", line 127, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1014, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 991, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 975, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 671, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 843, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/parrotAdmin/application/urls.py", line 29, in <module>
+    from dvadmin.system.views.login import (
+  File "/parrotAdmin/dvadmin/system/views/login.py", line 32, in <module>
+    from dvadmin_sms.utils import get_sms_code
+  File "/parrotAdmin/dvadmin_sms/utils.py", line 10, in <module>
+    from dvadmin_sms.api.alibaba_cloud import AliBabaCloudSample
+  File "/parrotAdmin/dvadmin_sms/api/alibaba_cloud.py", line 3, in <module>
+    from alibabacloud_dysmsapi20170525.client import Client as Dysmsapi20170525Client
+ModuleNotFoundError: No module named 'alibabacloud_dysmsapi20170525'
+[2024-01-21 07:40:17,209][uvicorn.access.send():499] [INFO] 177.8.0.1:45902 - "POST /api/login/ HTTP/1.1" 500
+[2024-01-21 07:40:46,764][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-21 07:40:51,196][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-21 07:40:51,196][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-21 07:40:51,197][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-21 07:41:55,688][django.request.log_response():224] [ERROR] Internal Server Error: /api/login/
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.8/site-packages/asgiref/sync.py", line 472, in thread_handler
+    raise exc_info[1]
+  File "/usr/local/lib/python3.8/site-packages/django/core/handlers/exception.py", line 38, in inner
+    response = await get_response(request)
+  File "/usr/local/lib/python3.8/site-packages/django/core/handlers/base.py", line 219, in _get_response_async
+    callback, callback_args, callback_kwargs = self.resolve_request(request)
+  File "/usr/local/lib/python3.8/site-packages/django/core/handlers/base.py", line 290, in resolve_request
+    resolver_match = resolver.resolve(request.path_info)
+  File "/usr/local/lib/python3.8/site-packages/django/urls/resolvers.py", line 560, in resolve
+    for pattern in self.url_patterns:
+  File "/usr/local/lib/python3.8/site-packages/django/utils/functional.py", line 48, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/usr/local/lib/python3.8/site-packages/django/urls/resolvers.py", line 602, in url_patterns
+    patterns = getattr(self.urlconf_module, "urlpatterns", self.urlconf_module)
+  File "/usr/local/lib/python3.8/site-packages/django/utils/functional.py", line 48, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/usr/local/lib/python3.8/site-packages/django/urls/resolvers.py", line 595, in urlconf_module
+    return import_module(self.urlconf_name)
+  File "/usr/local/lib/python3.8/importlib/__init__.py", line 127, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1014, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 991, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 975, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 671, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 843, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/parrotAdmin/application/urls.py", line 29, in <module>
+    from dvadmin.system.views.login import (
+  File "/parrotAdmin/dvadmin/system/views/login.py", line 32, in <module>
+    from dvadmin_sms.utils import get_sms_code
+  File "/parrotAdmin/dvadmin_sms/utils.py", line 10, in <module>
+    from dvadmin_sms.api.alibaba_cloud import AliBabaCloudSample
+  File "/parrotAdmin/dvadmin_sms/api/alibaba_cloud.py", line 3, in <module>
+    from alibabacloud_dysmsapi20170525.client import Client as Dysmsapi20170525Client
+ModuleNotFoundError: No module named 'alibabacloud_dysmsapi20170525'
+[2024-01-21 07:41:55,709][uvicorn.access.send():499] [INFO] 177.8.0.1:34792 - "POST /api/login/ HTTP/1.1" 500
+[2024-01-21 07:42:11,608][django.request.log_response():224] [ERROR] Internal Server Error: /api/login/
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.8/site-packages/asgiref/sync.py", line 472, in thread_handler
+    raise exc_info[1]
+  File "/usr/local/lib/python3.8/site-packages/django/core/handlers/exception.py", line 38, in inner
+    response = await get_response(request)
+  File "/usr/local/lib/python3.8/site-packages/django/core/handlers/base.py", line 219, in _get_response_async
+    callback, callback_args, callback_kwargs = self.resolve_request(request)
+  File "/usr/local/lib/python3.8/site-packages/django/core/handlers/base.py", line 290, in resolve_request
+    resolver_match = resolver.resolve(request.path_info)
+  File "/usr/local/lib/python3.8/site-packages/django/urls/resolvers.py", line 560, in resolve
+    for pattern in self.url_patterns:
+  File "/usr/local/lib/python3.8/site-packages/django/utils/functional.py", line 48, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/usr/local/lib/python3.8/site-packages/django/urls/resolvers.py", line 602, in url_patterns
+    patterns = getattr(self.urlconf_module, "urlpatterns", self.urlconf_module)
+  File "/usr/local/lib/python3.8/site-packages/django/utils/functional.py", line 48, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/usr/local/lib/python3.8/site-packages/django/urls/resolvers.py", line 595, in urlconf_module
+    return import_module(self.urlconf_name)
+  File "/usr/local/lib/python3.8/importlib/__init__.py", line 127, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1014, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 991, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 975, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 671, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 843, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/parrotAdmin/application/urls.py", line 29, in <module>
+    from dvadmin.system.views.login import (
+  File "/parrotAdmin/dvadmin/system/views/login.py", line 32, in <module>
+    from dvadmin_sms.utils import get_sms_code
+  File "/parrotAdmin/dvadmin_sms/utils.py", line 10, in <module>
+    from dvadmin_sms.api.alibaba_cloud import AliBabaCloudSample
+  File "/parrotAdmin/dvadmin_sms/api/alibaba_cloud.py", line 3, in <module>
+    from alibabacloud_dysmsapi20170525.client import Client as Dysmsapi20170525Client
+ModuleNotFoundError: No module named 'alibabacloud_dysmsapi20170525'
+[2024-01-21 07:42:11,621][uvicorn.access.send():499] [INFO] 177.8.0.1:50700 - "POST /api/login/ HTTP/1.1" 500
+[2024-01-21 07:44:21,785][django.request.log_response():224] [ERROR] Internal Server Error: /api/login/
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.8/site-packages/asgiref/sync.py", line 472, in thread_handler
+    raise exc_info[1]
+  File "/usr/local/lib/python3.8/site-packages/django/core/handlers/exception.py", line 38, in inner
+    response = await get_response(request)
+  File "/usr/local/lib/python3.8/site-packages/django/core/handlers/base.py", line 219, in _get_response_async
+    callback, callback_args, callback_kwargs = self.resolve_request(request)
+  File "/usr/local/lib/python3.8/site-packages/django/core/handlers/base.py", line 290, in resolve_request
+    resolver_match = resolver.resolve(request.path_info)
+  File "/usr/local/lib/python3.8/site-packages/django/urls/resolvers.py", line 560, in resolve
+    for pattern in self.url_patterns:
+  File "/usr/local/lib/python3.8/site-packages/django/utils/functional.py", line 48, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/usr/local/lib/python3.8/site-packages/django/urls/resolvers.py", line 602, in url_patterns
+    patterns = getattr(self.urlconf_module, "urlpatterns", self.urlconf_module)
+  File "/usr/local/lib/python3.8/site-packages/django/utils/functional.py", line 48, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/usr/local/lib/python3.8/site-packages/django/urls/resolvers.py", line 595, in urlconf_module
+    return import_module(self.urlconf_name)
+  File "/usr/local/lib/python3.8/importlib/__init__.py", line 127, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1014, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 991, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 975, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 671, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 843, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/parrotAdmin/application/urls.py", line 29, in <module>
+    from dvadmin.system.views.login import (
+  File "/parrotAdmin/dvadmin/system/views/login.py", line 32, in <module>
+    from dvadmin_sms.utils import get_sms_code
+  File "/parrotAdmin/dvadmin_sms/utils.py", line 10, in <module>
+    from dvadmin_sms.api.alibaba_cloud import AliBabaCloudSample
+  File "/parrotAdmin/dvadmin_sms/api/alibaba_cloud.py", line 3, in <module>
+    from alibabacloud_dysmsapi20170525.client import Client as Dysmsapi20170525Client
+ModuleNotFoundError: No module named 'alibabacloud_dysmsapi20170525'
+[2024-01-21 07:44:21,797][uvicorn.access.send():499] [INFO] 177.8.0.1:38794 - "POST /api/login/ HTTP/1.1" 500
+[2024-01-21 07:45:57,757][django.request.log_response():224] [ERROR] Internal Server Error: /api/login/
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.8/site-packages/asgiref/sync.py", line 472, in thread_handler
+    raise exc_info[1]
+  File "/usr/local/lib/python3.8/site-packages/django/core/handlers/exception.py", line 38, in inner
+    response = await get_response(request)
+  File "/usr/local/lib/python3.8/site-packages/django/core/handlers/base.py", line 219, in _get_response_async
+    callback, callback_args, callback_kwargs = self.resolve_request(request)
+  File "/usr/local/lib/python3.8/site-packages/django/core/handlers/base.py", line 290, in resolve_request
+    resolver_match = resolver.resolve(request.path_info)
+  File "/usr/local/lib/python3.8/site-packages/django/urls/resolvers.py", line 560, in resolve
+    for pattern in self.url_patterns:
+  File "/usr/local/lib/python3.8/site-packages/django/utils/functional.py", line 48, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/usr/local/lib/python3.8/site-packages/django/urls/resolvers.py", line 602, in url_patterns
+    patterns = getattr(self.urlconf_module, "urlpatterns", self.urlconf_module)
+  File "/usr/local/lib/python3.8/site-packages/django/utils/functional.py", line 48, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/usr/local/lib/python3.8/site-packages/django/urls/resolvers.py", line 595, in urlconf_module
+    return import_module(self.urlconf_name)
+  File "/usr/local/lib/python3.8/importlib/__init__.py", line 127, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1014, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 991, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 975, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 671, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 843, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/parrotAdmin/application/urls.py", line 29, in <module>
+    from dvadmin.system.views.login import (
+  File "/parrotAdmin/dvadmin/system/views/login.py", line 32, in <module>
+    from dvadmin_sms.utils import get_sms_code
+  File "/parrotAdmin/dvadmin_sms/utils.py", line 10, in <module>
+    from dvadmin_sms.api.alibaba_cloud import AliBabaCloudSample
+  File "/parrotAdmin/dvadmin_sms/api/alibaba_cloud.py", line 3, in <module>
+    from alibabacloud_dysmsapi20170525.client import Client as Dysmsapi20170525Client
+ModuleNotFoundError: No module named 'alibabacloud_dysmsapi20170525'
+[2024-01-21 07:45:57,770][uvicorn.access.send():499] [INFO] 177.8.0.1:37886 - "POST /api/login/ HTTP/1.1" 500
+[2024-01-22 04:45:29,414][uvicorn.error.serve():74] [INFO] Started server process [18]
+[2024-01-22 04:45:29,414][uvicorn.error.serve():74] [INFO] Started server process [19]
+[2024-01-22 04:45:29,420][uvicorn.error.startup():48] [INFO] Waiting for application startup.
+[2024-01-22 04:45:29,418][uvicorn.error.serve():74] [INFO] Started server process [17]
+[2024-01-22 04:45:29,421][uvicorn.error.startup():48] [INFO] Waiting for application startup.
+[2024-01-22 04:45:29,424][uvicorn.error.main():96] [INFO] ASGI 'lifespan' protocol appears unsupported.
+[2024-01-22 04:45:29,423][uvicorn.error.main():96] [INFO] ASGI 'lifespan' protocol appears unsupported.
+[2024-01-22 04:45:29,426][uvicorn.error.startup():62] [INFO] Application startup complete.
+[2024-01-22 04:45:29,423][uvicorn.error.startup():48] [INFO] Waiting for application startup.
+[2024-01-22 04:45:29,425][uvicorn.error.serve():74] [INFO] Started server process [14]
+[2024-01-22 04:45:29,427][uvicorn.error.startup():62] [INFO] Application startup complete.
+[2024-01-22 04:45:29,429][uvicorn.error.main():96] [INFO] ASGI 'lifespan' protocol appears unsupported.
+[2024-01-22 04:45:29,431][uvicorn.error.startup():48] [INFO] Waiting for application startup.
+[2024-01-22 04:45:29,432][uvicorn.error.startup():62] [INFO] Application startup complete.
+[2024-01-22 04:45:29,433][uvicorn.error.main():96] [INFO] ASGI 'lifespan' protocol appears unsupported.
+[2024-01-22 04:45:29,435][uvicorn.error.startup():62] [INFO] Application startup complete.
+[2024-01-22 15:08:36,911][django.request.log_response():224] [ERROR] Internal Server Error: /api/login/
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.8/site-packages/asgiref/sync.py", line 472, in thread_handler
+    raise exc_info[1]
+  File "/usr/local/lib/python3.8/site-packages/django/core/handlers/exception.py", line 38, in inner
+    response = await get_response(request)
+  File "/usr/local/lib/python3.8/site-packages/django/core/handlers/base.py", line 219, in _get_response_async
+    callback, callback_args, callback_kwargs = self.resolve_request(request)
+  File "/usr/local/lib/python3.8/site-packages/django/core/handlers/base.py", line 290, in resolve_request
+    resolver_match = resolver.resolve(request.path_info)
+  File "/usr/local/lib/python3.8/site-packages/django/urls/resolvers.py", line 560, in resolve
+    for pattern in self.url_patterns:
+  File "/usr/local/lib/python3.8/site-packages/django/utils/functional.py", line 48, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/usr/local/lib/python3.8/site-packages/django/urls/resolvers.py", line 602, in url_patterns
+    patterns = getattr(self.urlconf_module, "urlpatterns", self.urlconf_module)
+  File "/usr/local/lib/python3.8/site-packages/django/utils/functional.py", line 48, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/usr/local/lib/python3.8/site-packages/django/urls/resolvers.py", line 595, in urlconf_module
+    return import_module(self.urlconf_name)
+  File "/usr/local/lib/python3.8/importlib/__init__.py", line 127, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1014, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 991, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 975, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 671, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 843, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/parrotAdmin/application/urls.py", line 29, in <module>
+    from dvadmin.system.views.login import (
+  File "/parrotAdmin/dvadmin/system/views/login.py", line 32, in <module>
+    from dvadmin_sms.utils import get_sms_code
+  File "/parrotAdmin/dvadmin_sms/utils.py", line 10, in <module>
+    from dvadmin_sms.api.alibaba_cloud import AliBabaCloudSample
+  File "/parrotAdmin/dvadmin_sms/api/alibaba_cloud.py", line 3, in <module>
+    from alibabacloud_dysmsapi20170525.client import Client as Dysmsapi20170525Client
+ModuleNotFoundError: No module named 'alibabacloud_dysmsapi20170525'
+[2024-01-22 15:08:36,930][uvicorn.access.send():499] [INFO] 177.8.0.1:58464 - "POST /api/login/ HTTP/1.1" 500
+[2024-01-22 15:08:59,734][django.request.log_response():224] [ERROR] Internal Server Error: /api/login/
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.8/site-packages/asgiref/sync.py", line 472, in thread_handler
+    raise exc_info[1]
+  File "/usr/local/lib/python3.8/site-packages/django/core/handlers/exception.py", line 38, in inner
+    response = await get_response(request)
+  File "/usr/local/lib/python3.8/site-packages/django/core/handlers/base.py", line 219, in _get_response_async
+    callback, callback_args, callback_kwargs = self.resolve_request(request)
+  File "/usr/local/lib/python3.8/site-packages/django/core/handlers/base.py", line 290, in resolve_request
+    resolver_match = resolver.resolve(request.path_info)
+  File "/usr/local/lib/python3.8/site-packages/django/urls/resolvers.py", line 560, in resolve
+    for pattern in self.url_patterns:
+  File "/usr/local/lib/python3.8/site-packages/django/utils/functional.py", line 48, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/usr/local/lib/python3.8/site-packages/django/urls/resolvers.py", line 602, in url_patterns
+    patterns = getattr(self.urlconf_module, "urlpatterns", self.urlconf_module)
+  File "/usr/local/lib/python3.8/site-packages/django/utils/functional.py", line 48, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/usr/local/lib/python3.8/site-packages/django/urls/resolvers.py", line 595, in urlconf_module
+    return import_module(self.urlconf_name)
+  File "/usr/local/lib/python3.8/importlib/__init__.py", line 127, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1014, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 991, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 975, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 671, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 843, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/parrotAdmin/application/urls.py", line 29, in <module>
+    from dvadmin.system.views.login import (
+  File "/parrotAdmin/dvadmin/system/views/login.py", line 32, in <module>
+    from dvadmin_sms.utils import get_sms_code
+  File "/parrotAdmin/dvadmin_sms/utils.py", line 10, in <module>
+    from dvadmin_sms.api.alibaba_cloud import AliBabaCloudSample
+  File "/parrotAdmin/dvadmin_sms/api/alibaba_cloud.py", line 3, in <module>
+    from alibabacloud_dysmsapi20170525.client import Client as Dysmsapi20170525Client
+ModuleNotFoundError: No module named 'alibabacloud_dysmsapi20170525'
+[2024-01-22 15:08:59,753][uvicorn.access.send():499] [INFO] 177.8.0.1:59112 - "POST /api/login/ HTTP/1.1" 500
+[2024-01-22 15:09:31,500][django.request.log_response():224] [ERROR] Internal Server Error: /api/login/
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.8/site-packages/asgiref/sync.py", line 472, in thread_handler
+    raise exc_info[1]
+  File "/usr/local/lib/python3.8/site-packages/django/core/handlers/exception.py", line 38, in inner
+    response = await get_response(request)
+  File "/usr/local/lib/python3.8/site-packages/django/core/handlers/base.py", line 219, in _get_response_async
+    callback, callback_args, callback_kwargs = self.resolve_request(request)
+  File "/usr/local/lib/python3.8/site-packages/django/core/handlers/base.py", line 290, in resolve_request
+    resolver_match = resolver.resolve(request.path_info)
+  File "/usr/local/lib/python3.8/site-packages/django/urls/resolvers.py", line 560, in resolve
+    for pattern in self.url_patterns:
+  File "/usr/local/lib/python3.8/site-packages/django/utils/functional.py", line 48, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/usr/local/lib/python3.8/site-packages/django/urls/resolvers.py", line 602, in url_patterns
+    patterns = getattr(self.urlconf_module, "urlpatterns", self.urlconf_module)
+  File "/usr/local/lib/python3.8/site-packages/django/utils/functional.py", line 48, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/usr/local/lib/python3.8/site-packages/django/urls/resolvers.py", line 595, in urlconf_module
+    return import_module(self.urlconf_name)
+  File "/usr/local/lib/python3.8/importlib/__init__.py", line 127, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1014, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 991, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 975, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 671, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 843, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/parrotAdmin/application/urls.py", line 29, in <module>
+    from dvadmin.system.views.login import (
+  File "/parrotAdmin/dvadmin/system/views/login.py", line 32, in <module>
+    from dvadmin_sms.utils import get_sms_code
+  File "/parrotAdmin/dvadmin_sms/utils.py", line 10, in <module>
+    from dvadmin_sms.api.alibaba_cloud import AliBabaCloudSample
+  File "/parrotAdmin/dvadmin_sms/api/alibaba_cloud.py", line 3, in <module>
+    from alibabacloud_dysmsapi20170525.client import Client as Dysmsapi20170525Client
+ModuleNotFoundError: No module named 'alibabacloud_dysmsapi20170525'
+[2024-01-22 15:09:31,520][uvicorn.access.send():499] [INFO] 177.8.0.1:45460 - "POST /api/login/ HTTP/1.1" 500
+[2024-01-22 15:10:07,819][django.request.log_response():224] [ERROR] Internal Server Error: /api/login/
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.8/site-packages/asgiref/sync.py", line 472, in thread_handler
+    raise exc_info[1]
+  File "/usr/local/lib/python3.8/site-packages/django/core/handlers/exception.py", line 38, in inner
+    response = await get_response(request)
+  File "/usr/local/lib/python3.8/site-packages/django/core/handlers/base.py", line 219, in _get_response_async
+    callback, callback_args, callback_kwargs = self.resolve_request(request)
+  File "/usr/local/lib/python3.8/site-packages/django/core/handlers/base.py", line 290, in resolve_request
+    resolver_match = resolver.resolve(request.path_info)
+  File "/usr/local/lib/python3.8/site-packages/django/urls/resolvers.py", line 560, in resolve
+    for pattern in self.url_patterns:
+  File "/usr/local/lib/python3.8/site-packages/django/utils/functional.py", line 48, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/usr/local/lib/python3.8/site-packages/django/urls/resolvers.py", line 602, in url_patterns
+    patterns = getattr(self.urlconf_module, "urlpatterns", self.urlconf_module)
+  File "/usr/local/lib/python3.8/site-packages/django/utils/functional.py", line 48, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/usr/local/lib/python3.8/site-packages/django/urls/resolvers.py", line 595, in urlconf_module
+    return import_module(self.urlconf_name)
+  File "/usr/local/lib/python3.8/importlib/__init__.py", line 127, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1014, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 991, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 975, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 671, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 843, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/parrotAdmin/application/urls.py", line 29, in <module>
+    from dvadmin.system.views.login import (
+  File "/parrotAdmin/dvadmin/system/views/login.py", line 32, in <module>
+    from dvadmin_sms.utils import get_sms_code
+  File "/parrotAdmin/dvadmin_sms/utils.py", line 10, in <module>
+    from dvadmin_sms.api.alibaba_cloud import AliBabaCloudSample
+  File "/parrotAdmin/dvadmin_sms/api/alibaba_cloud.py", line 3, in <module>
+    from alibabacloud_dysmsapi20170525.client import Client as Dysmsapi20170525Client
+ModuleNotFoundError: No module named 'alibabacloud_dysmsapi20170525'
+[2024-01-22 15:10:07,831][uvicorn.access.send():499] [INFO] 177.8.0.1:49498 - "POST /api/login/ HTTP/1.1" 500
+[2024-01-22 15:10:40,425][django.request.log_response():224] [ERROR] Internal Server Error: /api/login/
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.8/site-packages/asgiref/sync.py", line 472, in thread_handler
+    raise exc_info[1]
+  File "/usr/local/lib/python3.8/site-packages/django/core/handlers/exception.py", line 38, in inner
+    response = await get_response(request)
+  File "/usr/local/lib/python3.8/site-packages/django/core/handlers/base.py", line 219, in _get_response_async
+    callback, callback_args, callback_kwargs = self.resolve_request(request)
+  File "/usr/local/lib/python3.8/site-packages/django/core/handlers/base.py", line 290, in resolve_request
+    resolver_match = resolver.resolve(request.path_info)
+  File "/usr/local/lib/python3.8/site-packages/django/urls/resolvers.py", line 560, in resolve
+    for pattern in self.url_patterns:
+  File "/usr/local/lib/python3.8/site-packages/django/utils/functional.py", line 48, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/usr/local/lib/python3.8/site-packages/django/urls/resolvers.py", line 602, in url_patterns
+    patterns = getattr(self.urlconf_module, "urlpatterns", self.urlconf_module)
+  File "/usr/local/lib/python3.8/site-packages/django/utils/functional.py", line 48, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/usr/local/lib/python3.8/site-packages/django/urls/resolvers.py", line 595, in urlconf_module
+    return import_module(self.urlconf_name)
+  File "/usr/local/lib/python3.8/importlib/__init__.py", line 127, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1014, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 991, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 975, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 671, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 843, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/parrotAdmin/application/urls.py", line 29, in <module>
+    from dvadmin.system.views.login import (
+  File "/parrotAdmin/dvadmin/system/views/login.py", line 32, in <module>
+    from dvadmin_sms.utils import get_sms_code
+  File "/parrotAdmin/dvadmin_sms/utils.py", line 10, in <module>
+    from dvadmin_sms.api.alibaba_cloud import AliBabaCloudSample
+  File "/parrotAdmin/dvadmin_sms/api/alibaba_cloud.py", line 3, in <module>
+    from alibabacloud_dysmsapi20170525.client import Client as Dysmsapi20170525Client
+ModuleNotFoundError: No module named 'alibabacloud_dysmsapi20170525'
+[2024-01-22 15:10:40,444][uvicorn.access.send():499] [INFO] 177.8.0.1:60402 - "POST /api/login/ HTTP/1.1" 500
+[2024-01-22 15:36:58,386][django.request.log_response():224] [ERROR] Internal Server Error: /api/login/
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.8/site-packages/asgiref/sync.py", line 472, in thread_handler
+    raise exc_info[1]
+  File "/usr/local/lib/python3.8/site-packages/django/core/handlers/exception.py", line 38, in inner
+    response = await get_response(request)
+  File "/usr/local/lib/python3.8/site-packages/django/core/handlers/base.py", line 219, in _get_response_async
+    callback, callback_args, callback_kwargs = self.resolve_request(request)
+  File "/usr/local/lib/python3.8/site-packages/django/core/handlers/base.py", line 290, in resolve_request
+    resolver_match = resolver.resolve(request.path_info)
+  File "/usr/local/lib/python3.8/site-packages/django/urls/resolvers.py", line 560, in resolve
+    for pattern in self.url_patterns:
+  File "/usr/local/lib/python3.8/site-packages/django/utils/functional.py", line 48, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/usr/local/lib/python3.8/site-packages/django/urls/resolvers.py", line 602, in url_patterns
+    patterns = getattr(self.urlconf_module, "urlpatterns", self.urlconf_module)
+  File "/usr/local/lib/python3.8/site-packages/django/utils/functional.py", line 48, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/usr/local/lib/python3.8/site-packages/django/urls/resolvers.py", line 595, in urlconf_module
+    return import_module(self.urlconf_name)
+  File "/usr/local/lib/python3.8/importlib/__init__.py", line 127, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1014, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 991, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 975, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 671, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 843, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/parrotAdmin/application/urls.py", line 29, in <module>
+    from dvadmin.system.views.login import (
+  File "/parrotAdmin/dvadmin/system/views/login.py", line 32, in <module>
+    from dvadmin_sms.utils import get_sms_code
+  File "/parrotAdmin/dvadmin_sms/utils.py", line 10, in <module>
+    from dvadmin_sms.api.alibaba_cloud import AliBabaCloudSample
+  File "/parrotAdmin/dvadmin_sms/api/alibaba_cloud.py", line 3, in <module>
+    from alibabacloud_dysmsapi20170525.client import Client as Dysmsapi20170525Client
+ModuleNotFoundError: No module named 'alibabacloud_dysmsapi20170525'
+[2024-01-22 15:36:58,400][uvicorn.access.send():499] [INFO] 177.8.0.1:33010 - "POST /api/login/ HTTP/1.1" 500
+[2024-01-22 16:19:09,605][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-22 16:19:10,196][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-22 16:19:10,197][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-22 16:19:10,197][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-22 16:22:47,333][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/menu.py changed, reloading.
+[2024-01-22 16:22:48,351][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-22 16:22:48,884][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-22 16:22:48,884][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-22 16:22:48,884][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-22 16:22:57,423][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/menu.py changed, reloading.
+[2024-01-22 16:22:58,246][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-22 16:22:58,756][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-22 16:22:58,756][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-22 16:22:58,757][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-22 16:23:32,868][django.request.log_response():224] [ERROR] Internal Server Error: /
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.8/site-packages/asgiref/sync.py", line 472, in thread_handler
+    raise exc_info[1]
+  File "/usr/local/lib/python3.8/site-packages/django/core/handlers/exception.py", line 38, in inner
+    response = await get_response(request)
+  File "/usr/local/lib/python3.8/site-packages/django/core/handlers/base.py", line 219, in _get_response_async
+    callback, callback_args, callback_kwargs = self.resolve_request(request)
+  File "/usr/local/lib/python3.8/site-packages/django/core/handlers/base.py", line 290, in resolve_request
+    resolver_match = resolver.resolve(request.path_info)
+  File "/usr/local/lib/python3.8/site-packages/django/urls/resolvers.py", line 560, in resolve
+    for pattern in self.url_patterns:
+  File "/usr/local/lib/python3.8/site-packages/django/utils/functional.py", line 48, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/usr/local/lib/python3.8/site-packages/django/urls/resolvers.py", line 602, in url_patterns
+    patterns = getattr(self.urlconf_module, "urlpatterns", self.urlconf_module)
+  File "/usr/local/lib/python3.8/site-packages/django/utils/functional.py", line 48, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/usr/local/lib/python3.8/site-packages/django/urls/resolvers.py", line 595, in urlconf_module
+    return import_module(self.urlconf_name)
+  File "/usr/local/lib/python3.8/importlib/__init__.py", line 127, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1014, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 991, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 975, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 671, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 843, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/parrotAdmin/application/urls.py", line 29, in <module>
+    from dvadmin.system.views.login import (
+  File "/parrotAdmin/dvadmin/system/views/login.py", line 32, in <module>
+    from dvadmin_sms.utils import get_sms_code
+  File "/parrotAdmin/dvadmin_sms/utils.py", line 10, in <module>
+    from dvadmin_sms.api.alibaba_cloud import AliBabaCloudSample
+  File "/parrotAdmin/dvadmin_sms/api/alibaba_cloud.py", line 3, in <module>
+    from alibabacloud_dysmsapi20170525.client import Client as Dysmsapi20170525Client
+ModuleNotFoundError: No module named 'alibabacloud_dysmsapi20170525'
+[2024-01-22 16:23:32,880][uvicorn.access.send():499] [INFO] 177.8.0.1:56000 - "GET / HTTP/1.1" 500
+[2024-01-22 16:23:33,374][django.request.log_response():224] [ERROR] Internal Server Error: /favicon.ico
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.8/site-packages/asgiref/sync.py", line 472, in thread_handler
+    raise exc_info[1]
+  File "/usr/local/lib/python3.8/site-packages/django/core/handlers/exception.py", line 38, in inner
+    response = await get_response(request)
+  File "/usr/local/lib/python3.8/site-packages/django/utils/deprecation.py", line 129, in __acall__
+    response = await sync_to_async(
+  File "/usr/local/lib/python3.8/site-packages/asgiref/sync.py", line 435, in __call__
+    ret = await asyncio.wait_for(future, timeout=None)
+  File "/usr/local/lib/python3.8/asyncio/tasks.py", line 455, in wait_for
+    return await fut
+  File "/usr/local/lib/python3.8/site-packages/asgiref/current_thread_executor.py", line 22, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "/usr/local/lib/python3.8/site-packages/asgiref/sync.py", line 476, in thread_handler
+    return func(*args, **kwargs)
+  File "/usr/local/lib/python3.8/site-packages/django/middleware/common.py", line 53, in process_request
+    if self.should_redirect_with_slash(request):
+  File "/usr/local/lib/python3.8/site-packages/django/middleware/common.py", line 70, in should_redirect_with_slash
+    if not is_valid_path(request.path_info, urlconf):
+  File "/usr/local/lib/python3.8/site-packages/django/urls/base.py", line 153, in is_valid_path
+    return resolve(path, urlconf)
+  File "/usr/local/lib/python3.8/site-packages/django/urls/base.py", line 24, in resolve
+    return get_resolver(urlconf).resolve(path)
+  File "/usr/local/lib/python3.8/site-packages/django/urls/resolvers.py", line 560, in resolve
+    for pattern in self.url_patterns:
+  File "/usr/local/lib/python3.8/site-packages/django/utils/functional.py", line 48, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/usr/local/lib/python3.8/site-packages/django/urls/resolvers.py", line 602, in url_patterns
+    patterns = getattr(self.urlconf_module, "urlpatterns", self.urlconf_module)
+  File "/usr/local/lib/python3.8/site-packages/django/utils/functional.py", line 48, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/usr/local/lib/python3.8/site-packages/django/urls/resolvers.py", line 595, in urlconf_module
+    return import_module(self.urlconf_name)
+  File "/usr/local/lib/python3.8/importlib/__init__.py", line 127, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1014, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 991, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 975, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 671, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 843, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/parrotAdmin/application/urls.py", line 29, in <module>
+    from dvadmin.system.views.login import (
+  File "/parrotAdmin/dvadmin/system/views/login.py", line 32, in <module>
+    from dvadmin_sms.utils import get_sms_code
+  File "/parrotAdmin/dvadmin_sms/utils.py", line 10, in <module>
+    from dvadmin_sms.api.alibaba_cloud import AliBabaCloudSample
+  File "/parrotAdmin/dvadmin_sms/api/alibaba_cloud.py", line 3, in <module>
+    from alibabacloud_dysmsapi20170525.client import Client as Dysmsapi20170525Client
+ModuleNotFoundError: No module named 'alibabacloud_dysmsapi20170525'
+[2024-01-22 16:23:33,384][uvicorn.access.send():499] [INFO] 177.8.0.1:56028 - "GET /favicon.ico HTTP/1.1" 500
+[2024-01-22 16:23:38,887][django.channels.server.log_action():147] [INFO] [mHTTP GET / 200 [0.12, 127.0.0.1:57724][0m
+[2024-01-22 16:23:38,898][django.channels.server.log_action():147] [INFO] [mHTTP GET /static/drf-yasg/swagger-ui-dist/swagger-ui.css 200 [0.00, 127.0.0.1:57724][0m
+[2024-01-22 16:23:38,902][django.channels.server.log_action():147] [INFO] [mHTTP GET /static/drf-yasg/swagger-ui-dist/swagger-ui-bundle.js 200 [0.01, 127.0.0.1:57725][0m
+[2024-01-22 16:23:38,904][django.channels.server.log_action():147] [INFO] [mHTTP GET /static/drf-yasg/swagger-ui-dist/swagger-ui-standalone-preset.js 200 [0.01, 127.0.0.1:57726][0m
+[2024-01-22 16:23:38,906][django.channels.server.log_action():147] [INFO] [mHTTP GET /static/drf-yasg/immutable.min.js 200 [0.01, 127.0.0.1:57727][0m
+[2024-01-22 16:23:38,918][django.channels.server.log_action():147] [INFO] [mHTTP GET /static/drf-yasg/swagger-ui-init.js 200 [0.02, 127.0.0.1:57728][0m
+[2024-01-22 16:23:39,329][django.channels.server.log_action():147] [INFO] [mHTTP GET /?format=openapi 200 [0.32, 127.0.0.1:57728][0m
+[2024-01-22 16:24:29,640][dvadmin.utils.backends.authenticate():22] [INFO] test12142 正在使用本地登录...
+[2024-01-22 16:24:30,794][dvadmin.utils.backends.authenticate():22] [INFO] test12142 正在使用本地登录...
+[2024-01-22 16:24:31,106][django.channels.server.log_action():147] [INFO] [mHTTP POST /api/login/ 200 [1.51, 127.0.0.1:57732][0m
+[2024-01-22 16:25:31,284][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/menu.py changed, reloading.
+[2024-01-22 16:25:32,310][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-22 16:25:32,842][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-22 16:25:32,842][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-22 16:25:32,843][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-22 16:25:49,038][django.channels.server.log_action():147] [INFO] [mHTTP GET / 200 [0.21, 127.0.0.1:57747][0m
+[2024-01-22 16:25:49,372][django.channels.server.log_action():147] [INFO] [mHTTP GET /?format=openapi 200 [0.24, 127.0.0.1:57747][0m
+[2024-01-22 16:26:13,225][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/menu.py changed, reloading.
+[2024-01-22 16:26:14,200][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-22 16:26:14,778][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-22 16:26:14,779][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-22 16:26:14,779][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-22 16:27:18,536][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-22 16:27:19,066][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-22 16:27:19,066][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-22 16:27:19,066][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-22 16:28:25,697][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/menu.py changed, reloading.
+[2024-01-22 16:28:26,576][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-22 16:28:27,088][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-22 16:28:27,089][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-22 16:28:27,089][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-22 16:31:59,021][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/menu.py changed, reloading.
+[2024-01-22 16:31:59,921][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-22 16:32:00,434][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-22 16:32:00,434][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-22 16:32:00,435][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-22 16:37:40,021][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-22 16:37:40,566][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-22 16:37:40,566][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-22 16:37:40,567][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-22 16:37:49,599][dvadmin.utils.backends.authenticate():22] [INFO] test12142 正在使用本地登录...
+[2024-01-22 16:37:50,652][dvadmin.utils.backends.authenticate():22] [INFO] test12142 正在使用本地登录...
+[2024-01-22 16:37:50,963][django.channels.server.log_action():147] [INFO] [mHTTP POST /api/login/ 200 [1.39, 127.0.0.1:57834][0m
+[2024-01-22 16:38:41,159][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/menu.py changed, reloading.
+[2024-01-22 16:38:42,125][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-22 16:40:57,394][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/menu.py changed, reloading.
+[2024-01-22 16:40:58,325][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-22 16:42:32,668][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/menu.py changed, reloading.
+[2024-01-22 16:42:33,599][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-22 16:42:47,871][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/menu.py changed, reloading.
+[2024-01-22 16:42:48,747][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-22 16:42:49,255][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-22 16:42:49,255][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-22 16:42:49,256][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-22 16:43:28,360][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/menu.py changed, reloading.
+[2024-01-22 16:43:29,334][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-22 16:45:56,064][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/menu.py changed, reloading.
+[2024-01-22 16:45:57,028][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-22 16:45:57,561][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-22 16:45:57,561][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-22 16:45:57,562][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-22 16:48:30,617][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/menu.py changed, reloading.
+[2024-01-22 16:48:31,605][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-22 16:48:32,140][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-22 16:48:32,140][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-22 16:48:32,141][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-22 16:48:47,937][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/menu.py changed, reloading.
+[2024-01-22 16:48:48,802][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-22 16:48:49,321][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-22 16:48:49,321][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-22 16:48:49,322][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-22 16:48:51,791][django.channels.server.log_action():147] [INFO] [mHTTP GET / 200 [0.09, 127.0.0.1:57977][0m
+[2024-01-22 16:48:52,135][django.channels.server.log_action():147] [INFO] [mHTTP GET /?format=openapi 200 [0.23, 127.0.0.1:57977][0m
+[2024-01-22 16:50:25,552][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/menu.py changed, reloading.
+[2024-01-22 16:50:26,483][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-22 16:50:27,016][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-22 16:50:27,016][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-22 16:50:27,017][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-22 16:50:48,176][django.channels.server.log_action():147] [INFO] [mHTTP GET / 200 [0.14, 127.0.0.1:57993][0m
+[2024-01-22 16:50:48,539][django.channels.server.log_action():147] [INFO] [mHTTP GET /?format=openapi 200 [0.23, 127.0.0.1:57993][0m
+[2024-01-22 16:51:23,665][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/menu.py changed, reloading.
+[2024-01-22 16:51:24,601][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-22 16:51:25,142][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-22 16:51:25,143][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-22 16:51:25,143][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-22 16:51:56,750][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-22 16:51:57,205][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-22 16:51:57,206][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-22 16:51:57,206][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-22 16:55:21,542][dvadmin.utils.backends.authenticate():22] [INFO] test12142 正在使用本地登录...
+[2024-01-22 16:55:22,509][dvadmin.utils.backends.authenticate():22] [INFO] test12142 正在使用本地登录...
+[2024-01-22 16:55:22,816][django.channels.server.log_action():147] [INFO] [mHTTP POST /api/login/ 200 [1.37, 127.0.0.1:58025][0m
+[2024-01-22 16:55:37,653][django.request.log_response():224] [ERROR] Internal Server Error: /api/system/menu/user_menu/
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/asgiref/sync.py", line 472, in thread_handler
+    raise exc_info[1]
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/core/handlers/exception.py", line 38, in inner
+    response = await get_response(request)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/core/handlers/base.py", line 233, in _get_response_async
+    response = await wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/asgiref/sync.py", line 435, in __call__
+    ret = await asyncio.wait_for(future, timeout=None)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/asyncio/tasks.py", line 455, in wait_for
+    return await fut
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/asgiref/current_thread_executor.py", line 22, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/asgiref/sync.py", line 476, in thread_handler
+    return func(*args, **kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/views/decorators/csrf.py", line 54, in wrapped_view
+    return view_func(*args, **kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/viewsets.py", line 125, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 511, in dispatch
+    self.response = self.finalize_response(request, response, *args, **kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 423, in finalize_response
+    assert isinstance(response, HttpResponseBase), (
+AssertionError: Expected a `Response`, `HttpResponse` or `HttpStreamingResponse` to be returned from the view, but received a `<class 'NoneType'>`
+[2024-01-22 16:55:37,658][django.channels.server.log_action():160] [ERROR] [35;1mHTTP GET /api/system/menu/user_menu/ 500 [0.06, 127.0.0.1:58029][0m
+[2024-01-22 16:56:45,353][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/menu.py changed, reloading.
+[2024-01-22 16:56:46,319][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-22 16:56:46,843][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-22 16:56:46,843][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-22 16:56:46,844][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-22 16:56:53,238][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/menu.py changed, reloading.
+[2024-01-22 16:56:53,939][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-22 16:56:54,434][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-22 16:56:54,435][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-22 16:56:54,435][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-22 16:56:55,076][django.channels.server.log_action():147] [INFO] [mHTTP GET /api/system/menu/user_menu/ 200 [0.02, 127.0.0.1:58037][0m
+[2024-01-22 16:57:36,733][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/menu.py changed, reloading.
+[2024-01-22 16:57:37,550][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-22 16:57:38,080][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-22 16:57:38,080][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-22 16:57:38,081][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-22 16:57:41,966][django.request.log_response():224] [WARNING] Not Found: /api/system/menu/user_menu/39/
+[2024-01-22 16:57:41,967][django.channels.server.log_action():155] [WARNING] [33mHTTP GET /api/system/menu/user_menu/39/ 404 [0.04, 127.0.0.1:58041][0m
+[2024-01-22 16:59:23,619][django.request.log_response():224] [WARNING] Not Found: /api/system/menu/web_router/39/
+[2024-01-22 16:59:23,620][django.channels.server.log_action():155] [WARNING] [33mHTTP GET /api/system/menu/web_router/39/ 404 [0.03, 127.0.0.1:58046][0m
+[2024-01-22 16:59:34,760][django.channels.server.log_action():147] [INFO] [mHTTP GET /api/system/menu/web_router/ 200 [0.03, 127.0.0.1:58047][0m
+[2024-01-22 17:02:44,925][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/menu.py changed, reloading.
+[2024-01-22 17:02:45,831][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-22 17:04:03,767][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/menu.py changed, reloading.
+[2024-01-22 17:04:04,605][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-22 17:04:05,120][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-22 17:04:05,121][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-22 17:04:05,121][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-22 17:04:23,087][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/menu.py changed, reloading.
+[2024-01-22 17:04:23,951][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-22 17:04:24,459][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-22 17:04:24,460][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-22 17:04:24,460][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-22 17:04:27,279][dvadmin.utils.exception.CustomExceptionHandler():66] [ERROR] Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/request.py", line 416, in __getattr__
+    return getattr(self._request, attr)
+AttributeError: 'ASGIRequest' object has no attribute 'menu_id'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/menu.py", line 195, in user_menu
+    menu_id = request.menu_id
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/request.py", line 418, in __getattr__
+    return self.__getattribute__(attr)
+AttributeError: 'Request' object has no attribute 'menu_id'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/menu.py", line 201, in user_menu
+    queryset = self.queryset.filter(status=1, is_user=1, visible=1, parent__isnull=True).all()
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/query.py", line 941, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/query.py", line 961, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/query.py", line 968, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/sql/query.py", line 1416, in add_q
+    clause, _ = self._add_q(q_object, self.used_aliases)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/sql/query.py", line 1435, in _add_q
+    child_clause, needed_inner = self.build_filter(
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/sql/query.py", line 1309, in build_filter
+    lookups, parts, reffed_expression = self.solve_lookup_type(arg)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/sql/query.py", line 1135, in solve_lookup_type
+    _, field, _, lookup_parts = self.names_to_path(lookup_splitted, self.get_meta())
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/sql/query.py", line 1562, in names_to_path
+    raise FieldError("Cannot resolve keyword '%s' into field. "
+django.core.exceptions.FieldError: Cannot resolve keyword 'is_user' into field. Choices are: cache, component, component_name, create_datetime, creator, creator_id, dept_belong_id, description, frame_out, icon, id, is_catalog, is_link, menu, menuPermission, micro_service, micro_service_id, modifier, name, parent, parent_id, role, sort, status, update_datetime, user_use, visible, web_path
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/request.py", line 416, in __getattr__
+    return getattr(self._request, attr)
+AttributeError: 'ASGIRequest' object has no attribute 'menu_id'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/menu.py", line 195, in user_menu
+    menu_id = request.menu_id
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/request.py", line 418, in __getattr__
+    return self.__getattribute__(attr)
+AttributeError: 'Request' object has no attribute 'menu_id'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/menu.py", line 201, in user_menu
+    queryset = self.queryset.filter(status=1, is_user=1, visible=1, parent__isnull=True).all()
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/query.py", line 941, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/query.py", line 961, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/query.py", line 968, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/sql/query.py", line 1416, in add_q
+    clause, _ = self._add_q(q_object, self.used_aliases)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/sql/query.py", line 1435, in _add_q
+    child_clause, needed_inner = self.build_filter(
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/sql/query.py", line 1309, in build_filter
+    lookups, parts, reffed_expression = self.solve_lookup_type(arg)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/sql/query.py", line 1135, in solve_lookup_type
+    _, field, _, lookup_parts = self.names_to_path(lookup_splitted, self.get_meta())
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/db/models/sql/query.py", line 1562, in names_to_path
+    raise FieldError("Cannot resolve keyword '%s' into field. "
+django.core.exceptions.FieldError: Cannot resolve keyword 'is_user' into field. Choices are: cache, component, component_name, create_datetime, creator, creator_id, dept_belong_id, description, frame_out, icon, id, is_catalog, is_link, menu, menuPermission, micro_service, micro_service_id, modifier, name, parent, parent_id, role, sort, status, update_datetime, user_use, visible, web_path
+[2024-01-22 17:04:27,283][django.channels.server.log_action():147] [INFO] [mHTTP GET /api/system/menu/user_menu/ 200 [0.07, 127.0.0.1:58065][0m
+[2024-01-22 17:04:53,114][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/menu.py changed, reloading.
+[2024-01-22 17:04:53,951][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-22 17:04:54,483][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-22 17:04:54,484][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-22 17:04:54,484][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-22 17:04:55,454][dvadmin.utils.exception.CustomExceptionHandler():66] [ERROR] Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/request.py", line 416, in __getattr__
+    return getattr(self._request, attr)
+AttributeError: 'ASGIRequest' object has no attribute 'menu_id'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/menu.py", line 195, in user_menu
+    menu_id = request.menu_id
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/request.py", line 418, in __getattr__
+    return self.__getattribute__(attr)
+AttributeError: 'Request' object has no attribute 'menu_id'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/menu.py", line 203, in user_menu
+    data = serializer.data
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 768, in data
+    ret = super().data
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 253, in data
+    self._data = self.to_representation(self.instance)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 686, in to_representation
+    return [
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 687, in <listcomp>
+    self.child.to_representation(item) for item in iterable
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_restql/mixins.py", line 149, in to_representation
+    return super().to_representation(instance)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 507, in to_representation
+    for field in fields:
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 368, in _readable_fields
+    for field in self.fields.values():
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_restql/mixins.py", line 423, in fields
+    return self.dynamic_fields
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/utils/functional.py", line 48, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_restql/mixins.py", line 383, in dynamic_fields
+    return self.allowed_fields
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/utils/functional.py", line 48, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_restql/mixins.py", line 153, in allowed_fields
+    fields = super().fields
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/utils/functional.py", line 48, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 356, in fields
+    for key, value in self.get_fields().items():
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 1052, in get_fields
+    field_names = self.get_field_names(declared_fields, info)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 1148, in get_field_names
+    assert field_name in fields, (
+AssertionError: The field 'hasChild' was declared on serializer UserMenuSerializer, but has not been included in the 'fields' option.
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/request.py", line 416, in __getattr__
+    return getattr(self._request, attr)
+AttributeError: 'ASGIRequest' object has no attribute 'menu_id'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/menu.py", line 195, in user_menu
+    menu_id = request.menu_id
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/request.py", line 418, in __getattr__
+    return self.__getattribute__(attr)
+AttributeError: 'Request' object has no attribute 'menu_id'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/menu.py", line 203, in user_menu
+    data = serializer.data
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 768, in data
+    ret = super().data
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 253, in data
+    self._data = self.to_representation(self.instance)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 686, in to_representation
+    return [
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 687, in <listcomp>
+    self.child.to_representation(item) for item in iterable
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_restql/mixins.py", line 149, in to_representation
+    return super().to_representation(instance)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 507, in to_representation
+    for field in fields:
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 368, in _readable_fields
+    for field in self.fields.values():
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_restql/mixins.py", line 423, in fields
+    return self.dynamic_fields
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/utils/functional.py", line 48, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_restql/mixins.py", line 383, in dynamic_fields
+    return self.allowed_fields
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/utils/functional.py", line 48, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_restql/mixins.py", line 153, in allowed_fields
+    fields = super().fields
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/utils/functional.py", line 48, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 356, in fields
+    for key, value in self.get_fields().items():
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 1052, in get_fields
+    field_names = self.get_field_names(declared_fields, info)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 1148, in get_field_names
+    assert field_name in fields, (
+AssertionError: The field 'hasChild' was declared on serializer UserMenuSerializer, but has not been included in the 'fields' option.
+[2024-01-22 17:04:55,459][django.channels.server.log_action():147] [INFO] [mHTTP GET /api/system/menu/user_menu/ 200 [0.03, 127.0.0.1:58069][0m
+[2024-01-22 17:06:06,273][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/menu.py changed, reloading.
+[2024-01-22 17:06:07,133][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-22 17:06:07,643][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-22 17:06:07,643][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-22 17:06:07,644][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-22 17:06:17,339][dvadmin.utils.exception.CustomExceptionHandler():66] [ERROR] Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/request.py", line 416, in __getattr__
+    return getattr(self._request, attr)
+AttributeError: 'ASGIRequest' object has no attribute 'menu_id'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/menu.py", line 195, in user_menu
+    menu_id = request.menu_id
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/request.py", line 418, in __getattr__
+    return self.__getattribute__(attr)
+AttributeError: 'Request' object has no attribute 'menu_id'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/menu.py", line 203, in user_menu
+    data = serializer.data
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 768, in data
+    ret = super().data
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 253, in data
+    self._data = self.to_representation(self.instance)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 686, in to_representation
+    return [
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 687, in <listcomp>
+    self.child.to_representation(item) for item in iterable
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_restql/mixins.py", line 149, in to_representation
+    return super().to_representation(instance)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 507, in to_representation
+    for field in fields:
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 368, in _readable_fields
+    for field in self.fields.values():
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_restql/mixins.py", line 423, in fields
+    return self.dynamic_fields
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/utils/functional.py", line 48, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_restql/mixins.py", line 383, in dynamic_fields
+    return self.allowed_fields
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/utils/functional.py", line 48, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_restql/mixins.py", line 153, in allowed_fields
+    fields = super().fields
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/utils/functional.py", line 48, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 356, in fields
+    for key, value in self.get_fields().items():
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 1052, in get_fields
+    field_names = self.get_field_names(declared_fields, info)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 1148, in get_field_names
+    assert field_name in fields, (
+AssertionError: The field 'menuPermission' was declared on serializer UserMenuSerializer, but has not been included in the 'fields' option.
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/request.py", line 416, in __getattr__
+    return getattr(self._request, attr)
+AttributeError: 'ASGIRequest' object has no attribute 'menu_id'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/menu.py", line 195, in user_menu
+    menu_id = request.menu_id
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/request.py", line 418, in __getattr__
+    return self.__getattribute__(attr)
+AttributeError: 'Request' object has no attribute 'menu_id'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/menu.py", line 203, in user_menu
+    data = serializer.data
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 768, in data
+    ret = super().data
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 253, in data
+    self._data = self.to_representation(self.instance)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 686, in to_representation
+    return [
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 687, in <listcomp>
+    self.child.to_representation(item) for item in iterable
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_restql/mixins.py", line 149, in to_representation
+    return super().to_representation(instance)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 507, in to_representation
+    for field in fields:
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 368, in _readable_fields
+    for field in self.fields.values():
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_restql/mixins.py", line 423, in fields
+    return self.dynamic_fields
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/utils/functional.py", line 48, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_restql/mixins.py", line 383, in dynamic_fields
+    return self.allowed_fields
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/utils/functional.py", line 48, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_restql/mixins.py", line 153, in allowed_fields
+    fields = super().fields
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/utils/functional.py", line 48, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 356, in fields
+    for key, value in self.get_fields().items():
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 1052, in get_fields
+    field_names = self.get_field_names(declared_fields, info)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 1148, in get_field_names
+    assert field_name in fields, (
+AssertionError: The field 'menuPermission' was declared on serializer UserMenuSerializer, but has not been included in the 'fields' option.
+[2024-01-22 17:06:17,343][django.channels.server.log_action():147] [INFO] [mHTTP GET /api/system/menu/user_menu/ 200 [0.06, 127.0.0.1:58240][0m
+[2024-01-22 17:06:34,302][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/menu.py changed, reloading.
+[2024-01-22 17:06:35,132][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-22 17:06:35,644][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-22 17:06:35,644][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-22 17:06:35,645][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-22 17:06:37,612][dvadmin.utils.exception.CustomExceptionHandler():66] [ERROR] Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/request.py", line 416, in __getattr__
+    return getattr(self._request, attr)
+AttributeError: 'ASGIRequest' object has no attribute 'menu_id'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/menu.py", line 195, in user_menu
+    menu_id = request.menu_id
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/request.py", line 418, in __getattr__
+    return self.__getattribute__(attr)
+AttributeError: 'Request' object has no attribute 'menu_id'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/menu.py", line 203, in user_menu
+    data = serializer.data
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 768, in data
+    ret = super().data
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 253, in data
+    self._data = self.to_representation(self.instance)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 686, in to_representation
+    return [
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 687, in <listcomp>
+    self.child.to_representation(item) for item in iterable
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_restql/mixins.py", line 149, in to_representation
+    return super().to_representation(instance)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 507, in to_representation
+    for field in fields:
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 368, in _readable_fields
+    for field in self.fields.values():
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_restql/mixins.py", line 423, in fields
+    return self.dynamic_fields
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/utils/functional.py", line 48, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_restql/mixins.py", line 383, in dynamic_fields
+    return self.allowed_fields
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/utils/functional.py", line 48, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_restql/mixins.py", line 153, in allowed_fields
+    fields = super().fields
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/utils/functional.py", line 48, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 356, in fields
+    for key, value in self.get_fields().items():
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 1076, in get_fields
+    field_class, field_kwargs = self.build_field(
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 1222, in build_field
+    return self.build_unknown_field(field_name, model_class)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 1340, in build_unknown_field
+    raise ImproperlyConfigured(
+django.core.exceptions.ImproperlyConfigured: Field name `children` is not valid for model `Menu`.
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/request.py", line 416, in __getattr__
+    return getattr(self._request, attr)
+AttributeError: 'ASGIRequest' object has no attribute 'menu_id'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/menu.py", line 195, in user_menu
+    menu_id = request.menu_id
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/request.py", line 418, in __getattr__
+    return self.__getattribute__(attr)
+AttributeError: 'Request' object has no attribute 'menu_id'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/menu.py", line 203, in user_menu
+    data = serializer.data
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 768, in data
+    ret = super().data
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 253, in data
+    self._data = self.to_representation(self.instance)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 686, in to_representation
+    return [
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 687, in <listcomp>
+    self.child.to_representation(item) for item in iterable
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_restql/mixins.py", line 149, in to_representation
+    return super().to_representation(instance)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 507, in to_representation
+    for field in fields:
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 368, in _readable_fields
+    for field in self.fields.values():
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_restql/mixins.py", line 423, in fields
+    return self.dynamic_fields
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/utils/functional.py", line 48, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_restql/mixins.py", line 383, in dynamic_fields
+    return self.allowed_fields
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/utils/functional.py", line 48, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_restql/mixins.py", line 153, in allowed_fields
+    fields = super().fields
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/utils/functional.py", line 48, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 356, in fields
+    for key, value in self.get_fields().items():
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 1076, in get_fields
+    field_class, field_kwargs = self.build_field(
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 1222, in build_field
+    return self.build_unknown_field(field_name, model_class)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 1340, in build_unknown_field
+    raise ImproperlyConfigured(
+django.core.exceptions.ImproperlyConfigured: Field name `children` is not valid for model `Menu`.
+[2024-01-22 17:06:37,616][django.channels.server.log_action():147] [INFO] [mHTTP GET /api/system/menu/user_menu/ 200 [0.09, 127.0.0.1:58244][0m
+[2024-01-22 17:06:54,829][dvadmin.utils.exception.CustomExceptionHandler():66] [ERROR] Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/request.py", line 416, in __getattr__
+    return getattr(self._request, attr)
+AttributeError: 'ASGIRequest' object has no attribute 'menu_id'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/menu.py", line 195, in user_menu
+    menu_id = request.menu_id
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/request.py", line 418, in __getattr__
+    return self.__getattribute__(attr)
+AttributeError: 'Request' object has no attribute 'menu_id'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/menu.py", line 203, in user_menu
+    data = serializer.data
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 768, in data
+    ret = super().data
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 253, in data
+    self._data = self.to_representation(self.instance)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 686, in to_representation
+    return [
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 687, in <listcomp>
+    self.child.to_representation(item) for item in iterable
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_restql/mixins.py", line 149, in to_representation
+    return super().to_representation(instance)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 507, in to_representation
+    for field in fields:
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 368, in _readable_fields
+    for field in self.fields.values():
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_restql/mixins.py", line 423, in fields
+    return self.dynamic_fields
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/utils/functional.py", line 48, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_restql/mixins.py", line 383, in dynamic_fields
+    return self.allowed_fields
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/utils/functional.py", line 48, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_restql/mixins.py", line 153, in allowed_fields
+    fields = super().fields
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/utils/functional.py", line 48, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 356, in fields
+    for key, value in self.get_fields().items():
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 1076, in get_fields
+    field_class, field_kwargs = self.build_field(
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 1222, in build_field
+    return self.build_unknown_field(field_name, model_class)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 1340, in build_unknown_field
+    raise ImproperlyConfigured(
+django.core.exceptions.ImproperlyConfigured: Field name `children` is not valid for model `Menu`.
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/request.py", line 416, in __getattr__
+    return getattr(self._request, attr)
+AttributeError: 'ASGIRequest' object has no attribute 'menu_id'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/menu.py", line 195, in user_menu
+    menu_id = request.menu_id
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/request.py", line 418, in __getattr__
+    return self.__getattribute__(attr)
+AttributeError: 'Request' object has no attribute 'menu_id'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/menu.py", line 203, in user_menu
+    data = serializer.data
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 768, in data
+    ret = super().data
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 253, in data
+    self._data = self.to_representation(self.instance)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 686, in to_representation
+    return [
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 687, in <listcomp>
+    self.child.to_representation(item) for item in iterable
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_restql/mixins.py", line 149, in to_representation
+    return super().to_representation(instance)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 507, in to_representation
+    for field in fields:
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 368, in _readable_fields
+    for field in self.fields.values():
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_restql/mixins.py", line 423, in fields
+    return self.dynamic_fields
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/utils/functional.py", line 48, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_restql/mixins.py", line 383, in dynamic_fields
+    return self.allowed_fields
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/utils/functional.py", line 48, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_restql/mixins.py", line 153, in allowed_fields
+    fields = super().fields
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django/utils/functional.py", line 48, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 356, in fields
+    for key, value in self.get_fields().items():
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 1076, in get_fields
+    field_class, field_kwargs = self.build_field(
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 1222, in build_field
+    return self.build_unknown_field(field_name, model_class)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 1340, in build_unknown_field
+    raise ImproperlyConfigured(
+django.core.exceptions.ImproperlyConfigured: Field name `children` is not valid for model `Menu`.
+[2024-01-22 17:06:54,834][django.channels.server.log_action():147] [INFO] [mHTTP GET /api/system/menu/user_menu/ 200 [0.01, 127.0.0.1:58245][0m
+[2024-01-22 17:06:54,850][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/menu.py changed, reloading.
+[2024-01-22 17:06:55,733][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-22 17:06:56,216][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-22 17:06:56,216][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-22 17:06:56,217][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-22 17:07:08,453][dvadmin.utils.exception.CustomExceptionHandler():66] [ERROR] Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/request.py", line 416, in __getattr__
+    return getattr(self._request, attr)
+AttributeError: 'ASGIRequest' object has no attribute 'menu_id'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/menu.py", line 195, in user_menu
+    menu_id = request.menu_id
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/request.py", line 418, in __getattr__
+    return self.__getattribute__(attr)
+AttributeError: 'Request' object has no attribute 'menu_id'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/menu.py", line 203, in user_menu
+    data = serializer.data
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 768, in data
+    ret = super().data
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 253, in data
+    self._data = self.to_representation(self.instance)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 686, in to_representation
+    return [
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 687, in <listcomp>
+    self.child.to_representation(item) for item in iterable
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_restql/mixins.py", line 149, in to_representation
+    return super().to_representation(instance)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 522, in to_representation
+    ret[field.field_name] = field.to_representation(attribute)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/fields.py", line 1837, in to_representation
+    method = getattr(self.parent, self.method_name)
+AttributeError: 'UserMenuSerializer' object has no attribute 'get_hasChild'
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/request.py", line 416, in __getattr__
+    return getattr(self._request, attr)
+AttributeError: 'ASGIRequest' object has no attribute 'menu_id'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/menu.py", line 195, in user_menu
+    menu_id = request.menu_id
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/request.py", line 418, in __getattr__
+    return self.__getattribute__(attr)
+AttributeError: 'Request' object has no attribute 'menu_id'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/menu.py", line 203, in user_menu
+    data = serializer.data
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 768, in data
+    ret = super().data
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 253, in data
+    self._data = self.to_representation(self.instance)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 686, in to_representation
+    return [
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 687, in <listcomp>
+    self.child.to_representation(item) for item in iterable
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_restql/mixins.py", line 149, in to_representation
+    return super().to_representation(instance)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 522, in to_representation
+    ret[field.field_name] = field.to_representation(attribute)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/fields.py", line 1837, in to_representation
+    method = getattr(self.parent, self.method_name)
+AttributeError: 'UserMenuSerializer' object has no attribute 'get_hasChild'
+[2024-01-22 17:07:08,456][django.channels.server.log_action():147] [INFO] [mHTTP GET /api/system/menu/user_menu/ 200 [0.06, 127.0.0.1:58249][0m
+[2024-01-22 17:07:40,675][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/menu.py changed, reloading.
+[2024-01-22 17:07:41,609][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-22 17:07:42,137][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-22 17:07:42,137][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-22 17:07:42,138][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-22 17:07:45,794][django.channels.server.log_action():147] [INFO] [mHTTP GET /api/system/menu/user_menu/ 200 [0.06, 127.0.0.1:58254][0m
+[2024-01-22 17:08:36,141][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/menu.py changed, reloading.
+[2024-01-22 17:08:36,994][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-22 17:08:37,523][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-22 17:08:37,523][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-22 17:08:37,523][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-22 17:08:45,078][django.channels.server.log_action():147] [INFO] [mHTTP GET /api/system/menu/user_menu/ 200 [0.07, 127.0.0.1:58263][0m
+[2024-01-22 17:09:57,669][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/menu.py changed, reloading.
+[2024-01-22 17:09:58,595][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-22 17:09:59,141][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-22 17:09:59,141][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-22 17:09:59,142][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-22 17:10:31,850][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/menu.py changed, reloading.
+[2024-01-22 17:10:32,707][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-22 17:10:33,216][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-22 17:10:33,216][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-22 17:10:33,217][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-22 17:10:41,369][django.request.log_response():224] [WARNING] Not Found: /api/system/menu/user_menu/39/
+[2024-01-22 17:10:41,370][django.channels.server.log_action():155] [WARNING] [33mHTTP GET /api/system/menu/user_menu/39/ 404 [0.08, 127.0.0.1:58273][0m
+[2024-01-22 17:10:55,627][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/menu.py changed, reloading.
+[2024-01-22 17:10:56,555][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-22 17:10:57,364][django.request.log_response():224] [ERROR] Internal Server Error: /api/system/menu/user_menu/
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.8/site-packages/asgiref/sync.py", line 472, in thread_handler
+    raise exc_info[1]
+  File "/usr/local/lib/python3.8/site-packages/django/core/handlers/exception.py", line 38, in inner
+    response = await get_response(request)
+  File "/usr/local/lib/python3.8/site-packages/django/core/handlers/base.py", line 219, in _get_response_async
+    callback, callback_args, callback_kwargs = self.resolve_request(request)
+  File "/usr/local/lib/python3.8/site-packages/django/core/handlers/base.py", line 290, in resolve_request
+    resolver_match = resolver.resolve(request.path_info)
+  File "/usr/local/lib/python3.8/site-packages/django/urls/resolvers.py", line 560, in resolve
+    for pattern in self.url_patterns:
+  File "/usr/local/lib/python3.8/site-packages/django/utils/functional.py", line 48, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/usr/local/lib/python3.8/site-packages/django/urls/resolvers.py", line 602, in url_patterns
+    patterns = getattr(self.urlconf_module, "urlpatterns", self.urlconf_module)
+  File "/usr/local/lib/python3.8/site-packages/django/utils/functional.py", line 48, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/usr/local/lib/python3.8/site-packages/django/urls/resolvers.py", line 595, in urlconf_module
+    return import_module(self.urlconf_name)
+  File "/usr/local/lib/python3.8/importlib/__init__.py", line 127, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1014, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 991, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 975, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 671, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 843, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/parrotAdmin/application/urls.py", line 29, in <module>
+    from dvadmin.system.views.login import (
+  File "/parrotAdmin/dvadmin/system/views/login.py", line 32, in <module>
+    from dvadmin_sms.utils import get_sms_code
+  File "/parrotAdmin/dvadmin_sms/utils.py", line 10, in <module>
+    from dvadmin_sms.api.alibaba_cloud import AliBabaCloudSample
+  File "/parrotAdmin/dvadmin_sms/api/alibaba_cloud.py", line 3, in <module>
+    from alibabacloud_dysmsapi20170525.client import Client as Dysmsapi20170525Client
+ModuleNotFoundError: No module named 'alibabacloud_dysmsapi20170525'
+[2024-01-22 17:10:57,375][uvicorn.access.send():499] [INFO] 177.8.0.1:32988 - "GET /api/system/menu/user_menu/ HTTP/1.1" 500
+[2024-01-22 17:11:03,351][django.channels.server.log_action():147] [INFO] [mHTTP GET /api/system/menu/user_menu/ 200 [0.07, 127.0.0.1:58278][0m
+[2024-01-22 17:11:35,322][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/menu.py changed, reloading.
+[2024-01-22 17:11:36,203][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-22 17:11:36,716][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-22 17:11:36,717][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-22 17:11:36,717][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-22 17:11:42,065][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/menu.py changed, reloading.
+[2024-01-22 17:11:42,914][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-22 17:11:43,380][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-22 17:11:43,380][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-22 17:11:43,381][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-22 17:11:46,025][django.channels.server.log_action():147] [INFO] [mHTTP GET /api/system/menu/user_menu/ 200 [0.05, 127.0.0.1:58285][0m
+[2024-01-22 17:12:18,630][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/menu.py changed, reloading.
+[2024-01-22 17:12:19,488][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-22 17:12:20,015][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-22 17:12:20,015][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-22 17:12:20,016][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-22 17:12:40,781][django.channels.server.log_action():147] [INFO] [mHTTP GET /api/system/menu/user_menu/ 200 [0.05, 127.0.0.1:58290][0m
+[2024-01-22 17:13:12,493][django.channels.server.log_action():147] [INFO] [mHTTP GET /api/system/menu/user_menu/ 200 [0.03, 127.0.0.1:58295][0m
+[2024-01-22 17:13:19,583][django.channels.server.log_action():147] [INFO] [mHTTP GET /api/system/menu/user_menu/ 200 [0.02, 127.0.0.1:58297][0m
+[2024-01-22 17:14:11,411][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/menu.py changed, reloading.
+[2024-01-22 17:14:12,379][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-22 17:16:39,038][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/menu.py changed, reloading.
+[2024-01-22 17:16:39,941][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-22 17:16:40,474][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-22 17:16:40,474][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-22 17:16:40,475][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-22 17:16:47,616][django.channels.server.log_action():147] [INFO] [mHTTP GET /api/system/menu/user_menu/ 200 [0.06, 127.0.0.1:58309][0m
+[2024-01-22 17:16:54,894][django.channels.server.log_action():147] [INFO] [mHTTP GET /api/system/menu/user_menu/ 200 [0.02, 127.0.0.1:58310][0m
+[2024-01-22 17:17:26,148][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/menu.py changed, reloading.
+[2024-01-22 17:17:27,070][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-22 17:17:27,605][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-22 17:17:27,605][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-22 17:17:27,606][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-22 17:17:29,716][django.channels.server.log_action():147] [INFO] [mHTTP GET /api/system/menu/user_menu/ 200 [0.02, 127.0.0.1:58317][0m
+[2024-01-22 17:18:13,042][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/menu.py changed, reloading.
+[2024-01-22 17:18:13,904][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-22 17:18:14,414][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-22 17:18:14,414][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-22 17:18:14,415][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-22 17:18:16,552][django.channels.server.log_action():147] [INFO] [mHTTP GET /api/system/menu/user_menu/ 200 [0.07, 127.0.0.1:58325][0m
+[2024-01-22 17:18:46,134][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/menu.py changed, reloading.
+[2024-01-22 17:18:47,013][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-22 17:18:47,547][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-22 17:18:47,547][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-22 17:18:47,548][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-22 17:19:01,104][dvadmin.utils.exception.CustomExceptionHandler():66] [ERROR] Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/menu.py", line 212, in user_menu
+    name_list = [x.name for x in data]
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/menu.py", line 212, in <listcomp>
+    name_list = [x.name for x in data]
+AttributeError: 'collections.OrderedDict' object has no attribute 'name'
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/menu.py", line 212, in user_menu
+    name_list = [x.name for x in data]
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/menu.py", line 212, in <listcomp>
+    name_list = [x.name for x in data]
+AttributeError: 'collections.OrderedDict' object has no attribute 'name'
+[2024-01-22 17:19:01,107][django.channels.server.log_action():147] [INFO] [mHTTP GET /api/system/menu/user_menu/ 200 [0.07, 127.0.0.1:58329][0m
+[2024-01-22 17:20:35,917][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/menu.py changed, reloading.
+[2024-01-22 17:20:36,849][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-22 17:20:37,391][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-22 17:20:37,391][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-22 17:20:37,392][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-22 17:20:39,593][django.channels.server.log_action():147] [INFO] [mHTTP GET /api/system/menu/user_menu/ 200 [0.08, 127.0.0.1:58389][0m
+[2024-01-22 17:21:11,311][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/menu.py changed, reloading.
+[2024-01-22 17:21:12,154][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-22 17:21:12,665][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-22 17:21:12,665][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-22 17:21:12,666][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-22 17:21:13,663][django.channels.server.log_action():147] [INFO] [mHTTP GET /api/system/menu/user_menu/ 200 [0.01, 127.0.0.1:58393][0m
+[2024-01-22 17:22:15,272][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/menu.py changed, reloading.
+[2024-01-22 17:22:16,244][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-22 17:22:16,774][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-22 17:22:16,774][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-22 17:22:16,775][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-22 17:22:22,898][django.channels.server.log_action():147] [INFO] [mHTTP GET /api/system/menu/user_menu/ 200 [0.08, 127.0.0.1:58768][0m
+[2024-01-22 17:23:04,278][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/menu.py changed, reloading.
+[2024-01-22 17:23:05,247][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-22 17:23:05,780][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-22 17:23:05,780][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-22 17:23:05,780][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-22 17:23:07,969][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/menu.py changed, reloading.
+[2024-01-22 17:23:08,675][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-22 17:23:09,136][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-22 17:23:09,137][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-22 17:23:09,137][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-22 17:23:13,453][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/menu.py changed, reloading.
+[2024-01-22 17:23:14,168][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-22 17:23:14,683][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-22 17:23:14,683][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-22 17:23:14,684][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-22 17:23:44,319][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/menu.py changed, reloading.
+[2024-01-22 17:24:20,000][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-22 17:24:20,538][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-22 17:24:20,539][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-22 17:24:20,539][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-22 17:24:26,904][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/menu.py changed, reloading.
+[2024-01-22 17:24:27,606][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-22 17:24:28,127][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-22 17:24:28,127][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-22 17:24:28,128][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-22 17:24:29,891][django.channels.server.log_action():147] [INFO] [mHTTP GET /api/system/menu/user_menu/ 200 [0.05, 127.0.0.1:59197][0m
+[2024-01-22 17:24:42,057][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/menu.py changed, reloading.
+[2024-01-22 17:24:42,882][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-22 17:24:43,392][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-22 17:24:43,392][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-22 17:24:43,393][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-22 17:26:58,184][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/menu.py changed, reloading.
+[2024-01-22 17:26:59,150][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-22 17:26:59,679][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-22 17:26:59,680][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-22 17:26:59,680][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-22 17:27:00,855][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/menu.py changed, reloading.
+[2024-01-22 17:27:01,532][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-22 17:27:01,991][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-22 17:27:01,991][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-22 17:27:01,992][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-22 17:27:05,347][django.channels.server.log_action():147] [INFO] [mHTTP GET /api/system/menu/user_menu/ 200 [0.06, 127.0.0.1:59450][0m
+[2024-01-22 17:28:15,933][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/menu.py changed, reloading.
+[2024-01-22 17:28:16,922][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-22 17:28:17,527][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-22 17:28:17,527][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-22 17:28:17,528][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-22 17:28:19,753][django.channels.server.log_action():147] [INFO] [mHTTP GET /api/system/menu/user_menu/ 200 [0.06, 127.0.0.1:59584][0m
+[2024-01-22 17:36:06,221][django.channels.server.log_action():147] [INFO] [mHTTP GET /api/system/menu/user_menu/ 200 [0.04, 127.0.0.1:60432][0m
+[2024-01-22 17:36:28,920][django.channels.server.log_action():147] [INFO] [mHTTP GET /api/system/menu/user_menu/ 200 [0.04, 127.0.0.1:60531][0m

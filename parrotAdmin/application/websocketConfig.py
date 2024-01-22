@@ -115,8 +115,7 @@ class MegCenter(DvadminWebSocket):
         await self.send(text_data=json.dumps(message))
 
 
-
-def websocket_push(room_name,message):
+def websocket_push(room_name, message):
     """
     主动推送
     @param room_name: 群组名称

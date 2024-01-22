@@ -187,6 +187,7 @@ class Menu(CoreModel):
         verbose_name="关联微服务",
         help_text="关联微服务",
     )
+    user_use = models.BooleanField(default=False, verbose_name="是否为前台用户所用", help_text="是否为前台用户所用")
     is_catalog = models.BooleanField(default=False, verbose_name="是否目录", help_text="是否目录")
     web_path = models.CharField(max_length=128, verbose_name="路由地址", null=True, blank=True, help_text="路由地址")
     component = models.CharField(max_length=128, verbose_name="组件地址", null=True, blank=True, help_text="组件地址")
