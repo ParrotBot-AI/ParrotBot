@@ -8425,6 +8425,7 @@ RuntimeError: You called this URL via PUT, but the URL doesn't end in a slash an
 [2024-01-21 01:53:25,244][uvicorn.error.startup():48] [INFO] Waiting for application startup.
 [2024-01-21 01:53:25,246][uvicorn.error.main():96] [INFO] ASGI 'lifespan' protocol appears unsupported.
 [2024-01-21 01:53:25,248][uvicorn.error.startup():62] [INFO] Application startup complete.
+<<<<<<< HEAD
 [2024-01-21 07:28:42,807][django.request.log_response():224] [ERROR] Internal Server Error: /api/login/
 Traceback (most recent call last):
   File "/usr/local/lib/python3.8/site-packages/asgiref/sync.py", line 472, in thread_handler
@@ -10079,3 +10080,33 @@ AttributeError: 'collections.OrderedDict' object has no attribute 'name'
 [2024-01-22 17:28:19,753][django.channels.server.log_action():147] [INFO] [mHTTP GET /api/system/menu/user_menu/ 200 [0.06, 127.0.0.1:59584][0m
 [2024-01-22 17:36:06,221][django.channels.server.log_action():147] [INFO] [mHTTP GET /api/system/menu/user_menu/ 200 [0.04, 127.0.0.1:60432][0m
 [2024-01-22 17:36:28,920][django.channels.server.log_action():147] [INFO] [mHTTP GET /api/system/menu/user_menu/ 200 [0.04, 127.0.0.1:60531][0m
+=======
+[2024-01-21 07:15:33,828][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-21 07:15:34,618][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-21 07:15:34,618][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=19780:interface=0.0.0.0
+[2024-01-21 07:15:34,619][daphne.server.listen_success():153] [INFO] Listening on TCP address 0.0.0.0:19780
+[2024-01-21 07:16:08,400][django.channels.server.log_action():147] [INFO] [mHTTP GET / 200 [0.14, 47.46.108.90:51997][0m
+[2024-01-21 07:16:08,583][django.channels.server.log_action():147] [INFO] [mHTTP GET /static/drf-yasg/style.css 200 [0.00, 47.46.108.90:51997][0m
+[2024-01-21 07:16:08,596][django.channels.server.log_action():147] [INFO] [mHTTP GET /static/drf-yasg/swagger-ui-dist/swagger-ui.css 200 [0.00, 47.46.108.90:51998][0m
+[2024-01-21 07:16:08,738][django.channels.server.log_action():147] [INFO] [mHTTP GET /static/drf-yasg/swagger-ui-dist/swagger-ui-bundle.js 200 [0.00, 47.46.108.90:51997][0m
+[2024-01-21 07:16:08,757][django.channels.server.log_action():147] [INFO] [mHTTP GET /static/drf-yasg/swagger-ui-dist/swagger-ui-standalone-preset.js 200 [0.00, 47.46.108.90:52001][0m
+[2024-01-21 07:16:08,760][django.channels.server.log_action():147] [INFO] [mHTTP GET /static/drf-yasg/immutable.min.js 200 [0.01, 47.46.108.90:52002][0m
+[2024-01-21 07:16:08,763][django.channels.server.log_action():147] [INFO] [mHTTP GET /static/drf-yasg/swagger-ui-init.js 200 [0.01, 47.46.108.90:52000][0m
+[2024-01-21 07:16:08,765][django.channels.server.log_action():147] [INFO] [mHTTP GET /static/drf-yasg/insQ.min.js 200 [0.01, 47.46.108.90:52003][0m
+[2024-01-21 07:16:10,378][django.channels.server.log_action():147] [INFO] [mHTTP GET /?format=openapi 200 [0.46, 47.46.108.90:51997][0m
+[2024-01-21 07:16:10,380][django.channels.server.log_action():147] [INFO] [mHTTP GET /static/drf-yasg/swagger-ui-dist/favicon-32x32.png 200 [0.45, 47.46.108.90:52001][0m
+[2024-01-21 07:16:40,314][django.channels.server.log_action():147] [INFO] [mHTTP GET / 200 [0.01, 47.46.108.90:52007][0m
+[2024-01-21 07:16:40,497][django.channels.server.log_action():147] [INFO] [mHTTP GET /static/drf-yasg/style.css 200 [0.00, 47.46.108.90:52007][0m
+[2024-01-21 07:16:40,501][django.channels.server.log_action():147] [INFO] [mHTTP GET /static/drf-yasg/swagger-ui-dist/swagger-ui.css 200 [0.00, 47.46.108.90:52006][0m
+[2024-01-21 07:16:40,658][django.channels.server.log_action():147] [INFO] [mHTTP GET /static/drf-yasg/swagger-ui-dist/swagger-ui-bundle.js 200 [0.00, 47.46.108.90:52007][0m
+[2024-01-21 07:16:40,674][django.channels.server.log_action():147] [INFO] [mHTTP GET /static/drf-yasg/immutable.min.js 200 [0.00, 47.46.108.90:52012][0m
+[2024-01-21 07:16:40,676][django.channels.server.log_action():147] [INFO] [mHTTP GET /static/drf-yasg/insQ.min.js 200 [0.00, 47.46.108.90:52010][0m
+[2024-01-21 07:16:40,677][django.channels.server.log_action():147] [INFO] [mHTTP GET /static/drf-yasg/swagger-ui-init.js 200 [0.01, 47.46.108.90:52009][0m
+[2024-01-21 07:16:40,679][django.channels.server.log_action():147] [INFO] [mHTTP GET /static/drf-yasg/swagger-ui-dist/swagger-ui-standalone-preset.js 200 [0.01, 47.46.108.90:52011][0m
+[2024-01-21 07:16:42,278][django.channels.server.log_action():147] [INFO] [mHTTP GET /?format=openapi 200 [0.43, 47.46.108.90:52007][0m
+[2024-01-21 07:16:42,280][django.channels.server.log_action():147] [INFO] [mHTTP GET /static/drf-yasg/swagger-ui-dist/favicon-32x32.png 200 [0.41, 47.46.108.90:52011][0m
+[2024-01-21 07:29:20,855][dvadmin.utils.backends.authenticate():22] [INFO] test12142 正在使用本地登录...
+[2024-01-21 07:29:21,211][django.channels.server.log_action():147] [INFO] [mHTTP POST /api/login/ 200 [0.37, 47.46.108.90:52078][0m
+[2024-01-21 07:29:41,793][dvadmin.utils.backends.authenticate():22] [INFO] e4f6bcdb-a0f 正在使用本地登录...
+[2024-01-21 07:29:41,961][django.channels.server.log_action():147] [INFO] [mHTTP POST /api/login/ 200 [0.35, 47.46.108.90:52082][0m
+>>>>>>> 8d308ba67801e27461116d79a2c411204e0437d2
