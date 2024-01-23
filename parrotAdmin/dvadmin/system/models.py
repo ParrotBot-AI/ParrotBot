@@ -223,6 +223,7 @@ class MenuButton(CoreModel):
         (1, "POST"),
         (2, "PUT"),
         (3, "DELETE"),
+        (4, "PATCH")
     )
     method = models.IntegerField(default=0, verbose_name="接口请求方法", null=True, blank=True,
                                  help_text="接口请求方法")
@@ -425,6 +426,7 @@ class ApiWhiteList(CoreModel):
         (1, "POST"),
         (2, "PUT"),
         (3, "DELETE"),
+        (5, "PATCH")
     )
     method = models.IntegerField(default=0, verbose_name="接口请求方法", null=True, blank=True,
                                  help_text="接口请求方法")

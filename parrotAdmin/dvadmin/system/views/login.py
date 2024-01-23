@@ -157,18 +157,20 @@ class LoginSerializer(TokenObtainPairWithoutPasswordSerializer):
         # 记录登录日志
         save_login_log(request=request)
         # 是否开启单点登录
-        if dispatch.get_system_config_values("base.single_login"):
-            # 将之前登录用户的token加入黑名单
-            user = Users.objects.filter(id=self.user.id).values('last_token').first()
-            last_token = user.get('last_token')
-            if last_token:
-                try:
-                    token = RefreshToken(last_token)
-                    token.blacklist()
-                except:
-                    pass
-            # 将最新的token保存到用户表
-            Users.objects.filter(id=self.user.id).update(last_token=data.get('refresh'))
+        # print(dispatch.get_system_config_values("base.single_login"))
+        # if dispatch.get_system_config_values("base.single_login"):
+        #     # 将之前登录用户的token加入黑名单
+        #     print(165)
+        #     user = Users.objects.filter(id=self.user.id).values('last_token').first()
+        #     last_token = user.get('last_token')
+        #     if last_token:
+        #         try:
+        #             token = RefreshToken(last_token)
+        #             token.blacklist()
+        #         except:
+        #             pass
+        #     # 将最新的token保存到用户表
+        #     Users.objects.filter(id=self.user.id).update(last_token=data.get('refresh'))
         return {"code": 2000, "msg": "请求成功", "data": data}
 
     def validate(self, attrs):
@@ -259,6 +261,7 @@ class LoginSerializer(TokenObtainPairWithoutPasswordSerializer):
 
                 if user:
                     attrs.update({'username': user.username})
+                    print("here")
                     return self.login(attrs)
 
                 else:
@@ -301,7 +304,6 @@ class LoginSerializer(TokenObtainPairWithoutPasswordSerializer):
         except:
             username = self.initial_data.get("username", None)
             user = Users.objects.filter(username=username).first()
-            print(attrs, 295)
             if user.username == 'test12142':
                 attrs.update({'password': 'test12138'})
             if user:

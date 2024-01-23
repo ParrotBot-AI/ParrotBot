@@ -4179,3 +4179,837 @@ Traceback (most recent call last):
   File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/menu.py", line 212, in <listcomp>
     name_list = [x.name for x in data]
 AttributeError: 'collections.OrderedDict' object has no attribute 'name'
+[2024-01-23 07:59:51,852][dvadmin.utils.exception.CustomExceptionHandler():66] [ERROR] Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 31, in _decorator
+    return method(self, *args, **kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 98, in _get
+    return self.client.get(key, default=default, version=version, client=client)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/client/default.py", line 260, in get
+    raise ConnectionInterrupted(connection=client) from e
+django_redis.exceptions.ConnectionInterrupted: Redis ConnectionError: Error 61 connecting to 127.0.0.1:19783. Connection refused.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework_simplejwt/views.py", line 43, in post
+    serializer.is_valid(raise_exception=True)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 227, in is_valid
+    self._validated_data = self.run_validation(self.initial_data)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 429, in run_validation
+    value = self.validate(value)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py", line 307, in validate
+    return self.login(attrs)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py", line 160, in login
+    if dispatch.get_system_config_values("base.single_login"):
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/application/dispatch.py", line 239, in get_system_config_values
+    system_config = cache.get(f"init_system_config")
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 91, in get
+    value = self._get(key, default, version, client)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 38, in _decorator
+    raise e.__cause__
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/client/default.py", line 258, in get
+    value = client.get(key)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/commands/core.py", line 1829, in get
+    return self.execute_command("GET", name)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/client.py", line 533, in execute_command
+    conn = self.connection or pool.get_connection(command_name, **options)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/connection.py", line 1086, in get_connection
+    connection.connect()
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/connection.py", line 270, in connect
+    raise ConnectionError(self._error_message(e))
+redis.exceptions.ConnectionError: Error 61 connecting to 127.0.0.1:19783. Connection refused.
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 31, in _decorator
+    return method(self, *args, **kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 98, in _get
+    return self.client.get(key, default=default, version=version, client=client)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/client/default.py", line 260, in get
+    raise ConnectionInterrupted(connection=client) from e
+django_redis.exceptions.ConnectionInterrupted: Redis ConnectionError: Error 61 connecting to 127.0.0.1:19783. Connection refused.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework_simplejwt/views.py", line 43, in post
+    serializer.is_valid(raise_exception=True)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 227, in is_valid
+    self._validated_data = self.run_validation(self.initial_data)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 429, in run_validation
+    value = self.validate(value)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py", line 307, in validate
+    return self.login(attrs)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py", line 160, in login
+    if dispatch.get_system_config_values("base.single_login"):
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/application/dispatch.py", line 239, in get_system_config_values
+    system_config = cache.get(f"init_system_config")
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 91, in get
+    value = self._get(key, default, version, client)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 38, in _decorator
+    raise e.__cause__
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/client/default.py", line 258, in get
+    value = client.get(key)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/commands/core.py", line 1829, in get
+    return self.execute_command("GET", name)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/client.py", line 533, in execute_command
+    conn = self.connection or pool.get_connection(command_name, **options)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/connection.py", line 1086, in get_connection
+    connection.connect()
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/connection.py", line 270, in connect
+    raise ConnectionError(self._error_message(e))
+redis.exceptions.ConnectionError: Error 61 connecting to 127.0.0.1:19783. Connection refused.
+[2024-01-23 08:00:03,680][dvadmin.utils.exception.CustomExceptionHandler():66] [ERROR] Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 31, in _decorator
+    return method(self, *args, **kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 98, in _get
+    return self.client.get(key, default=default, version=version, client=client)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/client/default.py", line 260, in get
+    raise ConnectionInterrupted(connection=client) from e
+django_redis.exceptions.ConnectionInterrupted: Redis ConnectionError: Error 61 connecting to 127.0.0.1:19783. Connection refused.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py", line 211, in validate
+    return self.login(attrs, phone)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py", line 160, in login
+    if dispatch.get_system_config_values("base.single_login"):
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/application/dispatch.py", line 239, in get_system_config_values
+    system_config = cache.get(f"init_system_config")
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 91, in get
+    value = self._get(key, default, version, client)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 38, in _decorator
+    raise e.__cause__
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/client/default.py", line 258, in get
+    value = client.get(key)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/commands/core.py", line 1829, in get
+    return self.execute_command("GET", name)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/client.py", line 533, in execute_command
+    conn = self.connection or pool.get_connection(command_name, **options)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/connection.py", line 1086, in get_connection
+    connection.connect()
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/connection.py", line 270, in connect
+    raise ConnectionError(self._error_message(e))
+redis.exceptions.ConnectionError: Error 61 connecting to 127.0.0.1:19783. Connection refused.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework_simplejwt/views.py", line 43, in post
+    serializer.is_valid(raise_exception=True)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 227, in is_valid
+    self._validated_data = self.run_validation(self.initial_data)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 429, in run_validation
+    value = self.validate(value)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py", line 304, in validate
+    if user.username == 'test12142':
+AttributeError: 'NoneType' object has no attribute 'username'
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 31, in _decorator
+    return method(self, *args, **kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 98, in _get
+    return self.client.get(key, default=default, version=version, client=client)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/client/default.py", line 260, in get
+    raise ConnectionInterrupted(connection=client) from e
+django_redis.exceptions.ConnectionInterrupted: Redis ConnectionError: Error 61 connecting to 127.0.0.1:19783. Connection refused.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py", line 211, in validate
+    return self.login(attrs, phone)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py", line 160, in login
+    if dispatch.get_system_config_values("base.single_login"):
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/application/dispatch.py", line 239, in get_system_config_values
+    system_config = cache.get(f"init_system_config")
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 91, in get
+    value = self._get(key, default, version, client)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 38, in _decorator
+    raise e.__cause__
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/client/default.py", line 258, in get
+    value = client.get(key)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/commands/core.py", line 1829, in get
+    return self.execute_command("GET", name)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/client.py", line 533, in execute_command
+    conn = self.connection or pool.get_connection(command_name, **options)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/connection.py", line 1086, in get_connection
+    connection.connect()
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/connection.py", line 270, in connect
+    raise ConnectionError(self._error_message(e))
+redis.exceptions.ConnectionError: Error 61 connecting to 127.0.0.1:19783. Connection refused.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework_simplejwt/views.py", line 43, in post
+    serializer.is_valid(raise_exception=True)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 227, in is_valid
+    self._validated_data = self.run_validation(self.initial_data)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 429, in run_validation
+    value = self.validate(value)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py", line 304, in validate
+    if user.username == 'test12142':
+AttributeError: 'NoneType' object has no attribute 'username'
+[2024-01-23 08:00:04,320][dvadmin.utils.exception.CustomExceptionHandler():66] [ERROR] Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 31, in _decorator
+    return method(self, *args, **kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 98, in _get
+    return self.client.get(key, default=default, version=version, client=client)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/client/default.py", line 260, in get
+    raise ConnectionInterrupted(connection=client) from e
+django_redis.exceptions.ConnectionInterrupted: Redis ConnectionError: Error 61 connecting to 127.0.0.1:19783. Connection refused.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py", line 211, in validate
+    return self.login(attrs, phone)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py", line 160, in login
+    if dispatch.get_system_config_values("base.single_login"):
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/application/dispatch.py", line 239, in get_system_config_values
+    system_config = cache.get(f"init_system_config")
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 91, in get
+    value = self._get(key, default, version, client)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 38, in _decorator
+    raise e.__cause__
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/client/default.py", line 258, in get
+    value = client.get(key)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/commands/core.py", line 1829, in get
+    return self.execute_command("GET", name)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/client.py", line 533, in execute_command
+    conn = self.connection or pool.get_connection(command_name, **options)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/connection.py", line 1086, in get_connection
+    connection.connect()
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/connection.py", line 270, in connect
+    raise ConnectionError(self._error_message(e))
+redis.exceptions.ConnectionError: Error 61 connecting to 127.0.0.1:19783. Connection refused.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework_simplejwt/views.py", line 43, in post
+    serializer.is_valid(raise_exception=True)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 227, in is_valid
+    self._validated_data = self.run_validation(self.initial_data)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 429, in run_validation
+    value = self.validate(value)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py", line 304, in validate
+    if user.username == 'test12142':
+AttributeError: 'NoneType' object has no attribute 'username'
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 31, in _decorator
+    return method(self, *args, **kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 98, in _get
+    return self.client.get(key, default=default, version=version, client=client)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/client/default.py", line 260, in get
+    raise ConnectionInterrupted(connection=client) from e
+django_redis.exceptions.ConnectionInterrupted: Redis ConnectionError: Error 61 connecting to 127.0.0.1:19783. Connection refused.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py", line 211, in validate
+    return self.login(attrs, phone)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py", line 160, in login
+    if dispatch.get_system_config_values("base.single_login"):
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/application/dispatch.py", line 239, in get_system_config_values
+    system_config = cache.get(f"init_system_config")
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 91, in get
+    value = self._get(key, default, version, client)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 38, in _decorator
+    raise e.__cause__
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/client/default.py", line 258, in get
+    value = client.get(key)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/commands/core.py", line 1829, in get
+    return self.execute_command("GET", name)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/client.py", line 533, in execute_command
+    conn = self.connection or pool.get_connection(command_name, **options)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/connection.py", line 1086, in get_connection
+    connection.connect()
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/connection.py", line 270, in connect
+    raise ConnectionError(self._error_message(e))
+redis.exceptions.ConnectionError: Error 61 connecting to 127.0.0.1:19783. Connection refused.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework_simplejwt/views.py", line 43, in post
+    serializer.is_valid(raise_exception=True)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 227, in is_valid
+    self._validated_data = self.run_validation(self.initial_data)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 429, in run_validation
+    value = self.validate(value)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py", line 304, in validate
+    if user.username == 'test12142':
+AttributeError: 'NoneType' object has no attribute 'username'
+[2024-01-23 08:01:41,255][dvadmin.utils.exception.CustomExceptionHandler():66] [ERROR] Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 31, in _decorator
+    return method(self, *args, **kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 98, in _get
+    return self.client.get(key, default=default, version=version, client=client)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/client/default.py", line 260, in get
+    raise ConnectionInterrupted(connection=client) from e
+django_redis.exceptions.ConnectionInterrupted: Redis ConnectionError: Error 61 connecting to 127.0.0.1:19783. Connection refused.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py", line 212, in validate
+    return self.login(attrs, phone)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py", line 160, in login
+    if dispatch.get_system_config_values("base.single_login"):
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/application/dispatch.py", line 239, in get_system_config_values
+    system_config = cache.get(f"init_system_config")
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 91, in get
+    value = self._get(key, default, version, client)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 38, in _decorator
+    raise e.__cause__
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/client/default.py", line 258, in get
+    value = client.get(key)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/commands/core.py", line 1829, in get
+    return self.execute_command("GET", name)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/client.py", line 533, in execute_command
+    conn = self.connection or pool.get_connection(command_name, **options)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/connection.py", line 1086, in get_connection
+    connection.connect()
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/connection.py", line 270, in connect
+    raise ConnectionError(self._error_message(e))
+redis.exceptions.ConnectionError: Error 61 connecting to 127.0.0.1:19783. Connection refused.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework_simplejwt/views.py", line 43, in post
+    serializer.is_valid(raise_exception=True)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 227, in is_valid
+    self._validated_data = self.run_validation(self.initial_data)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 429, in run_validation
+    value = self.validate(value)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py", line 305, in validate
+    if user.username == 'test12142':
+AttributeError: 'NoneType' object has no attribute 'username'
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 31, in _decorator
+    return method(self, *args, **kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 98, in _get
+    return self.client.get(key, default=default, version=version, client=client)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/client/default.py", line 260, in get
+    raise ConnectionInterrupted(connection=client) from e
+django_redis.exceptions.ConnectionInterrupted: Redis ConnectionError: Error 61 connecting to 127.0.0.1:19783. Connection refused.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py", line 212, in validate
+    return self.login(attrs, phone)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py", line 160, in login
+    if dispatch.get_system_config_values("base.single_login"):
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/application/dispatch.py", line 239, in get_system_config_values
+    system_config = cache.get(f"init_system_config")
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 91, in get
+    value = self._get(key, default, version, client)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 38, in _decorator
+    raise e.__cause__
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/client/default.py", line 258, in get
+    value = client.get(key)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/commands/core.py", line 1829, in get
+    return self.execute_command("GET", name)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/client.py", line 533, in execute_command
+    conn = self.connection or pool.get_connection(command_name, **options)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/connection.py", line 1086, in get_connection
+    connection.connect()
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/connection.py", line 270, in connect
+    raise ConnectionError(self._error_message(e))
+redis.exceptions.ConnectionError: Error 61 connecting to 127.0.0.1:19783. Connection refused.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework_simplejwt/views.py", line 43, in post
+    serializer.is_valid(raise_exception=True)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 227, in is_valid
+    self._validated_data = self.run_validation(self.initial_data)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 429, in run_validation
+    value = self.validate(value)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py", line 305, in validate
+    if user.username == 'test12142':
+AttributeError: 'NoneType' object has no attribute 'username'
+[2024-01-23 08:01:41,918][dvadmin.utils.exception.CustomExceptionHandler():66] [ERROR] Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 31, in _decorator
+    return method(self, *args, **kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 98, in _get
+    return self.client.get(key, default=default, version=version, client=client)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/client/default.py", line 260, in get
+    raise ConnectionInterrupted(connection=client) from e
+django_redis.exceptions.ConnectionInterrupted: Redis ConnectionError: Error 61 connecting to 127.0.0.1:19783. Connection refused.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py", line 212, in validate
+    return self.login(attrs, phone)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py", line 160, in login
+    if dispatch.get_system_config_values("base.single_login"):
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/application/dispatch.py", line 239, in get_system_config_values
+    system_config = cache.get(f"init_system_config")
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 91, in get
+    value = self._get(key, default, version, client)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 38, in _decorator
+    raise e.__cause__
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/client/default.py", line 258, in get
+    value = client.get(key)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/commands/core.py", line 1829, in get
+    return self.execute_command("GET", name)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/client.py", line 533, in execute_command
+    conn = self.connection or pool.get_connection(command_name, **options)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/connection.py", line 1086, in get_connection
+    connection.connect()
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/connection.py", line 270, in connect
+    raise ConnectionError(self._error_message(e))
+redis.exceptions.ConnectionError: Error 61 connecting to 127.0.0.1:19783. Connection refused.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework_simplejwt/views.py", line 43, in post
+    serializer.is_valid(raise_exception=True)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 227, in is_valid
+    self._validated_data = self.run_validation(self.initial_data)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 429, in run_validation
+    value = self.validate(value)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py", line 305, in validate
+    if user.username == 'test12142':
+AttributeError: 'NoneType' object has no attribute 'username'
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 31, in _decorator
+    return method(self, *args, **kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 98, in _get
+    return self.client.get(key, default=default, version=version, client=client)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/client/default.py", line 260, in get
+    raise ConnectionInterrupted(connection=client) from e
+django_redis.exceptions.ConnectionInterrupted: Redis ConnectionError: Error 61 connecting to 127.0.0.1:19783. Connection refused.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py", line 212, in validate
+    return self.login(attrs, phone)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py", line 160, in login
+    if dispatch.get_system_config_values("base.single_login"):
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/application/dispatch.py", line 239, in get_system_config_values
+    system_config = cache.get(f"init_system_config")
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 91, in get
+    value = self._get(key, default, version, client)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 38, in _decorator
+    raise e.__cause__
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/client/default.py", line 258, in get
+    value = client.get(key)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/commands/core.py", line 1829, in get
+    return self.execute_command("GET", name)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/client.py", line 533, in execute_command
+    conn = self.connection or pool.get_connection(command_name, **options)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/connection.py", line 1086, in get_connection
+    connection.connect()
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/connection.py", line 270, in connect
+    raise ConnectionError(self._error_message(e))
+redis.exceptions.ConnectionError: Error 61 connecting to 127.0.0.1:19783. Connection refused.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework_simplejwt/views.py", line 43, in post
+    serializer.is_valid(raise_exception=True)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 227, in is_valid
+    self._validated_data = self.run_validation(self.initial_data)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 429, in run_validation
+    value = self.validate(value)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py", line 305, in validate
+    if user.username == 'test12142':
+AttributeError: 'NoneType' object has no attribute 'username'
+[2024-01-23 08:02:38,827][dvadmin.utils.exception.CustomExceptionHandler():66] [ERROR] Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 31, in _decorator
+    return method(self, *args, **kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 98, in _get
+    return self.client.get(key, default=default, version=version, client=client)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/client/default.py", line 260, in get
+    raise ConnectionInterrupted(connection=client) from e
+django_redis.exceptions.ConnectionInterrupted: Redis ConnectionError: Error 61 connecting to 127.0.0.1:19783. Connection refused.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py", line 211, in validate
+    return self.login(attrs, phone)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py", line 160, in login
+    if dispatch.get_system_config_values("base.single_login"):
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/application/dispatch.py", line 239, in get_system_config_values
+    system_config = cache.get(f"init_system_config")
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 91, in get
+    value = self._get(key, default, version, client)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 38, in _decorator
+    raise e.__cause__
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/client/default.py", line 258, in get
+    value = client.get(key)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/commands/core.py", line 1829, in get
+    return self.execute_command("GET", name)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/client.py", line 533, in execute_command
+    conn = self.connection or pool.get_connection(command_name, **options)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/connection.py", line 1086, in get_connection
+    connection.connect()
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/connection.py", line 270, in connect
+    raise ConnectionError(self._error_message(e))
+redis.exceptions.ConnectionError: Error 61 connecting to 127.0.0.1:19783. Connection refused.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework_simplejwt/views.py", line 43, in post
+    serializer.is_valid(raise_exception=True)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 227, in is_valid
+    self._validated_data = self.run_validation(self.initial_data)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 429, in run_validation
+    value = self.validate(value)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py", line 304, in validate
+    if user.username == 'test12142':
+AttributeError: 'NoneType' object has no attribute 'username'
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 31, in _decorator
+    return method(self, *args, **kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 98, in _get
+    return self.client.get(key, default=default, version=version, client=client)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/client/default.py", line 260, in get
+    raise ConnectionInterrupted(connection=client) from e
+django_redis.exceptions.ConnectionInterrupted: Redis ConnectionError: Error 61 connecting to 127.0.0.1:19783. Connection refused.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py", line 211, in validate
+    return self.login(attrs, phone)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py", line 160, in login
+    if dispatch.get_system_config_values("base.single_login"):
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/application/dispatch.py", line 239, in get_system_config_values
+    system_config = cache.get(f"init_system_config")
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 91, in get
+    value = self._get(key, default, version, client)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 38, in _decorator
+    raise e.__cause__
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/client/default.py", line 258, in get
+    value = client.get(key)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/commands/core.py", line 1829, in get
+    return self.execute_command("GET", name)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/client.py", line 533, in execute_command
+    conn = self.connection or pool.get_connection(command_name, **options)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/connection.py", line 1086, in get_connection
+    connection.connect()
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/connection.py", line 270, in connect
+    raise ConnectionError(self._error_message(e))
+redis.exceptions.ConnectionError: Error 61 connecting to 127.0.0.1:19783. Connection refused.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework_simplejwt/views.py", line 43, in post
+    serializer.is_valid(raise_exception=True)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 227, in is_valid
+    self._validated_data = self.run_validation(self.initial_data)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 429, in run_validation
+    value = self.validate(value)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py", line 304, in validate
+    if user.username == 'test12142':
+AttributeError: 'NoneType' object has no attribute 'username'
+[2024-01-23 08:02:39,487][dvadmin.utils.exception.CustomExceptionHandler():66] [ERROR] Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 31, in _decorator
+    return method(self, *args, **kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 98, in _get
+    return self.client.get(key, default=default, version=version, client=client)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/client/default.py", line 260, in get
+    raise ConnectionInterrupted(connection=client) from e
+django_redis.exceptions.ConnectionInterrupted: Redis ConnectionError: Error 61 connecting to 127.0.0.1:19783. Connection refused.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py", line 211, in validate
+    return self.login(attrs, phone)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py", line 160, in login
+    if dispatch.get_system_config_values("base.single_login"):
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/application/dispatch.py", line 239, in get_system_config_values
+    system_config = cache.get(f"init_system_config")
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 91, in get
+    value = self._get(key, default, version, client)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 38, in _decorator
+    raise e.__cause__
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/client/default.py", line 258, in get
+    value = client.get(key)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/commands/core.py", line 1829, in get
+    return self.execute_command("GET", name)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/client.py", line 533, in execute_command
+    conn = self.connection or pool.get_connection(command_name, **options)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/connection.py", line 1086, in get_connection
+    connection.connect()
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/connection.py", line 270, in connect
+    raise ConnectionError(self._error_message(e))
+redis.exceptions.ConnectionError: Error 61 connecting to 127.0.0.1:19783. Connection refused.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework_simplejwt/views.py", line 43, in post
+    serializer.is_valid(raise_exception=True)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 227, in is_valid
+    self._validated_data = self.run_validation(self.initial_data)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 429, in run_validation
+    value = self.validate(value)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py", line 304, in validate
+    if user.username == 'test12142':
+AttributeError: 'NoneType' object has no attribute 'username'
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 31, in _decorator
+    return method(self, *args, **kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 98, in _get
+    return self.client.get(key, default=default, version=version, client=client)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/client/default.py", line 260, in get
+    raise ConnectionInterrupted(connection=client) from e
+django_redis.exceptions.ConnectionInterrupted: Redis ConnectionError: Error 61 connecting to 127.0.0.1:19783. Connection refused.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py", line 211, in validate
+    return self.login(attrs, phone)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py", line 160, in login
+    if dispatch.get_system_config_values("base.single_login"):
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/application/dispatch.py", line 239, in get_system_config_values
+    system_config = cache.get(f"init_system_config")
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 91, in get
+    value = self._get(key, default, version, client)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 38, in _decorator
+    raise e.__cause__
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/client/default.py", line 258, in get
+    value = client.get(key)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/commands/core.py", line 1829, in get
+    return self.execute_command("GET", name)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/client.py", line 533, in execute_command
+    conn = self.connection or pool.get_connection(command_name, **options)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/connection.py", line 1086, in get_connection
+    connection.connect()
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/connection.py", line 270, in connect
+    raise ConnectionError(self._error_message(e))
+redis.exceptions.ConnectionError: Error 61 connecting to 127.0.0.1:19783. Connection refused.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework_simplejwt/views.py", line 43, in post
+    serializer.is_valid(raise_exception=True)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 227, in is_valid
+    self._validated_data = self.run_validation(self.initial_data)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 429, in run_validation
+    value = self.validate(value)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py", line 304, in validate
+    if user.username == 'test12142':
+AttributeError: 'NoneType' object has no attribute 'username'
+[2024-01-23 08:14:55,756][dvadmin.utils.exception.CustomExceptionHandler():66] [ERROR] Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/user.py", line 325, in get_user
+    userID = request.data.id
+AttributeError: 'QueryDict' object has no attribute 'id'
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/user.py", line 325, in get_user
+    userID = request.data.id
+AttributeError: 'QueryDict' object has no attribute 'id'
+[2024-01-23 08:15:53,408][dvadmin.utils.exception.CustomExceptionHandler():66] [ERROR] Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/user.py", line 329, in get_user
+    data = serializer.data
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 768, in data
+    ret = super().data
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 253, in data
+    self._data = self.to_representation(self.instance)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 686, in to_representation
+    return [
+TypeError: 'Users' object is not iterable
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/user.py", line 329, in get_user
+    data = serializer.data
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 768, in data
+    ret = super().data
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 253, in data
+    self._data = self.to_representation(self.instance)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 686, in to_representation
+    return [
+TypeError: 'Users' object is not iterable
+[2024-01-23 08:28:27,584][dvadmin.utils.exception.CustomExceptionHandler():66] [ERROR] Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/user.py", line 332, in get_user
+    data['est_score'] = 90
+TypeError: list indices must be integers or slices, not str
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/user.py", line 332, in get_user
+    data['est_score'] = 90
+TypeError: list indices must be integers or slices, not str
+[2024-01-23 08:30:21,468][dvadmin.utils.exception.CustomExceptionHandler():66] [ERROR] Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/user.py", line 334, in get_user
+    data['est_score'] = 90
+TypeError: list indices must be integers or slices, not str
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/user.py", line 334, in get_user
+    data['est_score'] = 90
+TypeError: list indices must be integers or slices, not str
+[2024-01-23 08:30:24,861][dvadmin.utils.exception.CustomExceptionHandler():66] [ERROR] Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/user.py", line 334, in get_user
+    data['est_score'] = 90
+TypeError: list indices must be integers or slices, not str
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/user.py", line 334, in get_user
+    data['est_score'] = 90
+TypeError: list indices must be integers or slices, not str
+[2024-01-23 08:30:38,049][dvadmin.utils.exception.CustomExceptionHandler():66] [ERROR] Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/user.py", line 334, in get_user
+    data['est_score'] = 90
+TypeError: list indices must be integers or slices, not str
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/user.py", line 334, in get_user
+    data['est_score'] = 90
+TypeError: list indices must be integers or slices, not str
+[2024-01-23 08:50:58,430][dvadmin.utils.exception.CustomExceptionHandler():66] [ERROR] Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/mixins.py", line 82, in partial_update
+    return self.update(request, *args, **kwargs)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/utils/viewset.py", line 97, in update
+    instance = self.get_object()
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/generics.py", line 83, in get_object
+    queryset = self.filter_queryset(self.get_queryset())
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/utils/viewset.py", line 49, in filter_queryset
+    queryset = backend().filter_queryset(self.request, queryset, self)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/utils/filters.py", line 70, in filter_queryset
+    method = methodList.index(method)
+ValueError: 'PATCH' is not in list
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/mixins.py", line 82, in partial_update
+    return self.update(request, *args, **kwargs)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/utils/viewset.py", line 97, in update
+    instance = self.get_object()
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/generics.py", line 83, in get_object
+    queryset = self.filter_queryset(self.get_queryset())
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/utils/viewset.py", line 49, in filter_queryset
+    queryset = backend().filter_queryset(self.request, queryset, self)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/utils/filters.py", line 70, in filter_queryset
+    method = methodList.index(method)
+ValueError: 'PATCH' is not in list
+[2024-01-23 08:51:48,543][dvadmin.utils.exception.CustomExceptionHandler():66] [ERROR] Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/mixins.py", line 82, in partial_update
+    return self.update(request, *args, **kwargs)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/utils/viewset.py", line 97, in update
+    instance = self.get_object()
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/generics.py", line 83, in get_object
+    queryset = self.filter_queryset(self.get_queryset())
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/utils/viewset.py", line 49, in filter_queryset
+    queryset = backend().filter_queryset(self.request, queryset, self)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/utils/filters.py", line 70, in filter_queryset
+    method = methodList.index(method)
+ValueError: 'PATCH' is not in list
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/mixins.py", line 82, in partial_update
+    return self.update(request, *args, **kwargs)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/utils/viewset.py", line 97, in update
+    instance = self.get_object()
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/generics.py", line 83, in get_object
+    queryset = self.filter_queryset(self.get_queryset())
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/utils/viewset.py", line 49, in filter_queryset
+    queryset = backend().filter_queryset(self.request, queryset, self)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/utils/filters.py", line 70, in filter_queryset
+    method = methodList.index(method)
+ValueError: 'PATCH' is not in list
+[2024-01-23 09:10:27,221][django.request.log_response():224] [ERROR] Internal Server Error: /api/system/user/39/
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.8/site-packages/asgiref/sync.py", line 472, in thread_handler
+    raise exc_info[1]
+  File "/usr/local/lib/python3.8/site-packages/django/core/handlers/exception.py", line 38, in inner
+    response = await get_response(request)
+  File "/usr/local/lib/python3.8/site-packages/django/core/handlers/base.py", line 219, in _get_response_async
+    callback, callback_args, callback_kwargs = self.resolve_request(request)
+  File "/usr/local/lib/python3.8/site-packages/django/core/handlers/base.py", line 290, in resolve_request
+    resolver_match = resolver.resolve(request.path_info)
+  File "/usr/local/lib/python3.8/site-packages/django/urls/resolvers.py", line 560, in resolve
+    for pattern in self.url_patterns:
+  File "/usr/local/lib/python3.8/site-packages/django/utils/functional.py", line 48, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/usr/local/lib/python3.8/site-packages/django/urls/resolvers.py", line 602, in url_patterns
+    patterns = getattr(self.urlconf_module, "urlpatterns", self.urlconf_module)
+  File "/usr/local/lib/python3.8/site-packages/django/utils/functional.py", line 48, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/usr/local/lib/python3.8/site-packages/django/urls/resolvers.py", line 595, in urlconf_module
+    return import_module(self.urlconf_name)
+  File "/usr/local/lib/python3.8/importlib/__init__.py", line 127, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1014, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 991, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 975, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 671, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 843, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/parrotAdmin/application/urls.py", line 28, in <module>
+    from dvadmin.system.views.dictionary import InitDictionaryViewSet
+  File "/parrotAdmin/dvadmin/system/views/dictionary.py", line 16, in <module>
+    from dvadmin.utils.viewset import CustomModelViewSet
+  File "/parrotAdmin/dvadmin/utils/viewset.py", line 113
+    if key in reserved_list or 'modify'
+                                      ^
+SyntaxError: invalid syntax

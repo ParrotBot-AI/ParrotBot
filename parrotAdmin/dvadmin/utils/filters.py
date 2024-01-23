@@ -66,7 +66,7 @@ class DataLevelPermissionsFilter(BaseFilterBackend):
         """
         api = request.path  # 当前请求接口
         method = request.method  # 当前请求方法
-        methodList = ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
+        methodList = ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"]
         method = methodList.index(method)
         # ***接口白名单***
         api_white_list = ApiWhiteList.objects.filter(enable_datasource=False).values(

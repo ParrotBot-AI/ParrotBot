@@ -1,4 +1,6 @@
 import hashlib
+import json
+
 from django.core.exceptions import ValidationError as DjangoValidationError
 from django.contrib.auth.hashers import make_password, check_password
 from django_restql.fields import DynamicSerializerMethodField
@@ -26,6 +28,7 @@ from dvadmin.utils.validator import CustomValidationError
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 import logging
+
 logger = logging.getLogger(__name__)
 
 
@@ -39,6 +42,14 @@ def recursion(instance, parent, result):
         array = recursion(new_instance, parent, result)
         res += (array)
     return res
+
+
+class UserInterfaceSerializer(CustomModelSerializer):
+    class Meta:
+        model = Users
+        read_only_fields = ["id"]
+        fields = ["username", "email", 'mobile', 'avatar', "name", 'gender',
+                  'first_name', 'last_name', 'email']
 
 
 class UserSerializer(CustomModelSerializer):
@@ -310,6 +321,53 @@ class UserViewSet(CustomModelViewSet):
         "dept": {"title": "部门", "choices": {"queryset": Dept.objects.filter(status=True), "values_name": "name"}},
         "role": {"title": "角色", "choices": {"queryset": Role.objects.filter(status=True), "values_name": "name"}},
     }
+
+    @action(methods=["GET"], detail=False, permission_classes=[IsAuthenticated])
+    def get_user(self, request):
+        userID = request.data.get("userId")
+        if userID:
+            queryset = self.queryset.filter(id=userID).first()
+            serializer = UserInterfaceSerializer(queryset, many=False, request=request)
+            data = serializer.data
+
+            # request user statis from another app
+            data['est_score'] = 90
+            data['total_study'] = 90
+            data['next_test'] = 100
+            today_t = [
+                {
+                    'id':12,
+                    'task_name': '完成学习阅读204',
+                    'status':0,
+                },
+                {
+                    'id': 12,
+                    'task_name': '模考阅读',
+                    'status': 1,
+                },
+                {
+                    'id': 12,
+                    'task_name': '模考阅读',
+                    'status': 1,
+                }
+            ]
+            tomm_t = [
+                {
+                    'id': 12,
+                    'task_name': '复习阅读204',
+                    'status': 0,
+                },
+                {
+                    'id': 12,
+                    'task_name': '背诵单词200',
+                    'status': 0,
+                },
+            ]
+            data['tdy'] = today_t
+            data['tmr'] = tomm_t
+            return DetailResponse(data=data, msg="获取成功")
+        else:
+            ErrorResponse(msg="请传入正确id值")
 
     @action(methods=["GET"], detail=False, permission_classes=[IsAuthenticated])
     def user_info(self, request):

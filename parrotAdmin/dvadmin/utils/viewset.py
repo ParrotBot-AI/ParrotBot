@@ -102,7 +102,15 @@ class CustomModelViewSet(ModelViewSet, ImportSerializerMixin, ExportSerializerMi
             # If 'prefetch_related' has been applied to a queryset, we need to
             # forcibly invalidate the prefetch cache on the instance.
             instance._prefetched_objects_cache = {}
-        return DetailResponse(data=serializer.data, msg="更新成功")
+        data = serializer.data
+        # 前台用户
+        if "user_type" in data:
+            if data['user_type'] == 1:
+                reserved_list = ["username", "email", 'mobile', 'avatar', "name", 'gender',
+                  'first_name', 'last_name', 'email']
+                data = {k: data[k] for k in reserved_list if k in data}
+                return DetailResponse(data=data, msg="更新成功")
+        return DetailResponse(data=data, msg="更新成功")
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()

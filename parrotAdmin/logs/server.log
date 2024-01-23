@@ -10110,3 +10110,1318 @@ AttributeError: 'collections.OrderedDict' object has no attribute 'name'
 [2024-01-21 07:29:41,793][dvadmin.utils.backends.authenticate():22] [INFO] e4f6bcdb-a0f 正在使用本地登录...
 [2024-01-21 07:29:41,961][django.channels.server.log_action():147] [INFO] [mHTTP POST /api/login/ 200 [0.35, 47.46.108.90:52082][0m
 >>>>>>> 8d308ba67801e27461116d79a2c411204e0437d2
+[2024-01-23 02:15:21,653][uvicorn.error.serve():74] [INFO] Started server process [14]
+[2024-01-23 02:15:21,653][uvicorn.error.serve():74] [INFO] Started server process [15]
+[2024-01-23 02:15:21,653][uvicorn.error.serve():74] [INFO] Started server process [17]
+[2024-01-23 02:15:21,657][uvicorn.error.startup():48] [INFO] Waiting for application startup.
+[2024-01-23 02:15:21,657][uvicorn.error.startup():48] [INFO] Waiting for application startup.
+[2024-01-23 02:15:21,659][uvicorn.error.main():96] [INFO] ASGI 'lifespan' protocol appears unsupported.
+[2024-01-23 02:15:21,658][uvicorn.error.startup():48] [INFO] Waiting for application startup.
+[2024-01-23 02:15:21,660][uvicorn.error.main():96] [INFO] ASGI 'lifespan' protocol appears unsupported.
+[2024-01-23 02:15:21,661][uvicorn.error.startup():62] [INFO] Application startup complete.
+[2024-01-23 02:15:21,662][uvicorn.error.main():96] [INFO] ASGI 'lifespan' protocol appears unsupported.
+[2024-01-23 02:15:21,660][uvicorn.error.serve():74] [INFO] Started server process [20]
+[2024-01-23 02:15:21,662][uvicorn.error.startup():62] [INFO] Application startup complete.
+[2024-01-23 02:15:21,664][uvicorn.error.startup():62] [INFO] Application startup complete.
+[2024-01-23 02:15:21,665][uvicorn.error.startup():48] [INFO] Waiting for application startup.
+[2024-01-23 02:15:21,666][uvicorn.error.main():96] [INFO] ASGI 'lifespan' protocol appears unsupported.
+[2024-01-23 02:15:21,668][uvicorn.error.startup():62] [INFO] Application startup complete.
+[2024-01-23 07:56:50,358][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-23 07:56:51,640][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-23 07:56:51,640][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-23 07:56:51,641][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-23 07:57:11,657][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/user.py changed, reloading.
+[2024-01-23 07:57:12,542][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-23 07:57:13,053][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-23 07:57:13,053][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-23 07:57:13,053][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-23 07:58:19,671][dvadmin.utils.backends.authenticate():22] [INFO] test12142 正在使用本地登录...
+[2024-01-23 07:58:20,690][dvadmin.utils.backends.authenticate():22] [INFO] test12142 正在使用本地登录...
+[2024-01-23 07:58:21,002][django.channels.server.log_action():147] [INFO] [mHTTP POST /api/login/ 200 [1.40, 127.0.0.1:50587][0m
+[2024-01-23 07:58:21,014][dvadmin.utils.backends.authenticate():22] [INFO] test12142 正在使用本地登录...
+[2024-01-23 07:58:21,723][dvadmin.utils.backends.authenticate():22] [INFO] test12142 正在使用本地登录...
+[2024-01-23 07:58:22,031][django.channels.server.log_action():147] [INFO] [mHTTP POST /api/login/ 200 [1.02, 127.0.0.1:50590][0m
+[2024-01-23 07:58:58,181][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py changed, reloading.
+[2024-01-23 07:58:59,068][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-23 07:58:59,587][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-23 07:58:59,588][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-23 07:58:59,588][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-23 07:59:08,247][dvadmin.utils.backends.authenticate():22] [INFO] test12142 正在使用本地登录...
+[2024-01-23 07:59:09,011][dvadmin.utils.backends.authenticate():22] [INFO] test12142 正在使用本地登录...
+[2024-01-23 07:59:09,331][django.channels.server.log_action():147] [INFO] [mHTTP POST /api/login/ 200 [1.10, 127.0.0.1:50599][0m
+[2024-01-23 07:59:09,346][dvadmin.utils.backends.authenticate():22] [INFO] test12142 正在使用本地登录...
+[2024-01-23 07:59:10,115][dvadmin.utils.backends.authenticate():22] [INFO] test12142 正在使用本地登录...
+[2024-01-23 07:59:10,434][django.channels.server.log_action():147] [INFO] [mHTTP POST /api/login/ 200 [1.09, 127.0.0.1:50602][0m
+[2024-01-23 07:59:29,829][dvadmin.utils.backends.authenticate():22] [INFO] test12142 正在使用本地登录...
+[2024-01-23 07:59:30,128][dvadmin.utils.backends.authenticate():22] [INFO] test12142 正在使用本地登录...
+[2024-01-23 07:59:30,416][django.channels.server.log_action():147] [INFO] [mHTTP POST /api/login/ 200 [0.60, 127.0.0.1:50605][0m
+[2024-01-23 07:59:30,428][dvadmin.utils.backends.authenticate():22] [INFO] test12142 正在使用本地登录...
+[2024-01-23 07:59:31,165][dvadmin.utils.backends.authenticate():22] [INFO] test12142 正在使用本地登录...
+[2024-01-23 07:59:31,483][django.channels.server.log_action():147] [INFO] [mHTTP POST /api/login/ 200 [1.06, 127.0.0.1:50606][0m
+[2024-01-23 07:59:38,263][dvadmin.utils.backends.authenticate():22] [INFO] test12142 正在使用本地登录...
+[2024-01-23 07:59:39,343][dvadmin.utils.backends.authenticate():22] [INFO] test12142 正在使用本地登录...
+[2024-01-23 07:59:39,642][django.channels.server.log_action():147] [INFO] [mHTTP POST /api/login/ 200 [1.39, 127.0.0.1:50609][0m
+[2024-01-23 07:59:39,654][dvadmin.utils.backends.authenticate():22] [INFO] test12142 正在使用本地登录...
+[2024-01-23 07:59:40,410][dvadmin.utils.backends.authenticate():22] [INFO] test12142 正在使用本地登录...
+[2024-01-23 07:59:40,712][django.channels.server.log_action():147] [INFO] [mHTTP POST /api/login/ 200 [1.06, 127.0.0.1:50612][0m
+[2024-01-23 07:59:49,984][dvadmin.utils.backends.authenticate():22] [INFO] admin 正在使用本地登录...
+[2024-01-23 07:59:50,906][dvadmin.utils.backends.authenticate():22] [INFO] admin 正在使用本地登录...
+[2024-01-23 07:59:51,852][dvadmin.utils.exception.CustomExceptionHandler():66] [ERROR] Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 31, in _decorator
+    return method(self, *args, **kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 98, in _get
+    return self.client.get(key, default=default, version=version, client=client)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/client/default.py", line 260, in get
+    raise ConnectionInterrupted(connection=client) from e
+django_redis.exceptions.ConnectionInterrupted: Redis ConnectionError: Error 61 connecting to 127.0.0.1:19783. Connection refused.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework_simplejwt/views.py", line 43, in post
+    serializer.is_valid(raise_exception=True)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 227, in is_valid
+    self._validated_data = self.run_validation(self.initial_data)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 429, in run_validation
+    value = self.validate(value)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py", line 307, in validate
+    return self.login(attrs)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py", line 160, in login
+    if dispatch.get_system_config_values("base.single_login"):
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/application/dispatch.py", line 239, in get_system_config_values
+    system_config = cache.get(f"init_system_config")
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 91, in get
+    value = self._get(key, default, version, client)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 38, in _decorator
+    raise e.__cause__
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/client/default.py", line 258, in get
+    value = client.get(key)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/commands/core.py", line 1829, in get
+    return self.execute_command("GET", name)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/client.py", line 533, in execute_command
+    conn = self.connection or pool.get_connection(command_name, **options)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/connection.py", line 1086, in get_connection
+    connection.connect()
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/connection.py", line 270, in connect
+    raise ConnectionError(self._error_message(e))
+redis.exceptions.ConnectionError: Error 61 connecting to 127.0.0.1:19783. Connection refused.
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 31, in _decorator
+    return method(self, *args, **kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 98, in _get
+    return self.client.get(key, default=default, version=version, client=client)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/client/default.py", line 260, in get
+    raise ConnectionInterrupted(connection=client) from e
+django_redis.exceptions.ConnectionInterrupted: Redis ConnectionError: Error 61 connecting to 127.0.0.1:19783. Connection refused.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework_simplejwt/views.py", line 43, in post
+    serializer.is_valid(raise_exception=True)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 227, in is_valid
+    self._validated_data = self.run_validation(self.initial_data)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 429, in run_validation
+    value = self.validate(value)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py", line 307, in validate
+    return self.login(attrs)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py", line 160, in login
+    if dispatch.get_system_config_values("base.single_login"):
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/application/dispatch.py", line 239, in get_system_config_values
+    system_config = cache.get(f"init_system_config")
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 91, in get
+    value = self._get(key, default, version, client)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 38, in _decorator
+    raise e.__cause__
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/client/default.py", line 258, in get
+    value = client.get(key)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/commands/core.py", line 1829, in get
+    return self.execute_command("GET", name)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/client.py", line 533, in execute_command
+    conn = self.connection or pool.get_connection(command_name, **options)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/connection.py", line 1086, in get_connection
+    connection.connect()
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/connection.py", line 270, in connect
+    raise ConnectionError(self._error_message(e))
+redis.exceptions.ConnectionError: Error 61 connecting to 127.0.0.1:19783. Connection refused.
+[2024-01-23 07:59:51,906][django.channels.server.log_action():147] [INFO] [mHTTP POST /api/login/ 200 [1.93, 127.0.0.1:50617][0m
+[2024-01-23 07:59:51,928][dvadmin.utils.backends.authenticate():22] [INFO] test12142 正在使用本地登录...
+[2024-01-23 07:59:52,705][dvadmin.utils.backends.authenticate():22] [INFO] test12142 正在使用本地登录...
+[2024-01-23 07:59:53,027][django.channels.server.log_action():147] [INFO] [mHTTP POST /api/login/ 200 [1.11, 127.0.0.1:50622][0m
+[2024-01-23 08:00:03,055][dvadmin.utils.backends.authenticate():22] [INFO] test12141 正在使用本地登录...
+[2024-01-23 08:00:03,680][dvadmin.utils.exception.CustomExceptionHandler():66] [ERROR] Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 31, in _decorator
+    return method(self, *args, **kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 98, in _get
+    return self.client.get(key, default=default, version=version, client=client)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/client/default.py", line 260, in get
+    raise ConnectionInterrupted(connection=client) from e
+django_redis.exceptions.ConnectionInterrupted: Redis ConnectionError: Error 61 connecting to 127.0.0.1:19783. Connection refused.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py", line 211, in validate
+    return self.login(attrs, phone)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py", line 160, in login
+    if dispatch.get_system_config_values("base.single_login"):
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/application/dispatch.py", line 239, in get_system_config_values
+    system_config = cache.get(f"init_system_config")
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 91, in get
+    value = self._get(key, default, version, client)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 38, in _decorator
+    raise e.__cause__
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/client/default.py", line 258, in get
+    value = client.get(key)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/commands/core.py", line 1829, in get
+    return self.execute_command("GET", name)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/client.py", line 533, in execute_command
+    conn = self.connection or pool.get_connection(command_name, **options)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/connection.py", line 1086, in get_connection
+    connection.connect()
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/connection.py", line 270, in connect
+    raise ConnectionError(self._error_message(e))
+redis.exceptions.ConnectionError: Error 61 connecting to 127.0.0.1:19783. Connection refused.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework_simplejwt/views.py", line 43, in post
+    serializer.is_valid(raise_exception=True)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 227, in is_valid
+    self._validated_data = self.run_validation(self.initial_data)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 429, in run_validation
+    value = self.validate(value)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py", line 304, in validate
+    if user.username == 'test12142':
+AttributeError: 'NoneType' object has no attribute 'username'
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 31, in _decorator
+    return method(self, *args, **kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 98, in _get
+    return self.client.get(key, default=default, version=version, client=client)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/client/default.py", line 260, in get
+    raise ConnectionInterrupted(connection=client) from e
+django_redis.exceptions.ConnectionInterrupted: Redis ConnectionError: Error 61 connecting to 127.0.0.1:19783. Connection refused.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py", line 211, in validate
+    return self.login(attrs, phone)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py", line 160, in login
+    if dispatch.get_system_config_values("base.single_login"):
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/application/dispatch.py", line 239, in get_system_config_values
+    system_config = cache.get(f"init_system_config")
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 91, in get
+    value = self._get(key, default, version, client)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 38, in _decorator
+    raise e.__cause__
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/client/default.py", line 258, in get
+    value = client.get(key)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/commands/core.py", line 1829, in get
+    return self.execute_command("GET", name)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/client.py", line 533, in execute_command
+    conn = self.connection or pool.get_connection(command_name, **options)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/connection.py", line 1086, in get_connection
+    connection.connect()
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/connection.py", line 270, in connect
+    raise ConnectionError(self._error_message(e))
+redis.exceptions.ConnectionError: Error 61 connecting to 127.0.0.1:19783. Connection refused.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework_simplejwt/views.py", line 43, in post
+    serializer.is_valid(raise_exception=True)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 227, in is_valid
+    self._validated_data = self.run_validation(self.initial_data)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 429, in run_validation
+    value = self.validate(value)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py", line 304, in validate
+    if user.username == 'test12142':
+AttributeError: 'NoneType' object has no attribute 'username'
+[2024-01-23 08:00:03,715][django.channels.server.log_action():147] [INFO] [mHTTP POST /api/login/ 200 [0.68, 127.0.0.1:50626][0m
+[2024-01-23 08:00:03,729][dvadmin.utils.backends.authenticate():22] [INFO] 3d83bc71-8e0 正在使用本地登录...
+[2024-01-23 08:00:04,320][dvadmin.utils.exception.CustomExceptionHandler():66] [ERROR] Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 31, in _decorator
+    return method(self, *args, **kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 98, in _get
+    return self.client.get(key, default=default, version=version, client=client)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/client/default.py", line 260, in get
+    raise ConnectionInterrupted(connection=client) from e
+django_redis.exceptions.ConnectionInterrupted: Redis ConnectionError: Error 61 connecting to 127.0.0.1:19783. Connection refused.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py", line 211, in validate
+    return self.login(attrs, phone)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py", line 160, in login
+    if dispatch.get_system_config_values("base.single_login"):
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/application/dispatch.py", line 239, in get_system_config_values
+    system_config = cache.get(f"init_system_config")
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 91, in get
+    value = self._get(key, default, version, client)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 38, in _decorator
+    raise e.__cause__
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/client/default.py", line 258, in get
+    value = client.get(key)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/commands/core.py", line 1829, in get
+    return self.execute_command("GET", name)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/client.py", line 533, in execute_command
+    conn = self.connection or pool.get_connection(command_name, **options)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/connection.py", line 1086, in get_connection
+    connection.connect()
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/connection.py", line 270, in connect
+    raise ConnectionError(self._error_message(e))
+redis.exceptions.ConnectionError: Error 61 connecting to 127.0.0.1:19783. Connection refused.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework_simplejwt/views.py", line 43, in post
+    serializer.is_valid(raise_exception=True)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 227, in is_valid
+    self._validated_data = self.run_validation(self.initial_data)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 429, in run_validation
+    value = self.validate(value)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py", line 304, in validate
+    if user.username == 'test12142':
+AttributeError: 'NoneType' object has no attribute 'username'
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 31, in _decorator
+    return method(self, *args, **kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 98, in _get
+    return self.client.get(key, default=default, version=version, client=client)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/client/default.py", line 260, in get
+    raise ConnectionInterrupted(connection=client) from e
+django_redis.exceptions.ConnectionInterrupted: Redis ConnectionError: Error 61 connecting to 127.0.0.1:19783. Connection refused.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py", line 211, in validate
+    return self.login(attrs, phone)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py", line 160, in login
+    if dispatch.get_system_config_values("base.single_login"):
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/application/dispatch.py", line 239, in get_system_config_values
+    system_config = cache.get(f"init_system_config")
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 91, in get
+    value = self._get(key, default, version, client)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 38, in _decorator
+    raise e.__cause__
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/client/default.py", line 258, in get
+    value = client.get(key)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/commands/core.py", line 1829, in get
+    return self.execute_command("GET", name)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/client.py", line 533, in execute_command
+    conn = self.connection or pool.get_connection(command_name, **options)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/connection.py", line 1086, in get_connection
+    connection.connect()
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/connection.py", line 270, in connect
+    raise ConnectionError(self._error_message(e))
+redis.exceptions.ConnectionError: Error 61 connecting to 127.0.0.1:19783. Connection refused.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework_simplejwt/views.py", line 43, in post
+    serializer.is_valid(raise_exception=True)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 227, in is_valid
+    self._validated_data = self.run_validation(self.initial_data)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 429, in run_validation
+    value = self.validate(value)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py", line 304, in validate
+    if user.username == 'test12142':
+AttributeError: 'NoneType' object has no attribute 'username'
+[2024-01-23 08:00:04,360][django.channels.server.log_action():147] [INFO] [mHTTP POST /api/login/ 200 [0.64, 127.0.0.1:50629][0m
+[2024-01-23 08:01:36,167][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py changed, reloading.
+[2024-01-23 08:01:37,053][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-23 08:01:37,566][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-23 08:01:37,566][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-23 08:01:37,567][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-23 08:01:40,454][dvadmin.utils.backends.authenticate():22] [INFO] test12141 正在使用本地登录...
+[2024-01-23 08:01:41,255][dvadmin.utils.exception.CustomExceptionHandler():66] [ERROR] Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 31, in _decorator
+    return method(self, *args, **kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 98, in _get
+    return self.client.get(key, default=default, version=version, client=client)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/client/default.py", line 260, in get
+    raise ConnectionInterrupted(connection=client) from e
+django_redis.exceptions.ConnectionInterrupted: Redis ConnectionError: Error 61 connecting to 127.0.0.1:19783. Connection refused.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py", line 212, in validate
+    return self.login(attrs, phone)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py", line 160, in login
+    if dispatch.get_system_config_values("base.single_login"):
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/application/dispatch.py", line 239, in get_system_config_values
+    system_config = cache.get(f"init_system_config")
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 91, in get
+    value = self._get(key, default, version, client)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 38, in _decorator
+    raise e.__cause__
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/client/default.py", line 258, in get
+    value = client.get(key)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/commands/core.py", line 1829, in get
+    return self.execute_command("GET", name)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/client.py", line 533, in execute_command
+    conn = self.connection or pool.get_connection(command_name, **options)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/connection.py", line 1086, in get_connection
+    connection.connect()
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/connection.py", line 270, in connect
+    raise ConnectionError(self._error_message(e))
+redis.exceptions.ConnectionError: Error 61 connecting to 127.0.0.1:19783. Connection refused.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework_simplejwt/views.py", line 43, in post
+    serializer.is_valid(raise_exception=True)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 227, in is_valid
+    self._validated_data = self.run_validation(self.initial_data)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 429, in run_validation
+    value = self.validate(value)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py", line 305, in validate
+    if user.username == 'test12142':
+AttributeError: 'NoneType' object has no attribute 'username'
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 31, in _decorator
+    return method(self, *args, **kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 98, in _get
+    return self.client.get(key, default=default, version=version, client=client)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/client/default.py", line 260, in get
+    raise ConnectionInterrupted(connection=client) from e
+django_redis.exceptions.ConnectionInterrupted: Redis ConnectionError: Error 61 connecting to 127.0.0.1:19783. Connection refused.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py", line 212, in validate
+    return self.login(attrs, phone)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py", line 160, in login
+    if dispatch.get_system_config_values("base.single_login"):
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/application/dispatch.py", line 239, in get_system_config_values
+    system_config = cache.get(f"init_system_config")
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 91, in get
+    value = self._get(key, default, version, client)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 38, in _decorator
+    raise e.__cause__
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/client/default.py", line 258, in get
+    value = client.get(key)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/commands/core.py", line 1829, in get
+    return self.execute_command("GET", name)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/client.py", line 533, in execute_command
+    conn = self.connection or pool.get_connection(command_name, **options)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/connection.py", line 1086, in get_connection
+    connection.connect()
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/connection.py", line 270, in connect
+    raise ConnectionError(self._error_message(e))
+redis.exceptions.ConnectionError: Error 61 connecting to 127.0.0.1:19783. Connection refused.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework_simplejwt/views.py", line 43, in post
+    serializer.is_valid(raise_exception=True)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 227, in is_valid
+    self._validated_data = self.run_validation(self.initial_data)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 429, in run_validation
+    value = self.validate(value)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py", line 305, in validate
+    if user.username == 'test12142':
+AttributeError: 'NoneType' object has no attribute 'username'
+[2024-01-23 08:01:41,270][django.channels.server.log_action():147] [INFO] [mHTTP POST /api/login/ 200 [0.88, 127.0.0.1:50642][0m
+[2024-01-23 08:01:41,290][dvadmin.utils.backends.authenticate():22] [INFO] 3d83bc71-8e0 正在使用本地登录...
+[2024-01-23 08:01:41,918][dvadmin.utils.exception.CustomExceptionHandler():66] [ERROR] Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 31, in _decorator
+    return method(self, *args, **kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 98, in _get
+    return self.client.get(key, default=default, version=version, client=client)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/client/default.py", line 260, in get
+    raise ConnectionInterrupted(connection=client) from e
+django_redis.exceptions.ConnectionInterrupted: Redis ConnectionError: Error 61 connecting to 127.0.0.1:19783. Connection refused.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py", line 212, in validate
+    return self.login(attrs, phone)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py", line 160, in login
+    if dispatch.get_system_config_values("base.single_login"):
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/application/dispatch.py", line 239, in get_system_config_values
+    system_config = cache.get(f"init_system_config")
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 91, in get
+    value = self._get(key, default, version, client)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 38, in _decorator
+    raise e.__cause__
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/client/default.py", line 258, in get
+    value = client.get(key)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/commands/core.py", line 1829, in get
+    return self.execute_command("GET", name)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/client.py", line 533, in execute_command
+    conn = self.connection or pool.get_connection(command_name, **options)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/connection.py", line 1086, in get_connection
+    connection.connect()
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/connection.py", line 270, in connect
+    raise ConnectionError(self._error_message(e))
+redis.exceptions.ConnectionError: Error 61 connecting to 127.0.0.1:19783. Connection refused.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework_simplejwt/views.py", line 43, in post
+    serializer.is_valid(raise_exception=True)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 227, in is_valid
+    self._validated_data = self.run_validation(self.initial_data)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 429, in run_validation
+    value = self.validate(value)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py", line 305, in validate
+    if user.username == 'test12142':
+AttributeError: 'NoneType' object has no attribute 'username'
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 31, in _decorator
+    return method(self, *args, **kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 98, in _get
+    return self.client.get(key, default=default, version=version, client=client)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/client/default.py", line 260, in get
+    raise ConnectionInterrupted(connection=client) from e
+django_redis.exceptions.ConnectionInterrupted: Redis ConnectionError: Error 61 connecting to 127.0.0.1:19783. Connection refused.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py", line 212, in validate
+    return self.login(attrs, phone)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py", line 160, in login
+    if dispatch.get_system_config_values("base.single_login"):
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/application/dispatch.py", line 239, in get_system_config_values
+    system_config = cache.get(f"init_system_config")
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 91, in get
+    value = self._get(key, default, version, client)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 38, in _decorator
+    raise e.__cause__
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/client/default.py", line 258, in get
+    value = client.get(key)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/commands/core.py", line 1829, in get
+    return self.execute_command("GET", name)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/client.py", line 533, in execute_command
+    conn = self.connection or pool.get_connection(command_name, **options)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/connection.py", line 1086, in get_connection
+    connection.connect()
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/connection.py", line 270, in connect
+    raise ConnectionError(self._error_message(e))
+redis.exceptions.ConnectionError: Error 61 connecting to 127.0.0.1:19783. Connection refused.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework_simplejwt/views.py", line 43, in post
+    serializer.is_valid(raise_exception=True)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 227, in is_valid
+    self._validated_data = self.run_validation(self.initial_data)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 429, in run_validation
+    value = self.validate(value)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py", line 305, in validate
+    if user.username == 'test12142':
+AttributeError: 'NoneType' object has no attribute 'username'
+[2024-01-23 08:01:41,934][django.channels.server.log_action():147] [INFO] [mHTTP POST /api/login/ 200 [0.65, 127.0.0.1:50645][0m
+[2024-01-23 08:02:30,589][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py changed, reloading.
+[2024-01-23 08:02:31,457][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-23 08:02:31,968][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-23 08:02:31,968][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-23 08:02:31,969][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-23 08:02:38,206][dvadmin.utils.backends.authenticate():22] [INFO] test12141 正在使用本地登录...
+[2024-01-23 08:02:38,827][dvadmin.utils.exception.CustomExceptionHandler():66] [ERROR] Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 31, in _decorator
+    return method(self, *args, **kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 98, in _get
+    return self.client.get(key, default=default, version=version, client=client)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/client/default.py", line 260, in get
+    raise ConnectionInterrupted(connection=client) from e
+django_redis.exceptions.ConnectionInterrupted: Redis ConnectionError: Error 61 connecting to 127.0.0.1:19783. Connection refused.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py", line 211, in validate
+    return self.login(attrs, phone)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py", line 160, in login
+    if dispatch.get_system_config_values("base.single_login"):
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/application/dispatch.py", line 239, in get_system_config_values
+    system_config = cache.get(f"init_system_config")
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 91, in get
+    value = self._get(key, default, version, client)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 38, in _decorator
+    raise e.__cause__
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/client/default.py", line 258, in get
+    value = client.get(key)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/commands/core.py", line 1829, in get
+    return self.execute_command("GET", name)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/client.py", line 533, in execute_command
+    conn = self.connection or pool.get_connection(command_name, **options)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/connection.py", line 1086, in get_connection
+    connection.connect()
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/connection.py", line 270, in connect
+    raise ConnectionError(self._error_message(e))
+redis.exceptions.ConnectionError: Error 61 connecting to 127.0.0.1:19783. Connection refused.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework_simplejwt/views.py", line 43, in post
+    serializer.is_valid(raise_exception=True)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 227, in is_valid
+    self._validated_data = self.run_validation(self.initial_data)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 429, in run_validation
+    value = self.validate(value)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py", line 304, in validate
+    if user.username == 'test12142':
+AttributeError: 'NoneType' object has no attribute 'username'
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 31, in _decorator
+    return method(self, *args, **kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 98, in _get
+    return self.client.get(key, default=default, version=version, client=client)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/client/default.py", line 260, in get
+    raise ConnectionInterrupted(connection=client) from e
+django_redis.exceptions.ConnectionInterrupted: Redis ConnectionError: Error 61 connecting to 127.0.0.1:19783. Connection refused.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py", line 211, in validate
+    return self.login(attrs, phone)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py", line 160, in login
+    if dispatch.get_system_config_values("base.single_login"):
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/application/dispatch.py", line 239, in get_system_config_values
+    system_config = cache.get(f"init_system_config")
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 91, in get
+    value = self._get(key, default, version, client)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 38, in _decorator
+    raise e.__cause__
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/client/default.py", line 258, in get
+    value = client.get(key)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/commands/core.py", line 1829, in get
+    return self.execute_command("GET", name)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/client.py", line 533, in execute_command
+    conn = self.connection or pool.get_connection(command_name, **options)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/connection.py", line 1086, in get_connection
+    connection.connect()
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/connection.py", line 270, in connect
+    raise ConnectionError(self._error_message(e))
+redis.exceptions.ConnectionError: Error 61 connecting to 127.0.0.1:19783. Connection refused.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework_simplejwt/views.py", line 43, in post
+    serializer.is_valid(raise_exception=True)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 227, in is_valid
+    self._validated_data = self.run_validation(self.initial_data)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 429, in run_validation
+    value = self.validate(value)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py", line 304, in validate
+    if user.username == 'test12142':
+AttributeError: 'NoneType' object has no attribute 'username'
+[2024-01-23 08:02:38,840][django.channels.server.log_action():147] [INFO] [mHTTP POST /api/login/ 200 [0.70, 127.0.0.1:50657][0m
+[2024-01-23 08:02:38,864][dvadmin.utils.backends.authenticate():22] [INFO] 3d83bc71-8e0 正在使用本地登录...
+[2024-01-23 08:02:39,487][dvadmin.utils.exception.CustomExceptionHandler():66] [ERROR] Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 31, in _decorator
+    return method(self, *args, **kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 98, in _get
+    return self.client.get(key, default=default, version=version, client=client)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/client/default.py", line 260, in get
+    raise ConnectionInterrupted(connection=client) from e
+django_redis.exceptions.ConnectionInterrupted: Redis ConnectionError: Error 61 connecting to 127.0.0.1:19783. Connection refused.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py", line 211, in validate
+    return self.login(attrs, phone)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py", line 160, in login
+    if dispatch.get_system_config_values("base.single_login"):
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/application/dispatch.py", line 239, in get_system_config_values
+    system_config = cache.get(f"init_system_config")
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 91, in get
+    value = self._get(key, default, version, client)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 38, in _decorator
+    raise e.__cause__
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/client/default.py", line 258, in get
+    value = client.get(key)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/commands/core.py", line 1829, in get
+    return self.execute_command("GET", name)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/client.py", line 533, in execute_command
+    conn = self.connection or pool.get_connection(command_name, **options)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/connection.py", line 1086, in get_connection
+    connection.connect()
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/connection.py", line 270, in connect
+    raise ConnectionError(self._error_message(e))
+redis.exceptions.ConnectionError: Error 61 connecting to 127.0.0.1:19783. Connection refused.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework_simplejwt/views.py", line 43, in post
+    serializer.is_valid(raise_exception=True)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 227, in is_valid
+    self._validated_data = self.run_validation(self.initial_data)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 429, in run_validation
+    value = self.validate(value)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py", line 304, in validate
+    if user.username == 'test12142':
+AttributeError: 'NoneType' object has no attribute 'username'
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 31, in _decorator
+    return method(self, *args, **kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 98, in _get
+    return self.client.get(key, default=default, version=version, client=client)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/client/default.py", line 260, in get
+    raise ConnectionInterrupted(connection=client) from e
+django_redis.exceptions.ConnectionInterrupted: Redis ConnectionError: Error 61 connecting to 127.0.0.1:19783. Connection refused.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py", line 211, in validate
+    return self.login(attrs, phone)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py", line 160, in login
+    if dispatch.get_system_config_values("base.single_login"):
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/application/dispatch.py", line 239, in get_system_config_values
+    system_config = cache.get(f"init_system_config")
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 91, in get
+    value = self._get(key, default, version, client)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/cache.py", line 38, in _decorator
+    raise e.__cause__
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/django_redis/client/default.py", line 258, in get
+    value = client.get(key)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/commands/core.py", line 1829, in get
+    return self.execute_command("GET", name)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/client.py", line 533, in execute_command
+    conn = self.connection or pool.get_connection(command_name, **options)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/connection.py", line 1086, in get_connection
+    connection.connect()
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/redis/connection.py", line 270, in connect
+    raise ConnectionError(self._error_message(e))
+redis.exceptions.ConnectionError: Error 61 connecting to 127.0.0.1:19783. Connection refused.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework_simplejwt/views.py", line 43, in post
+    serializer.is_valid(raise_exception=True)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 227, in is_valid
+    self._validated_data = self.run_validation(self.initial_data)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 429, in run_validation
+    value = self.validate(value)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py", line 304, in validate
+    if user.username == 'test12142':
+AttributeError: 'NoneType' object has no attribute 'username'
+[2024-01-23 08:02:39,511][django.channels.server.log_action():147] [INFO] [mHTTP POST /api/login/ 200 [0.66, 127.0.0.1:50660][0m
+[2024-01-23 08:03:15,594][dvadmin.utils.backends.authenticate():22] [INFO] test12142 正在使用本地登录...
+[2024-01-23 08:03:15,909][dvadmin.utils.backends.authenticate():22] [INFO] test12142 正在使用本地登录...
+[2024-01-23 08:03:16,184][django.channels.server.log_action():147] [INFO] [mHTTP POST /api/login/ 200 [0.61, 127.0.0.1:50663][0m
+[2024-01-23 08:03:16,197][dvadmin.utils.backends.authenticate():22] [INFO] test12142 正在使用本地登录...
+[2024-01-23 08:03:17,286][dvadmin.utils.backends.authenticate():22] [INFO] test12142 正在使用本地登录...
+[2024-01-23 08:03:17,589][django.channels.server.log_action():147] [INFO] [mHTTP POST /api/login/ 200 [1.40, 127.0.0.1:50664][0m
+[2024-01-23 08:03:27,401][dvadmin.utils.backends.authenticate():22] [INFO] test12142 正在使用本地登录...
+[2024-01-23 08:03:27,694][dvadmin.utils.backends.authenticate():22] [INFO] test12142 正在使用本地登录...
+[2024-01-23 08:03:27,976][django.channels.server.log_action():147] [INFO] [mHTTP POST /api/login/ 200 [0.58, 127.0.0.1:50667][0m
+[2024-01-23 08:03:27,987][dvadmin.utils.backends.authenticate():22] [INFO] test12142 正在使用本地登录...
+[2024-01-23 08:03:28,749][dvadmin.utils.backends.authenticate():22] [INFO] test12142 正在使用本地登录...
+[2024-01-23 08:03:29,068][django.channels.server.log_action():147] [INFO] [mHTTP POST /api/login/ 200 [1.09, 127.0.0.1:50668][0m
+[2024-01-23 08:03:41,221][dvadmin.utils.backends.authenticate():22] [INFO] test12142 正在使用本地登录...
+[2024-01-23 08:03:42,000][dvadmin.utils.backends.authenticate():22] [INFO] test12142 正在使用本地登录...
+[2024-01-23 08:03:42,315][django.channels.server.log_action():147] [INFO] [mHTTP POST /api/login/ 200 [1.10, 127.0.0.1:50671][0m
+[2024-01-23 08:03:42,327][dvadmin.utils.backends.authenticate():22] [INFO] test12142 正在使用本地登录...
+[2024-01-23 08:03:43,079][dvadmin.utils.backends.authenticate():22] [INFO] test12142 正在使用本地登录...
+[2024-01-23 08:03:43,390][django.channels.server.log_action():147] [INFO] [mHTTP POST /api/login/ 200 [1.07, 127.0.0.1:50674][0m
+[2024-01-23 08:04:06,330][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py changed, reloading.
+[2024-01-23 08:04:07,291][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-23 08:04:07,850][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-23 08:04:07,850][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-23 08:04:07,851][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-23 08:04:10,085][dvadmin.utils.backends.authenticate():22] [INFO] test12142 正在使用本地登录...
+[2024-01-23 08:04:10,873][dvadmin.utils.backends.authenticate():22] [INFO] test12142 正在使用本地登录...
+[2024-01-23 08:04:11,198][django.channels.server.log_action():147] [INFO] [mHTTP POST /api/login/ 200 [1.12, 127.0.0.1:50681][0m
+[2024-01-23 08:04:11,214][dvadmin.utils.backends.authenticate():22] [INFO] test12142 正在使用本地登录...
+[2024-01-23 08:04:11,972][dvadmin.utils.backends.authenticate():22] [INFO] test12142 正在使用本地登录...
+[2024-01-23 08:04:12,294][django.channels.server.log_action():147] [INFO] [mHTTP POST /api/login/ 200 [1.09, 127.0.0.1:50684][0m
+[2024-01-23 08:04:43,726][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py changed, reloading.
+[2024-01-23 08:04:44,637][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-23 08:04:45,167][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-23 08:04:45,167][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-23 08:04:45,168][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-23 08:04:47,929][dvadmin.utils.backends.authenticate():22] [INFO] test12142 正在使用本地登录...
+[2024-01-23 08:04:48,958][dvadmin.utils.backends.authenticate():22] [INFO] test12142 正在使用本地登录...
+[2024-01-23 08:04:49,268][django.channels.server.log_action():147] [INFO] [mHTTP POST /api/login/ 200 [1.38, 127.0.0.1:50693][0m
+[2024-01-23 08:04:49,284][dvadmin.utils.backends.authenticate():22] [INFO] test12142 正在使用本地登录...
+[2024-01-23 08:04:50,020][dvadmin.utils.backends.authenticate():22] [INFO] test12142 正在使用本地登录...
+[2024-01-23 08:04:50,328][django.channels.server.log_action():147] [INFO] [mHTTP POST /api/login/ 200 [1.05, 127.0.0.1:50697][0m
+[2024-01-23 08:05:25,200][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py changed, reloading.
+[2024-01-23 08:05:26,043][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-23 08:05:26,567][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-23 08:05:26,567][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-23 08:05:26,568][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-23 08:05:33,311][dvadmin.utils.backends.authenticate():22] [INFO] test12142 正在使用本地登录...
+[2024-01-23 08:05:34,086][dvadmin.utils.backends.authenticate():22] [INFO] test12142 正在使用本地登录...
+[2024-01-23 08:05:34,367][django.channels.server.log_action():147] [INFO] [mHTTP POST /api/login/ 200 [1.07, 127.0.0.1:50705][0m
+[2024-01-23 08:05:34,377][dvadmin.utils.backends.authenticate():22] [INFO] test12142 正在使用本地登录...
+[2024-01-23 08:05:35,140][dvadmin.utils.backends.authenticate():22] [INFO] test12142 正在使用本地登录...
+[2024-01-23 08:05:35,453][django.channels.server.log_action():147] [INFO] [mHTTP POST /api/login/ 200 [1.08, 127.0.0.1:50708][0m
+[2024-01-23 08:06:27,957][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py changed, reloading.
+[2024-01-23 08:06:28,902][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-23 08:06:29,434][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-23 08:06:29,434][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-23 08:06:29,434][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-23 08:06:31,634][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py changed, reloading.
+[2024-01-23 08:06:32,355][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-23 08:06:32,813][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-23 08:06:32,813][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-23 08:06:32,814][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-23 08:06:37,282][dvadmin.utils.backends.authenticate():22] [INFO] test12142 正在使用本地登录...
+[2024-01-23 08:06:38,247][dvadmin.utils.backends.authenticate():22] [INFO] test12142 正在使用本地登录...
+[2024-01-23 08:06:38,544][django.channels.server.log_action():147] [INFO] [mHTTP POST /api/login/ 200 [1.27, 127.0.0.1:50720][0m
+[2024-01-23 08:06:38,563][dvadmin.utils.backends.authenticate():22] [INFO] test12142 正在使用本地登录...
+[2024-01-23 08:06:39,293][dvadmin.utils.backends.authenticate():22] [INFO] test12142 正在使用本地登录...
+[2024-01-23 08:06:39,591][django.channels.server.log_action():147] [INFO] [mHTTP POST /api/login/ 200 [1.03, 127.0.0.1:50723][0m
+[2024-01-23 08:06:59,353][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py changed, reloading.
+[2024-01-23 08:07:00,177][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-23 08:07:00,684][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-23 08:07:00,684][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-23 08:07:00,685][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-23 08:07:02,941][dvadmin.utils.backends.authenticate():22] [INFO] test12142 正在使用本地登录...
+[2024-01-23 08:07:03,716][dvadmin.utils.backends.authenticate():22] [INFO] test12142 正在使用本地登录...
+[2024-01-23 08:07:04,023][django.channels.server.log_action():147] [INFO] [mHTTP POST /api/login/ 200 [1.15, 127.0.0.1:50730][0m
+[2024-01-23 08:07:04,050][dvadmin.utils.backends.authenticate():22] [INFO] test12142 正在使用本地登录...
+[2024-01-23 08:07:04,831][dvadmin.utils.backends.authenticate():22] [INFO] test12142 正在使用本地登录...
+[2024-01-23 08:07:05,147][django.channels.server.log_action():147] [INFO] [mHTTP POST /api/login/ 200 [1.12, 127.0.0.1:50733][0m
+[2024-01-23 08:07:34,611][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py changed, reloading.
+[2024-01-23 08:07:35,521][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-23 08:07:36,048][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-23 08:07:36,048][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-23 08:07:36,049][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-23 08:07:37,422][dvadmin.utils.backends.authenticate():22] [INFO] test12142 正在使用本地登录...
+[2024-01-23 08:07:38,203][dvadmin.utils.backends.authenticate():22] [INFO] test12142 正在使用本地登录...
+[2024-01-23 08:07:38,525][django.channels.server.log_action():147] [INFO] [mHTTP POST /api/login/ 200 [1.15, 127.0.0.1:50740][0m
+[2024-01-23 08:07:38,537][dvadmin.utils.backends.authenticate():22] [INFO] test12142 正在使用本地登录...
+[2024-01-23 08:07:39,268][dvadmin.utils.backends.authenticate():22] [INFO] test12142 正在使用本地登录...
+[2024-01-23 08:07:39,593][django.channels.server.log_action():147] [INFO] [mHTTP POST /api/login/ 200 [1.06, 127.0.0.1:50743][0m
+[2024-01-23 08:07:58,296][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py changed, reloading.
+[2024-01-23 08:07:59,174][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-23 08:07:59,682][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-23 08:07:59,682][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-23 08:07:59,683][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-23 08:08:06,798][dvadmin.utils.backends.authenticate():22] [INFO] test12142 正在使用本地登录...
+[2024-01-23 08:08:07,898][dvadmin.utils.backends.authenticate():22] [INFO] test12142 正在使用本地登录...
+[2024-01-23 08:08:08,226][django.channels.server.log_action():147] [INFO] [mHTTP POST /api/login/ 200 [1.44, 127.0.0.1:50749][0m
+[2024-01-23 08:08:08,241][dvadmin.utils.backends.authenticate():22] [INFO] test12142 正在使用本地登录...
+[2024-01-23 08:08:09,024][dvadmin.utils.backends.authenticate():22] [INFO] test12142 正在使用本地登录...
+[2024-01-23 08:08:09,344][django.channels.server.log_action():147] [INFO] [mHTTP POST /api/login/ 200 [1.11, 127.0.0.1:50752][0m
+[2024-01-23 08:08:36,716][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py changed, reloading.
+[2024-01-23 08:08:37,682][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-23 08:08:38,213][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-23 08:08:38,213][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-23 08:08:38,214][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-23 08:08:42,034][dvadmin.utils.backends.authenticate():22] [INFO] test12142 正在使用本地登录...
+[2024-01-23 08:08:42,751][dvadmin.utils.backends.authenticate():22] [INFO] test12142 正在使用本地登录...
+[2024-01-23 08:08:43,036][django.channels.server.log_action():147] [INFO] [mHTTP POST /api/login/ 200 [1.05, 127.0.0.1:50760][0m
+[2024-01-23 08:08:43,047][dvadmin.utils.backends.authenticate():22] [INFO] test12142 正在使用本地登录...
+[2024-01-23 08:08:43,806][dvadmin.utils.backends.authenticate():22] [INFO] test12142 正在使用本地登录...
+[2024-01-23 08:08:44,084][django.channels.server.log_action():147] [INFO] [mHTTP POST /api/login/ 200 [1.04, 127.0.0.1:50763][0m
+[2024-01-23 08:09:06,913][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py changed, reloading.
+[2024-01-23 08:09:07,741][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-23 08:09:08,256][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-23 08:09:08,256][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-23 08:09:08,257][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-23 08:09:12,034][dvadmin.utils.backends.authenticate():22] [INFO] test12142 正在使用本地登录...
+[2024-01-23 08:09:12,818][dvadmin.utils.backends.authenticate():22] [INFO] test12142 正在使用本地登录...
+[2024-01-23 08:09:13,100][django.channels.server.log_action():147] [INFO] [mHTTP POST /api/login/ 200 [1.08, 127.0.0.1:50769][0m
+[2024-01-23 08:09:13,113][dvadmin.utils.backends.authenticate():22] [INFO] test12142 正在使用本地登录...
+[2024-01-23 08:09:13,864][dvadmin.utils.backends.authenticate():22] [INFO] test12142 正在使用本地登录...
+[2024-01-23 08:09:14,142][django.channels.server.log_action():147] [INFO] [mHTTP POST /api/login/ 200 [1.03, 127.0.0.1:50772][0m
+[2024-01-23 08:09:40,226][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py changed, reloading.
+[2024-01-23 08:09:41,137][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-23 08:09:41,657][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-23 08:09:41,658][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-23 08:09:41,658][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-23 08:09:43,979][dvadmin.utils.backends.authenticate():22] [INFO] test12142 正在使用本地登录...
+[2024-01-23 08:09:44,967][django.channels.server.log_action():147] [INFO] [mHTTP POST /api/login/ 200 [1.04, 127.0.0.1:50779][0m
+[2024-01-23 08:09:44,986][dvadmin.utils.backends.authenticate():22] [INFO] test12142 正在使用本地登录...
+[2024-01-23 08:09:45,773][django.channels.server.log_action():147] [INFO] [mHTTP POST /api/login/ 200 [0.80, 127.0.0.1:50781][0m
+[2024-01-23 08:10:33,206][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py changed, reloading.
+[2024-01-23 08:10:34,113][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-23 08:10:34,622][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-23 08:10:34,622][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-23 08:10:34,623][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-23 08:10:36,779][dvadmin.utils.backends.authenticate():22] [INFO] test12142 正在使用本地登录...
+[2024-01-23 08:10:37,534][dvadmin.utils.backends.authenticate():22] [INFO] test12142 正在使用本地登录...
+[2024-01-23 08:10:37,853][django.channels.server.log_action():147] [INFO] [mHTTP POST /api/login/ 200 [1.15, 127.0.0.1:50789][0m
+[2024-01-23 08:10:37,884][dvadmin.utils.backends.authenticate():22] [INFO] test12142 正在使用本地登录...
+[2024-01-23 08:10:38,628][dvadmin.utils.backends.authenticate():22] [INFO] test12142 正在使用本地登录...
+[2024-01-23 08:10:38,940][django.channels.server.log_action():147] [INFO] [mHTTP POST /api/login/ 200 [1.08, 127.0.0.1:50792][0m
+[2024-01-23 08:12:25,145][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-23 08:12:25,601][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-23 08:12:25,601][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-23 08:12:25,601][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-23 08:12:28,710][dvadmin.utils.backends.authenticate():22] [INFO] test12142 正在使用本地登录...
+[2024-01-23 08:12:29,782][dvadmin.utils.backends.authenticate():22] [INFO] test12142 正在使用本地登录...
+[2024-01-23 08:12:30,101][django.channels.server.log_action():147] [INFO] [mHTTP POST /api/login/ 200 [1.48, 127.0.0.1:50812][0m
+[2024-01-23 08:12:30,114][dvadmin.utils.backends.authenticate():22] [INFO] test12142 正在使用本地登录...
+[2024-01-23 08:12:30,861][dvadmin.utils.backends.authenticate():22] [INFO] test12142 正在使用本地登录...
+[2024-01-23 08:12:31,174][django.channels.server.log_action():147] [INFO] [mHTTP POST /api/login/ 200 [1.07, 127.0.0.1:50815][0m
+[2024-01-23 08:14:16,371][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py changed, reloading.
+[2024-01-23 08:14:17,305][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-23 08:14:17,848][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-23 08:14:17,848][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-23 08:14:17,849][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-23 08:14:34,725][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py changed, reloading.
+[2024-01-23 08:14:35,597][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-23 08:14:36,142][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-23 08:14:36,142][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-23 08:14:36,143][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-23 08:14:39,489][dvadmin.utils.backends.authenticate():22] [INFO] test12142 正在使用本地登录...
+[2024-01-23 08:14:40,662][django.channels.server.log_action():147] [INFO] [mHTTP POST /api/login/ 200 [1.18, 127.0.0.1:50829][0m
+[2024-01-23 08:14:40,678][dvadmin.utils.backends.authenticate():22] [INFO] test12142 正在使用本地登录...
+[2024-01-23 08:14:41,445][django.channels.server.log_action():147] [INFO] [mHTTP POST /api/login/ 200 [0.77, 127.0.0.1:50832][0m
+[2024-01-23 08:14:55,756][dvadmin.utils.exception.CustomExceptionHandler():66] [ERROR] Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/user.py", line 325, in get_user
+    userID = request.data.id
+AttributeError: 'QueryDict' object has no attribute 'id'
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/user.py", line 325, in get_user
+    userID = request.data.id
+AttributeError: 'QueryDict' object has no attribute 'id'
+[2024-01-23 08:14:55,761][django.channels.server.log_action():147] [INFO] [mHTTP GET /api/system/user/get_user/ 200 [0.03, 127.0.0.1:50839][0m
+[2024-01-23 08:15:25,874][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/login.py changed, reloading.
+[2024-01-23 08:15:26,847][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-23 08:15:27,445][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-23 08:15:27,445][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-23 08:15:27,446][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-23 08:15:47,247][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/user.py changed, reloading.
+[2024-01-23 08:15:48,271][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-23 08:15:48,826][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-23 08:15:48,826][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-23 08:15:48,827][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-23 08:15:53,408][dvadmin.utils.exception.CustomExceptionHandler():66] [ERROR] Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/user.py", line 329, in get_user
+    data = serializer.data
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 768, in data
+    ret = super().data
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 253, in data
+    self._data = self.to_representation(self.instance)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 686, in to_representation
+    return [
+TypeError: 'Users' object is not iterable
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/user.py", line 329, in get_user
+    data = serializer.data
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 768, in data
+    ret = super().data
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 253, in data
+    self._data = self.to_representation(self.instance)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/serializers.py", line 686, in to_representation
+    return [
+TypeError: 'Users' object is not iterable
+[2024-01-23 08:15:53,410][django.channels.server.log_action():147] [INFO] [mHTTP GET /api/system/user/get_user/ 200 [0.06, 127.0.0.1:50852][0m
+[2024-01-23 08:16:06,727][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/user.py changed, reloading.
+[2024-01-23 08:16:07,656][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-23 08:16:08,192][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-23 08:16:08,192][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-23 08:16:08,193][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-23 08:16:10,811][django.channels.server.log_action():147] [INFO] [mHTTP GET /api/system/user/get_user/ 200 [0.07, 127.0.0.1:50859][0m
+[2024-01-23 08:17:00,128][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/user.py changed, reloading.
+[2024-01-23 08:17:00,994][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-23 08:17:01,496][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-23 08:17:01,497][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-23 08:17:01,497][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-23 08:23:05,943][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/user.py changed, reloading.
+[2024-01-23 08:23:06,894][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-23 08:25:20,183][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/user.py changed, reloading.
+[2024-01-23 08:25:21,196][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-23 08:25:21,876][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-23 08:25:21,876][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-23 08:25:21,877][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-23 08:25:42,081][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/user.py changed, reloading.
+[2024-01-23 08:25:43,007][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-23 08:25:43,525][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-23 08:25:43,525][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-23 08:25:43,526][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-23 08:26:05,620][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/user.py changed, reloading.
+[2024-01-23 08:26:06,610][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-23 08:26:07,140][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-23 08:26:07,140][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-23 08:26:07,141][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-23 08:26:16,776][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/user.py changed, reloading.
+[2024-01-23 08:26:17,739][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-23 08:26:18,268][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-23 08:26:18,268][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-23 08:26:18,269][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-23 08:26:58,127][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/user.py changed, reloading.
+[2024-01-23 08:26:59,098][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-23 08:26:59,641][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-23 08:26:59,641][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-23 08:26:59,642][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-23 08:27:14,545][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/user.py changed, reloading.
+[2024-01-23 08:27:15,478][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-23 08:27:16,099][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-23 08:27:16,099][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-23 08:27:16,100][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-23 08:27:25,645][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/user.py changed, reloading.
+[2024-01-23 08:27:26,512][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-23 08:27:27,034][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-23 08:27:27,034][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-23 08:27:27,035][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-23 08:27:29,264][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/user.py changed, reloading.
+[2024-01-23 08:27:29,999][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-23 08:27:30,454][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-23 08:27:30,454][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-23 08:27:30,455][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-23 08:28:18,883][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/user.py changed, reloading.
+[2024-01-23 08:28:19,931][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-23 08:28:20,454][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-23 08:28:20,455][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-23 08:28:20,455][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-23 08:28:27,584][dvadmin.utils.exception.CustomExceptionHandler():66] [ERROR] Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/user.py", line 332, in get_user
+    data['est_score'] = 90
+TypeError: list indices must be integers or slices, not str
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/user.py", line 332, in get_user
+    data['est_score'] = 90
+TypeError: list indices must be integers or slices, not str
+[2024-01-23 08:28:27,586][django.channels.server.log_action():147] [INFO] [mHTTP GET /api/system/user/get_user/ 200 [0.07, 127.0.0.1:51035][0m
+[2024-01-23 08:30:03,252][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/user.py changed, reloading.
+[2024-01-23 08:30:04,319][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-23 08:30:04,893][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-23 08:30:04,893][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-23 08:30:04,894][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-23 08:30:21,468][dvadmin.utils.exception.CustomExceptionHandler():66] [ERROR] Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/user.py", line 334, in get_user
+    data['est_score'] = 90
+TypeError: list indices must be integers or slices, not str
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/user.py", line 334, in get_user
+    data['est_score'] = 90
+TypeError: list indices must be integers or slices, not str
+[2024-01-23 08:30:21,471][django.channels.server.log_action():147] [INFO] [mHTTP GET /api/system/user/get_user/ 200 [0.07, 127.0.0.1:51098][0m
+[2024-01-23 08:30:24,861][dvadmin.utils.exception.CustomExceptionHandler():66] [ERROR] Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/user.py", line 334, in get_user
+    data['est_score'] = 90
+TypeError: list indices must be integers or slices, not str
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/user.py", line 334, in get_user
+    data['est_score'] = 90
+TypeError: list indices must be integers or slices, not str
+[2024-01-23 08:30:24,865][django.channels.server.log_action():147] [INFO] [mHTTP GET /api/system/user/get_user/ 200 [0.02, 127.0.0.1:51099][0m
+[2024-01-23 08:30:33,731][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/user.py changed, reloading.
+[2024-01-23 08:30:34,565][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-23 08:30:35,120][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-23 08:30:35,120][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-23 08:30:35,120][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-23 08:30:38,049][dvadmin.utils.exception.CustomExceptionHandler():66] [ERROR] Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/user.py", line 334, in get_user
+    data['est_score'] = 90
+TypeError: list indices must be integers or slices, not str
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/user.py", line 334, in get_user
+    data['est_score'] = 90
+TypeError: list indices must be integers or slices, not str
+[2024-01-23 08:30:38,052][django.channels.server.log_action():147] [INFO] [mHTTP GET /api/system/user/get_user/ 200 [0.06, 127.0.0.1:51103][0m
+[2024-01-23 08:31:31,054][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/user.py changed, reloading.
+[2024-01-23 08:31:32,038][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-23 08:31:32,600][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-23 08:31:32,600][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-23 08:31:32,601][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-23 08:31:33,634][django.channels.server.log_action():147] [INFO] [mHTTP GET /api/system/user/get_user/ 200 [0.03, 127.0.0.1:51111][0m
+[2024-01-23 08:33:07,708][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/views/user.py changed, reloading.
+[2024-01-23 08:33:08,764][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-23 08:33:09,284][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-23 08:33:09,284][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-23 08:33:09,285][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-23 08:36:16,414][django.channels.server.log_action():147] [INFO] [mHTTP PATCH /api/system/user/39/ 200 [0.08, 127.0.0.1:51132][0m
+[2024-01-23 08:38:31,063][django.channels.server.log_action():147] [INFO] [mHTTP PATCH /api/system/user/39/ 200 [0.03, 127.0.0.1:51140][0m
+[2024-01-23 08:40:01,971][django.channels.server.log_action():147] [INFO] [mHTTP PUT /api/system/user/39/ 200 [0.05, 127.0.0.1:51143][0m
+[2024-01-23 08:40:11,967][django.channels.server.log_action():147] [INFO] [mHTTP PATCH /api/system/user/39/ 200 [0.01, 127.0.0.1:51146][0m
+[2024-01-23 08:42:06,210][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/models.py changed, reloading.
+[2024-01-23 08:42:07,191][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-23 08:42:07,722][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-23 08:42:07,722][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-23 08:42:07,723][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-23 08:43:55,031][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/models.py changed, reloading.
+[2024-01-23 08:43:56,011][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-23 08:43:56,605][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-23 08:43:56,605][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-23 08:43:56,606][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-23 08:44:03,930][django.channels.server.log_action():147] [INFO] [mHTTP PATCH /api/system/user/39/ 200 [0.08, 127.0.0.1:51176][0m
+[2024-01-23 08:44:41,448][django.channels.server.log_action():147] [INFO] [mHTTP PATCH /api/system/user/39/ 200 [0.01, 127.0.0.1:51181][0m
+[2024-01-23 08:45:51,363][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/utils/viewset.py changed, reloading.
+[2024-01-23 08:45:52,330][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-23 08:45:52,872][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-23 08:45:52,872][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-23 08:45:52,873][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-23 08:46:57,088][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/utils/permission.py changed, reloading.
+[2024-01-23 08:46:58,011][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-23 08:46:58,520][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-23 08:46:58,521][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-23 08:46:58,521][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-23 08:47:05,321][django.channels.server.log_action():147] [INFO] [mHTTP PATCH /api/system/user/39/ 200 [0.04, 127.0.0.1:51198][0m
+[2024-01-23 08:47:32,421][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/utils/permission.py changed, reloading.
+[2024-01-23 08:47:33,370][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-23 08:47:33,933][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-23 08:47:33,933][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-23 08:47:33,934][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-23 08:47:36,294][django.channels.server.log_action():147] [INFO] [mHTTP PATCH /api/system/user/39/ 200 [0.05, 127.0.0.1:51205][0m
+[2024-01-23 08:47:59,348][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/utils/permission.py changed, reloading.
+[2024-01-23 08:48:00,201][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-23 08:48:00,708][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-23 08:48:00,708][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-23 08:48:00,709][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-23 08:48:04,761][django.channels.server.log_action():147] [INFO] [mHTTP PATCH /api/system/user/39/ 200 [0.08, 127.0.0.1:51211][0m
+[2024-01-23 08:48:55,622][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/utils/permission.py changed, reloading.
+[2024-01-23 08:48:56,547][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-23 08:48:57,075][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-23 08:48:57,075][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-23 08:48:57,076][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-23 08:49:00,734][django.channels.server.log_action():147] [INFO] [mHTTP PATCH /api/system/user/39/ 200 [0.08, 127.0.0.1:51217][0m
+[2024-01-23 08:49:50,956][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/utils/permission.py changed, reloading.
+[2024-01-23 08:49:51,860][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-23 08:49:52,363][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-23 08:49:52,363][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-23 08:49:52,364][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-23 08:49:59,850][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/utils/permission.py changed, reloading.
+[2024-01-23 08:50:00,759][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-23 08:50:01,290][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-23 08:50:01,290][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-23 08:50:01,291][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-23 08:50:06,673][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/utils/permission.py changed, reloading.
+[2024-01-23 08:50:07,518][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-23 08:50:08,023][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-23 08:50:08,024][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-23 08:50:08,024][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-23 08:50:09,540][django.channels.server.log_action():147] [INFO] [mHTTP PATCH /api/system/user/39/ 200 [0.07, 127.0.0.1:51229][0m
+[2024-01-23 08:50:39,803][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/system/models.py changed, reloading.
+[2024-01-23 08:50:40,737][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-23 08:50:41,252][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-23 08:50:41,252][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-23 08:50:41,253][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-23 08:50:58,430][dvadmin.utils.exception.CustomExceptionHandler():66] [ERROR] Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/mixins.py", line 82, in partial_update
+    return self.update(request, *args, **kwargs)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/utils/viewset.py", line 97, in update
+    instance = self.get_object()
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/generics.py", line 83, in get_object
+    queryset = self.filter_queryset(self.get_queryset())
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/utils/viewset.py", line 49, in filter_queryset
+    queryset = backend().filter_queryset(self.request, queryset, self)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/utils/filters.py", line 70, in filter_queryset
+    method = methodList.index(method)
+ValueError: 'PATCH' is not in list
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/mixins.py", line 82, in partial_update
+    return self.update(request, *args, **kwargs)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/utils/viewset.py", line 97, in update
+    instance = self.get_object()
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/generics.py", line 83, in get_object
+    queryset = self.filter_queryset(self.get_queryset())
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/utils/viewset.py", line 49, in filter_queryset
+    queryset = backend().filter_queryset(self.request, queryset, self)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/utils/filters.py", line 70, in filter_queryset
+    method = methodList.index(method)
+ValueError: 'PATCH' is not in list
+[2024-01-23 08:50:58,433][django.channels.server.log_action():147] [INFO] [mHTTP PATCH /api/system/user/39/ 200 [0.09, 127.0.0.1:51235][0m
+[2024-01-23 08:51:43,623][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/utils/permission.py changed, reloading.
+[2024-01-23 08:51:44,593][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-23 08:51:45,132][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-23 08:51:45,132][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-23 08:51:45,133][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-23 08:51:48,543][dvadmin.utils.exception.CustomExceptionHandler():66] [ERROR] Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/mixins.py", line 82, in partial_update
+    return self.update(request, *args, **kwargs)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/utils/viewset.py", line 97, in update
+    instance = self.get_object()
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/generics.py", line 83, in get_object
+    queryset = self.filter_queryset(self.get_queryset())
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/utils/viewset.py", line 49, in filter_queryset
+    queryset = backend().filter_queryset(self.request, queryset, self)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/utils/filters.py", line 70, in filter_queryset
+    method = methodList.index(method)
+ValueError: 'PATCH' is not in list
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/mixins.py", line 82, in partial_update
+    return self.update(request, *args, **kwargs)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/utils/viewset.py", line 97, in update
+    instance = self.get_object()
+  File "/opt/anaconda3/envs/parrotbot/lib/python3.8/site-packages/rest_framework/generics.py", line 83, in get_object
+    queryset = self.filter_queryset(self.get_queryset())
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/utils/viewset.py", line 49, in filter_queryset
+    queryset = backend().filter_queryset(self.request, queryset, self)
+  File "/Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/utils/filters.py", line 70, in filter_queryset
+    method = methodList.index(method)
+ValueError: 'PATCH' is not in list
+[2024-01-23 08:51:48,545][django.channels.server.log_action():147] [INFO] [mHTTP PATCH /api/system/user/39/ 200 [0.06, 127.0.0.1:51244][0m
+[2024-01-23 08:53:11,613][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/utils/filters.py changed, reloading.
+[2024-01-23 08:53:12,602][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-23 08:53:13,143][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-23 08:53:13,143][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-23 08:53:13,144][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-23 08:53:19,992][django.channels.server.log_action():147] [INFO] [mHTTP PATCH /api/system/user/39/ 200 [0.07, 127.0.0.1:51253][0m
+[2024-01-23 08:55:11,540][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/utils/viewset.py changed, reloading.
+[2024-01-23 08:55:12,509][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-23 08:55:13,033][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-23 08:55:13,034][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-23 08:55:13,034][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-23 08:55:44,676][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/utils/viewset.py changed, reloading.
+[2024-01-23 08:55:45,520][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-23 08:55:46,027][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-23 08:55:46,028][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-23 08:55:46,028][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-23 08:55:52,303][django.channels.server.log_action():147] [INFO] [mHTTP PATCH /api/system/user/39/ 200 [0.07, 127.0.0.1:51265][0m
+[2024-01-23 08:57:20,026][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/utils/permission.py changed, reloading.
+[2024-01-23 08:57:20,955][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-23 08:57:21,477][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-23 08:57:21,478][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-23 08:57:21,478][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-23 09:00:00,644][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/utils/viewset.py changed, reloading.
+[2024-01-23 09:00:01,590][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-23 09:00:02,113][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-23 09:00:02,113][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-23 09:00:02,114][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-23 09:00:09,533][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/utils/viewset.py changed, reloading.
+[2024-01-23 09:00:10,390][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-23 09:00:10,890][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-23 09:00:10,890][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-23 09:00:10,891][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-23 09:00:20,991][django.channels.server.log_action():147] [INFO] [mHTTP PATCH /api/system/user/39/ 200 [0.09, 127.0.0.1:51288][0m
+[2024-01-23 09:06:04,813][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/utils/viewset.py changed, reloading.
+[2024-01-23 09:06:05,860][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-23 09:07:14,754][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/utils/viewset.py changed, reloading.
+[2024-01-23 09:07:15,705][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-23 09:07:16,551][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-23 09:07:16,552][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-23 09:07:16,552][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-23 09:09:46,746][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/utils/viewset.py changed, reloading.
+[2024-01-23 09:09:47,796][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-23 09:10:27,221][django.request.log_response():224] [ERROR] Internal Server Error: /api/system/user/39/
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.8/site-packages/asgiref/sync.py", line 472, in thread_handler
+    raise exc_info[1]
+  File "/usr/local/lib/python3.8/site-packages/django/core/handlers/exception.py", line 38, in inner
+    response = await get_response(request)
+  File "/usr/local/lib/python3.8/site-packages/django/core/handlers/base.py", line 219, in _get_response_async
+    callback, callback_args, callback_kwargs = self.resolve_request(request)
+  File "/usr/local/lib/python3.8/site-packages/django/core/handlers/base.py", line 290, in resolve_request
+    resolver_match = resolver.resolve(request.path_info)
+  File "/usr/local/lib/python3.8/site-packages/django/urls/resolvers.py", line 560, in resolve
+    for pattern in self.url_patterns:
+  File "/usr/local/lib/python3.8/site-packages/django/utils/functional.py", line 48, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/usr/local/lib/python3.8/site-packages/django/urls/resolvers.py", line 602, in url_patterns
+    patterns = getattr(self.urlconf_module, "urlpatterns", self.urlconf_module)
+  File "/usr/local/lib/python3.8/site-packages/django/utils/functional.py", line 48, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/usr/local/lib/python3.8/site-packages/django/urls/resolvers.py", line 595, in urlconf_module
+    return import_module(self.urlconf_name)
+  File "/usr/local/lib/python3.8/importlib/__init__.py", line 127, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1014, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 991, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 975, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 671, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 843, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/parrotAdmin/application/urls.py", line 28, in <module>
+    from dvadmin.system.views.dictionary import InitDictionaryViewSet
+  File "/parrotAdmin/dvadmin/system/views/dictionary.py", line 16, in <module>
+    from dvadmin.utils.viewset import CustomModelViewSet
+  File "/parrotAdmin/dvadmin/utils/viewset.py", line 113
+    if key in reserved_list or 'modify'
+                                      ^
+SyntaxError: invalid syntax
+[2024-01-23 09:10:27,238][uvicorn.access.send():499] [INFO] 177.8.0.1:44014 - "PATCH /api/system/user/39/ HTTP/1.1" 500
+[2024-01-23 09:10:44,934][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/utils/viewset.py changed, reloading.
+[2024-01-23 09:10:45,846][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-23 09:10:46,476][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-23 09:10:46,476][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-23 09:10:46,477][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-23 09:10:47,630][django.channels.server.log_action():147] [INFO] [mHTTP PATCH /api/system/user/39/ 200 [0.03, 127.0.0.1:51349][0m
+[2024-01-23 09:11:13,189][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/utils/viewset.py changed, reloading.
+[2024-01-23 09:11:14,090][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-23 09:11:14,623][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-23 09:11:14,623][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-23 09:11:14,624][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-23 09:12:32,964][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/utils/viewset.py changed, reloading.
+[2024-01-23 09:12:33,908][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-23 09:12:34,462][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-23 09:12:34,462][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-23 09:12:34,463][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-23 09:12:36,690][django.utils.autoreload.trigger_reload():251] [INFO] /Users/zhilinhe/Desktop/hhhhzl/WorkGetBetter/Parrot/parrotbot/parrotAdmin/dvadmin/utils/viewset.py changed, reloading.
+[2024-01-23 09:12:37,461][django.utils.autoreload.run_with_reloader():637] [INFO] Watching for file changes with StatReloader
+[2024-01-23 09:12:37,936][daphne.server.run():113] [INFO] HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+[2024-01-23 09:12:37,936][daphne.server.run():122] [INFO] Configuring endpoint tcp:port=8000:interface=127.0.0.1
+[2024-01-23 09:12:37,937][daphne.server.listen_success():153] [INFO] Listening on TCP address 127.0.0.1:8000
+[2024-01-23 09:12:39,361][django.channels.server.log_action():147] [INFO] [mHTTP PATCH /api/system/user/39/ 200 [0.06, 127.0.0.1:51368][0m
