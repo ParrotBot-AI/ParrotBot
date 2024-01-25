@@ -5,6 +5,7 @@ function initWebSocket (e) {
   const token = util.cookies.get('token')
   if (token) {
     const wsUri = util.wsBaseURL() + 'ws/' + token + '/'
+    console.log(wsUri, 8)
     this.socket = new WebSocket(wsUri)// 这里面的this都指向vue
     this.socket.onerror = webSocketOnError
     this.socket.onmessage = webSocketOnMessage

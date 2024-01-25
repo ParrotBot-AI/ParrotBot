@@ -16,8 +16,9 @@ from dvadmin.system.views.operation_log import OperationLogViewSet
 from dvadmin.system.views.role import RoleViewSet
 from dvadmin.system.views.system_config import SystemConfigViewSet
 from dvadmin.system.views.user import UserViewSet
-from dvadmin.system.views.microservice import MicroServiceRegisterViewSet
 from dvadmin.system.views.streaming import Streaming
+
+from dvadmin.system.views.microservice import MicroServiceRegisterViewSet
 
 system_url = routers.SimpleRouter()
 system_url.register(r'menu', MenuViewSet)

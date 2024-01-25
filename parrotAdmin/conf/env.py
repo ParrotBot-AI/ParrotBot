@@ -34,6 +34,8 @@ TABLE_PREFIX = "parrot_"
 REDIS_PASSWORD = 'test'
 REDIS_HOST = '127.0.0.1'
 REDIS_PORT = 19783
+# 本地
+# REDIS_PORT = 6379
 REDIS_DATABASE = {
     'test': 0,
     "cache": 1,

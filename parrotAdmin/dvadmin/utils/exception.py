@@ -45,6 +45,7 @@ def CustomExceptionHandler(ex, context):
             code = 401
             msg = ex.detail
     elif isinstance(ex, Http404):
+        print(ex, Http404, 48)
         code = 400
         msg = "接口地址不正确"
     elif isinstance(ex, DRFAPIException):

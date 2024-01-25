@@ -41,6 +41,7 @@ class UserMenuSerializer(CustomModelSerializer):
         fields = ['id', 'name', 'icon', 'is_catalog', 'web_path', 'parent', 'hasChild', 'menuPermission']
         read_only_fields = ["id"]
 
+
 class MenuSerializer(CustomModelSerializer):
     """
     菜单表的简单序列化器
@@ -172,8 +173,8 @@ class WebRouterSerializer(CustomModelSerializer):
     class Meta:
         model = Menu
         fields = (
-        'id', 'parent', 'icon', 'sort', 'path', 'name', 'title', 'is_link', 'is_catalog', 'web_path', 'component',
-        'component_name', 'cache', 'visible', 'menuPermission', 'frame_out')
+            'id', 'parent', 'icon', 'sort', 'path', 'name', 'title', 'is_link', 'is_catalog', 'web_path', 'component',
+            'component_name', 'cache', 'visible', 'menuPermission', 'frame_out')
         read_only_fields = ["id"]
 
 
@@ -194,10 +195,23 @@ class MenuViewSet(CustomModelViewSet):
     filter_fields = ['parent', 'name', 'status', 'is_link', 'visible', 'cache', 'is_catalog']
 
     # extra_filter_backends = []
-    @action(methods=['GET'], detail=False, permission_classes=[])
-    def user_menu(self, request, **kwargs):
+    @action(methods=['GET'], detail=False, permission_classes=[IsAuthenticated],
+            url_path="user_menu/(?P<menu_id>\d+)"
+            )
+    def get_user_menu(self, request, menu_id):
         """用于前端获取当前角色的路由(用户端)"""
+        print(menu_id)
+        if menu_id:
+            queryset = self.queryset.filter(status=1, user_use=1, visible=1, parent_id=menu_id).all()
+            serializer = UserMenuSerializer(queryset, many=True, request=request)
+            data = serializer.data
+            return SuccessResponse(data=data, total=len(data), msg="获取成功")
+        else:
+            return SuccessResponse(data=[], total=0, msg="获取成功")
 
+    @action(methods=['GET'], detail=False, permission_classes=[IsAuthenticated],)
+    def user_menu(self, request):
+        """用于前端获取当前角色的路由(用户端)"""
         menu_id = request.data.get("menu_id")
         if menu_id:
             queryset = self.queryset.filter(status=1, user_use=1, visible=1, parent_id=menu_id).all()
@@ -206,14 +220,26 @@ class MenuViewSet(CustomModelViewSet):
             return SuccessResponse(data=data, total=len(data), msg="获取成功")
         else:
             # 直接跳过考试层
+            # request for toefl exam id
+            # to do
+
+            exam_id = 1
             queryset = self.queryset.filter(status=1, user_use=1, visible=1, name='托福').first()
             tuofu_id = queryset.id
             queryset = self.queryset.filter(status=1, user_use=1, visible=1, parent_id=tuofu_id).all()
             # queryset = self.queryset.filter(status=1, user_use=1, visible=1, parent__isnull=True).all()
             serializer = UserMenuSerializer(queryset, many=True, request=request)
-            data = serializer.data
-            return SuccessResponse(data=data, total=len(data), msg="获取成功")
+            response = []
+            for each in serializer.data:
+                me = dict(each)
+                if me['name'] in ['阅读','口语','写作','听力']:
+                    # request for microservices pattern id
+                    # send for exam id, pattern_name, and return pattern id
+                    # to do
+                    me['pattern_id'] = 11
 
+                response.append(me)
+            return SuccessResponse(data=response, total=len(response), msg="获取成功")
 
         # if not kwargs["id"]:
         #     queryset = self.queryset.filter(status=1, user_use=1, visible=1, parent__isnull=True).all()

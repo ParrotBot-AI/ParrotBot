@@ -53,7 +53,10 @@ def ReUUID(api):
 
 class CustomPermission(BasePermission):
     """自定义权限"""
-    allowed_anonymous_url = ['/api/system/user/']
+    allowed_anonymous_url = [
+        '/api/system/user/',
+        '/api/system/menu/user_menu/'
+    ]
 
     def has_permission(self, request, view):
         if isinstance(request.user, AnonymousUser):
@@ -68,6 +71,10 @@ class CustomPermission(BasePermission):
             return True
         else:
             api = request.path  # 当前请求接口
+            if api in self.allowed_anonymous_url:
+                return True
+            else:
+                return False
             method = request.method  # 当前请求方法
             methodList = ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH']
             method = methodList.index(method)
@@ -85,6 +92,7 @@ class CustomPermission(BasePermission):
                     item.get('permission__method')) + '$' for item in userApiList if item.get('permission__api')]
             new_api_ist = api_white_list + ApiList
             new_api = api + ":" + str(method)
+            print(new_api, 88)
             for item in new_api_ist:
                 matchObj = re.match(item, new_api, re.M | re.I)
                 if matchObj is None:

@@ -76,9 +76,7 @@ class DvadminWebSocket(AsyncJsonWebsocketConsumer):
                     # 发送连接成功
                     await self.send_json(set_message('system', 'SYSTEM', '连接成功'))
                 else:
-                    await self.send_json(
-                        set_message('system', 'SYSTEM', "请查看您的未读消息~",
-                                    refresh_unread=True))
+                    await self.send_json(set_message('system', 'SYSTEM', "请查看您的未读消息~", refresh_unread=True))
         except InvalidSignatureError:
             await self.disconnect(None)
 
@@ -129,3 +127,40 @@ def websocket_push(room_name, message):
             "json": message
         }
     )
+
+
+# === question websocket ==== #
+class QuestionWebSocket(AsyncJsonWebsocketConsumer):
+    async def connect(self):
+        try:
+            import jwt
+            self.service_uid = self.scope["url_route"]["kwargs"]["service_uid"]
+            decoded_result = jwt.decode(self.service_uid, settings.SECRET_KEY, algorithms=["HS256"])
+            if decoded_result:
+                self.user_id = decoded_result.get('user_id')
+                self.room_name = "user_" + str(self.user_id)
+                # 收到连接时候处理，
+                await self.channel_layer.group_add(
+                    "dvadmin",
+                    self.channel_name
+                )
+                await self.channel_layer.group_add(
+                    self.room_name,
+                    self.channel_name
+                )
+                await self.accept()
+                # 发送连接成功
+                await self.send_json(set_message('system', 'SYSTEM', '做题websocket连接成功'))
+        except InvalidSignatureError:
+            await self.disconnect(None)
+
+    async def disconnect(self, close_code):
+        # Leave room group
+        await self.channel_layer.group_discard(self.room_name, self.channel_name)
+        await self.channel_layer.group_discard("dvadmin", self.channel_name)
+        print("连接关闭")
+        print("===存入题目===")
+        try:
+            await self.close(close_code)
+        except Exception:
+            pass

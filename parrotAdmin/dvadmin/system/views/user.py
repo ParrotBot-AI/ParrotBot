@@ -322,9 +322,8 @@ class UserViewSet(CustomModelViewSet):
         "role": {"title": "角色", "choices": {"queryset": Role.objects.filter(status=True), "values_name": "name"}},
     }
 
-    @action(methods=["GET"], detail=False, permission_classes=[IsAuthenticated])
-    def get_user(self, request):
-        userID = request.data.get("userId")
+    @action(methods=["GET"], detail=False, permission_classes=[IsAuthenticated], url_path="get_user/(?P<userID>\d+)")
+    def get_user_id(self, request, userID):
         if userID:
             queryset = self.queryset.filter(id=userID).first()
             serializer = UserInterfaceSerializer(queryset, many=False, request=request)
@@ -336,9 +335,9 @@ class UserViewSet(CustomModelViewSet):
             data['next_test'] = 100
             today_t = [
                 {
-                    'id':12,
+                    'id': 12,
                     'task_name': '完成学习阅读204',
-                    'status':0,
+                    'status': 0,
                 },
                 {
                     'id': 12,
