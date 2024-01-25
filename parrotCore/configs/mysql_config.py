@@ -5,7 +5,7 @@ from sqlalchemy.orm.session import Session
 from sqlalchemy_utils import database_exists, create_database
 
 MYSQL_PORT_DEV = 19782
-MYSQL_HOST_DEV = 'http://yingwuzhixue.com'
+MYSQL_HOST_DEV = 'yingwuzhixue.com'
 
 MYSQL_SETTINGS = {
     "core": {

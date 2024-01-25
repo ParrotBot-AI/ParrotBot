@@ -64,8 +64,3 @@ if __name__ == "__main__":
     # pprint(flow.fetch_module_chains(task_id=1))
     # print()
     pprint(flow._retrieve(model=Modules, restrict_field='id', restrict_value=2))
-    if DATABASE_SELECTION == 'postgre':
-        from configs.postgre_config import BASES
-    elif DATABASE_SELECTION == 'mysql':
-        from configs.mysql_config import BASES
-    print(BASES['core'].metadata.tables.keys())

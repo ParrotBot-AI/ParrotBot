@@ -24,6 +24,12 @@ class question_function(enum.Enum):
     learning = 3
 
 
+class answerType(enum.Enum):
+    mock_exam = 1
+    practice = 2
+    learning = 3
+
+
 # ==================== Tables ====================#
 class Subjects(BASES['core']):
     __tablename__ = "Subjects"
@@ -156,14 +162,42 @@ class Indicators(BASES['core']):
         return s
 
 
-class QuestionsType(BASES['core']):
-    __tablename__ = "QuestionsType"
+class BasicQuestionsType(BASES['core']):
+    # some basic question types, single choice, multiple choice,
+    __tablename__ = "BasicQuestionsType"
 
     id = Column(Integer, autoincrement=True, primary_key=True)
     type_name = Column(String(20), nullable=False)
     is_active = Column(Boolean, default=True)
-    rubric = Column(String(50), nullable=False)
-    limitation = Column(String(50), nullable=True)
+
+    detail = Column(String(50), nullable=False)  # define for stem type and option type
+    restriction = Column(String(50), nullable=False)  # define the restriction for the question
+    cal_function = Column(String(50), nullable=True)
+
+    create_time = Column(DateTime)
+    last_update_time = Column(DateTime)
+
+    def __str__(self) -> str:
+        s = f'(id: {self.id} n: {self.type_name})'
+        return s
+
+    def __repr__(self) -> str:
+        s = f'(id: {self.id} n: {self.type_name})'
+        return s
+
+
+class QuestionsType(BASES['core']):
+    __tablename__ = "QuestionsType"
+
+    id = Column(Integer, autoincrement=True, primary_key=True)
+    basic_question_type = Column(Integer, ForeignKey('BasicQuestionsType.id', ondelete='CASCADE'), nullable=True)
+    type_name = Column(String(20), nullable=False)
+    is_active = Column(Boolean, default=True)
+
+    detail = Column(String(50), nullable=True)  # define for stem type and option type
+    restriction = Column(String(50), nullable=True)  # define the restriction for the question
+    rubric = Column(String(50), nullable=False)  # define the extra grading rubric for the question
+
     create_time = Column(DateTime)
     last_update_time = Column(DateTime)
 
@@ -184,26 +218,29 @@ class Questions(BASES['core']):
 
     id = Column(Integer, autoincrement=True, primary_key=True)
     question_type = Column(Integer, ForeignKey('QuestionsType.id', ondelete='CASCADE'), nullable=False)
-    question_title = Column(String(20), nullable=False)
-    question_content = Column(Text, nullable=False)
-    question_stem = Column(String(600), nullable=False)
+    question_title = Column(String(20), nullable=True)
+    question_content = Column(Text, nullable=True)
+    question_stem = Column(String(600), nullable=True)
     question_function_type = Column(Enum(question_function), nullable=True)
 
     order = Column(Integer, nullable=True)  # 题目号
-    father_question = Column(Integer, nullable=True)
-    cal_method = Column(Integer, nullable=False)  # 计算方式
-    duration = Column(Float, nullable=False)  # 做题时间
-    max_score = Column(Integer, nullable=False)  # 题目最大分值
+    father_question = Column(Integer, nullable=False)
+
     stem_weights = Column(String(20), nullable=True)  # 题目stem权重
+    cal_method = Column(Integer, nullable=False)  # 计算方式 0 为自动记分
+    duration = Column(Float, nullable=True)  # 做题时间
+    max_score = Column(Integer, nullable=False)  # 题目最大分值
+
     correct_answer = Column(String(20), nullable=True)  # 题目的正确值
-    rubric_detail = Column(String(50), nullable=True)
     d_level = Column(Integer, nullable=True)  # 题目难度
+    keywords = Column(String(20), nullable=True)  # 题目关键词
+    remark = Column(String(30), nullable=True)
+
     voice_link = Column(String(20), nullable=True)  # Link to voice if it requires voice (听力题)
     is_require = Column(Boolean, default=True)  # 是否必答
     is_cal = Column(Boolean, default=True)  # 是否记分
     is_active = Column(Boolean, default=True)
     is_attachable = Column(Boolean, default=True)  # 是否可以上传文件
-    keywords = Column(String(20), nullable=True)  # 题目关键词
 
     # foreign keys
     section_id = Column(Integer, ForeignKey('Sections.id', ondelete='CASCADE'), nullable=True)
@@ -228,6 +265,7 @@ class IndicatorQuestion(BASES['core']):
     id = Column(Integer, autoincrement=True, primary_key=True)
     indicator_id = Column(Integer, ForeignKey('Indicators.id', ondelete='CASCADE'), nullable=False)
     question_id = Column(Integer, ForeignKey('Questions.id', ondelete='CASCADE'), nullable=False)
+    is_active = Column(Boolean, default=True)
     create_time = Column(DateTime)
     last_update_time = Column(DateTime)
 
@@ -240,19 +278,46 @@ class IndicatorQuestion(BASES['core']):
         return s
 
 
+class AnswerSheetRecord(BASES['core']):
+    __tablename__ = "AnswerSheetRecord"
+
+    id = Column(Integer, autoincrement=True, primary_key=True)
+    account_id = Column(Integer, ForeignKey('Accounts.id', ondelete='CASCADE'), nullable=False)
+    start_time = Column(DateTime)
+    end_time = Column(DateTime, nullable=True)
+    status = Column(Integer)  # 0 unfinished / paused; 1 finished; 2 存档
+    type = Column(Enum(answerType))
+
+    max_score = Column(Integer, nullable=True)
+    score = Column(Integer, nullable=True)
+
+    is_graded = Column(Boolean, default=True)  # 是否打分完成
+    is_time = Column(Boolean, default=True)
+    is_check_answer = Column(Boolean, default=True)
+    is_active = Column(Boolean, default=True)
+    create_time = Column(DateTime)
+    last_update_time = Column(DateTime)
+
+
 class Submissions(BASES['core']):
     __tablename__ = "Submissions"
 
     id = Column(Integer, autoincrement=True, primary_key=True)
-    account_id = Column(Integer, ForeignKey('Accounts.id', ondelete='CASCADE'), nullable=False)
+    answer_sheet_id = Column(Integer, ForeignKey('AnswerSheetRecord.id', ondelete='CASCADE'), nullable=False)
     question_id = Column(Integer, ForeignKey('Questions.id', ondelete='CASCADE'), nullable=False)
     answer = Column(Text, nullable=True)
-    duration = Column(Float, nullable=False) # 做题时长
+    stem_weight = Column(Text, nullable=False)
+    duration = Column(Float, nullable=False)  # 做题时长
+
+    # external links
     voice_link = Column(String(20), nullable=True)
     video_link = Column(String(20), nullable=True)
     upload_file_link = Column(String(20), nullable=True)
+
+    cal_method = Column(Integer, nullable=True)
+    max_score = Column(Integer, nullable=True)
     score = Column(Integer, nullable=True)
-    graded = Column(Integer, nullable=False)  # 是否打分完成
+    is_graded = Column(Integer, nullable=False)  # 是否打分完成
     create_time = Column(DateTime)
     last_update_time = Column(DateTime)
 
@@ -271,6 +336,8 @@ class Analysis(BASES['core']):
     id = Column(Integer, autoincrement=True, primary_key=True)
     question_id = Column(Integer, ForeignKey('Questions.id', ondelete='CASCADE'), nullable=False)
     analysis_text = Column(Text, nullable=True)
+
+    is_active = Column(Boolean, default=True)
     create_time = Column(DateTime)
     last_update_time = Column(DateTime)
 
