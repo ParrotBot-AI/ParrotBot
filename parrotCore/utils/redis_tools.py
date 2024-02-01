@@ -99,6 +99,9 @@ class RedisWrapper(object):
         result = [json.loads(i) for i in byte_res]
         return result
 
+    def delete(self, key):
+        return self.redis_client.delete(key)
+
 
 if __name__ == '__main__':
     redis_cli = RedisWrapper('p_lock')

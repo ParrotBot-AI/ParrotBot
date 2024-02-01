@@ -1,3 +1,5 @@
+import datetime
+
 from blueprints.education.models import (
     Exams,
     Subjects,
@@ -5,11 +7,22 @@ from blueprints.education.models import (
     Sections,
     Resources,
     QuestionsType,
+    BasicQuestionsType,
     IndicatorQuestion,
     Indicators,
     Questions,
+    Submissions,
+    AnswerSheetRecord
 )
+from blueprints.account import models
+from blueprints.learning import models
+import pprint
+from utils.structure import Tree, TreeNode
+from utils.redis_tools import RedisWrapper
 from configs.environment import DATABASE_SELECTION
+from sqlalchemy import null, select, union_all, and_, or_
+import time
+from sqlalchemy.orm import aliased
 
 if DATABASE_SELECTION == 'postgre':
     from configs.postgre_config import get_db_session as db_session
@@ -20,16 +33,494 @@ from utils import abspath
 from utils.logger_tools import get_general_logger
 from blueprints.util.crud import crudController
 from blueprints.util.serializer import Serializer as s
+import json
 
 logger = get_general_logger('account', path=abspath('logs', 'core_web'))
+
+
+class QuestionController(crudController):
+    """
+    事务模块 继承crudController
+    调用CRUD: _create; _retrieve; _update; _delete
+    支持所有事务表单(Projects, 问卷s, Sections, Resources)
+    init: 先创建Projects => 问卷s => Sections, Resources
+    """
+
+    def _get_all_questions_under_section(self, section_id, active=None):
+        with db_session('core') as session:
+            section = self._retrieve(model=Sections, restrict_field='id', restrict_value=section_id)
+            if section:
+                if active:
+                    questions = (
+                        session.query(Questions)
+                        .filter(Questions.section_id == section_id)
+                        .all()
+                    )
+                    return s.serialize_list(questions, self.default_not_show)
+                else:
+                    questions = (
+                        session.query(Questions)
+                        .filter(Questions.section_id == section_id)
+                        .filter(Questions.is_active == active)
+                        .all()
+                    )
+                    return s.serialize_list(questions, self.default_not_show)
+            else:
+                return 'Invalid Section Id'
+
+    def fetch_questions(self, question_ids, session, ac_type, fetch_questions=None):
+        # -------------------- get all questions joined with question type ---------------------#
+        subquery = select([
+            Questions.id.label('id'),
+            Questions.question_title,
+            Questions.question_content,
+            Questions.question_stem,
+            Questions.question_type,
+            Questions.keywords,
+            Questions.stem_weights,
+            Questions.has_ans,
+            Questions.max_score,
+            Questions.order,
+            Questions.d_level,
+            Questions.father_question,
+            QuestionsType.id.label('question_type_id'),
+            QuestionsType.type_name,
+            QuestionsType.detail.label('q_detail'),
+            QuestionsType.restriction.label('q_restriction'),
+            QuestionsType.rubric
+        ]).select_from(
+            Questions
+        ).outerjoin(
+            QuestionsType, Questions.question_type == QuestionsType.id
+        ).where(
+            Questions.id.in_(question_ids)
+        ).subquery('Q')
+
+        # Final query joining the subquery with BasicQuestionsType
+        final_query = select([
+            subquery,
+            BasicQuestionsType.detail,
+            BasicQuestionsType.restriction,
+            BasicQuestionsType.cal_function
+        ]).select_from(
+            subquery
+        ).outerjoin(
+            BasicQuestionsType, subquery.c.question_type_id == BasicQuestionsType.id
+        )
+        results = session.execute(final_query).fetchall()
+
+        # -------------------------------------- 解析 ----------------------------------------#
+        start = time.time()
+        refine_questions = []
+        root_questions = []
+        redis_store = {}
+        for result in results:
+            if not result.has_ans:
+                record = {
+                    "question_id": result.id,
+                    "question_title": result.question_title,
+                    "question_content": result.question_content,
+                    "question_stem": result.question_stem,
+                    "max_score": result.max_score,
+                    "father_id": result.father_question,
+                    "question_depth": result.d_level,
+                    "keywords": json.loads(result.keywords),
+                    "order": result.order
+                }
+
+                if result.id in question_ids:
+                    root_questions.append(record)
+                else:
+                    refine_questions.append(record)
+
+                redis_store[result.id] = record
+
+            else:
+                if result.question_stem:
+                    merged_detail = {**json.loads(result.detail), **json.loads(result.q_detail),
+                                     'd': result.question_stem.split(";")}
+                else:
+                    merged_detail = {**json.loads(result.detail), **json.loads(result.q_detail),
+                                     'd': []}
+                if not result.q_restriction:
+                    merged_restrict = json.loads(result.restriction)
+                else:
+                    merged_restrict = {**json.loads(result.restriction), **json.loads(result.q_restriction)}
+
+                if result.keywords:
+                    k = json.loads(result.keywords)
+                else:
+                    k = None
+
+                account_ans, duration = None,None
+                if ac_type == 'create':
+                    account_ans = [0] * len([int(num) for num in result.stem_weights.split(";")])
+                    duration = None
+                elif ac_type == 'get':
+                    account_ans = [int(num) for num in fetch_questions[result.id]['a'].split(";")]
+                    duration = fetch_questions[result.id]['d']
+
+                record = {
+                    "question_id": result.id,
+                    "question_title": result.question_title,
+                    "question_content": result.question_content,
+                    "question_depth": result.d_level,
+                    "father_id": result.father_question,
+                    "max_score": result.max_score,
+                    "keywords": k,
+                    "order": result.order,
+                    "detail": merged_detail['d'],
+                    "options_label": merged_detail['ol'],
+                    "answer_weight": [int(num) for num in result.stem_weights.split(";")],
+                    "answer": account_ans,
+                    "duration": duration,
+                    "restriction": merged_restrict
+                }
+
+                if ac_type == 'get':
+                    record['score'] = fetch_questions[result.id]['s']
+
+                if result.id in question_ids:
+                    root_questions.append(record)
+                else:
+                    refine_questions.append(record)
+
+                redis_store[result.id] = record
+
+        # --------   make a tree structure for front end -------- #
+        tree = Tree()
+        for question in root_questions:
+            tree.add_root(question)
+        for question in refine_questions:
+            tree.add_node("question_id", question["father_id"], question)
+
+        res_questions = tree.print_tree()
+        return res_questions, redis_store
+
+    def create_answer_sheet(self, account_id=None, type='practice', question_ids=None):
+        account_id = 7
+        question_ids = [3, 18, 33]
+        if account_id:
+            # 查找exam_ids下面所有的sections_id
+            with db_session('core') as session:
+                if question_ids:
+                    questions = (
+                        session.query(Questions)
+                        .filter(Questions.id.in_(question_ids))
+                        .filter(Questions.is_active.is_(True))
+                        .all()
+                    )
+                    total_max = sum([x.max_score for x in questions])
+                    test_duration = sum([x.duration for x in questions]) * 60  # 60 秒
+                    # -------------------- get all questions id under the root ids ---------------------#
+                    base_query = select([
+                        Questions.id,
+                        Questions.father_question
+                    ]).where(Questions.id.in_(question_ids))
+                    # Define the CTE expression.
+                    question_hierarchy = base_query.cte(name='QuestionHierarchy', recursive=True)
+                    # Define the alias for the CTE and the Questions table for the recursive part.
+                    question_hierarchy_alias = aliased(question_hierarchy, name='qh')
+                    questions_alias = aliased(Questions, name='q')
+
+                    # Add the recursive part to the CTE.
+                    question_hierarchy = question_hierarchy.union_all(
+                        select([
+                            questions_alias.id,
+                            questions_alias.father_question
+                        ]).where(questions_alias.father_question == question_hierarchy_alias.c.id)
+                    )
+                    # Execute the query.
+                    questions = session.execute(select([question_hierarchy])).fetchall()
+                    all_ids = [x.id for x in questions]
+
+                    res_questions, redis_store = self.fetch_questions(question_ids=all_ids, session=session, ac_type="create")
+                    # ------------------------------------create answer sheet---------------------------#
+                    if not type == 'mock_exam':
+                        is_time, is_check_answer = 0, 1
+                    else:
+                        is_time, is_check_answer = 1, 0
+                    new_answer_sheet = {
+                        "account_id": account_id,
+                        "status": 1,
+                        "type": type,
+                        "max_score": total_max,
+                        "is_time": is_time,
+                        "is_check_answer": is_check_answer,
+                        "is_active": 1,
+                        "is_graded": 0
+                    }
+                    create_new = self._create(model=AnswerSheetRecord, create_params=new_answer_sheet)
+                    if create_new[0]:
+                        sheet_id = create_new[1]
+                        response = {
+                            "sheet_id": sheet_id,
+                            "is_time": is_time,
+                            "is_check_answer": is_check_answer,
+                            "time_remain": test_duration,
+                            "max_score": total_max,
+                            "type": type,
+                            "questions": res_questions
+                        }
+
+                        # store question submission to redis
+                        redis_dic = {
+                            "sheet_id": sheet_id,
+                            "is_time": is_time,
+                            "is_check_answer": is_check_answer,
+                            "time_remain": test_duration,
+                            "max_score": total_max,
+                            "type": type,
+                            "questions": redis_store
+                        }
+                        redis_cli = RedisWrapper('core_cache')
+                        redis_cli.set(f'Sheet-{sheet_id}', redis_dic)
+
+                        update_time = {
+                            "id": sheet_id,
+                            "start_time": datetime.datetime.now(tz=datetime.timezone.utc),
+                            "end_time": datetime.datetime.now(tz=datetime.timezone.utc) + datetime.timedelta(seconds=test_duration + 2)
+                            # 2 seconds grace period
+                        }
+                        # 开始计时
+                        try:
+                            self._update(model=AnswerSheetRecord, update_parameters=update_time, restrict_field="id")
+                            return True, response
+                        except:
+                            return False, "计时失败"
+                    else:
+                        return False, "创建答卷失败"
+        else:
+            return False, "未知账户"
+
+    def get_test_answers_history(self, account_id):
+        # 获取问卷答题信息，
+        # status = 0为已完成答题，批改问卷
+        # status = 1为正在答题
+        # status = 2为答题暂停
+        # status = 3为已完成答题，题目已保存，未批改
+        # status = 4为正在批改
+        with db_session('core') as session:
+            records = (
+                session.query(AnswerSheetRecord)
+                .filter(AnswerSheetRecord.account_id == account_id)
+                .all()
+            )
+            return s.serialize_list(records)
+
+    def get_test_answers(self, sheet_id):
+        # 获取问卷答题信息，
+        # status = 0为已完成答题，批改问卷
+        # status = 1为正在答题
+        # status = 2为答题暂停
+        # status = 3为已完成答题，题目已保存，未批改
+        # status = 4为正在批改
+        with db_session('core') as session:
+            record = (
+                session.query(AnswerSheetRecord)
+                .filter(AnswerSheetRecord.id == sheet_id)
+                .one_or_none()
+            )
+            if record:
+                if record.status == 1:
+                    response = {
+                        "sheet_id": sheet_id,
+                        "is_time": record.is_time,
+                        "is_check_answer": record.is_check_answer,
+                        "time_remain": (record.end_time - datetime.datetime.utcnow()).total_seconds(),
+                        "max_score": record.max_score,
+                        "score": record.score if record.score else None,
+                        "type": record.type.value,
+                    }
+                    redis_cli = RedisWrapper('core_cache')
+                    cache_dict = redis_cli.get(f'Sheet-{sheet_id}')
+
+                    if cache_dict:
+                        cache_question = cache_dict['questions']
+                        refine_questions = [x for x in cache_question.values() if x['father_id'] != -1]
+                        root_questions = [x for x in cache_question.values() if x['father_id'] == -1]
+
+                        tree = Tree()
+                        for question in root_questions:
+                            tree.add_root(question)
+                        for question in refine_questions:
+                            tree.add_node("question_id", question["father_id"], question)
+
+                        res_questions = tree.print_tree()
+                        response['questions'] = res_questions
+                        return True, response
+
+                    else:
+                        # 没有迁移至数据库
+                        return False, "无法找到题目缓存"
+                else:
+                    start = time.time()
+                    redis_cli = RedisWrapper('core_cache')
+                    cache_dict = redis_cli.get(f'Sheet-non-{sheet_id}')
+                    response = {
+                        "sheet_id": sheet_id,
+                        "is_time": record.is_time,
+                        "is_check_answer": record.is_check_answer,
+                        "time_remain":
+                            (record.end_time - record.last_pause_time).total_seconds() if record.status == 2 else 0,
+                        "max_score": record.max_score,
+                        "score": record.score if record.score else None,
+                        "type": record.type.value,
+                    }
+
+                    # 如若有缓存
+                    if cache_dict:
+                        cache_question = cache_dict['questions']
+                        refine_questions = [x for x in cache_question.values() if x['father_id'] != -1]
+                        root_questions = [x for x in cache_question.values() if x['father_id'] == -1]
+
+                        tree = Tree()
+                        for question in root_questions:
+                            tree.add_root(question)
+                        for question in refine_questions:
+                            tree.add_node("question_id", question["father_id"], question)
+                        res_questions = tree.print_tree()
+                        response['questions'] = res_questions
+
+                        print(time.time() - start)
+                        return True, response
+                    else:
+                        questions = (
+                            session.query(Submissions)
+                            .filter(Submissions.answer_sheet_id == sheet_id)
+                            .all()
+                        )
+                        question_ids = []
+                        question_dic = {}
+
+                        for each in questions:
+                            question_ids.append(each.question_id)
+                            question_dic[each.question_id] = {}
+                            if each.answer:
+                                question_dic[each.question_id]['a'] = each.answer
+                            else:
+                                question_dic[each.question_id]['a'] = None
+                            if each.duration:
+                                question_dic[each.question_id]['d'] = each.duration
+                            else:
+                                question_dic[each.question_id]['d'] = None
+                            if each.score:
+                                question_dic[each.question_id]['s'] = each.score
+                            else:
+                                question_dic[each.question_id]['s'] = None
+
+                        res_questions, redis_store = self.fetch_questions(question_ids=question_ids, session=session,ac_type="get", fetch_questions=question_dic)
+
+                        redis_dic = {
+                            "sheet_id": sheet_id,
+                            "is_time": record.is_time,
+                            "is_check_answer": record.is_check_answer,
+                            "time_remain": (record.end_time - record.last_pause_time).total_seconds() if record.status == 2 else 0,
+                            "max_score": record.max_score,
+                            "score": record.score if record.score else None,
+                            "type": record.type.value,
+                            "questions": redis_store
+                        }
+                        response['questions'] = res_questions
+                        redis_cli = RedisWrapper('core_cache')
+                        redis_cli.set(f'Sheet-non-{sheet_id}', redis_dic, ex=600)
+                        return True, response
+
+            else:
+                return False, "未找到答卷"
+
+    def update_question_answer(self, sheet_id, question_id, answer, duration):
+        redis_cli = RedisWrapper('core_cache')
+        cache_dict = redis_cli.get(f'Sheet-{sheet_id}')
+        if cache_dict:
+            cache_dict['questions'][str(question_id)]['answer'] = answer  # Replace 'new_value' with the desired value
+            cache_dict['questions'][str(question_id)]['duration'] = duration
+            redis_cli.set(f'Sheet-{sheet_id}', cache_dict)
+            return True, "OK."
+        else:
+            return False, "未找到答卷题目缓存"
+
+    def get_sheet_status(self, sheet_id):
+        # 答卷当中获取当前答题状态
+        redis_cli = RedisWrapper('core_cache')
+        cache_dict = redis_cli.get(f'Sheet-{sheet_id}')
+        if cache_dict:
+            questions_dic = cache_dict['questions']
+            questions_li = []
+            for value in questions_dic.values():
+                if 'answer' in value:
+                    if value['answer'] != [0] * 4:
+                        value['is_answer'] = True
+                    else:
+                        value['is_answer'] = False
+                    questions_li.append(value)
+            return True, questions_li
+        else:
+            return False, "未找到答卷题目缓存"
+
+    def save_answer(self, sheet_id):
+        redis_cli = RedisWrapper('core_cache')
+        cache_dict = redis_cli.get(f'Sheet-{sheet_id}')
+        if cache_dict:
+            questions_dic = cache_dict['questions']
+            with db_session('core') as session:
+                for value in questions_dic.values():
+                    answer = {
+                        'question_id': value['question_id'],
+                        'answer': ';'.join(map(str, value['answer'])) if 'answer' in value else None,
+                        'duration': value['duration'] if 'duration' in value else None,
+                        'voice_link': value['voice_link'] if 'voice_link' in value else None,
+                        'video_link': value['video_link'] if 'video_link' in value else None,
+                        'upload_file_link': value['video_link'] if 'video_link' in value else None,
+                        'answer_sheet_id': sheet_id,
+                        'stem_weight': ';'.join(map(str, value['answer_weight'])) if 'answer_weight' in value else None,
+                        'max_score': value['max_score'],
+                        'is_graded': False,
+                        'submit_time': datetime.datetime.now(tz=datetime.timezone.utc)
+                    }
+                    default_dic = {
+                        'create_time': datetime.datetime.now(tz=datetime.timezone.utc),
+                        'last_update_time': datetime.datetime.now(tz=datetime.timezone.utc)
+                    }
+                    merged_dict = {**default_dic, **answer}
+                    record = Submissions(**merged_dict)
+                    session.add(record)
+
+                try:
+                    session.commit()
+                except Exception as e:
+                    session.rollback()
+                    return False, str(e)
+            self.calculate_score(sheet_id)
+            if redis_cli.delete(f'Sheet-{sheet_id}') == 1:
+                return True, "题目数据保存成功"
+            else:
+                return False, "题目保存成功，缓存删除失败"
+        else:
+            return False, "无法找到题目缓存"
+
+    def calculate_score(self, sheet_id):
+        with db_session('core') as session:
+            records = (
+                session.query(Submissions)
+                .filter(Submissions.answer_sheet_id == sheet_id)
+                .all()
+            )
+            for record in records:
+                print(record)
+
+
+
+class AnsweringController(crudController):
+    pass
 
 
 class TransactionsController(crudController):
     """
     事务模块 继承crudController
     调用CRUD: _create; _retrieve; _update; _delete
-    支持所有事务表单(Exams, Sections, Patterns, Resources)
-    init: 先创建Exams => Patterns => Sections, Resources
+    支持所有事务表单(Projects, 问卷s, Sections, Resources)
+    init: 先创建Projects => 问卷s => Sections, Resources
     """
 
     def _get_all_exams(self, active=None):
@@ -93,81 +584,257 @@ class TransactionsController(crudController):
             else:
                 return 'Invalid Pattern Id'
 
+    def _get_all_resources_under_patterns(self, pattern_id, account_id):
+        with db_session('core') as session:
+            start = time.time()
+            # resources = (
+            #     session.query(Resources)
+            #     .filter(Resources.pattern_id == pattern_id)
+            #     .filter(Resources.section_id.is_(null()))
+            #     .all()
+            # )
 
-class QuestionsController(crudController):
+            Parent = aliased(Resources, name='parent')
+            Child = aliased(Resources, name='child')
+            Question = aliased(Questions, name='Q')
+            Submission = aliased(Submissions, name='S')
+            Answer = aliased(AnswerSheetRecord, name='R')
+
+            # Subquery J
+            subquery_j = session.query(
+                Parent.id.label('parent_id'),
+                Parent.resource_name.label('parent_resource_name'),
+                Child.id.label('child_id'),
+                Child.resource_name.label('child_resource_name')
+            ).select_from(
+                Parent
+            ).outerjoin(
+                Child, Parent.id == Child.father_resource
+            ).filter(
+                Parent.pattern_id == pattern_id,
+                Parent.section_id.is_(None),
+                Child.id.isnot(None)
+            ).subquery('J')
+
+            # Subquery for Questions linked to subquery J
+            subquery_q = session.query(
+                subquery_j.c.parent_id.label('resource_id'),
+                subquery_j.c.parent_resource_name.label('resource_name'),
+                subquery_j.c.child_id.label('section_id'),
+                subquery_j.c.child_resource_name.label('section_name'),
+                Question.id.label('question_id'),
+                Question.question_title.label('question_title'),
+                Question.order.label('order'),
+                Question.remark.label('remark')
+            ).outerjoin(
+                Question, subquery_j.c.child_id == Question.source
+            ).filter(
+                Question.father_question == -1
+            ).subquery('T')
+
+            # Subquery for AnswerSheetRecord and Submission
+            subquery_a = session.query(
+                Submission.id.label('submission_id'),
+                Submission.question_id.label('question_id'),
+                Answer.account_id.label('account_id'),
+                Answer.status.label('status'),
+                Submission.score.label('last_record')
+            ).select_from(
+                Submission
+            ).join(
+                Answer, Submission.answer_sheet_id == Answer.id
+            ).filter(
+                Answer.account_id == account_id,
+            ).order_by(
+                Submission.last_update_time.asc()
+            ).limit(1).subquery('A')
+
+            # Final outer query
+            resources = session.query(
+                subquery_q,
+                subquery_a.c.submission_id,
+                subquery_a.c.account_id,
+                subquery_a.c.status,
+                subquery_a.c.last_record
+            ).outerjoin(
+                subquery_a, subquery_q.c.question_id == subquery_a.c.question_id
+            ).all()
+
+            # 数据解析
+            response = []
+            resources_dic = {}
+            for result in resources:
+                section = {}
+
+                if result.resource_id not in resources_dic:
+                    resource_record = {}
+                    resources_dic[result.resource_id] = 1
+                    resource_record['resource_id'] = result.resource_id
+                    resource_record['resource_name'] = result.resource_name
+                    if result.section_id not in section:
+                        section[result.section_id] = 1
+                        resource_record['section'] = []
+                        question_record = {
+                            "section_id": result.section_id,
+                            "section_name": result.section_name,
+                            "questions": [
+                                {
+                                    "question_id": result.question_id,
+                                    "question_name": result.question_title,
+                                    "question_account": 10,
+                                    "order": result.order,
+                                    "remark": result.remark,
+                                    "last_record": result.last_record,
+                                    "status": result.status
+                                }
+                            ]
+                        }
+                        resource_record['section'].append(question_record)
+                    else:
+                        question_record = {
+                            "question_id": result.question_id,
+                            "question_name": result.question_title,
+                            "question_account": 10,
+                            "order": result.order,
+                            "remark": result.remark,
+                            "last_record": result.last_record,
+                            "status": result.status
+                        }
+                        resource_record['section']["questions"].append(question_record)
+                    response.append(resource_record)
+                else:
+                    if result.section_id not in section:
+                        section[result.section_id] = 1
+                        question_record = {
+                            "section_id": result.section_id,
+                            "section_name": result.section_name,
+                            "questions": [
+                                {
+                                    "question_id": result.question_id,
+                                    "question_name": result.question_title,
+                                    "question_account": 10,
+                                    "order": result.order,
+                                    "remark": result.remark,
+                                    "last_record": result.last_record,
+                                    "status": result.status
+                                }
+                            ]
+                        }
+                        resource_record['section'].append(question_record)
+                    else:
+                        question_record = {
+                            "question_id": result.question_id,
+                            "question_name": result.question_title,
+                            "question_account": 10,
+                            "order": result.order,
+                            "remark": result.remark,
+                            "last_record": result.last_record,
+                            "status": result.status
+                        }
+                        resource_record['section']["questions"].append(question_record)
+
+            print(time.time() - start)
+            return response
+            # print(resources)
+            # return s.serialize_list(resources, self.default_not_show)
+
+
+class InitController(crudController):
     """
     问题 继承crudController
     调用CRUD: _create; _retrieve; _update; _delete
     支持所有问题相关表单(Questions, QuestionsType, Indicators, IndicatorQuestion)
     init: 先定义Indicators, QuestionsType => Questions => IndicatorQuestion
     """
-
-    def _get_all_questions_under_section(self, section_id, active=None):
+    def build_resources(self):
+        indexes = list(range(3, 76))
         with db_session('core') as session:
-            section = self._retrieve(model=Sections, restrict_field='id', restrict_value=section_id)
-            if section:
-                if active:
-                    questions = (
-                        session.query(Questions)
-                        .filter(Questions.section_id == section_id)
-                        .all()
+            for i in indexes:
+                number = str(i)
+                record = (
+                    session.query(Resources)
+                    .filter(Resources.resource_name == f'TPO{number}-阅读')
+                    .one_or_none()
+                )
+                if record:
+                    father_record = record.id
+
+                    if i <= 54:
+                        exam_id = 2
+                        pattern_id = 15
+                    else:
+                        exam_id = 1
+                        pattern_id = 11
+
+                    for index, j in enumerate(list(range(3, 6))):
+                        new_resource = {
+                            "resource_name":f'TPO{number}-阅读-s{index+1}',
+                            "resource_eng_name": f'TPO{number}-Reading-s{index + 1}',
+                            "father_resource": father_record,
+                            "section_id":j,
+                            "pattern_id":pattern_id,
+                            "exam_id":exam_id,
+                            "is_active":1,
+                            'create_time': datetime.datetime.now(tz=datetime.timezone.utc),
+                            'last_update_time': datetime.datetime.now(tz=datetime.timezone.utc)
+                        }
+                        n_record = Resources(**new_resource)
+                        session.add(n_record)
+
+            try:
+                session.commit()
+                return True, ""
+            except Exception as e:
+                session.rollback()
+                return False, str(e)
+
+
+    def build_passages(self):
+        file_path = '/Users/zhilinhe/Desktop/TPO1-34.txt/passage_1-34.json'
+        with open(file_path, encoding="utf-8") as f:
+            data = json.load(f)
+            with db_session('core') as session:
+                for each in data:
+                    print(each['remark'])
+                    resource_name = each['source']
+                    record = (
+                        session.query(Resources)
+                        .filter(Resources.resource_name == resource_name)
+                        .one_or_none()
                     )
-                    return s.serialize_list(questions, self.default_not_show)
-                else:
-                    questions = (
-                        session.query(Questions)
-                        .filter(Questions.section_id == section_id)
-                        .filter(Questions.is_active == active)
-                        .all()
-                    )
-                    return s.serialize_list(questions, self.default_not_show)
-            else:
-                return 'Invalid Section Id'
+                    if record:
+                        source_id = record.id
+                        each['source'] = source_id
+                        default_dic = {
+                            'create_time': datetime.datetime.now(tz=datetime.timezone.utc),
+                            'last_update_time': datetime.datetime.now(tz=datetime.timezone.utc)
+                        }
+                        merged_dict = {**each, **default_dic}
+                        record = Questions(**merged_dict)
+                        session.add(record)
+
+                try:
+                    session.commit()
+                    return True, ""
+                except Exception as e:
+                    session.rollback()
+                    return False, str(e)
+
+
+
+
+
+
 
 
 if __name__ == '__main__':
     #
-    init = TransactionsController()
-    exam = {
-        'exam_name': "托福",
-        'exam_eng_name': "TOEFL",
-        'no_patterns': 4,
-        'duration': 120,
-        'max_score': 120,
-    }
-    # exam_db = init._retrieve(model=Exams, restrict_field='exam_name', restrict_value='托福')
-    # _id = exam_db.id
-    # Pattern = [
-    #     {
-    #         'exam_id': _id,
-    #         'pattern_name': '阅读',
-    #         'pattern_eng_name': 'Reading',
-    #         'duration': 35,
-    #         'max_score': 30
-    #     },
-    #     {
-    #         'exam_id': _id,
-    #         'pattern_name': '听力',
-    #         'pattern_eng_name': 'Listening',
-    #         'duration': 36,
-    #         'max_score': 30
-    #     },
-    #     {
-    #         'exam_id': _id,
-    #         'pattern_name': '口语',
-    #         'pattern_eng_name': 'Speaking',
-    #         'duration': 17,
-    #         'max_score': 30
-    #     },
-    #     {
-    #         'exam_id': _id,
-    #         'pattern_name': '写作',
-    #         'pattern_eng_name': 'writing',
-    #         'duration': 29,
-    #         'max_score': 30
-    #     }
-    # ]
-    # for item in Pattern:
-    #     record = init._create(model=Patterns, create_params=item)
-    #     if record == True:
-    #         print("Success add!")
+    # init = TransactionsController()
+    # pprint.pprint(init._get_all_resources_under_patterns(pattern_id=15, account_id=1))
+    init = InitController()
+    # init.build_resources()
+    print(init.build_passages())
+    # pprint.pprint(init.create_answer_sheet(account_id=7))
+    # print(init.get_test_answers(sheet_id=7))
+    # pprint.pprint(init.save_answer(sheet_id=7))
+    # init.get_test_answers_history(account_id=7)

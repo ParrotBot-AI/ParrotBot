@@ -53,7 +53,7 @@ class crudController:
 
             try:
                 session.commit()
-                return True, ""
+                return True, record.id
             except Exception as e:
                 session.rollback()
                 return False, str(e)

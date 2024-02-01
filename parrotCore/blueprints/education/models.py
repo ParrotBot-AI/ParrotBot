@@ -59,6 +59,7 @@ class Exams(BASES['core']):
     max_score = Column(Integer, nullable=True)
     is_active = Column(Boolean, default=True)
     is_current_use = Column(Boolean, default=True)
+    father_exam = Column(Integer, nullable=True)
     # father_exam = Column(Integer, nullable=False, default=-1)
     no_patterns = Column(Integer, nullable=True)
     create_time = Column(DateTime)
@@ -123,8 +124,8 @@ class Resources(BASES['core']):
     __tablename__ = "Resources"
 
     id = Column(Integer, autoincrement=True, primary_key=True)
-    resource_name = Column(String(20), nullable=False)
-    resource_eng_name = Column(String(20), nullable=False)
+    resource_name = Column(String(30), nullable=False)
+    resource_eng_name = Column(String(30), nullable=False)
     father_resource = Column(Integer, nullable=False)
     section_id = Column(Integer, ForeignKey('Sections.id', ondelete='CASCADE'), nullable=True)
     pattern_id = Column(Integer, ForeignKey('Patterns.id', ondelete='CASCADE'), nullable=True)
@@ -218,22 +219,22 @@ class Questions(BASES['core']):
 
     id = Column(Integer, autoincrement=True, primary_key=True)
     question_type = Column(Integer, ForeignKey('QuestionsType.id', ondelete='CASCADE'), nullable=False)
-    question_title = Column(String(20), nullable=True)
+    question_title = Column(Text, nullable=True)
     question_content = Column(Text, nullable=True)
-    question_stem = Column(String(600), nullable=True)
+    question_stem = Column(Text, nullable=True)
     question_function_type = Column(Enum(question_function), nullable=True)
 
     order = Column(Integer, nullable=True)  # 题目号
     father_question = Column(Integer, nullable=False)
 
-    stem_weights = Column(String(20), nullable=True)  # 题目stem权重
+    stem_weights = Column(String(50), nullable=True)  # 题目stem权重
     cal_method = Column(Integer, nullable=False)  # 计算方式 0 为自动记分
     duration = Column(Float, nullable=True)  # 做题时间
     max_score = Column(Integer, nullable=False)  # 题目最大分值
 
-    correct_answer = Column(String(20), nullable=True)  # 题目的正确值
+    correct_answer = Column(String(50), nullable=True)  # 题目的正确值
     d_level = Column(Integer, nullable=True)  # 题目难度
-    keywords = Column(String(20), nullable=True)  # 题目关键词
+    keywords = Column(Text, nullable=True)  # 题目关键词
     remark = Column(String(30), nullable=True)
 
     voice_link = Column(String(20), nullable=True)  # Link to voice if it requires voice (听力题)
@@ -241,6 +242,7 @@ class Questions(BASES['core']):
     is_cal = Column(Boolean, default=True)  # 是否记分
     is_active = Column(Boolean, default=True)
     is_attachable = Column(Boolean, default=True)  # 是否可以上传文件
+    has_ans = Column(Boolean, default=True)  # 是否有答题
 
     # foreign keys
     section_id = Column(Integer, ForeignKey('Sections.id', ondelete='CASCADE'), nullable=True)
@@ -285,7 +287,9 @@ class AnswerSheetRecord(BASES['core']):
     account_id = Column(Integer, ForeignKey('Accounts.id', ondelete='CASCADE'), nullable=False)
     start_time = Column(DateTime)
     end_time = Column(DateTime, nullable=True)
-    status = Column(Integer)  # 0 unfinished / paused; 1 finished; 2 存档
+    last_pause_time = Column(DateTime, nullable=True)
+
+    status = Column(Integer)  # 0为已完成答题，批改问卷; 1为正在答题; 2为答题暂停; 3为已完成答题，题目已保存，未批改; 4为正在批改
     type = Column(Enum(answerType))
 
     max_score = Column(Integer, nullable=True)
@@ -306,18 +310,19 @@ class Submissions(BASES['core']):
     answer_sheet_id = Column(Integer, ForeignKey('AnswerSheetRecord.id', ondelete='CASCADE'), nullable=False)
     question_id = Column(Integer, ForeignKey('Questions.id', ondelete='CASCADE'), nullable=False)
     answer = Column(Text, nullable=True)
-    stem_weight = Column(Text, nullable=False)
-    duration = Column(Float, nullable=False)  # 做题时长
+    stem_weight = Column(Text, nullable=True)
+    duration = Column(Float, nullable=True)  # 做题时长
 
     # external links
     voice_link = Column(String(20), nullable=True)
     video_link = Column(String(20), nullable=True)
     upload_file_link = Column(String(20), nullable=True)
 
-    cal_method = Column(Integer, nullable=True)
+    cal_method = Column(Text, nullable=True)
     max_score = Column(Integer, nullable=True)
     score = Column(Integer, nullable=True)
-    is_graded = Column(Integer, nullable=False)  # 是否打分完成
+    is_graded = Column(Boolean, nullable=False)  # 是否打分完成
+    submit_time = Column(DateTime)
     create_time = Column(DateTime)
     last_update_time = Column(DateTime)
 

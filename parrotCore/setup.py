@@ -56,7 +56,7 @@ setup(name=PROJECT_NAME,
           'blinker>=1.6.2',
           'importlib-metadata>=3.6.0',
           'sqlalchemy_utils',
-
+          'alembic'
       ],
       zip_safe=False
       )
