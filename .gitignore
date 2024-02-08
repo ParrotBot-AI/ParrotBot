@@ -9,6 +9,6 @@ data
 .log
 logs
 log
-
-./parrotAdmin/logs
+.DS_Store
+/parrotAdmin/logs/
 
