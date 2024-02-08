@@ -53,9 +53,11 @@ class crudController:
 
             try:
                 session.commit()
+                session.close()
                 return True, record.id
             except Exception as e:
                 session.rollback()
+                session.close()
                 return False, str(e)
 
     def _retrieve(self, model, restrict_field, restrict_value, callback_function=None):  # "id", 5
@@ -70,8 +72,10 @@ class crudController:
                 callback_function()
 
             if record:
+                session.close()
                 return record
             else:
+                session.close()
                 return None
 
     def _update(self, model, update_parameters, restrict_field, callback_function=None):
@@ -92,9 +96,11 @@ class crudController:
 
             try:
                 session.commit()
+                session.close()
                 return True
             except Exception as e:
                 session.rollback()
+                session.close()
                 return False
 
     def _delete(self, model, restrict_field, restrict_value):
@@ -108,9 +114,11 @@ class crudController:
                 session.delete(record)
                 try:
                     session.commit()
+                    session.close()
                     return True
                 except Exception as e:
                     session.rollback()
+                    session.close()
                     return e
 
 

@@ -53,6 +53,22 @@ class Tree:
             trees.append(root)
         return trees
 
+    def sum_children_scores(self, node):
+        # Base case: if the node has no children, return its score
+        if not node.children:
+            return node.score
+
+        # Recursive case: the node has children, so sum their scores
+        total_score = 0
+        for child in node.children:
+            total_score += self.sum_children_scores(child)
+
+        # Update the current node's score to be the sum of its children's scores
+        node.score = total_score
+        return node.score
+
+
+
 
 if __name__ == "__main__":
     # Example usage

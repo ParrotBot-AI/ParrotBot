@@ -48,6 +48,14 @@ class Subjects(BASES['core']):
         s = f'(id: {self.id} n: {self.subject_name})'
         return s
 
+class MenuExams(BASES['core']):
+    __tablename__ = "Menu"
+
+    id = Column(Integer, autoincrement=True, primary_key=True)
+    menu_id = Column(Integer, nullable=False)
+    exam_id = Column(Integer, ForeignKey('Exams.id', ondelete='CASCADE'), nullable=False)
+    pattern_id = Column(Integer, ForeignKey('Patterns.id', ondelete='CASCADE'), nullable=True)
+
 
 class Exams(BASES['core']):
     __tablename__ = "Exams"
@@ -289,7 +297,7 @@ class AnswerSheetRecord(BASES['core']):
     end_time = Column(DateTime, nullable=True)
     last_pause_time = Column(DateTime, nullable=True)
 
-    status = Column(Integer)  # 0为已完成答题，批改问卷; 1为正在答题; 2为答题暂停; 3为已完成答题，题目已保存，未批改; 4为正在批改
+    status = Column(Integer)  # 0为已完成答题，批改问卷; 1为正在答题; 2为答题暂停; 3为已完成答题，题目已保存，未批改; 4为正在批改, 5为批改完成，未登分
     type = Column(Enum(answerType))
 
     max_score = Column(Integer, nullable=True)
@@ -333,6 +341,26 @@ class Submissions(BASES['core']):
     def __repr__(self) -> str:
         s = f'(id: {self.id} a: {self.answer})'
         return s
+
+
+class Scores(BASES['core']):
+    __tablename__ = "Scores"
+
+    id = Column(Integer, autoincrement=True, primary_key=True)
+    answer_sheet_id = Column(Integer, ForeignKey('AnswerSheetRecord.id', ondelete='CASCADE'), nullable=False)
+    section_id = Column(Integer, ForeignKey('Sections.id', ondelete='CASCADE'), nullable=True)
+    total_score = Column(Float, nullable=True)
+    score = Column(Float, nullable=True)
+    max_score = Column(Float)
+
+
+class ScoreRubric(BASES['core']):
+    __tablename__ = "ScoresRubric"
+
+    id = Column(Integer, autoincrement=True, primary_key=True)
+    section_id = Column(Integer, ForeignKey('Sections.id', ondelete='CASCADE'), nullable=True)
+    rubric = Column(Text)
+    max_score = Column(Float)
 
 
 class Analysis(BASES['core']):

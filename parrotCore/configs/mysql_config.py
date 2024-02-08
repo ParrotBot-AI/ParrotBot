@@ -24,7 +24,7 @@ def get_db_uri(CONNECTOR, USERNAME, PASSWORD, HOST, PORT, DB):
 
 
 def get_db_session_sql(db) -> Session:
-    return sessionmaker(ENGINES[db], autocommit=False)()
+    return sessionmaker(ENGINES[db], autocommit=False, autoflush=False)()
 
 
 DB_URI = get_db_uri(**MYSQL_SETTINGS["core"])
