@@ -352,6 +352,16 @@ class Scores(BASES['core']):
     total_score = Column(Float, nullable=True)
     score = Column(Float, nullable=True)
     max_score = Column(Float)
+    create_time = Column(DateTime)
+    last_update_time = Column(DateTime)
+
+    def __str__(self) -> str:
+        s = f'(id: {self.id} a: {self.answer_sheet_id} s: {self.section_id})'
+        return s
+
+    def __repr__(self) -> str:
+        s = f'(id: {self.id} a: {self.answer_sheet_id} s: {self.section_id})'
+        return s
 
 
 class ScoreRubric(BASES['core']):
@@ -361,6 +371,14 @@ class ScoreRubric(BASES['core']):
     section_id = Column(Integer, ForeignKey('Sections.id', ondelete='CASCADE'), nullable=True)
     rubric = Column(Text)
     max_score = Column(Float)
+
+    def __str__(self) -> str:
+        s = f'(id: {self.id} s: {self.section_id})'
+        return s
+
+    def __repr__(self) -> str:
+        s = f'(id: {self.id}  s: {self.section_id})'
+        return s
 
 
 class Analysis(BASES['core']):
