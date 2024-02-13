@@ -7,6 +7,9 @@ from blueprints.account.models import (
     AccountsScores,
     Users
 )
+from blueprints.education.models import (
+    MenuExams
+)
 from configs.environment import DATABASE_SELECTION
 
 if DATABASE_SELECTION == 'postgre':
@@ -55,6 +58,17 @@ class AccountController(crudController):
                     return False, str(e)
         else:
             return False, 'False to register, already exists'
+
+    def get_menu_exams(self, menu_ids):
+        with db_session('core') as session:
+            records = (
+                session.query(MenuExams)
+                .filter(MenuExams.Menu_id.in_(menu_ids))
+                .all()
+            )
+            return True, s.serialize_list(records)
+
+
 
 
 if __name__ == '__main__':

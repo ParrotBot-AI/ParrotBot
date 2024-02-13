@@ -1,7 +1,145 @@
 from flask import Blueprint, request
 from utils.response_tools import (SuccessDataResponse, ArgumentExceptionResponse)
+from blueprints.education.controllers import QuestionController, AnsweringScoringController, TransactionsController
 import json
 from utils.redis_tools import RedisWrapper
 import uuid as u
 
-bp = Blueprint('education_api', __name__, url_prefix='/o1/education/api')
+bp = Blueprint('education_api', __name__, url_prefix='/v1/api/education/')
+
+
+# ----------------------------------------   题库资源  ---------------------------------------- #
+@bp.route('fetch_resource_p/<account_id>/', methods=['GET'])
+def fetch_resource_p(account_id):
+    try:
+        # res = TransactionsController()._get_all_resources_under_patterns(
+        #     pattern_id=pattern_id,
+        #     account_id=account_id
+        # )
+        res = True, []
+        if res[0]:
+            return SuccessDataResponse(res[1])
+        else:
+            return ArgumentExceptionResponse(msg=f'{res[1]}')
+    except Exception as e:
+        return ArgumentExceptionResponse(msg=f'{e}')
+
+
+@bp.route('fetch_resource_p/<account_id>/<pattern_id>/', methods=['GET'])
+def fetch_resource_p(account_id, pattern_id):
+    try:
+        res = TransactionsController()._get_all_resources_under_patterns(
+            pattern_id=pattern_id,
+            account_id=account_id
+        )
+        if res[0]:
+            return SuccessDataResponse(res[1])
+        else:
+            return ArgumentExceptionResponse(msg=f'{res[1]}')
+    except Exception as e:
+        return ArgumentExceptionResponse(msg=f'{e}')
+
+
+# ----------------------------------------   做题   ---------------------------------------- #
+@bp.route('create_sheet', methods=['POST'])
+def create_sheet():
+    try:
+        args = request.json
+        account_id = args.get('account_id')
+        q_type = args.get('q_type')
+        question_ids = args.get('question_ids')
+        res = AnsweringScoringController().create_answer_sheet(
+            account_id=account_id,
+            type=q_type,
+            question_ids=question_ids
+        )
+        if res[0]:
+            return SuccessDataResponse(res[1])
+        else:
+            return ArgumentExceptionResponse(msg=f'{res[1]}')
+    except Exception as e:
+        return ArgumentExceptionResponse(msg=f'{e}')
+
+
+@bp.route('get_ans_sheet/<sheet_id>/', methods=['GET'])
+def get_ans_sheet(sheet_id):
+    try:
+        res = AnsweringScoringController().get_test_answers(
+            sheet_id=sheet_id
+        )
+        if res[0]:
+            return SuccessDataResponse(res[1])
+        else:
+            return ArgumentExceptionResponse(msg=f'{res[1]}')
+    except Exception as e:
+        return ArgumentExceptionResponse(msg=f'{e}')
+
+
+@bp.route('get_ans_status/<sheet_id>/', methods=['GET'])
+def get_ans_status(sheet_id):
+    try:
+        res = AnsweringScoringController().get_sheet_status(
+            sheet_id=sheet_id
+        )
+        if res[0]:
+            return SuccessDataResponse(res[1])
+        else:
+            return ArgumentExceptionResponse(msg=f'{res[1]}')
+    except Exception as e:
+        return ArgumentExceptionResponse(msg=f'{e}')
+
+
+@bp.route('update_ans', methods=['POST'])
+def update_ans():
+    try:
+        args = request.json
+        sheet_id = args.get('sheet_id')
+        duration = args.get('duration')
+        answer = args.get('answer')
+        question_id = args.get('question_id')
+        res = AnsweringScoringController().update_question_answer(
+            sheet_id=sheet_id,
+            question_id=question_id,
+            answer=answer,
+            duration=duration
+        )
+        if res[0]:
+            return SuccessDataResponse(res[1])
+        else:
+            return ArgumentExceptionResponse(msg=f'{res[1]}')
+    except Exception as e:
+        return ArgumentExceptionResponse(msg=f'{e}')
+
+
+@bp.route('save_answer/<sheet_id>/', methods=['GET'])
+def get_ans_status(sheet_id):
+    try:
+        res = AnsweringScoringController().save_answer(
+            sheet_id=sheet_id
+        )
+        if res[0]:
+            return SuccessDataResponse(res[1])
+        else:
+            return ArgumentExceptionResponse(msg=f'{res[1]}')
+    except Exception as e:
+        return ArgumentExceptionResponse(msg=f'{e}')
+
+
+@bp.route('save_answer/<sheet_id>/', methods=['GET'])
+def save_answer(sheet_id):
+    try:
+        res = AnsweringScoringController().save_answer(
+            sheet_id=sheet_id
+        )
+        if res[0]:
+            return SuccessDataResponse(res[1])
+        else:
+            return ArgumentExceptionResponse(msg=f'{res[1]}')
+    except Exception as e:
+        return ArgumentExceptionResponse(msg=f'{e}')
+
+
+# heart beat
+@bp.route('test_hb', methods=['GET'])
+def test_hb():
+    return SuccessDataResponse([])
