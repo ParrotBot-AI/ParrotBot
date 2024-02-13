@@ -5,23 +5,25 @@ from application.settings import BASE_DIR
 # ================================================= #
 # *************** mysql数据库 配置  *************** #
 # ================================================= #
+import pymysql
+pymysql.install_as_MySQLdb()
 # 数据库 ENGINE ，默认演示使用 sqlite3 数据库，正式环境建议使用 mysql 数据库
 # sqlite3 设置
-DATABASE_ENGINE = "django.db.backends.sqlite3"
-DATABASE_NAME = os.path.join(BASE_DIR, "db.sqlite3")
+# DATABASE_ENGINE = "django.db.backends.sqlite3"
+# DATABASE_NAME = os.path.join(BASE_DIR, "db.sqlite3")
 
 # 使用mysql时，改为此配置
-# DATABASE_ENGINE = "django.db.backends.mysql"
-# DATABASE_NAME = 'parrot_admin' # mysql 时使用
+DATABASE_ENGINE = "django.db.backends.mysql"
+DATABASE_NAME = 'parrotAdmin' # mysql 时使用
 
 # 数据库地址 改为自己数据库地址
 DATABASE_HOST = "127.0.0.1"
 # # 数据库端口
-DATABASE_PORT = 3306
+DATABASE_PORT = 19779
 # # 数据库用户名
 DATABASE_USER = "root"
 # # 数据库密码
-DATABASE_PASSWORD = "123456"
+DATABASE_PASSWORD = "ParrotBot236"
 
 # 表前缀
 TABLE_PREFIX = "parrot_"
