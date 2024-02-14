@@ -19,7 +19,7 @@ logger = get_general_logger(name='core', path=abspath('logs'))
 
 def main():
     _app = app.create_app()
-    # apps.run(debug=True, port=10981, host='0.0.0.0')
+    _app.run(debug=True, port=10981, host='0.0.0.0')
     http_server = WSGIServer((HOST, PORT), _app)
     logger.info('Core Started.')
     logger.info(f'Host: {HOST} Port: {PORT} URL: http://{HOST}:{PORT}')

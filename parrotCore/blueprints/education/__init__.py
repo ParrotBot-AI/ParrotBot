@@ -9,8 +9,8 @@ bp = Blueprint('education_api', __name__, url_prefix='/v1/api/education/')
 
 
 # ----------------------------------------   题库资源  ---------------------------------------- #
-@bp.route('fetch_resource_p/<account_id>/', methods=['GET'])
-def fetch_resource_p(account_id):
+@bp.route('fetch_resource/<account_id>/', methods=['GET'])
+def fetch_resource(account_id):
     try:
         # res = TransactionsController()._get_all_resources_under_patterns(
         #     pattern_id=pattern_id,
@@ -109,21 +109,6 @@ def update_ans():
             return ArgumentExceptionResponse(msg=f'{res[1]}')
     except Exception as e:
         return ArgumentExceptionResponse(msg=f'{e}')
-
-
-@bp.route('save_answer/<sheet_id>/', methods=['GET'])
-def get_ans_status(sheet_id):
-    try:
-        res = AnsweringScoringController().save_answer(
-            sheet_id=sheet_id
-        )
-        if res[0]:
-            return SuccessDataResponse(res[1])
-        else:
-            return ArgumentExceptionResponse(msg=f'{res[1]}')
-    except Exception as e:
-        return ArgumentExceptionResponse(msg=f'{e}')
-
 
 @bp.route('save_answer/<sheet_id>/', methods=['GET'])
 def save_answer(sheet_id):

@@ -12,7 +12,8 @@ bp = Blueprint('account_api', __name__, url_prefix='/v1/api/account/')
 def get_menu_exam():
     try:
         args = request.json
-        menu_ids = args.get('menu_id') # list
+        menu_ids = args.get('menu_id')  # list
+        print(menu_ids, 16)
         res = AccountController().get_menu_exams(
             menu_ids=menu_ids
         )

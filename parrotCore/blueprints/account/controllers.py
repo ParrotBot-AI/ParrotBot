@@ -63,7 +63,7 @@ class AccountController(crudController):
         with db_session('core') as session:
             records = (
                 session.query(MenuExams)
-                .filter(MenuExams.Menu_id.in_(menu_ids))
+                .filter(MenuExams.menu_id.in_(menu_ids))
                 .all()
             )
             return True, s.serialize_list(records)

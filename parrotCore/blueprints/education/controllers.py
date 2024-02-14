@@ -1086,7 +1086,7 @@ class TransactionsController(crudController):
                             resource_record['section']["questions"].append(question_record)
 
                 print(time.time() - start)
-                return response
+                return True, response
             else:
                 return False, "为查找到相关考试信息"
 
@@ -1226,8 +1226,8 @@ class InitController(crudController):
 
 if __name__ == '__main__':
     #
-    # init = TransactionsController()
-    # pprint.pprint(init._get_all_resources_under_patterns(pattern_id=11, account_id=7))
+    init = TransactionsController()
+    pprint.pprint(init._get_all_resources_under_patterns(pattern_id=11, account_id=7))
     # init = InitController()
     # init.build_resources()
     # print(init.build_questions())
@@ -1235,7 +1235,7 @@ if __name__ == '__main__':
     # print(init.get_test_answers(sheet_id=7))
     # pprint.pprint(init.save_answer(sheet_id=7))
     # init.get_test_answers_history(account_id=7)
-    init = AnsweringScoringController()
+    # init = AnsweringScoringController()
     # res = init.create_answer_sheet(account_id=8, question_ids=[3, 18])
     # sheet_id = res[1]['sheet_id']
     # print(init.get_test_answers(sheet_id=sheet_id))
@@ -1249,7 +1249,7 @@ if __name__ == '__main__':
     # print(init.save_answer(sheet_id=16))
 
     # 算分
-    start = time.time()
-    print(init.scoring(answer_sheet_id=16))
-    pprint.pprint(init.get_score(answer_sheet_id=16))
-    print(time.time() - start)
+    # start = time.time()
+    # print(init.scoring(answer_sheet_id=16))
+    # pprint.pprint(init.get_score(answer_sheet_id=16))
+    # print(time.time() - start)

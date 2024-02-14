@@ -15,6 +15,7 @@ from django.core.cache import cache
 import random
 import jwt
 import datetime
+import requests
 from rest_framework import serializers
 from rest_framework.permissions import IsAuthenticated, AllowAny
 
@@ -164,6 +165,9 @@ class MicroServiceRegisterViewSet(CustomModelViewSet):
     def resource(self, request):
         exam_id = request.data.get("exam_id")
         pattern_id = request.data.get("pattern_id")
+        # account_id = request.data.get("account_id")
+        account_id = 7
+
         # whether_zt = request.data.get("is_real_problem") # 目前默认false
         whether_zt = False
         page = request.data.get("page")
@@ -174,95 +178,104 @@ class MicroServiceRegisterViewSet(CustomModelViewSet):
         else:
             page = int(page)
         if not limit:
-            limit = 10
+            limit = 20
         else:
             limit = int(limit)
 
         # request send to microservices
-        # input: exam_id, pattern_id, whether_zt
+        if True:
+            # data = dict(micro.data)
+            url = f"http://{'127.0.0.1'}:{10981}/v1/api/education/fetch_resource_p/{account_id}/{pattern_id}/"
+            r = requests.get(url)
+
+            if r.json()['code'] == 10000:
+                res_data = r.json()['data']
+            else:
+                return ErrorResponse(msg="微服务故障")
+
         # output: resource list with sub question
 
-        resource = [
-            {
-                "resource_id": 1,
-                "resource_parent_name": "TPO 1",
-                "resource_name": "TPO 1-阅读",
-                "sections":
-                    [
-                        {
-                            "section_id": 1,
-                            "section_name": "第一篇阅读",
-                            "questions": [
-                                {
-                                    "question_id": 1,
-                                    "question_name": "How a visual artist redefines success in graphic design",
-                                    "question_count": 10,
-                                    "order": 1,
-                                    "remark": "Passage 1",
-                                    "last_record": 6
-                                },
-                                {
-                                    "question_id": 2,
-                                    "question_name": "Travelling as a way of self-discovery and progress",
-                                    "question_count": 10,
-                                    "order": 2,
-                                    "remark": "Passage 1",
-                                    "last_record": 6
-                                },
-                                {
-                                    "question_id": 3,
-                                    "question_name": "Start a blog to reach your creative peak",
-                                    "question_count": 10,
-                                    "order": 3,
-                                    "remark": "Passage 1",
-                                    "last_record": 6
-                                },
-                            ]
-                        }
-                    ]
-
-            },
-            {
-                "resource_id": 2,
-                "resource_parent_name": "TPO 2",
-                "resource_name": "TPO 2-阅读",
-                "sections":
-                    [
-                        {
-                            "section_id": 2,
-                            "section_name": "第一篇阅读",
-                            "questions": [
-                                {
-                                    "question_id": 11,
-                                    "question_name": "How a visual artist redefines success in graphic design",
-                                    "question_count": 10,
-                                    "order": 1,
-                                    "remark": "Passage 1",
-                                    "last_record": 6
-                                },
-                                {
-                                    "question_id": 12,
-                                    "question_name": "Travelling as a way of self-discovery and progress",
-                                    "question_count": 10,
-                                    "order": 2,
-                                    "remark": "Passage 1",
-                                    "last_record": 6
-                                },
-                                {
-                                    "question_id": 13,
-                                    "question_name": "Start a blog to reach your creative peak",
-                                    "question_count": 10,
-                                    "order": 3,
-                                    "remark": "Passage 1",
-                                    "last_record": 6
-                                },
-                            ]
-                        }
-                    ]
-            },
-
-        ]
-        return SuccessResponse(data=resource, msg='获取成功', page=page, limit=limit, total=len(resource))
+        # resource = [
+        #     {
+        #         "resource_id": 1,
+        #         "resource_parent_name": "TPO 1",
+        #         "resource_name": "TPO 1-阅读",
+        #         "sections":
+        #             [
+        #                 {
+        #                     "section_id": 1,
+        #                     "section_name": "第一篇阅读",
+        #                     "questions": [
+        #                         {
+        #                             "question_id": 1,
+        #                             "question_name": "How a visual artist redefines success in graphic design",
+        #                             "question_count": 10,
+        #                             "order": 1,
+        #                             "remark": "Passage 1",
+        #                             "last_record": 6
+        #                         },
+        #                         {
+        #                             "question_id": 2,
+        #                             "question_name": "Travelling as a way of self-discovery and progress",
+        #                             "question_count": 10,
+        #                             "order": 2,
+        #                             "remark": "Passage 1",
+        #                             "last_record": 6
+        #                         },
+        #                         {
+        #                             "question_id": 3,
+        #                             "question_name": "Start a blog to reach your creative peak",
+        #                             "question_count": 10,
+        #                             "order": 3,
+        #                             "remark": "Passage 1",
+        #                             "last_record": 6
+        #                         },
+        #                     ]
+        #                 }
+        #             ]
+        #
+        #     },
+        #     {
+        #         "resource_id": 2,
+        #         "resource_parent_name": "TPO 2",
+        #         "resource_name": "TPO 2-阅读",
+        #         "sections":
+        #             [
+        #                 {
+        #                     "section_id": 2,
+        #                     "section_name": "第一篇阅读",
+        #                     "questions": [
+        #                         {
+        #                             "question_id": 11,
+        #                             "question_name": "How a visual artist redefines success in graphic design",
+        #                             "question_count": 10,
+        #                             "order": 1,
+        #                             "remark": "Passage 1",
+        #                             "last_record": 6
+        #                         },
+        #                         {
+        #                             "question_id": 12,
+        #                             "question_name": "Travelling as a way of self-discovery and progress",
+        #                             "question_count": 10,
+        #                             "order": 2,
+        #                             "remark": "Passage 1",
+        #                             "last_record": 6
+        #                         },
+        #                         {
+        #                             "question_id": 13,
+        #                             "question_name": "Start a blog to reach your creative peak",
+        #                             "question_count": 10,
+        #                             "order": 3,
+        #                             "remark": "Passage 1",
+        #                             "last_record": 6
+        #                         },
+        #                     ]
+        #                 }
+        #             ]
+        #     },
+        #
+        # ]
+        return SuccessResponse(data=res_data, msg='获取成功', page=page, limit=limit, total=len(res_data))
 
     @action(methods=["POST"], detail=False, permission_classes=[IsAuthenticated])
     def create_mock(self, request):
@@ -853,6 +866,7 @@ class MicroServiceRegisterViewSet(CustomModelViewSet):
     def answer_panel(self, request):
         question_id = request.data.get('question_id')
         answer = request.data.get('answer')
+        duration = request.data.get('duration')
         try:
             answer = list(answer)
             return DetailResponse(data=[], msg='OK.')
@@ -861,7 +875,7 @@ class MicroServiceRegisterViewSet(CustomModelViewSet):
 
     @action(methods=["POST"], detail=False, permission_classes=[IsAuthenticated])
     def submit_answers(self, request):
-        question_id = request.data.get('practice_id')
+        sheet_id = request.data.get('sheet_id')
         try:
             return DetailResponse(data=[], msg='提交成功.')
         except:

@@ -9,11 +9,13 @@
 from rest_framework import serializers
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from dvadmin.system.models import Menu, MenuButton
+from dvadmin.system.models import Menu, MenuButton, MicroServiceRegister
 from dvadmin.system.views.menu_button import MenuButtonInitSerializer
-from dvadmin.utils.json_response import SuccessResponse
+# from dvadmin.system.views.microservice import MicroServiceRegisterSerializer
+from dvadmin.utils.json_response import SuccessResponse, ErrorResponse
 from dvadmin.utils.serializers import CustomModelSerializer
 from dvadmin.utils.viewset import CustomModelViewSet
+import requests
 
 
 class UserMenuSerializer(CustomModelSerializer):
@@ -209,10 +211,12 @@ class MenuViewSet(CustomModelViewSet):
         else:
             return SuccessResponse(data=[], total=0, msg="获取成功")
 
-    @action(methods=['GET'], detail=False, permission_classes=[IsAuthenticated],)
-    def user_menu(self, request):
+    @action(methods=["GET"], detail=False, permission_classes=[IsAuthenticated],
+            url_path="user_menu(?:/(?P<menu_id>\d+))?")
+    # @action(methods=['GET'], detail=False, permission_classes=[IsAuthenticated],)
+    def user_menu(self, request, menu_id=None):
         """用于前端获取当前角色的路由(用户端)"""
-        menu_id = request.data.get("menu_id")
+        # menu_id = request.data.get("menu_id")
         if menu_id:
             queryset = self.queryset.filter(status=1, user_use=1, visible=1, parent_id=menu_id).all()
             serializer = UserMenuSerializer(queryset, many=True, request=request)
@@ -222,35 +226,34 @@ class MenuViewSet(CustomModelViewSet):
             # 直接跳过考试层
             # request for toefl exam id
             # to do
-
             exam_id = 1
             queryset = self.queryset.filter(status=1, user_use=1, visible=1, name='托福').first()
             tuofu_id = queryset.id
             queryset = self.queryset.filter(status=1, user_use=1, visible=1, parent_id=tuofu_id).all()
             # queryset = self.queryset.filter(status=1, user_use=1, visible=1, parent__isnull=True).all()
             serializer = UserMenuSerializer(queryset, many=True, request=request)
-            response = []
-            for each in serializer.data:
-                me = dict(each)
-                if me['name'] in ['阅读','口语','写作','听力']:
-                    # request for microservices pattern id
-                    # send for exam id, pattern_name, and return pattern id
-                    # to do
-                    me['pattern_id'] = 11
 
-                response.append(me)
+            menu_ids = [each['id'] for each in serializer.data]
+            # micro_q = MicroServiceRegister.objects.filter(name='ParrotCore', status=1)
+            # micro = MicroServiceRegisterSerializer(micro_q, many=False, request=request)
+            if True:
+                # data = dict(micro.data)
+                url = f"http://{'127.0.0.1'}:{10981}/v1/api/account/get_menu_exam"
+                r = requests.post(url, json={
+                    'menu_id': menu_ids,
+                })
+
+                if r.json()['code'] == 10000:
+                    res_data = r.json()['data']
+                else:
+                    return ErrorResponse(msg="微服务故障")
+
+            response = [dict(item) for item in serializer.data]
+            menu_id_to_pattern_id = {item['menu_id']: item['pattern_id'] for item in res_data}
+            for item in response:
+                item['pattern_id'] = menu_id_to_pattern_id.get(item['id'], None)
+
             return SuccessResponse(data=response, total=len(response), msg="获取成功")
-
-        # if not kwargs["id"]:
-        #     queryset = self.queryset.filter(status=1, user_use=1, visible=1, parent__isnull=True).all()
-        #     serializer = UserMenuSerializer(queryset, many=True, request=request)
-        #     data = serializer.data
-        #     return SuccessResponse(data=data, total=len(data), msg="获取成功")
-        # else:
-        #     queryset = self.queryset.filter(status=1, is_user=1, visible=1, parent_id=kwargs["id"]).all()
-        #     serializer = UserMenuSerializer(queryset, many=True, request=request)
-        #     data = serializer.data
-        #     return SuccessResponse(data=data, total=len(data), msg="获取成功")
 
     @action(methods=['GET'], detail=False, permission_classes=[])
     def web_router(self, request):
