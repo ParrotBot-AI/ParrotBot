@@ -18,7 +18,7 @@ import datetime
 import requests
 from rest_framework import serializers
 from rest_framework.permissions import IsAuthenticated, AllowAny
-
+import json
 
 class MicroServiceInitRegisterSerializer(CustomModelSerializer):
     """
@@ -186,7 +186,10 @@ class MicroServiceRegisterViewSet(CustomModelViewSet):
         if True:
             # data = dict(micro.data)
             url = f"http://{'127.0.0.1'}:{10981}/v1/api/education/fetch_resource_p/{account_id}/{pattern_id}/"
-            r = requests.get(url)
+            r = requests.post(url, json={
+                'page': page,
+                'limit': limit
+            })
 
             if r.json()['code'] == 10000:
                 res_data = r.json()['data']
@@ -194,690 +197,177 @@ class MicroServiceRegisterViewSet(CustomModelViewSet):
                 return ErrorResponse(msg="微服务故障")
 
         # output: resource list with sub question
-
-        # resource = [
-        #     {
-        #         "resource_id": 1,
-        #         "resource_parent_name": "TPO 1",
-        #         "resource_name": "TPO 1-阅读",
-        #         "sections":
-        #             [
-        #                 {
-        #                     "section_id": 1,
-        #                     "section_name": "第一篇阅读",
-        #                     "questions": [
-        #                         {
-        #                             "question_id": 1,
-        #                             "question_name": "How a visual artist redefines success in graphic design",
-        #                             "question_count": 10,
-        #                             "order": 1,
-        #                             "remark": "Passage 1",
-        #                             "last_record": 6
-        #                         },
-        #                         {
-        #                             "question_id": 2,
-        #                             "question_name": "Travelling as a way of self-discovery and progress",
-        #                             "question_count": 10,
-        #                             "order": 2,
-        #                             "remark": "Passage 1",
-        #                             "last_record": 6
-        #                         },
-        #                         {
-        #                             "question_id": 3,
-        #                             "question_name": "Start a blog to reach your creative peak",
-        #                             "question_count": 10,
-        #                             "order": 3,
-        #                             "remark": "Passage 1",
-        #                             "last_record": 6
-        #                         },
-        #                     ]
-        #                 }
-        #             ]
-        #
-        #     },
-        #     {
-        #         "resource_id": 2,
-        #         "resource_parent_name": "TPO 2",
-        #         "resource_name": "TPO 2-阅读",
-        #         "sections":
-        #             [
-        #                 {
-        #                     "section_id": 2,
-        #                     "section_name": "第一篇阅读",
-        #                     "questions": [
-        #                         {
-        #                             "question_id": 11,
-        #                             "question_name": "How a visual artist redefines success in graphic design",
-        #                             "question_count": 10,
-        #                             "order": 1,
-        #                             "remark": "Passage 1",
-        #                             "last_record": 6
-        #                         },
-        #                         {
-        #                             "question_id": 12,
-        #                             "question_name": "Travelling as a way of self-discovery and progress",
-        #                             "question_count": 10,
-        #                             "order": 2,
-        #                             "remark": "Passage 1",
-        #                             "last_record": 6
-        #                         },
-        #                         {
-        #                             "question_id": 13,
-        #                             "question_name": "Start a blog to reach your creative peak",
-        #                             "question_count": 10,
-        #                             "order": 3,
-        #                             "remark": "Passage 1",
-        #                             "last_record": 6
-        #                         },
-        #                     ]
-        #                 }
-        #             ]
-        #     },
-        #
-        # ]
         return SuccessResponse(data=res_data, msg='获取成功', page=page, limit=limit, total=len(res_data))
 
     @action(methods=["POST"], detail=False, permission_classes=[IsAuthenticated])
     def create_mock(self, request):
+
+        question_ids = None
+        account_id = request.data.get("account_id")
+        if type(request.data.get('question_ids')) == str:
+            question_ids = json.loads(request.data.get('question_ids'))
+        elif type(request.data.get('question_ids')) == list:
+            question_ids = request.data.get('question_ids')
+
+        q_type = request.data.get('q_type')
+
+        # to commend
         user_id = request.data.get("user_id")
-        question_ids = request.data.get("question_ids")
-        if question_ids:
-            question_ids = list(question_ids)
-            if len(question_ids) < 1:
-                return ErrorResponse(msg='至少选择一道题目')
+        # account_id = 7
 
-        # whether_zt = request.data.get("is_real_problem") # 目前默认false
+        if len(question_ids) < 1:
+            return ErrorResponse(msg='至少选择一道题目')
 
         # request send to microservices
-        # input: user_id, question_ids
-        # output: resource list with sub questions
+        # input: account_id, question_ids, question_type
+        if True:
+            try:
+                # data = dict(micro.data)
+                url = f"http://{'127.0.0.1'}:{10981}/v1/api/education/create_sheet"
+                r = requests.post(url, json={
+                    "account_id":account_id,
+                    "question_ids":question_ids,
+                    "q_type":q_type
+                })
 
-        mock = {
-            'practice_id': 1,
-            'is_time': True,
-            'is_check_answer': False,
-            'time_remain': 1800,  # 秒
-            'questions': [
-                {
-                    "question_id": 1,
-                    "question_title": "Portraits as Art",
-                    "questions_content": "Darwin's theory is that 'selective breeding' occurs in nature as 'natural selection' is the engine behind evolution. $$ Thus, the theory provides an excellent basis for understanding how organisms change over time. $$ Nevertheless, it is just a theory and elusively difficult to prove. One of the major holes in Darwin's theory revolves around “irreducibly complex systems.” An irreducibly complex system is known as a system where many different parts must all operate together. As a result, in the absence of one, the system as a whole collapses. Consequently, as modern technology improves, science can identify these “irreducibly complex systems” even at microscopic levels. These complex systems, if so inter-reliant, would be resistant to Darwin's supposition of how evolution occurs. As Darwin himself admitted, “To suppose that the eye with all its inimitable contrivance for adjusting the focus for different distances, for admitting different amounts of light, and for the correction of spherical and chromatic aberration, could have been formed by natural selection, seems, I free confess, absurd in the highest degree.\nIn conclusion, “On the Origin of Species” is known as one of the most consequential books ever published. Darwin's Theory of Evolution remains, to this day, a lightning rod for controversy. The theory can be observed repeatedly, but never proven, and there are a plethora of instances that cast doubt on the processes of natural selection and evolution. Darwin's conclusions were a result of keen observation and training as a naturalist. Despite the controversy that swirls around his theory, Darwin remains one of the most influential scientists and naturalists ever born due to his Theory of Evolution.",
-                    "keywords": "$$",
-                    "question_depth": 0,
-                    "question_count": 10,
-                    "children": [
-                        {
-                            "question_id": 2,
-                            "stem": "The word “engage” in the passage is closest in meaning to",
-                            "keywords": "engage",
-                            "paragraph": 1,
-                            "question_depth": 1,
-                            "order": 1,
-                            "choice": ["construct", "are pleased", "are altered", "are involved in"],
-                            "question_type": "TR_sc",
-                            "choice_label": ["A", "B", "C", "D"],
-                            "answer_weight": [1, 0, 0, 0],
-                            "restriction_count": 1,
-                            "answer": [0, 0, 0, 0],
-                        },
-                        {
-                            "question_id": 3,
-                            "stem": "According to paragraph 1，which of the following gives support of portrait painting's complexity?",
-                            "keywords": "",
-                            "paragraph": 1,
-                            "question_depth": 1,
-                            "order": 2,
-                            "choice": [
-                                "Portraits representing faces are more true to life than portraits that portray a whole figure.",
-                                "are pleased", "are altered", "are involved in"],
-                            "question_type": "TR_mc",
-                            "choice_label": ["A", "B", "C", "D"],
-                            "answer_weight": [1, 0, 1, 0],
-                            "restriction_count": 2,
-                            "answer": [0, 0, 0, 0],
-                            "restriction": {
-                                1: 0,
-                                0: 0
-                            }
-                        },
-                        {
-                            "question_id": 4,
-                            "stem": "Look at the four squares 【   】 that indicate where the following sentence could be added to the passage. Where would the sentence best fit? Click on a square 【   】to add the sentence to the passage. \n In certain instances, portrait artists depended on a combination of direct and indirect involvement with their subjects",
-                            "keywords": "In certain instances, portrait artists depended on a combination of direct and indirect involvement with their subjects",
-                            "paragraph": 1,
-                            "question_depth": 1,
-                            "order": 3,
-                            "choice": ["", "", "", ""],
-                            "question_type": "TR_fill_sentence",
-                            "choice_label": ["A", "B", "C", "D"],
-                            "answer_weight": [1, 0, 0, 0],
-                            "answer": [0, 0, 0, 0],
-                            "restriction_count": 1,
-                        },
-                        {
-                            "question_id": 5,
-                            "stem": "Portraiture as an art form is more complex than is suggested by its definition.",
-                            "keywords": "",
-                            "paragraph": None,
-                            "question_depth": 1,
-                            "order": 4,
-                            "choice": [
-                                "The definitions of portrait art in the dictionary have regularly transformed throughout the years to reflect shifting attitudes regarding the genre.",
-                                "Portraits generally mirror the conventions of the time rather than the unique qualities of the individual.",
-                                "Portrait art should be considered as a distinct artistic genre due to its intense occupation with the subject and the way in which it was produced.",
-                                "Throughout history, the majority of professional artists avoided portrait art since they regarded it as a mechanical art form, and not as fine art.",
-                                'Beginning in the Renaissance and continuing into the start of the nineteenth century, portrait art was idealized to a greater degree than it is in today.',
-                                "Portrait art was at times viewed in a negative light since it was considered as simple copying void of artistic innovation."],
-                            "question_type": "TR_last_mc",
-                            "choice_label": ["A", "B", "C", "D", "E", "F"],
-                            "answer_weight": [1, 0, 1, 0, 1, 0],
-                            "answer": [0, 0, 0, 0, 0, 0],
-                            "restriction_count": 3,
-                            "restriction": {
-                                2: 1,
-                                1: 0,
-                                0: 0
-                            }
-                        },
+                if r.json()['code'] == 10000:
+                    res_data = r.json()['data']
+                    return DetailResponse(data=res_data, msg='获取成功')
+                else:
+                    return ErrorResponse(msg=r.json()['msg'])
+            except:
+                return ErrorResponse(msg="微服务故障")
 
-                    ]
-                },
-                {
-                    "question_id": 6,
-                    "question_title": "Portraits as Art",
-                    "questions_content": "Darwin's theory is that 'selective breeding' occurs in nature as 'natural selection' is the engine behind evolution. $$ Thus, the theory provides an excellent basis for understanding how organisms change over time. $$ Nevertheless, it is just a theory and elusively difficult to prove. One of the major holes in Darwin's theory revolves around “irreducibly complex systems.” An irreducibly complex system is known as a system where many different parts must all operate together. As a result, in the absence of one, the system as a whole collapses. Consequently, as modern technology improves, science can identify these “irreducibly complex systems” even at microscopic levels. These complex systems, if so inter-reliant, would be resistant to Darwin's supposition of how evolution occurs. As Darwin himself admitted, “To suppose that the eye with all its inimitable contrivance for adjusting the focus for different distances, for admitting different amounts of light, and for the correction of spherical and chromatic aberration, could have been formed by natural selection, seems, I free confess, absurd in the highest degree.\nIn conclusion, “On the Origin of Species” is known as one of the most consequential books ever published. Darwin's Theory of Evolution remains, to this day, a lightning rod for controversy. The theory can be observed repeatedly, but never proven, and there are a plethora of instances that cast doubt on the processes of natural selection and evolution. Darwin's conclusions were a result of keen observation and training as a naturalist. Despite the controversy that swirls around his theory, Darwin remains one of the most influential scientists and naturalists ever born due to his Theory of Evolution.",
-                    "keywords": "$$",
-                    "question_depth": 0,
-                    "question_count": 10,
-                    "children": [
-                        {
-                            "question_id": 7,
-                            "stem": "The word “engage” in the passage is closest in meaning to",
-                            "keywords": "engage",
-                            "paragraph": 1,
-                            "question_depth": 1,
-                            "order": 1,
-                            "choice": ["construct", "are pleased", "are altered", "are involved in"],
-                            "question_type": "TR_sc",
-                            "choice_label": ["A", "B", "C", "D"],
-                            "answer_weight": [1, 0, 0, 0],
-                            "answer": [0, 0, 0, 0],
-                            "restriction_count": 1,
-                        },
-                        {
-                            "question_id": 8,
-                            "stem": "According to paragraph 1，which of the following gives support of portrait painting's complexity?",
-                            "keywords": "",
-                            "paragraph": 1,
-                            "question_depth": 1,
-                            "order": 2,
-                            "choice": [
-                                "Portraits representing faces are more true to life than portraits that portray a whole figure.",
-                                "are pleased", "are altered", "are involved in"],
-                            "question_type": "TR_mc",
-                            "choice_label": ["A", "B", "C", "D"],
-                            "answer_weight": [1, 0, 1, 0],
-                            "answer": [0, 0, 0, 0],
-                            "restriction_count": 2,
-                            "restriction": {
-                                1: 0,
-                                0: 0
-                            }
-                        },
-                        {
-                            "question_id": 9,
-                            "stem": "Look at the four squares 【   】 that indicate where the following sentence could be added to the passage. Where would the sentence best fit? Click on a square 【   】to add the sentence to the passage. \n In certain instances, portrait artists depended on a combination of direct and indirect involvement with their subjects",
-                            "keywords": "In certain instances, portrait artists depended on a combination of direct and indirect involvement with their subjects",
-                            "paragraph": 1,
-                            "question_depth": 1,
-                            "order": 3,
-                            "choice": ["", "", "", ""],
-                            "question_type": "TR_fill_sentence",
-                            "choice_label": ["A", "B", "C", "D"],
-                            "answer_weight": [1, 0, 0, 0],
-                            "answer": [0, 0, 0, 0],
-                            "restriction_count": 1,
-                        },
-                        {
-                            "question_id": 10,
-                            "stem": "Portraiture as an art form is more complex than is suggested by its definition.",
-                            "keywords": "",
-                            "paragraph": None,
-                            "question_depth": 1,
-                            "order": 4,
-                            "choice": [
-                                "The definitions of portrait art in the dictionary have regularly transformed throughout the years to reflect shifting attitudes regarding the genre.",
-                                "Portraits generally mirror the conventions of the time rather than the unique qualities of the individual.",
-                                "Portrait art should be considered as a distinct artistic genre due to its intense occupation with the subject and the way in which it was produced.",
-                                "Throughout history, the majority of professional artists avoided portrait art since they regarded it as a mechanical art form, and not as fine art.",
-                                'Beginning in the Renaissance and continuing into the start of the nineteenth century, portrait art was idealized to a greater degree than it is in today.',
-                                "Portrait art was at times viewed in a negative light since it was considered as simple copying void of artistic innovation."],
-                            "question_type": "TR_last_mc",
-                            "choice_label": ["A", "B", "C", "D", "E", "F"],
-                            "answer_weight": [1, 0, 1, 0, 1, 0],
-                            "answer": [0, 0, 0, 0, 0, 0],
-                            "restriction_count": 3,
-                            "restriction": {
-                                2: 1,
-                                1: 0,
-                                0: 0
-                            }
-                        },
-
-                    ]
-                },
-                {
-                    "question_id": 11,
-                    "question_title": "Portraits as Art",
-                    "questions_content": "Darwin's theory is that 'selective breeding' occurs in nature as 'natural selection' is the engine behind evolution. $$ Thus, the theory provides an excellent basis for understanding how organisms change over time. $$ Nevertheless, it is just a theory and elusively difficult to prove. One of the major holes in Darwin's theory revolves around “irreducibly complex systems.” An irreducibly complex system is known as a system where many different parts must all operate together. As a result, in the absence of one, the system as a whole collapses. Consequently, as modern technology improves, science can identify these “irreducibly complex systems” even at microscopic levels. These complex systems, if so inter-reliant, would be resistant to Darwin's supposition of how evolution occurs. As Darwin himself admitted, “To suppose that the eye with all its inimitable contrivance for adjusting the focus for different distances, for admitting different amounts of light, and for the correction of spherical and chromatic aberration, could have been formed by natural selection, seems, I free confess, absurd in the highest degree.\nIn conclusion, “On the Origin of Species” is known as one of the most consequential books ever published. Darwin's Theory of Evolution remains, to this day, a lightning rod for controversy. The theory can be observed repeatedly, but never proven, and there are a plethora of instances that cast doubt on the processes of natural selection and evolution. Darwin's conclusions were a result of keen observation and training as a naturalist. Despite the controversy that swirls around his theory, Darwin remains one of the most influential scientists and naturalists ever born due to his Theory of Evolution.",
-                    "keywords": "$$",
-                    "question_depth": 0,
-                    "question_count": 10,
-                    "children": [
-                        {
-                            "question_id": 12,
-                            "stem": "The word “engage” in the passage is closest in meaning to",
-                            "keywords": "engage",
-                            "paragraph": 1,
-                            "question_depth": 1,
-                            "order": 1,
-                            "choice": ["construct", "are pleased", "are altered", "are involved in"],
-                            "question_type": "TR_sc",
-                            "choice_label": ["A", "B", "C", "D"],
-                            "answer_weight": [1, 0, 0, 0],
-                            "answer": [0, 0, 0, 0],
-                            "restriction_count": 1,
-                        },
-                        {
-                            "question_id": 13,
-                            "stem": "According to paragraph 1，which of the following gives support of portrait painting's complexity?",
-                            "keywords": "",
-                            "paragraph": 1,
-                            "question_depth": 1,
-                            "order": 2,
-                            "choice": [
-                                "Portraits representing faces are more true to life than portraits that portray a whole figure.",
-                                "are pleased", "are altered", "are involved in"],
-                            "question_type": "TR_mc",
-                            "choice_label": ["A", "B", "C", "D"],
-                            "answer_weight": [1, 0, 1, 0],
-                            "answer": [0, 0, 0, 0],
-                            "restriction_count": 2,
-                            "restriction": {
-                                1: 0,
-                                0: 0
-                            }
-                        },
-                        {
-                            "question_id": 14,
-                            "stem": "Look at the four squares 【   】 that indicate where the following sentence could be added to the passage. Where would the sentence best fit? Click on a square 【   】to add the sentence to the passage. \n In certain instances, portrait artists depended on a combination of direct and indirect involvement with their subjects",
-                            "keywords": "In certain instances, portrait artists depended on a combination of direct and indirect involvement with their subjects",
-                            "paragraph": 1,
-                            "question_depth": 1,
-                            "order": 3,
-                            "choice": ["", "", "", ""],
-                            "question_type": "TR_fill_sentence",
-                            "choice_label": ["A", "B", "C", "D"],
-                            "answer_weight": [1, 0, 0, 0],
-                            "answer": [0, 0, 0, 0],
-                            "restriction_count": 1,
-                        },
-                        {
-                            "question_id": 15,
-                            "stem": "Portraiture as an art form is more complex than is suggested by its definition.",
-                            "keywords": "",
-                            "paragraph": None,
-                            "question_depth": 1,
-                            "order": 4,
-                            "choice": [
-                                "The definitions of portrait art in the dictionary have regularly transformed throughout the years to reflect shifting attitudes regarding the genre.",
-                                "Portraits generally mirror the conventions of the time rather than the unique qualities of the individual.",
-                                "Portrait art should be considered as a distinct artistic genre due to its intense occupation with the subject and the way in which it was produced.",
-                                "Throughout history, the majority of professional artists avoided portrait art since they regarded it as a mechanical art form, and not as fine art.",
-                                'Beginning in the Renaissance and continuing into the start of the nineteenth century, portrait art was idealized to a greater degree than it is in today.',
-                                "Portrait art was at times viewed in a negative light since it was considered as simple copying void of artistic innovation."],
-                            "question_type": "TR_last_mc",
-                            "choice_label": ["A", "B", "C", "D", "E", "F"],
-                            "answer_weight": [1, 0, 1, 0, 1, 0],
-                            "answer": [0, 0, 0, 0, 0, 0],
-                            "restriction_count": 3,
-                            "restriction": {
-                                2: 1,
-                                1: 0,
-                                0: 0
-                            }
-                        },
-
-                    ]
-                },
-            ]
-        }
-        return DetailResponse(data=mock, msg='获取成功')
 
     @action(methods=["GET"], detail=False, permission_classes=[IsAuthenticated],
-            url_path="get_mock/(?P<practice_id>\d+)")
-    def get_mock(self, request, practice_id):
+            url_path="get_mock/(?P<sheet_id>\d+)")
+    def get_mock(self, request, sheet_id):
         # request send to microservices
-        # input: practice
-        mock = {
-            'practice_id': 1,
-            'is_time': True,
-            'is_check_answer': False,
-            'time_remain': 900,  # 秒
-            'questions': [
-                {
-                    "question_id": 1,
-                    "question_title": "Portraits as Art",
-                    "questions_content": "Darwin's theory is that 'selective breeding' occurs in nature as 'natural selection' is the engine behind evolution. $$ Thus, the theory provides an excellent basis for understanding how organisms change over time. $$ Nevertheless, it is just a theory and elusively difficult to prove. One of the major holes in Darwin's theory revolves around “irreducibly complex systems.” An irreducibly complex system is known as a system where many different parts must all operate together. As a result, in the absence of one, the system as a whole collapses. Consequently, as modern technology improves, science can identify these “irreducibly complex systems” even at microscopic levels. These complex systems, if so inter-reliant, would be resistant to Darwin's supposition of how evolution occurs. As Darwin himself admitted, “To suppose that the eye with all its inimitable contrivance for adjusting the focus for different distances, for admitting different amounts of light, and for the correction of spherical and chromatic aberration, could have been formed by natural selection, seems, I free confess, absurd in the highest degree.\nIn conclusion, “On the Origin of Species” is known as one of the most consequential books ever published. Darwin's Theory of Evolution remains, to this day, a lightning rod for controversy. The theory can be observed repeatedly, but never proven, and there are a plethora of instances that cast doubt on the processes of natural selection and evolution. Darwin's conclusions were a result of keen observation and training as a naturalist. Despite the controversy that swirls around his theory, Darwin remains one of the most influential scientists and naturalists ever born due to his Theory of Evolution.",
-                    "keywords": "$$",
-                    "question_depth": 0,
-                    "question_count": 10,
-                    "children": [
-                        {
-                            "question_id": 2,
-                            "stem": "The word “engage” in the passage is closest in meaning to",
-                            "keywords": "engage",
-                            "paragraph": 1,
-                            "question_depth": 1,
-                            "order": 1,
-                            "choice": ["construct", "are pleased", "are altered", "are involved in"],
-                            "question_type": "TR_sc",
-                            "choice_label": ["A", "B", "C", "D"],
-                            "answer_weight": [1, 0, 0, 0],
-                            "answer": [1, 0, 0, 0],
-                            "restriction_count": 1,
-                        },
-                        {
-                            "question_id": 3,
-                            "stem": "According to paragraph 1，which of the following gives support of portrait painting's complexity?",
-                            "keywords": "",
-                            "paragraph": 1,
-                            "question_depth": 1,
-                            "order": 2,
-                            "choice": [
-                                "Portraits representing faces are more true to life than portraits that portray a whole figure.",
-                                "are pleased", "are altered", "are involved in"],
-                            "question_type": "TR_mc",
-                            "choice_label": ["A", "B", "C", "D"],
-                            "answer_weight": [1, 0, 1, 0],
-                            "answer": [1, 0, 0, 1],
-                            "restriction_count": 2,
-                            "restriction": {
-                                1: 0,
-                                0: 0
-                            }
-                        },
-                        {
-                            "question_id": 4,
-                            "stem": "Look at the four squares 【   】 that indicate where the following sentence could be added to the passage. Where would the sentence best fit? Click on a square 【   】to add the sentence to the passage. \n In certain instances, portrait artists depended on a combination of direct and indirect involvement with their subjects",
-                            "keywords": "In certain instances, portrait artists depended on a combination of direct and indirect involvement with their subjects",
-                            "paragraph": 1,
-                            "question_depth": 1,
-                            "order": 3,
-                            "choice": ["", "", "", ""],
-                            "question_type": "TR_fill_sentence",
-                            "choice_label": ["A", "B", "C", "D"],
-                            "answer_weight": [1, 0, 0, 0],
-                            "answer": [1, 0, 0, 0],
-                            "restriction_count": 1,
-                        },
-                        {
-                            "question_id": 5,
-                            "stem": "Portraiture as an art form is more complex than is suggested by its definition.",
-                            "keywords": "",
-                            "paragraph": None,
-                            "question_depth": 1,
-                            "order": 4,
-                            "choice": [
-                                "The definitions of portrait art in the dictionary have regularly transformed throughout the years to reflect shifting attitudes regarding the genre.",
-                                "Portraits generally mirror the conventions of the time rather than the unique qualities of the individual.",
-                                "Portrait art should be considered as a distinct artistic genre due to its intense occupation with the subject and the way in which it was produced.",
-                                "Throughout history, the majority of professional artists avoided portrait art since they regarded it as a mechanical art form, and not as fine art.",
-                                'Beginning in the Renaissance and continuing into the start of the nineteenth century, portrait art was idealized to a greater degree than it is in today.',
-                                "Portrait art was at times viewed in a negative light since it was considered as simple copying void of artistic innovation."],
-                            "question_type": "TR_last_mc",
-                            "choice_label": ["A", "B", "C", "D", "E", "F"],
-                            "answer_weight": [1, 0, 1, 0, 1, 0],
-                            "answer": [1, 0, 0, 1, 1, 0],
-                            "restriction_count": 3,
-                            "restriction": {
-                                2: 1,
-                                1: 0,
-                                0: 0
-                            }
-                        },
+        # input: sheet_id
+        if True:
+            try:
+                # data = dict(micro.data)
+                url = f"http://{'127.0.0.1'}:{10981}/v1/api/education/get_sheet/{sheet_id}/"
+                r = requests.get(url)
 
-                    ]
-                },
-                {
-                    "question_id": 6,
-                    "question_title": "Portraits as Art",
-                    "questions_content": "Darwin's theory is that 'selective breeding' occurs in nature as 'natural selection' is the engine behind evolution. $$ Thus, the theory provides an excellent basis for understanding how organisms change over time. $$ Nevertheless, it is just a theory and elusively difficult to prove. One of the major holes in Darwin's theory revolves around “irreducibly complex systems.” An irreducibly complex system is known as a system where many different parts must all operate together. As a result, in the absence of one, the system as a whole collapses. Consequently, as modern technology improves, science can identify these “irreducibly complex systems” even at microscopic levels. These complex systems, if so inter-reliant, would be resistant to Darwin's supposition of how evolution occurs. As Darwin himself admitted, “To suppose that the eye with all its inimitable contrivance for adjusting the focus for different distances, for admitting different amounts of light, and for the correction of spherical and chromatic aberration, could have been formed by natural selection, seems, I free confess, absurd in the highest degree.\nIn conclusion, “On the Origin of Species” is known as one of the most consequential books ever published. Darwin's Theory of Evolution remains, to this day, a lightning rod for controversy. The theory can be observed repeatedly, but never proven, and there are a plethora of instances that cast doubt on the processes of natural selection and evolution. Darwin's conclusions were a result of keen observation and training as a naturalist. Despite the controversy that swirls around his theory, Darwin remains one of the most influential scientists and naturalists ever born due to his Theory of Evolution.",
-                    "keywords": "$$",
-                    "question_depth": 0,
-                    "question_count": 10,
-                    "children": [
-                        {
-                            "question_id": 7,
-                            "stem": "The word “engage” in the passage is closest in meaning to",
-                            "keywords": "engage",
-                            "paragraph": 1,
-                            "question_depth": 1,
-                            "order": 1,
-                            "choice": ["construct", "are pleased", "are altered", "are involved in"],
-                            "question_type": "TR_sc",
-                            "choice_label": ["A", "B", "C", "D"],
-                            "answer_weight": [1, 0, 0, 0],
-                            "answer": [0, 0, 1, 0],
-                            "restriction_count": 1,
-                        },
-                        {
-                            "question_id": 8,
-                            "stem": "According to paragraph 1，which of the following gives support of portrait painting's complexity?",
-                            "keywords": "",
-                            "paragraph": 1,
-                            "question_depth": 1,
-                            "order": 2,
-                            "choice": [
-                                "Portraits representing faces are more true to life than portraits that portray a whole figure.",
-                                "are pleased", "are altered", "are involved in"],
-                            "question_type": "TR_mc",
-                            "choice_label": ["A", "B", "C", "D"],
-                            "answer_weight": [1, 0, 1, 0],
-                            "answer": [1, 0, 0, 0],
-                            "restriction_count": 2,
-                            "restriction": {
-                                1: 0,
-                                0: 0
-                            }
-                        },
-                        {
-                            "question_id": 9,
-                            "stem": "Look at the four squares 【   】 that indicate where the following sentence could be added to the passage. Where would the sentence best fit? Click on a square 【   】to add the sentence to the passage. \n In certain instances, portrait artists depended on a combination of direct and indirect involvement with their subjects",
-                            "keywords": "In certain instances, portrait artists depended on a combination of direct and indirect involvement with their subjects",
-                            "paragraph": 1,
-                            "question_depth": 1,
-                            "order": 3,
-                            "choice": ["", "", "", ""],
-                            "question_type": "TR_fill_sentence",
-                            "choice_label": ["A", "B", "C", "D"],
-                            "answer_weight": [1, 0, 0, 0],
-                            "answer": [0, 0, 0, 0],
-                            "restriction_count": 1,
-                        },
-                        {
-                            "question_id": 10,
-                            "stem": "Portraiture as an art form is more complex than is suggested by its definition.",
-                            "keywords": "",
-                            "paragraph": None,
-                            "question_depth": 1,
-                            "order": 4,
-                            "choice": [
-                                "The definitions of portrait art in the dictionary have regularly transformed throughout the years to reflect shifting attitudes regarding the genre.",
-                                "Portraits generally mirror the conventions of the time rather than the unique qualities of the individual.",
-                                "Portrait art should be considered as a distinct artistic genre due to its intense occupation with the subject and the way in which it was produced.",
-                                "Throughout history, the majority of professional artists avoided portrait art since they regarded it as a mechanical art form, and not as fine art.",
-                                'Beginning in the Renaissance and continuing into the start of the nineteenth century, portrait art was idealized to a greater degree than it is in today.',
-                                "Portrait art was at times viewed in a negative light since it was considered as simple copying void of artistic innovation."],
-                            "question_type": "TR_last_mc",
-                            "choice_label": ["A", "B", "C", "D", "E", "F"],
-                            "answer_weight": [1, 0, 1, 0, 1, 0],
-                            "answer": [1, 0, 1, 0, 1, 0],
-                            "restriction_count": 3,
-                            "restriction": {
-                                2: 1,
-                                1: 0,
-                                0: 0
-                            }
-                        },
+                if r.json()['code'] == 10000:
+                    res_data = r.json()['data']
+                    return DetailResponse(data=res_data, msg='获取成功')
+                else:
+                    return ErrorResponse(msg=r.json()['msg'])
+            except:
+                return ErrorResponse(msg="微服务故障")
 
-                    ]
-                },
-                {
-                    "question_id": 11,
-                    "question_title": "Portraits as Art",
-                    "questions_content": "Darwin's theory is that 'selective breeding' occurs in nature as 'natural selection' is the engine behind evolution. $$ Thus, the theory provides an excellent basis for understanding how organisms change over time. $$ Nevertheless, it is just a theory and elusively difficult to prove. One of the major holes in Darwin's theory revolves around “irreducibly complex systems.” An irreducibly complex system is known as a system where many different parts must all operate together. As a result, in the absence of one, the system as a whole collapses. Consequently, as modern technology improves, science can identify these “irreducibly complex systems” even at microscopic levels. These complex systems, if so inter-reliant, would be resistant to Darwin's supposition of how evolution occurs. As Darwin himself admitted, “To suppose that the eye with all its inimitable contrivance for adjusting the focus for different distances, for admitting different amounts of light, and for the correction of spherical and chromatic aberration, could have been formed by natural selection, seems, I free confess, absurd in the highest degree.\nIn conclusion, “On the Origin of Species” is known as one of the most consequential books ever published. Darwin's Theory of Evolution remains, to this day, a lightning rod for controversy. The theory can be observed repeatedly, but never proven, and there are a plethora of instances that cast doubt on the processes of natural selection and evolution. Darwin's conclusions were a result of keen observation and training as a naturalist. Despite the controversy that swirls around his theory, Darwin remains one of the most influential scientists and naturalists ever born due to his Theory of Evolution.",
-                    "keywords": "$$",
-                    "question_depth": 0,
-                    "question_count": 10,
-                    "children": [
-                        {
-                            "question_id": 12,
-                            "stem": "The word “engage” in the passage is closest in meaning to",
-                            "keywords": "engage",
-                            "paragraph": 1,
-                            "question_depth": 1,
-                            "order": 1,
-                            "choice": ["construct", "are pleased", "are altered", "are involved in"],
-                            "question_type": "TR_sc",
-                            "choice_label": ["A", "B", "C", "D"],
-                            "answer_weight": [1, 0, 0, 0],
-                            "answer": [0, 0, 0, 0],
-                            "restriction_count": 1,
-                        },
-                        {
-                            "question_id": 13,
-                            "stem": "According to paragraph 1，which of the following gives support of portrait painting's complexity?",
-                            "keywords": "",
-                            "paragraph": 1,
-                            "question_depth": 1,
-                            "order": 2,
-                            "choice": [
-                                "Portraits representing faces are more true to life than portraits that portray a whole figure.",
-                                "are pleased", "are altered", "are involved in"],
-                            "question_type": "TR_mc",
-                            "choice_label": ["A", "B", "C", "D"],
-                            "answer_weight": [1, 0, 1, 0],
-                            "answer": [0, 0, 0, 0],
-                            "restriction_count": 2,
-                            "restriction": {
-                                1: 0,
-                                0: 0
-                            }
-                        },
-                        {
-                            "question_id": 14,
-                            "stem": "Look at the four squares 【   】 that indicate where the following sentence could be added to the passage. Where would the sentence best fit? Click on a square 【   】to add the sentence to the passage. \n In certain instances, portrait artists depended on a combination of direct and indirect involvement with their subjects",
-                            "keywords": "In certain instances, portrait artists depended on a combination of direct and indirect involvement with their subjects",
-                            "paragraph": 1,
-                            "question_depth": 1,
-                            "order": 3,
-                            "choice": ["", "", "", ""],
-                            "question_type": "TR_fill_sentence",
-                            "choice_label": ["A", "B", "C", "D"],
-                            "answer_weight": [1, 0, 0, 0],
-                            "answer": [0, 0, 0, 0],
-                            "restriction_count": 1,
-                        },
-                        {
-                            "question_id": 15,
-                            "stem": "Portraiture as an art form is more complex than is suggested by its definition.",
-                            "keywords": "",
-                            "paragraph": None,
-                            "question_depth": 1,
-                            "order": 4,
-                            "choice": [
-                                "The definitions of portrait art in the dictionary have regularly transformed throughout the years to reflect shifting attitudes regarding the genre.",
-                                "Portraits generally mirror the conventions of the time rather than the unique qualities of the individual.",
-                                "Portrait art should be considered as a distinct artistic genre due to its intense occupation with the subject and the way in which it was produced.",
-                                "Throughout history, the majority of professional artists avoided portrait art since they regarded it as a mechanical art form, and not as fine art.",
-                                'Beginning in the Renaissance and continuing into the start of the nineteenth century, portrait art was idealized to a greater degree than it is in today.',
-                                "Portrait art was at times viewed in a negative light since it was considered as simple copying void of artistic innovation."],
-                            "question_type": "TR_last_mc",
-                            "choice_label": ["A", "B", "C", "D", "E", "F"],
-                            "answer_weight": [1, 0, 1, 0, 1, 0],
-                            "answer": [0, 0, 0, 0],
-                            "restriction_count": 3,
-                            "restriction": {
-                                2: 1,
-                                1: 0,
-                                0: 0
-                            }
-                        },
-                    ]
-                },
-            ]
-        }
-        return DetailResponse(data=mock, msg='获取成功')
 
     @action(methods=["GET"], detail=False, permission_classes=[IsAuthenticated],
-            url_path="answer_status/(?P<practice_id>\d+)")
-    def get_answer_status(self, request, practice_id):
-        response = [
-            {
-                "order": 1,
-                "stem": "The word “engage” in the passage is closest in meaning to",
-                "is_answer": True,
-            },
-            {
-                "order": 2,
-                "stem": "According to paragraph 1，which of the following gives support of portrait painting's complexity?",
-                "is_answer": True,
-            },
-            {
-                "order": 3,
-                "stem": "According to paragraph 1，which of the following gives support of portrait painting's complexity?",
-                "is_answer": True,
-            },
-            {
-                "order": 4,
-                "stem": "According to paragraph 1，which of the following gives support of portrait painting's complexity?",
-                "is_answer": True,
-            },
-            {
-                "order": 5,
-                "stem": "According to paragraph 1，which of the following gives support of portrait painting's complexity?",
-                "is_answer": True,
-            },
-            {
-                "order": 6,
-                "stem": "Look at the four squares 【   】 that indicate where the following sentence could be added to the passage. Where would the sentence best fit? Click on a square 【   】to add the sentence to the passage.",
-                "is_answer": False,
-            },
-            {
-                "order": 1,
-                "stem": "According to paragraph 1，which of the following gives support of portrait painting's complexity?",
-                "is_answer": False,
-            }
-        ]
-        return DetailResponse(data=response, msg='获取成功')
+            url_path="answer_status/(?P<sheet_id>\d+)")
+    def get_answer_status(self, request, sheet_id):
+        if True:
+            try:
+                # data = dict(micro.data)
+                url = f"http://{'127.0.0.1'}:{10981}/v1/api/education/get_sheet_status/{sheet_id}/"
+                r = requests.get(url)
+
+                if r.json()['code'] == 10000:
+                    res_data = r.json()['data']
+                    return DetailResponse(data=res_data, msg='获取成功')
+                else:
+                    return ErrorResponse(msg=r.json()['msg'])
+            except:
+                return ErrorResponse(msg="微服务故障")
+
 
     @action(methods=["POST"], detail=False, permission_classes=[IsAuthenticated])
     def answer_panel(self, request):
+        sheet_id = request.data.get('sheet_id')
         question_id = request.data.get('question_id')
-        answer = request.data.get('answer')
+        answer = None
+        if type(request.data.get('answer')) == str:
+            answer = json.loads(request.data.get('answer'))
+        elif type(request.data.get('answer')) == list:
+            answer = request.data.get('answer')
         duration = request.data.get('duration')
         try:
-            answer = list(answer)
-            return DetailResponse(data=[], msg='OK.')
+            # answer = list(answer)
+            if True:
+                try:
+                    # data = dict(micro.data)
+                    url = f"http://{'127.0.0.1'}:{10981}/v1/api/education/update_ans"
+                    r = requests.post(url, json={
+                        "sheet_id": sheet_id,
+                        "question_id": question_id,
+                        "answer": answer,
+                        "duration": duration
+                    })
+
+                    if r.json()['code'] == 10000:
+                        res_data = r.json()['data']
+                        return DetailResponse(data=res_data, msg='OK.')
+                    else:
+                        return ErrorResponse(msg=r.json()['msg'])
+
+                except:
+                    return ErrorResponse(msg="微服务故障")
         except:
             return ErrorResponse(msg='参数格式错误')
 
-    @action(methods=["POST"], detail=False, permission_classes=[IsAuthenticated])
-    def submit_answers(self, request):
-        sheet_id = request.data.get('sheet_id')
+    @action(methods=["POST"], detail=False, permission_classes=[IsAuthenticated], url_path="submit_answers/(?P<sheet_id>\d+)")
+    def submit_answers(self, request, sheet_id):
         try:
-            return DetailResponse(data=[], msg='提交成功.')
+            if True:
+                try:
+                    # data = dict(micro.data)
+                    url = f"http://{'127.0.0.1'}:{10981}/v1/api/education/save_answer/{sheet_id}/"
+                    r = requests.post(url)
+
+                    if r.json()['code'] == 10000:
+                        res_data = r.json()['data']
+                        return DetailResponse(data=res_data, msg='OK.')
+                    else:
+                        return ErrorResponse(msg=r.json()['msg'])
+                except:
+                    return ErrorResponse(msg="微服务故障")
+
+        except:
+            return ErrorResponse(msg='参数格式错误')
+
+    @action(methods=["POST"], detail=False, permission_classes=[IsAuthenticated], url_path="scoring/(?P<sheet_id>\d+)")
+    def scoring(self, request, sheet_id):
+        try:
+            if True:
+                try:
+                    # data = dict(micro.data)
+                    url = f"http://{'127.0.0.1'}:{10981}/v1/api/education/scoring/{sheet_id}/"
+                    r = requests.post(url)
+
+                    if r.json()['code'] == 10000:
+                        res_data = r.json()['data']
+                        return DetailResponse(data=res_data, msg='OK.')
+                    else:
+                        return ErrorResponse(msg=r.json()['msg'])
+                except:
+                    return ErrorResponse(msg="微服务故障")
+
+        except:
+            return ErrorResponse(msg='参数格式错误')
+
+    @action(methods=["GET"], detail=False, permission_classes=[IsAuthenticated], url_path="get_score/(?P<sheet_id>\d+)")
+    def get_score(self, request, sheet_id):
+        try:
+            if True:
+                try:
+                    # data = dict(micro.data)
+                    url = f"http://{'127.0.0.1'}:{10981}/v1/api/education/get_score/{sheet_id}/"
+                    r = requests.get(url)
+
+                    if r.json()['code'] == 10000:
+                        res_data = r.json()['data']
+                        return DetailResponse(data=res_data, msg='OK.')
+                    else:
+                        return ErrorResponse(msg=r.json()['msg'])
+                except:
+                    return ErrorResponse(msg="微服务故障")
+
         except:
             return ErrorResponse(msg='参数格式错误')
 

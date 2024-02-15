@@ -1,6 +1,7 @@
 import os
 
 from application.settings import BASE_DIR
+from config.version import VERSION_ENV
 
 # ================================================= #
 # *************** mysql数据库 配置  *************** #
@@ -17,7 +18,10 @@ DATABASE_ENGINE = "django.db.backends.mysql"
 DATABASE_NAME = 'parrotAdmin' # mysql 时使用
 
 # 数据库地址 改为自己数据库地址
-DATABASE_HOST = "127.0.0.1"
+if VERSION_ENV == "local":
+    DATABASE_HOST = "yingwuzhixue.com"
+else:
+    DATABASE_HOST = "localhost"
 # # 数据库端口
 DATABASE_PORT = 19779
 # # 数据库用户名

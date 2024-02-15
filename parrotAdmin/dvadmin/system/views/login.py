@@ -261,7 +261,6 @@ class LoginSerializer(TokenObtainPairWithoutPasswordSerializer):
 
                 if user:
                     attrs.update({'username': user.username})
-                    print("here")
                     return self.login(attrs)
 
                 else:

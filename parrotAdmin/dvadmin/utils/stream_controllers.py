@@ -9,3 +9,8 @@ class AdminStream:
     def core_register(self, **kwargs):
         # ep.send_event("account_register", {"core": str(True), "test": str(True)})
         return True, "broker account_register"
+
+    @ep.event("pause_sheet")
+    def pause_sheet(self, **kwargs):
+        # ep.send_event("account_register", {"core": str(True), "test": str(True)})
+        return True, "broker pause_sheet"
