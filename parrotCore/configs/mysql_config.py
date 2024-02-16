@@ -5,19 +5,23 @@ from sqlalchemy.orm.session import Session
 from sqlalchemy_utils import database_exists, create_database
 from configs.version import VERSION_ENV
 
-if VERSION_ENV == 'local' or VERSION_ENV == 'dev':
+if VERSION_ENV == 'local':
     MYSQL_PORT_DEV = 19782
     MYSQL_HOST_DEV = 'yingwuzhixue.com'
-    MYSQL_SETTINGS = {
-        "core": {
-            "HOST": MYSQL_HOST_DEV,
-            "PORT": MYSQL_PORT_DEV,
-            "USERNAME": "root",
-            "PASSWORD": "Mysql-60003",
-            "DB": "core",
-            "CONNECTOR": "pymysql"
-        }
+elif VERSION_ENV == 'dev':
+    MYSQL_PORT_DEV = 19782
+    MYSQL_HOST_DEV = 'localhost'
+
+MYSQL_SETTINGS = {
+    "core": {
+        "HOST": MYSQL_HOST_DEV,
+        "PORT": MYSQL_PORT_DEV,
+        "USERNAME": "root",
+        "PASSWORD": "Mysql-60003",
+        "DB": "core",
+        "CONNECTOR": "pymysql"
     }
+}
 
 
 def get_db_uri(CONNECTOR, USERNAME, PASSWORD, HOST, PORT, DB):
