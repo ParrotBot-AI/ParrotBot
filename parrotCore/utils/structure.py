@@ -15,6 +15,12 @@ class TreeNode:
         attributes['children'] = [repr(child) for child in self.children]
         return str(attributes)
 
+    def to_dict(self):
+        """Return a dictionary representation of the node, including its attributes and children."""
+        attributes = vars(self).copy()  # Copy attributes to include in the dictionary
+        attributes['children'] = [child.to_dict() for child in self.children]  # Recursively convert children
+        return attributes
+
 
 class Tree:
     def __init__(self):
@@ -46,12 +52,9 @@ class Tree:
                 return node
         return None
 
-    def print_tree(self, start_node=None, level=0):
-        """Print the tree from each root, unless a specific start node is given."""
-        trees = []
-        for root in self.roots:
-            trees.append(root)
-        return trees
+    def print_tree(self, start_node=None):
+        """Return a list of dictionaries representing the tree from each root."""
+        return [root.to_dict() for root in self.roots]
 
     def sum_children_scores(self, node):
         # Base case: if the node has no children, return its score

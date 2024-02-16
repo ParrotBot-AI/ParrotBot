@@ -1,5 +1,6 @@
 from tools.streaming.revents import Worker
 from blueprints.account.controllers import AccountController
+from blueprints.education.controllers import AnsweringScoringController
 from blueprints.account.models import (
     Accounts,
     AccountsVocab,
@@ -18,6 +19,15 @@ def account_register(user_id=None):
         return True
     else:
         print(f"Create account {user_id} failed.")
+
+@core_worker.on('broker', "pause_sheet")
+def pause_sheet(sheet_id=None):
+    if sheet_id:
+        AnsweringScoringController().pause_sheet(int(sheet_id))
+        print(f"Pause sheet for user {sheet_id}.")
+        return True
+    else:
+        print(f"Pause sheet {sheet_id} failed.")
 
 def main():
     print("开始监听....")

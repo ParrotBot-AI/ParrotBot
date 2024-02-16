@@ -13,3 +13,5 @@ log
 /parrotAdmin/logs/
 /parrotAdmin/dumpdata.json
 /parrotAdmin/db.sqlite3
+/parrotAdmin/application/version.py
+/parrotCore/configs/version.py

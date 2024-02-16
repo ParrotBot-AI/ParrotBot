@@ -83,7 +83,7 @@ class QuestionController(crudController):
                 return 'Invalid Section Id'
 
     @staticmethod
-    def fetch_questions(question_ids, session, ac_type, fetch_questions=None):
+    def fetch_questions(question_ids, session, ac_type, fetch_question=None):
         # -------------------- get all questions joined with question type ---------------------#
         subquery = select([
             Questions.id.label('id'),
@@ -175,8 +175,8 @@ class QuestionController(crudController):
                     account_ans = [0] * len([int(num) for num in result.stem_weights.split(";")])
                     duration = None
                 elif ac_type == 'get':
-                    account_ans = [int(num) for num in fetch_questions[result.id]['a'].split(";")]
-                    duration = fetch_questions[result.id]['d']
+                    account_ans = [int(num) for num in fetch_question[result.id]['a'].split(";")]
+                    duration = fetch_question[result.id]['d']
 
                 if result.section_id and result.section_id not in sections:
                     sections[result.section_id] = 1
@@ -200,7 +200,7 @@ class QuestionController(crudController):
                 }
 
                 if ac_type == 'get':
-                    record['score'] = fetch_questions[result.id]['s']
+                    record['score'] = fetch_question[result.id]['s']
 
                 if result.father_question == -1:
                     root_questions.append(record)
@@ -284,7 +284,7 @@ class AnsweringScoringController(crudController):
                     questions = session.execute(select([question_hierarchy])).fetchall()
                     all_ids = [x.id for x in questions]
 
-                    res_questions, redis_store, sections = QuestionController.fetch_questions(
+                    res_questions, redis_store, sections = QuestionController().fetch_questions(
                         question_ids=all_ids,
                         session=session,
                         ac_type="create"
@@ -382,15 +382,16 @@ class AnsweringScoringController(crudController):
             )
             return s.serialize_list(records)
 
-    def get_test_answers(self, sheet_id):
+    def get_test_answers(self, sheet_id, contin=False):
         # 获取问卷答题信息，
         # status = 0为已完成答题，批改问卷
         # status = 1为正在答题
         # status = 2为答题暂停
         # status = 3为已完成答题，题目已保存，未批改
         # status = 4为正在批改
-        # status = 5为批改完成，未璐入分数
+        # status = 5为批改完成，未录入分数
         with db_session('core') as session:
+            start = time.time()
             record = (
                 session.query(AnswerSheetRecord)
                 .filter(AnswerSheetRecord.id == sheet_id)
@@ -409,7 +410,6 @@ class AnsweringScoringController(crudController):
                     }
                     redis_cli = RedisWrapper('core_cache')
                     cache_dict = redis_cli.get(f'Sheet-{sheet_id}')
-
                     if cache_dict:
                         cache_question = cache_dict['questions']
                         refine_questions = [x for x in cache_question.values() if x['father_id'] != -1]
@@ -423,6 +423,7 @@ class AnsweringScoringController(crudController):
 
                         res_questions = tree.print_tree()
                         response['questions'] = res_questions
+                        print(time.time() - start)
                         return True, response
 
                     else:
@@ -456,8 +457,6 @@ class AnsweringScoringController(crudController):
                             tree.add_node("question_id", question["father_id"], question)
                         res_questions = tree.print_tree()
                         response['questions'] = res_questions
-
-                        print(time.time() - start)
                         return True, response
                     else:
                         questions = (
@@ -484,8 +483,11 @@ class AnsweringScoringController(crudController):
                             else:
                                 question_dic[each.question_id]['s'] = None
 
-                        res_questions, redis_store = self.fetch_questions(question_ids=question_ids, session=session,
-                                                                          ac_type="get", fetch_questions=question_dic)
+                        res_questions, redis_store, sections = QuestionController().fetch_questions(
+                            question_ids=question_ids,
+                            session=session,
+                            ac_type="get",
+                            fetch_question=question_dic)
 
                         redis_dic = {
                             "sheet_id": sheet_id,
@@ -501,8 +503,19 @@ class AnsweringScoringController(crudController):
                         response['questions'] = res_questions
                         redis_cli = RedisWrapper('core_cache')
                         redis_cli.set(f'Sheet-non-{sheet_id}', redis_dic, ex=600)
-                        return True, response
 
+                        if contin:
+                            try:
+                                update_s = {
+                                    "id": sheet_id,
+                                    "status": 1
+                                }
+                                self._update(model=AnswerSheetRecord, update_parameters=update_s, restrict_field="id")
+                                session.commit()
+                            except Exception as e:
+                                session.rollback()
+                                return False, str(e)
+                        return True, response
             else:
                 return False, "未找到答卷"
 
@@ -534,6 +547,19 @@ class AnsweringScoringController(crudController):
             return True, questions_li
         else:
             return False, "未找到答卷题目缓存"
+
+    def pause_sheet(self, sheet_id):
+        with db_session('core') as session:
+            try:
+                update_s = {
+                    "id": sheet_id,
+                    "status": 2
+                }
+                self._update(model=AnswerSheetRecord, update_parameters=update_s, restrict_field="id")
+                session.commit()
+            except Exception as e:
+                session.rollback()
+                return False, str(e)
 
     def save_answer(self, sheet_id):
         redis_cli = RedisWrapper('core_cache')
@@ -589,7 +615,9 @@ class AnsweringScoringController(crudController):
             )
             if answer_record:
                 if answer_record.status == 0:
-                    return True, s.serialize_dic(answer_record)
+                    l = s.serialize_dic(answer_record, self.default_not_show)
+                    l['type'] = l['type'].value
+                    return True, l
                 elif answer_record.status == 5 and answer_record.is_graded == 1:  # 完成批改但未登分
                     records = (
                         session.query(Scores)
@@ -606,9 +634,11 @@ class AnsweringScoringController(crudController):
                         "status": 0,
                     }
                     self._update(model=AnswerSheetRecord, update_parameters=update_s, restrict_field="id")
-                    re_s = s.serialize_dic(answer_record)
+                    re_s = s.serialize_dic(answer_record, self.default_not_show)
                     re_s['score'] = t_score
+                    re_s['type'] = re_s['type'].value
                     re_s["status"] = 0
+                    print(type(re_s))
 
                     try:
                         session.commit()
@@ -625,10 +655,19 @@ class AnsweringScoringController(crudController):
             else:
                 return False, "未查询到考卷信息"
 
-    def scoring(self, answer_sheet_id):
+    def scoring(self, sheet_id):
         with db_session('core') as session:
+            record = (
+                session.query(AnswerSheetRecord)
+                .filter(AnswerSheetRecord.id == sheet_id)
+                .one_or_none()
+            )
+            if record:
+                if record.status == 1:
+                    return False, "正在答题"
+
             update_s = {
-                "id": answer_sheet_id,
+                "id": sheet_id,
                 "status": 4
             }
             self._update(model=AnswerSheetRecord, update_parameters=update_s, restrict_field="id")
@@ -657,7 +696,7 @@ class AnsweringScoringController(crudController):
             ).select_from(
                 join(S, Q, S.question_id == Q.id)
             ).where(
-                S.answer_sheet_id == answer_sheet_id
+                S.answer_sheet_id == sheet_id
             ).alias('L')
 
             # Second subquery (R)
@@ -765,7 +804,7 @@ class AnsweringScoringController(crudController):
 
                     record = (
                         session.query(Scores)
-                        .filter(and_(Scores.answer_sheet_id == answer_sheet_id, Scores.section_id == d['section_id']))
+                        .filter(and_(Scores.answer_sheet_id == sheet_id, Scores.section_id == d['section_id']))
                         .one_or_none()
                     )
 
@@ -782,7 +821,7 @@ class AnsweringScoringController(crudController):
                         u_r.append(new_record)
                 else:
                     new_record = {
-                        "answer_sheet_id": answer_sheet_id,
+                        "answer_sheet_id": sheet_id,
                         "section_id": d['section_id'] if d['section_id'] else None,
                         "total_score": d['total_score'],
                         "score": s_r[d['total_score']] if s_r else None,
@@ -824,7 +863,7 @@ class AnsweringScoringController(crudController):
 
             try:
                 update_s = {
-                    "id": answer_sheet_id,
+                    "id": sheet_id,
                     "status": 5,
                     "is_graded": 1
                 }
@@ -834,7 +873,7 @@ class AnsweringScoringController(crudController):
                 return True, "完成打分"
             except Exception as e:
                 update_s = {
-                    "id": answer_sheet_id,
+                    "id": sheet_id,
                     "status": 3
                 }
                 self._update(model=AnswerSheetRecord, update_parameters=update_s, restrict_field="id")
@@ -912,7 +951,7 @@ class TransactionsController(crudController):
             else:
                 return 'Invalid Pattern Id'
 
-    def _get_all_resources_under_patterns(self, pattern_id, account_id):
+    def _get_all_resources_under_patterns(self, pattern_id, account_id, page=0,limit=20):
         with db_session('core') as session:
             start = time.time()
             # 首先查找所有相关的pattern => exams, => pattern
@@ -1226,8 +1265,8 @@ class InitController(crudController):
 
 if __name__ == '__main__':
     #
-    init = TransactionsController()
-    pprint.pprint(init._get_all_resources_under_patterns(pattern_id=11, account_id=7))
+    # init = TransactionsController()
+    # pprint.pprint(init._get_all_resources_under_patterns(pattern_id=11, account_id=7))
     # init = InitController()
     # init.build_resources()
     # print(init.build_questions())
@@ -1235,11 +1274,12 @@ if __name__ == '__main__':
     # print(init.get_test_answers(sheet_id=7))
     # pprint.pprint(init.save_answer(sheet_id=7))
     # init.get_test_answers_history(account_id=7)
-    # init = AnsweringScoringController()
-    # res = init.create_answer_sheet(account_id=8, question_ids=[3, 18])
+    init = AnsweringScoringController()
+    # res = init.create_answer_sheet(account_id=11, question_ids=[3, 18])
     # sheet_id = res[1]['sheet_id']
+    sheet_id = 17
     # print(init.get_test_answers(sheet_id=sheet_id))
-    # pprint.pprint(init.get_sheet_status(sheet_id=sheet_id))
+    pprint.pprint(init.get_sheet_status(sheet_id=sheet_id))
 
     # 做题
     # print(init.update_question_answer(sheet_id=sheet_id, question_id=4, answer=[0, 0, 1, 0], duration=200))
@@ -1250,6 +1290,6 @@ if __name__ == '__main__':
 
     # 算分
     # start = time.time()
-    # print(init.scoring(answer_sheet_id=16))
+    # print(init.scoring(sheet_id=16))
     # pprint.pprint(init.get_score(answer_sheet_id=16))
     # print(time.time() - start)
