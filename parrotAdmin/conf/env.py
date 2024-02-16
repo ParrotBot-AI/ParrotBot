@@ -1,7 +1,7 @@
 import os
 
 from application.settings import BASE_DIR
-from config.version import VERSION_ENV
+from application.version import VERSION_ENV
 
 # ================================================= #
 # *************** mysql数据库 配置  *************** #

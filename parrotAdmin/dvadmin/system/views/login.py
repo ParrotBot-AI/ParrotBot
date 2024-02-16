@@ -24,7 +24,7 @@ from django.conf import settings
 import json
 import re
 from application import dispatch
-from dvadmin.system.models import Users
+from dvadmin.system.models import Users, Role
 from dvadmin.utils.json_response import ErrorResponse, DetailResponse
 from dvadmin.utils.request_util import save_login_log
 from dvadmin.utils.serializers import CustomModelSerializer
@@ -243,6 +243,11 @@ class LoginSerializer(TokenObtainPairWithoutPasswordSerializer):
                             serializer.save()
                             user = Users.objects.filter(username=user_name).first()
 
+                            # 注册该用户到用户表
+                            role = Role.objects.get(name='用户').first()
+                            user.role.add(role)
+                            user.save()
+
                             # 注册用户到 microservices
                             self.register_mic(user.id)
 
@@ -288,6 +293,11 @@ class LoginSerializer(TokenObtainPairWithoutPasswordSerializer):
                         raise CustomValidationError(Error)
                     serializer.save()
                     user = Users.objects.filter(username=attrs["username"]).first()
+
+                    # 注册该用户到用户表
+                    role = Role.objects.get(name='用户').first()
+                    user.role.add(role)
+                    user.save()
 
                     # 注册用户到 microservices
                     self.register_mic(user.id)
