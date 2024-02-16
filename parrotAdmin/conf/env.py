@@ -19,15 +19,21 @@ DATABASE_NAME = 'parrotAdmin' # mysql 时使用
 
 # 数据库地址 改为自己数据库地址
 if VERSION_ENV == "local":
-    DATABASE_HOST = "yingwuzhixue.com"
+    DATABASE_HOST = "localhost"
+    # # 数据库端口
+    DATABASE_PORT = 19779
+    # # 数据库密码
+    DATABASE_PASSWORD = "ParrotBot236"
 else:
     DATABASE_HOST = "localhost"
-# # 数据库端口
-DATABASE_PORT = 19779
+    # # 数据库端口
+    DATABASE_PORT = 19782
+    # # 数据库密码
+    DATABASE_PASSWORD = "Mysql-60003"
+
 # # 数据库用户名
 DATABASE_USER = "root"
-# # 数据库密码
-DATABASE_PASSWORD = "ParrotBot236"
+
 
 # 表前缀
 TABLE_PREFIX = "parrot_"
