@@ -58,10 +58,9 @@ class SmsSendSmsView(APIView):
             return ErrorResponse(msg=f"请输入正确的手机号!")
 
         # 短信服务默认开启
-        # is_enabled = dispatch.get_system_config_values("sms.is_enabled") or False  # 是否启用短信服务
-        # if not is_enabled:
-        #     return ErrorResponse(msg=f"暂未开启短信服务!")
-
+        is_enabled = dispatch.get_system_config_values("sms.is_enabled") or False  # 是否启用短信服务
+        if not is_enabled:
+            return ErrorResponse(msg=f"暂未开启短信服务!")
         frequency = dispatch.get_system_config_values("sms.frequency") or 60  # 短信发送频率
 
         test_white_list = dispatch.get_system_config_values("sms.test_white_list") or ''  # 测试白名单手机号

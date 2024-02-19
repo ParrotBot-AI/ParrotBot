@@ -22,7 +22,6 @@ def send_sms(phone, code, send_type="mobilelogin"):
     :return:
     """
     template_code = None
-
     for template in dispatch.get_system_config_values("sms.template"):
         if template.get('key') == send_type:
             template_code = template.get('value')

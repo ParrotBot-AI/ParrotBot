@@ -57,14 +57,14 @@ class HuaweiCloudSample:
         try:
             resp = requests.post(self.url, data=formData, headers=header, verify=False)
             # 输出json格式的字符串回包
-            print(resp.text)  # 打印响应信息
+            print(resp.text, 60)  # 打印响应信息
             res = json.loads(resp.to_json_string(indent=2))
             if res.get('SendStatusSet')[0].get('Code') == "Ok":
-                return True, resp.text
+                return True, ""
             return False, res.get('SendStatusSet')[0].get('Message')
         except Exception as error:
             # 如有需要，请打印 error
-            return False, str(error)
+            return False, str(resp.text) + ";" + str(error)
 
 
 if __name__ == '__main__':
