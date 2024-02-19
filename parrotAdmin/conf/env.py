@@ -24,12 +24,14 @@ if VERSION_ENV == "local":
     DATABASE_PORT = 19779
     # # 数据库密码
     DATABASE_PASSWORD = "ParrotBot236"
+    REDIS_PORT = 6379
 else:
     DATABASE_HOST = "localhost"
     # # 数据库端口
     DATABASE_PORT = 19782
     # # 数据库密码
     DATABASE_PASSWORD = "Mysql-60003"
+    REDIS_PORT = 19783
 
 # # 数据库用户名
 DATABASE_USER = "root"
@@ -45,7 +47,7 @@ TABLE_PREFIX = "parrot_"
 # dev 环境
 REDIS_PASSWORD = 'test'
 REDIS_HOST = '127.0.0.1'
-REDIS_PORT = 6379
+
 # 本地
 # REDIS_PORT = 6379
 REDIS_DATABASE = {
