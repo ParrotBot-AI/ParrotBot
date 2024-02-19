@@ -60,7 +60,7 @@ class HuaweiCloudSample:
             print(resp.text)  # 打印响应信息
             res = json.loads(resp.to_json_string(indent=2))
             if res.get('SendStatusSet')[0].get('Code') == "Ok":
-                return True, ''
+                return True, resp.text
             return False, res.get('SendStatusSet')[0].get('Message')
         except Exception as error:
             # 如有需要，请打印 error

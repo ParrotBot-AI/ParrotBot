@@ -57,9 +57,11 @@ class SmsSendSmsView(APIView):
         if len(phone) != 11:
             return ErrorResponse(msg=f"请输入正确的手机号!")
 
-        is_enabled = dispatch.get_system_config_values("sms.is_enabled") or False  # 是否启用短信服务
-        if not is_enabled:
-            return ErrorResponse(msg=f"暂未开启短信服务!")
+        # 短信服务默认开启
+        # is_enabled = dispatch.get_system_config_values("sms.is_enabled") or False  # 是否启用短信服务
+        # if not is_enabled:
+        #     return ErrorResponse(msg=f"暂未开启短信服务!")
+
         frequency = dispatch.get_system_config_values("sms.frequency") or 60  # 短信发送频率
 
         test_white_list = dispatch.get_system_config_values("sms.test_white_list") or ''  # 测试白名单手机号
@@ -75,7 +77,7 @@ class SmsSendSmsView(APIView):
             # 发送手机号登录验证码
             status, msg = send_sms(phone=phone, code=code, send_type=send_type)
             if not status:
-                return ErrorResponse(msg=f"发送失败，请联系管理员!")
+                return ErrorResponse(msg=f"{msg},发送失败，请联系管理员!")
 
         cache.set(f"dvadmin_sms_send_sms_{phone}", code, frequency)
         cache.set(f"dvadmin_sms_code_{phone}", code, 300)  # 5分钟有效期
