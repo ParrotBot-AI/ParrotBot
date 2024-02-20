@@ -138,6 +138,7 @@ class QuestionController(crudController):
                     "section_id": result.section_id,
                     "question_title": result.question_title,
                     "question_content": result.question_content,
+                    "question_type":result.type_name,
                     "question_stem": result.question_stem,
                     "max_score": result.max_score,
                     "father_id": result.father_question,
@@ -185,6 +186,7 @@ class QuestionController(crudController):
                     "question_id": result.id,
                     "question_title": result.question_title,
                     "question_content": result.question_content,
+                    "question_type": result.type_name,
                     "section_id": result.section_id,
                     "question_depth": result.d_level,
                     "father_id": result.father_question,
@@ -284,7 +286,7 @@ class AnsweringScoringController(crudController):
                     questions = session.execute(select([question_hierarchy])).fetchall()
                     all_ids = [x.id for x in questions]
 
-                    res_questions, redis_store, sections = QuestionController().fetch_questions(
+                    res_questions, redis_store, _sections = QuestionController().fetch_questions(
                         question_ids=all_ids,
                         session=session,
                         ac_type="create"
@@ -340,7 +342,7 @@ class AnsweringScoringController(crudController):
                         }
                         # 开始计时
                         s_l = []
-                        for section in sections:
+                        for section in _sections:
                             new_record = {
                                 "answer_sheet_id": sheet_id,
                                 "section_id": section,
@@ -348,13 +350,14 @@ class AnsweringScoringController(crudController):
                                 'last_update_time': datetime.datetime.now(tz=datetime.timezone.utc)
                             }
                             s_l.append(new_record)
+
                         session.execute(
                             insert(Scores),
                             s_l
                         )
                         try:
-                            session.commit()
                             self._update(model=AnswerSheetRecord, update_parameters=update_time, restrict_field="id")
+                            session.commit()
                             session.close()
                             return True, response
                         except:
@@ -1275,11 +1278,11 @@ if __name__ == '__main__':
     # pprint.pprint(init.save_answer(sheet_id=7))
     # init.get_test_answers_history(account_id=7)
     init = AnsweringScoringController()
-    # res = init.create_answer_sheet(account_id=11, question_ids=[3, 18])
+    # res = init.create_answer_sheet(account_id=18, question_ids=[243, 244])
     # sheet_id = res[1]['sheet_id']
-    sheet_id = 17
-    # print(init.get_test_answers(sheet_id=sheet_id))
-    pprint.pprint(init.get_sheet_status(sheet_id=sheet_id))
+    sheet_id = 11
+    print(init.get_test_answers(sheet_id=sheet_id))
+    # pprint.pprint(init.get_sheet_status(sheet_id=sheet_id))
 
     # 做题
     # print(init.update_question_answer(sheet_id=sheet_id, question_id=4, answer=[0, 0, 1, 0], duration=200))
