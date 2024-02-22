@@ -10,6 +10,7 @@ from blueprints.account.models import (
 from blueprints.education.models import (
     MenuExams
 )
+from blueprints.learning.controllers import VocabLearningController
 from configs.environment import DATABASE_SELECTION
 
 if DATABASE_SELECTION == 'postgre':
@@ -34,7 +35,6 @@ class AccountController(crudController):
     def register_user_exams(self, user_id, exam_ids, session):
         user = self._retrieve(model=Users, restrict_field='user_id', restrict_value=user_id)
         index_id = s.serialize_dic(user, self.default_not_show)['id']
-        print(index_id)
 
         for each in exam_ids:
             default_dic = {
@@ -47,9 +47,11 @@ class AccountController(crudController):
 
         try:
             session.commit()
-            return True, ""
+            # session.close()
+            return True, "OK."
         except Exception as e:
             session.rollback()
+            # session.close()
             return False, str(e)
 
     def register_user(self, user_id, exam_ids):
@@ -60,15 +62,21 @@ class AccountController(crudController):
                 .one_or_none()
             )
             if record:
-                self.register_user_exams(user_id, exam_ids, session)
+                return self.register_user_exams(user_id, exam_ids, session)
             else:
                 user = {"user_id": user_id}
                 response = self._create(model=Users, create_params=user, restrict_field='user_id')
                 # 注册账号
                 if response[0]:
-                    self.register_user_exams(user_id, exam_ids, session)
+                    res = self.register_user_exams(user_id, exam_ids, session)
+                    if res[0]:
+                        res = VocabLearningController().init_vocabs_learnings(user_id)
+                        if res[0]:
+                            return True, 'OK.'
+                        else:
+                            return False, res[1]
                 else:
-                    return False, 'False to register, already exists'
+                    return False, response[1]
 
     def get_menu_exams(self, menu_ids):
         with db_session('core') as session:
@@ -77,6 +85,7 @@ class AccountController(crudController):
                 .filter(MenuExams.menu_id.in_(menu_ids))
                 .all()
             )
+            session.close()
             return True, s.serialize_list(records)
 
     def get_user_accounts(self, user_id, exam_id=None):
@@ -129,7 +138,7 @@ class AccountController(crudController):
 
 if __name__ == '__main__':
     test = AccountController()
-    user_id = 1
-    # print(test.register_user(38, [1]))
-    print(test.get_user_accounts(40))
+    user_id = 3
+    print(test.register_user(user_id, [1]))
+    # print(test.get_user_accounts(40))
     # print(test._create(model=Accounts, create_params={'user_id': 7, 'exam_id': 1}))

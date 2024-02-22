@@ -16,8 +16,6 @@ from blueprints.education.models import (
     Submissions,
     AnswerSheetRecord
 )
-from blueprints.account import models
-from blueprints.learning import models
 from blueprints.grading.grading_func import Grading
 import pprint
 from utils.structure import Tree, TreeNode
@@ -1288,7 +1286,7 @@ if __name__ == '__main__':
     # pprint.pprint(init.save_answer(sheet_id=7))
     # init.get_test_answers_history(account_id=7)
     init = AnsweringScoringController()
-    res = init.create_answer_sheet(account_id=18, question_ids=[243, 244])
+    # res = init.create_answer_sheet(account_id=18, question_ids=[243, 244])
     # sheet_id = res[1]['sheet_id']
     # sheet_id = 11
     # print(init.get_test_answers(sheet_id=sheet_id))

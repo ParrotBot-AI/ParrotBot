@@ -20,6 +20,7 @@ def account_register(user_id=None):
     else:
         print(f"Create account {user_id} failed.")
 
+
 @core_worker.on('broker', "pause_sheet")
 def pause_sheet(sheet_id=None):
     if sheet_id:
@@ -29,7 +30,7 @@ def pause_sheet(sheet_id=None):
     else:
         print(f"Pause sheet {sheet_id} failed.")
 
+
 def main():
     print("开始监听....")
     core_worker.listen(listen_name='broker')
-

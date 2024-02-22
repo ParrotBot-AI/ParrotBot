@@ -45,3 +45,5 @@ pillow
 openpyxl
 sqlalchemy_utils
 alembic
+scipy
+gensim

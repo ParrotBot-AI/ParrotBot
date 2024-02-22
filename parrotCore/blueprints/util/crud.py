@@ -13,7 +13,7 @@ class crudController:
     """
     default_not_show = ['create_time', 'last_update_time']
 
-    def _create(self, model, create_params, restrict_field=None, callback_function=None):
+    def _create(self, model, create_params, restrict_field=None, callback_function=None, session=None):
         # # Example usage:
         # params = {
         #     'account_id': 123,
@@ -21,7 +21,7 @@ class crudController:
         #     'amount': INIT_CASH,
         #     'is_locked': False
         # }
-        with db_session('core') as session:
+        if session:
             if restrict_field:
                 old_record = (
                     session.query(model)
@@ -50,15 +50,47 @@ class crudController:
 
             if callback_function is not None:
                 callback_function()
+            return True, record.id
+        else:
+            with db_session('core') as session:
+                if restrict_field:
+                    old_record = (
+                        session.query(model)
+                        .filter(getattr(model, restrict_field) == create_params[restrict_field])
+                        .one_or_none()
+                    )
+                    if old_record is None:
+                        default_dic = {
+                            'create_time': datetime.datetime.now(tz=datetime.timezone.utc),
+                            'last_update_time': datetime.datetime.now(tz=datetime.timezone.utc)
+                        }
+                        merged_dict = {**default_dic, **create_params}
+                        record = model(**merged_dict)
+                        session.add(record)
+                    else:
+                        return False, "已存在"
 
-            try:
-                session.commit()
-                # session.close()
-                return True, record.id
-            except Exception as e:
-                session.rollback()
-                # session.close()
-                return False, str(e)
+                else:
+                    default_dic = {
+                        'create_time': datetime.datetime.now(tz=datetime.timezone.utc),
+                        'last_update_time': datetime.datetime.now(tz=datetime.timezone.utc)
+                    }
+                    merged_dict = {**create_params, **default_dic}
+                    record = model(**merged_dict)
+                    session.add(record)
+
+                if callback_function is not None:
+                    callback_function()
+
+                try:
+                    print("here")
+                    session.commit()
+                    # session.close()
+                    return True, record.id
+                except Exception as e:
+                    session.rollback()
+                    # session.close()
+                    return False, str(e)
 
     def _retrieve(self, model, restrict_field, restrict_value, callback_function=None):  # "id", 5
         with db_session('core') as session:

@@ -1,9 +1,6 @@
 from flask import Blueprint, request
 from utils.response_tools import (SuccessDataResponse, ArgumentExceptionResponse)
 from blueprints.account.controllers import AccountController
-import json
-from utils.redis_tools import RedisWrapper
-import uuid as u
 
 bp = Blueprint('account_api', __name__, url_prefix='/v1/api/account/')
 

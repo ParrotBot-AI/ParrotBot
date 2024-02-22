@@ -2,6 +2,8 @@ from sqlalchemy import Column, String, Integer, Boolean, DateTime, ForeignKey, E
 from configs.environment import DATABASE_SELECTION
 import enum
 
+# from blueprints.account.models import (Accounts)
+
 if DATABASE_SELECTION == 'postgre':
     from configs.postgre_config import BASES
 elif DATABASE_SELECTION == 'mysql':
@@ -400,13 +402,48 @@ class Analysis(BASES['core']):
         s = f'(id: {self.id} a: {self.analysis_text[:15]})'
         return s
 
+class VocabCategorys(BASES['core']):
+    __tablename__ = "VocabsCategorys"
+
+    id = Column(Integer, autoincrement=True, primary_key=True)
+    exam_id = Column(Integer, ForeignKey("Exams.id", ondelete='CASCADE'), nullable=True)
+    name = Column(String(20), nullable=False)
+    order = Column(Integer, nullable=True)
+    create_time = Column(DateTime)
+    last_update_time = Column(DateTime)
+
+    def __str__(self) -> str:
+        s = f'(id: {self.id} n: {self.name})'
+        return s
+
+    def __repr__(self) -> str:
+        s = f'(id: {self.id} n: {self.name})'
+        return s
+
 
 class VocabBase(BASES['core']):
     __tablename__ = "Vocabs"
 
     id = Column(Integer, autoincrement=True, primary_key=True)
-    word = Column(String(20), nullable=True)
-    level = Column(Enum(level), nullable=True)
+    word = Column(Text, nullable=False)
+    word_c = Column(Text, nullable=False)
+    create_time = Column(DateTime)
+    last_update_time = Column(DateTime)
+
+    def __str__(self) -> str:
+        s = f'(id: {self.id} w: {self.word})'
+        return s
+
+    def __repr__(self) -> str:
+        s = f'(id: {self.id} w: {self.word})'
+        return s
+
+class VocabCategoryRelationships(BASES['core']):
+    __tablename__ = "VocabCategoryRelationships"
+
+    id = Column(Integer, autoincrement=True, primary_key=True)
+    word_id = Column(Integer, ForeignKey("Vocabs.id", ondelete='CASCADE'), nullable=True)
+    category_id = Column(Integer, ForeignKey("VocabsCategorys.id", ondelete='CASCADE'), nullable=True)
     create_time = Column(DateTime)
     last_update_time = Column(DateTime)
 

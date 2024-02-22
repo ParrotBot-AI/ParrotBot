@@ -2,6 +2,8 @@ from sqlalchemy import Column, String, Integer, DateTime, ForeignKey
 from sqlalchemy import UniqueConstraint
 from configs.environment import DATABASE_SELECTION
 
+# from blueprints.education.models import (Exams)
+
 if DATABASE_SELECTION == 'postgre':
     from configs.postgre_config import BASES
 elif DATABASE_SELECTION == 'mysql':
@@ -45,8 +47,8 @@ class Accounts(BASES['core']):
 
     id = Column(Integer, autoincrement=True, primary_key=True)
     user_id = Column(Integer, ForeignKey('Users.id', ondelete='CASCADE'), nullable=False)
-    exam_id = Column(Integer, nullable=False)
-    # exam_id = Column(Integer, ForeignKey('Exams.id', ondelete='CASCADE'), nullable=False)
+    # exam_id = Column(Integer, nullable=False)
+    exam_id = Column(Integer, ForeignKey('Exams.id', ondelete='CASCADE'), nullable=False)
     create_time = Column(DateTime)
     last_update_time = Column(DateTime)
     last_request_time = Column(DateTime)
