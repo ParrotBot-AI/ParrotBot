@@ -349,13 +349,8 @@ class AnsweringScoringController(crudController):
                             insert(Scores),
                             s_l
                         )
-                        try:
-                            session.commit()
-                            session.close()
-                        except:
-                            session.rollback()
-                            session.close()
-                            return False, "计时失败"
+
+                        default_dic = {'last_update_time': datetime.datetime.now(tz=datetime.timezone.utc)}
 
                         update_time = {
                             "id": sheet_id,
@@ -364,7 +359,20 @@ class AnsweringScoringController(crudController):
                                 seconds=test_duration + 2)
                             # 2 seconds grace period
                         }
-                        return self._update(model=AnswerSheetRecord, update_parameters=update_time, restrict_field="id"), ""
+
+                        records = (
+                            session.query(AnswerSheetRecord)
+                            .filter(getattr(AnswerSheetRecord, "id") == update_time["id"])
+                            .update({**update_time, **default_dic})
+                        )
+                        try:
+                            session.commit()
+                            session.close()
+                            return True, response
+                        except:
+                            session.rollback()
+                            session.close()
+                            return False, "创建答卷失败"
 
                     else:
                         session.close()
