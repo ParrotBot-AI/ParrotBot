@@ -333,13 +333,7 @@ class AnsweringScoringController(crudController):
                         redis_cli = RedisWrapper('core_cache')
                         redis_cli.set(f'Sheet-{sheet_id}', redis_dic)
 
-                        update_time = {
-                            "id": sheet_id,
-                            "start_time": datetime.datetime.now(tz=datetime.timezone.utc),
-                            "end_time": datetime.datetime.now(tz=datetime.timezone.utc) + datetime.timedelta(
-                                seconds=test_duration + 2)
-                            # 2 seconds grace period
-                        }
+
                         # 开始计时
                         s_l = []
                         for section in _sections:
@@ -356,14 +350,22 @@ class AnsweringScoringController(crudController):
                             s_l
                         )
                         try:
-                            self._update(model=AnswerSheetRecord, update_parameters=update_time, restrict_field="id")
                             session.commit()
                             session.close()
-                            return True, response
                         except:
                             session.rollback()
                             session.close()
                             return False, "计时失败"
+
+                        update_time = {
+                            "id": sheet_id,
+                            "start_time": datetime.datetime.now(tz=datetime.timezone.utc),
+                            "end_time": datetime.datetime.now(tz=datetime.timezone.utc) + datetime.timedelta(
+                                seconds=test_duration + 2)
+                            # 2 seconds grace period
+                        }
+                        return self._update(model=AnswerSheetRecord, update_parameters=update_time, restrict_field="id"), ""
+
                     else:
                         session.close()
                         return False, "创建答卷失败"
@@ -1278,10 +1280,10 @@ if __name__ == '__main__':
     # pprint.pprint(init.save_answer(sheet_id=7))
     # init.get_test_answers_history(account_id=7)
     init = AnsweringScoringController()
-    # res = init.create_answer_sheet(account_id=18, question_ids=[243, 244])
+    res = init.create_answer_sheet(account_id=18, question_ids=[243, 244])
     # sheet_id = res[1]['sheet_id']
-    sheet_id = 11
-    print(init.get_test_answers(sheet_id=sheet_id))
+    # sheet_id = 11
+    # print(init.get_test_answers(sheet_id=sheet_id))
     # pprint.pprint(init.get_sheet_status(sheet_id=sheet_id))
 
     # 做题
