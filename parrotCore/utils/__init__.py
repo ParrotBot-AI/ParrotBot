@@ -3,6 +3,7 @@ import getpass
 import datetime
 from pprint import pprint
 import pytz
+from datetime import datetime, time
 USERNAME = getpass.getuser()
 ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -26,8 +27,11 @@ def abspath(*path):
 
 
 def iso_ts():
-    current_china = datetime.datetime.now(pytz.timezone('Asia/Shanghai'))
+    current_china = datetime.now(pytz.timezone('Asia/Shanghai'))
     return current_china.isoformat()
+
+def get_today_midnight():
+    return datetime.combine(datetime.today(), time.min)
 
 
 def chunk_list(l, chunk_size):

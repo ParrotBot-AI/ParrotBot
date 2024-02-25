@@ -14,14 +14,17 @@ from blueprints.education.models import (
     Indicators,
     Questions,
     Submissions,
-    AnswerSheetRecord
+    AnswerSheetRecord,
+    VocabBase,
+    VocabCategoryRelationships,
+    VocabCategorySimilarities
 )
 from blueprints.grading.grading_func import Grading
 import pprint
 from utils.structure import Tree, TreeNode
 from utils.redis_tools import RedisWrapper
 from configs.environment import DATABASE_SELECTION
-from sqlalchemy import null, select, union_all, and_, or_, join, outerjoin, update, insert
+from sqlalchemy import null, select, union_all, and_, or_, join, outerjoin, update, insert, delete
 import time
 from sqlalchemy.orm import aliased
 from sqlalchemy.sql.expression import bindparam
@@ -1222,6 +1225,143 @@ class InitController(crudController):
                     session.rollback()
                     return False, str(e)
 
+
+    def import_relationship(self):
+        file_path = "/Users/zhilinhe/Desktop/Temp/Toefl Reading 1-72/generate_data/核心词汇.csv"
+        import pandas as pd
+        df = pd.read_csv(file_path)
+        with db_session('core') as session:
+            l = []
+            words = {}
+            for index, row in df.iterrows():
+                if row['word'].lower() not in words:
+                    words[row['word'].lower()] = 1
+                    record_w = (
+                        session.query(VocabBase)
+                        .filter(VocabBase.word == row['word'].lower())
+                        .one_or_none()
+                    )
+                    if record_w:
+                        l.append(record_w.id)
+                    if index % 100 == 0:
+                        print(index)
+            # for value in session.query(VocabBase.id).distinct():
+            #     l.append(value[0])
+
+            s_d = []
+            s_l = []
+            count = 0
+            for i in l:
+                new_record = {
+                    "word_id": i,
+                    "category_id": 2,
+                    'create_time': datetime.datetime.now(tz=datetime.timezone.utc),
+                    'last_update_time': datetime.datetime.now(tz=datetime.timezone.utc)
+                }
+                s_l.append(new_record)
+
+                record_d = (
+                    session.query(VocabCategoryRelationships)
+                    .filter(VocabCategoryRelationships.word_id == i)
+                    .filter(VocabCategoryRelationships.category_id == 1)
+                    .one_or_none()
+                )
+                if record_d:
+                    s_d.append(record_d.id)
+
+                if count % 100 == 0:
+                    print(count)
+                count += 1
+
+            print(len(s_l), len(s_d))
+
+            session.execute(
+                insert(VocabCategoryRelationships),
+                s_l
+            )
+            session.execute(
+                delete(VocabCategoryRelationships).where(VocabCategoryRelationships.id.in_(s_d)),
+            )
+            print("commit")
+            try:
+                session.commit()
+                return True, ""
+            except Exception as e:
+                session.rollback()
+                return False, str(e)
+
+
+    def import_vocabs(self):
+        file_path = "/Users/zhilinhe/Desktop/Temp/Toefl Reading 1-72/generate_data/核心词汇.csv"
+        import pandas as pd
+        df = pd.read_csv(file_path)
+        with db_session('core') as session:
+            s_l = []
+            words = {}
+            for index, row in df.iterrows():
+                if row['word'].lower() not in words:
+                    record = (
+                        session.query(VocabBase)
+                        .filter(VocabBase.word == row['word'].lower())
+                        .one_or_none()
+                    )
+                    if not record:
+                        new_record = {
+                            # "id": int(row['id']),
+                            "word": row['word'].lower(),
+                            "word_c":row['word_c'],
+                            'create_time': datetime.datetime.now(tz=datetime.timezone.utc),
+                            'last_update_time': datetime.datetime.now(tz=datetime.timezone.utc)
+                        }
+                        s_l.append(new_record)
+                    words[row['word'].lower()] = 1
+                    if index % 100 == 0:
+                        print(index)
+
+            print(len(s_l))
+
+            session.execute(
+                insert(VocabBase),
+                s_l
+            )
+            print("commit")
+            try:
+                session.commit()
+                return True, ""
+            except Exception as e:
+                session.rollback()
+                return False, str(e)
+
+    def build_similarities(self):
+        import pandas as pd
+        df = pd.read_csv('simi.csv')
+        df = df.where(pd.notnull(df), None)
+        with db_session('core') as session:
+            s_l = []
+            for index, row in df.iterrows():
+                new_record = {
+                    "word_id": int(row['word_id']),
+                    "similarities": row['similarity'],
+                    'create_time': datetime.datetime.now(tz=datetime.timezone.utc),
+                    'last_update_time': datetime.datetime.now(tz=datetime.timezone.utc)
+                }
+                s_l.append(new_record)
+
+            session.execute(
+                insert(VocabCategorySimilarities),
+                s_l
+            )
+            print("commit")
+            try:
+                session.commit()
+                return True, ""
+            except Exception as e:
+                session.rollback()
+                return False, str(e)
+
+
+
+
     def build_questions(self):
         file_path = '/Users/zhilinhe/Desktop/TPO1-34.txt/q_1-12.xlsx'
         import pandas as pd
@@ -1278,14 +1418,15 @@ if __name__ == '__main__':
     #
     # init = TransactionsController()
     # pprint.pprint(init._get_all_resources_under_patterns(pattern_id=11, account_id=7))
-    # init = InitController()
-    # init.build_resources()
+    init = InitController()
+    # print(init.import_vocabs())
+    # print(init.build_similarities())
     # print(init.build_questions())
     # pprint.pprint(init.create_answer_sheet(account_id=7))
     # print(init.get_test_answers(sheet_id=7))
     # pprint.pprint(init.save_answer(sheet_id=7))
     # init.get_test_answers_history(account_id=7)
-    init = AnsweringScoringController()
+    # init = AnsweringScoringController()
     # res = init.create_answer_sheet(account_id=18, question_ids=[243, 244])
     # sheet_id = res[1]['sheet_id']
     # sheet_id = 11

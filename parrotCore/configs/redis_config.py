@@ -29,5 +29,11 @@ REDIS_SETTINGS = {
         'port': REDIS_PORT,
         'db': 4,
         'password': 'test'
+    },
+    'core_learning':{
+        'host': '127.0.0.1',
+        'port': REDIS_PORT,
+        'db': 5,
+        'password': 'test'
     }
 }

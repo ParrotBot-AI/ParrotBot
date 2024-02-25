@@ -1,7 +1,8 @@
-from sqlalchemy import Column, String, Integer, Boolean, DateTime, ForeignKey, Float
+from sqlalchemy import Column, String, Integer, Boolean, DateTime, ForeignKey, Float, Text
 from configs.environment import DATABASE_SELECTION
 
 # from blueprints.education.models import (VocabBase, VocabCategorys)
+# from blueprints.account.models import Accounts
 
 if DATABASE_SELECTION == 'postgre':
     from configs.postgre_config import BASES
@@ -67,9 +68,9 @@ class TaskFlowsConditions(BASES['core']):
     __tablename__ = "TaskFlowsConditions"
 
     id = Column(Integer, autoincrement=True, primary_key=True)
-    in_function = Column(String(30), nullable=False)
-    out_function = Column(String(30), nullable=False)
-    current_module_id = Column(Integer, ForeignKey('Modules.id', ondelete='CASCADE'), nullable=False)
+    in_function = Column(Text, nullable=False)
+    out_function = Column(Text, nullable=False)
+    # current_module_id = Column(Integer, ForeignKey('Modules.id', ondelete='CASCADE'), nullable=False)
     condition = Column(String(30), nullable=False)
     is_active = Column(Boolean, default=True)
     create_time = Column(DateTime)
@@ -93,6 +94,7 @@ class TaskFlows(BASES['core']):
     condition_id = Column(Integer)
     from_module_id = Column(Integer, ForeignKey('Modules.id', ondelete='CASCADE'), nullable=True)
     to_module_id = Column(Integer, ForeignKey('Modules.id', ondelete='CASCADE'), nullable=True)
+    result = Column(Text)
     is_optional = Column(Boolean, default=False)
     is_active = Column(Boolean, default=True)
     create_time = Column(DateTime)
@@ -141,6 +143,7 @@ class VocabsLearning(BASES['core']):
     in_process = Column(String(20), nullable=False)  # key to redis
     finished = Column(String(20), nullable=False)  # key to redis
     to_review = Column(String(20), nullable=False)  # key to redis
+    today_learn = Column(String(20), nullable=False) # key to redis
     unknown = Column(String(20), nullable=False)  # key to redis
     amount = Column(Integer, nullable=False)  # key to redis
 
@@ -167,6 +170,7 @@ class VocabsLearningRecords(BASES['core']):
     __tablename__ = "VocabsLearningRecords"
 
     id = Column(Integer, autoincrement=True, primary_key=True)
+    accounts_id = Column(Integer, ForeignKey('Accounts.id', ondelete='CASCADE'), nullable=False)
     reviewed_word_id = Column(Integer, ForeignKey('Vocabs.id', ondelete='CASCADE'), nullable=True)
     study_word_id = Column(Integer, ForeignKey('Vocabs.id', ondelete='CASCADE'), nullable=True)
     wrong_word_id = Column(Integer, ForeignKey('Vocabs.id', ondelete='CASCADE'), nullable=True)

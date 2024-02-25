@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Integer, Boolean, DateTime, ForeignKey, Enum, Text, Float
+from sqlalchemy import Column, String, Integer, Boolean, DateTime, ForeignKey, Enum, Text, Float, UniqueConstraint
 from configs.environment import DATABASE_SELECTION
 import enum
 
@@ -49,6 +49,7 @@ class Subjects(BASES['core']):
     def __repr__(self) -> str:
         s = f'(id: {self.id} n: {self.subject_name})'
         return s
+
 
 class MenuExams(BASES['core']):
     __tablename__ = "Menu"
@@ -402,6 +403,7 @@ class Analysis(BASES['core']):
         s = f'(id: {self.id} a: {self.analysis_text[:15]})'
         return s
 
+
 class VocabCategorys(BASES['core']):
     __tablename__ = "VocabsCategorys"
 
@@ -423,9 +425,12 @@ class VocabCategorys(BASES['core']):
 
 class VocabBase(BASES['core']):
     __tablename__ = "Vocabs"
+    __table_args__ = (
+        UniqueConstraint('word'),
+    )
 
     id = Column(Integer, autoincrement=True, primary_key=True)
-    word = Column(Text, nullable=False)
+    word = Column(String(50), nullable=False)
     word_c = Column(Text, nullable=False)
     create_time = Column(DateTime)
     last_update_time = Column(DateTime)
@@ -438,12 +443,31 @@ class VocabBase(BASES['core']):
         s = f'(id: {self.id} w: {self.word})'
         return s
 
+
 class VocabCategoryRelationships(BASES['core']):
     __tablename__ = "VocabCategoryRelationships"
 
     id = Column(Integer, autoincrement=True, primary_key=True)
     word_id = Column(Integer, ForeignKey("Vocabs.id", ondelete='CASCADE'), nullable=True)
     category_id = Column(Integer, ForeignKey("VocabsCategorys.id", ondelete='CASCADE'), nullable=True)
+    create_time = Column(DateTime)
+    last_update_time = Column(DateTime)
+
+    def __str__(self) -> str:
+        s = f'(id: {self.id} w: {self.word})'
+        return s
+
+    def __repr__(self) -> str:
+        s = f'(id: {self.id} w: {self.word})'
+        return s
+
+
+class VocabCategorySimilarities(BASES['core']):
+    __tablename__ = "VocabCategorySimilarities"
+
+    id = Column(Integer, autoincrement=True, primary_key=True)
+    word_id = Column(Integer, ForeignKey("Vocabs.id", ondelete='CASCADE'), nullable=False)
+    similarities = Column(Text, nullable=True)
     create_time = Column(DateTime)
     last_update_time = Column(DateTime)
 
