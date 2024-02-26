@@ -369,24 +369,24 @@ if __name__ == "__main__":
     flow = TaskController()
     # pprint(flow.fetch_account_tasks(account_id=account_id, after_time=get_today_midnight(), active=True))
 
-    # pprint(flow.start_task(account_id=4, taskAccount_id=2))
-    dic = {'condition_id': 3,
-            'current_loop': 1,
-            'current_m': 6,
-            'loop': 1,
-            'payload': {'answer': [1, 0, 0, 0],
-                    'correct_answer': [1, 0, 0, 0],
-                    'stem': ['n. 工程；课题、作业', 'n. 建筑', 'n. 发展；生长；开发', 'n. 主动权，自主权'],
-                    'target': ['answer'],
-                    'word': 'project',
-                    'word_id': 34001,
-                    'word_ids': [34001, 35082, 35964, 34573]},
-            'task_account_id': 2,
-            'task_flow_id': 7,
-            'task_id': 8,
-            'task_name': '学习新单词',
-            'account_id':4
-           }
+    pprint(flow.start_task(account_id=4, taskAccount_id=2))
+    # dic = {'condition_id': 3,
+    #         'current_loop': 1,
+    #         'current_m': 6,
+    #         'loop': 1,
+    #         'payload': {'answer': [1, 0, 0, 0],
+    #                 'correct_answer': [1, 0, 0, 0],
+    #                 'stem': ['n. 工程；课题、作业', 'n. 建筑', 'n. 发展；生长；开发', 'n. 主动权，自主权'],
+    #                 'target': ['answer'],
+    #                 'word': 'project',
+    #                 'word_id': 34001,
+    #                 'word_ids': [34001, 35082, 35964, 34573]},
+    #         'task_account_id': 2,
+    #         'task_flow_id': 7,
+    #         'task_id': 8,
+    #         'task_name': '学习新单词',
+    #         'account_id':4
+    #        }
     # dic = {'condition_id': 2,
     #         'current_loop': 1,
     #         'current_m': 7,
@@ -402,7 +402,7 @@ if __name__ == "__main__":
     #         'task_name': '学习新单词',
     #         'account_id':4
     #        }
-    pprint(flow.rec_module_outcome(response=dic))
+    # pprint(flow.rec_module_outcome(response=dic))
     # print()
     # pprint(flow._retrieve(model=Modules, restrict_field='id', restrict_value=2))
     # init = VocabLearningController()
