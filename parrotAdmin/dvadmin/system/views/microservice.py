@@ -20,6 +20,7 @@ from rest_framework import serializers
 from rest_framework.permissions import IsAuthenticated, AllowAny
 import json
 
+
 class MicroServiceInitRegisterSerializer(CustomModelSerializer):
     """
     初始化微服务-序列化器
@@ -225,9 +226,9 @@ class MicroServiceRegisterViewSet(CustomModelViewSet):
                 # data = dict(micro.data)
                 url = f"http://{'127.0.0.1'}:{10981}/v1/api/education/create_sheet"
                 r = requests.post(url, json={
-                    "account_id":account_id,
-                    "question_ids":question_ids,
-                    "q_type":q_type
+                    "account_id": account_id,
+                    "question_ids": question_ids,
+                    "q_type": q_type
                 })
 
                 if r.json()['code'] == 10000:
@@ -237,7 +238,6 @@ class MicroServiceRegisterViewSet(CustomModelViewSet):
                     return ErrorResponse(msg=r.json()['msg'])
             except:
                 return ErrorResponse(msg="微服务故障")
-
 
     @action(methods=["GET"], detail=False, permission_classes=[IsAuthenticated],
             url_path="get_mock/(?P<sheet_id>\d+)")
@@ -258,7 +258,6 @@ class MicroServiceRegisterViewSet(CustomModelViewSet):
             except:
                 return ErrorResponse(msg="微服务故障")
 
-
     @action(methods=["GET"], detail=False, permission_classes=[IsAuthenticated],
             url_path="answer_status/(?P<sheet_id>\d+)")
     def get_answer_status(self, request, sheet_id):
@@ -275,7 +274,6 @@ class MicroServiceRegisterViewSet(CustomModelViewSet):
                     return ErrorResponse(msg=r.json()['msg'])
             except:
                 return ErrorResponse(msg="微服务故障")
-
 
     @action(methods=["POST"], detail=False, permission_classes=[IsAuthenticated])
     def answer_panel(self, request):
@@ -311,7 +309,8 @@ class MicroServiceRegisterViewSet(CustomModelViewSet):
         except:
             return ErrorResponse(msg='参数格式错误')
 
-    @action(methods=["POST"], detail=False, permission_classes=[IsAuthenticated], url_path="submit_answers/(?P<sheet_id>\d+)")
+    @action(methods=["POST"], detail=False, permission_classes=[IsAuthenticated],
+            url_path="submit_answers/(?P<sheet_id>\d+)")
     def submit_answers(self, request, sheet_id):
         try:
             if True:
@@ -371,4 +370,24 @@ class MicroServiceRegisterViewSet(CustomModelViewSet):
         except:
             return ErrorResponse(msg='参数格式错误')
 
+    @action(methods=["GET"], detail=False, permission_classes=[IsAuthenticated],
+            url_path="get_vocabs_statics/(?P<account_id>\d+)")
+    def get_score(self, request, account_id):
+        account = 7
+        try:
+            if True:
+                try:
+                    # data = dict(micro.data)
+                    url = f"http://{'127.0.0.1'}:{10981}/v1/api/learning/get_vocabs_statics/{account}/"
+                    r = requests.get(url)
 
+                    if r.json()['code'] == 10000:
+                        res_data = r.json()['data']
+                        return DetailResponse(data=res_data, msg='OK.')
+                    else:
+                        return ErrorResponse(msg=r.json()['msg'])
+                except:
+                    return ErrorResponse(msg="微服务故障")
+
+        except:
+            return ErrorResponse(msg='参数格式错误')

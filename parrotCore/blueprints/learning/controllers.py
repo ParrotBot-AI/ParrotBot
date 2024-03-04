@@ -4,6 +4,7 @@ from blueprints.learning.models import (
     TaskFlows,
     Modules,
     VocabsLearning,
+    VocabsLearningRecords,
     TaskFlowsConditions
 )
 from blueprints.account.models import (
@@ -12,6 +13,8 @@ from blueprints.account.models import (
     AccountsScores,
     Users,
 )
+from sqlalchemy import select, func, Date, cast, and_, text, literal_column, case
+from datetime import datetime, timedelta
 from pprint import pprint
 from configs.environment import DATABASE_SELECTION
 from blueprints.learning import vocab_learning
@@ -26,7 +29,7 @@ from utils import abspath, iso_ts, get_today_midnight
 from utils.logger_tools import get_general_logger
 from blueprints.util.crud import crudController
 from blueprints.util.serializer import Serializer as s
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, timezone, timedelta, date
 from sqlalchemy import null, select, union_all, and_, or_, join, outerjoin, update, insert
 import json
 from utils.redis_tools import RedisWrapper
@@ -36,8 +39,93 @@ logger = get_general_logger('account', path=abspath('logs', 'core_web'))
 
 class VocabLearningController(crudController):
 
-    def fetch_vocabs(self, category_ids):
-        pass
+    def fetch_past_5_days_list(self, t_interval, account_id):
+        with db_session('core') as session:
+            date_series_sql = " ".join(
+                [f"UNION ALL SELECT CURDATE() - INTERVAL {i} DAY\n" for i in range(1, t_interval)])
+            raw_sql = text(f"""
+            SELECT
+              DateSeries.day,
+              SUM(Data.wrong_word) AS w_c,
+              SUM(Data.correct_word) AS c_c
+            FROM (
+              SELECT CURDATE() as 'day'
+              {date_series_sql}
+            ) DateSeries
+            LEFT JOIN (
+              SELECT
+                DATE(time) AS day,
+                wrong_word_id IS NOT NULL AS wrong_word,
+                correct_word_id IS NOT NULL AS correct_word
+              FROM VocabsLearningRecords
+              WHERE accounts_id = {account_id}
+                AND time >= CURDATE() - INTERVAL {t_interval - 1} DAY
+            ) AS Data ON DateSeries.day = Data.day
+            GROUP BY DateSeries.day
+            ORDER BY DateSeries.day DESC;
+            """)
+
+            # Execute the raw SQL query
+            return session.execute(raw_sql).fetchall()
+
+    def fetch_account_vocab(self, account_id):
+        redis = RedisWrapper('core_cache')
+        cache_resp = redis.get(f'VocabsStatics:{account_id}')
+        if cache_resp:
+            return True, cache_resp
+
+        with db_session('core') as session:
+            resp = {}
+            account = (
+                session.query(Accounts)
+                .filter(Accounts.id == account_id)
+                .one_or_none()
+            )
+            if not account:
+                return False, "未找到该账户"
+
+            record = (
+                session.query(VocabsLearning)
+                .filter(VocabsLearning.account_id == account_id)
+                .one_or_none()
+            )
+
+            if record:
+                user = (
+                    session.query(Users)
+                    .filter(Users.id == account.user_id)
+                    .one_or_none()
+                )
+                if user:
+                    resp['vocab'] = user.vocab_level
+                    resp['last_day_review'] = record.last_day_review
+                    resp['last_day_study'] = record.last_day_study
+                    resp['today_day_study'] = record.today_day_study
+                    resp['today_day_review'] = record.today_day_review
+                    resp['total_study'] = record.total_study
+                    resp['total_review'] = record.total_review
+
+                    # 搜索过去5天的正确的与错误的
+                    results = self.fetch_past_5_days_list(t_interval=5, account_id=account_id)
+                    s_l = []
+                    for result in results:
+                        r = dict(
+                            day=result.day.strftime('%Y-%m-%d'),
+                            wrong_words=int(result.w_c) if result.w_c else 0,
+                            correct_words=int(result.c_c) if result.c_c else 0
+                        )
+                        s_l.append(r)
+
+                    resp['series'] = s_l
+
+                    # 缓存
+                    redis.set(f'VocabsStatics:{account_id}', resp)
+
+                    return True, resp
+                else:
+                    return False, "未找到该用户"
+            else:
+                return False, "未找到该账号单词"
 
     def init_vocabs_learnings(self, user_id):
         user = self._retrieve(model=Users, restrict_field='user_id', restrict_value=user_id)
@@ -99,8 +187,9 @@ class TaskController(crudController):
             tasks = query.all()
             return True, s.serialize_list(tasks, self.default_not_show)
 
-    def search_next_chain(self, response:dict, **kwargs):
-        task_id, module_id, payload, condition_id = response['task_id'], response['current_m'],response['payload'], response['condition_id']
+    def search_next_chain(self, response: dict, **kwargs):
+        task_id, module_id, payload, condition_id = response['task_id'], response['current_m'], response['payload'], \
+                                                    response['condition_id']
         # 搜索 2次，执行2个function
         with db_session('core') as session:
             tasks = (
@@ -365,28 +454,30 @@ class TaskController(crudController):
 
 
 if __name__ == "__main__":
-    account_id = 4
-    flow = TaskController()
+    account_id = 7
+    # flow = TaskController()
     # pprint(flow.fetch_account_tasks(account_id=account_id, after_time=get_today_midnight(), active=True))
+    flow = VocabLearningController()
+    pprint(flow.fetch_account_vocab(account_id=account_id))
 
-    pprint(flow.start_task(account_id=4, taskAccount_id=2))
-    dic = {'condition_id': 3,
-            'current_loop': 1,
-            'current_m': 6,
-            'loop': 1,
-            'payload': {'answer': [1, 0, 0, 0],
-                    'correct_answer': [1, 0, 0, 0],
-                    'stem': ['n. 工程；课题、作业', 'n. 建筑', 'n. 发展；生长；开发', 'n. 主动权，自主权'],
-                    'target': ['answer'],
-                    'word': 'project',
-                    'word_id': 34001,
-                    'word_ids': [34001, 35082, 35964, 34573]},
-            'task_account_id': 2,
-            'task_flow_id': 7,
-            'task_id': 8,
-            'task_name': '学习新单词',
-            'account_id': 4
-           }
+    # pprint(flow.start_task(account_id=4, taskAccount_id=2))
+    # dic = {'condition_id': 3,
+    #         'current_loop': 1,
+    #         'current_m': 6,
+    #         'loop': 1,
+    #         'payload': {'answer': [1, 0, 0, 0],
+    #                 'correct_answer': [1, 0, 0, 0],
+    #                 'stem': ['n. 工程；课题、作业', 'n. 建筑', 'n. 发展；生长；开发', 'n. 主动权，自主权'],
+    #                 'target': ['answer'],
+    #                 'word': 'project',
+    #                 'word_id': 34001,
+    #                 'word_ids': [34001, 35082, 35964, 34573]},
+    #         'task_account_id': 2,
+    #         'task_flow_id': 7,
+    #         'task_id': 8,
+    #         'task_name': '学习新单词',
+    #         'account_id': 4
+    #        }
     # dic = {'condition_id': 2,
     #         'current_loop': 1,
     #         'current_m': 7,
