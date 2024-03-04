@@ -101,10 +101,17 @@ def update_ans():
         duration = args.get('duration')
         answer = args.get('answer')
         question_id = args.get('question_id')
+        answer_voice_link = args.get('answer_voice_link')
+        answer_video_link = args.get('answer_video_link')
+        upload_file = args.get('upload_file')
+
         res = AnsweringScoringController().update_question_answer(
             sheet_id=sheet_id,
             question_id=question_id,
             answer=answer,
+            answer_voice_link=answer_voice_link,
+            answer_video_link=answer_video_link,
+            upload_file_link=upload_file,
             duration=duration
         )
         if res[0]:
