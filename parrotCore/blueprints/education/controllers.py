@@ -618,9 +618,9 @@ class AnsweringScoringController(crudController):
             with db_session('core') as session:
                 for value in questions_dic.values():
                     if 'answer' in value and value['answer']:
-                        if value['answer'][0] == '[' and value['answer'][-1] == ']':
+                        if type(value['answer']) == list:
                             single_answer = ';'.join(map(str, value['answer']))
-                        else:
+                        elif type(value['answer']) == str:
                             single_answer = value['answer']
                     elif 'answer' in value and not value['answer']:
                         single_answer = value['answer']
@@ -1712,7 +1712,7 @@ class InitController(crudController):
 if __name__ == '__main__':
     #
     init = TransactionsController()
-    pprint.pprint(init._get_all_resources_under_patterns(pattern_id=13, account_id=7))
+    # pprint.pprint(init._get_all_resources_under_patterns(pattern_id=11, account_id=7))
     # init = InitController()
     # print(init.helper(None))
     # print(init.build_resources())
@@ -1725,12 +1725,12 @@ if __name__ == '__main__':
     # init.get_test_answers_history(account_id=7)
 
     init = AnsweringScoringController()
-    #res = init.create_answer_sheet(account_id=7, question_ids=[1220, 1221, 1222, 1223])
-    # print(init.create_answer_sheet(account_id=7, question_ids=[1516, 1590]))
+    # res = init.create_answer_sheet(account_id=7, question_ids=[1220, 1221, 1222, 1223])
+    # print(init.create_answer_sheet(account_id=7, question_ids=[3, 18]))
     # sheet_id = res[1]['sheet_id']
     # sheet_id = 59
-    # print(init.get_test_answers(sheet_id=58))
-    # pprint.pprint(init.get_test_answers(61)[1])
+    # print(init.get_test_answers(sheet_id=62))
+    # pprint.pprint(init.get_test_answers(63)[1])
     # pprint.pprint(init.get_sheet_status(sheet_id=sheet_id))
 
     # 做题
@@ -1738,7 +1738,7 @@ if __name__ == '__main__':
     # print(init.update_question_answer(sheet_id=sheet_id, question_id=5, answer=[0, 0, 1, 0], duration=200))
 
     # 提交答案
-    # print(init.save_answer(sheet_id=61))
+    pprint.pprint(init.save_answer(sheet_id=63))
 
     # 算分
     # start = time.time()
