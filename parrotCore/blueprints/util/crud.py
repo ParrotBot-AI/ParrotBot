@@ -83,7 +83,6 @@ class crudController:
                     callback_function()
 
                 try:
-                    print("here")
                     session.commit()
                     # session.close()
                     return True, record.id

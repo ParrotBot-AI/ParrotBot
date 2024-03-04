@@ -248,7 +248,8 @@ class Questions(BASES['core']):
     keywords = Column(Text, nullable=True)  # 题目关键词
     remark = Column(String(30), nullable=True)
 
-    voice_link = Column(String(20), nullable=True)  # Link to voice if it requires voice (听力题)
+    voice_link = Column(Text, nullable=True)  # Link to voice if it requires voice (听力题)
+    voice_content = Column(Text, nullable=True)
     is_require = Column(Boolean, default=True)  # 是否必答
     is_cal = Column(Boolean, default=True)  # 是否记分
     is_active = Column(Boolean, default=True)
@@ -325,9 +326,9 @@ class Submissions(BASES['core']):
     duration = Column(Float, nullable=True)  # 做题时长
 
     # external links
-    voice_link = Column(String(20), nullable=True)
-    video_link = Column(String(20), nullable=True)
-    upload_file_link = Column(String(20), nullable=True)
+    voice_link = Column(Text, nullable=True)
+    video_link = Column(Text, nullable=True)
+    upload_file_link = Column(Text, nullable=True)
 
     cal_method = Column(Text, nullable=True)
     max_score = Column(Integer, nullable=True)
