@@ -2,7 +2,7 @@ from sqlalchemy import Column, String, Integer, Boolean, DateTime, ForeignKey, F
 from configs.environment import DATABASE_SELECTION
 
 # from blueprints.education.models import (VocabBase, VocabCategorys)
-# from blueprints.account.models import Accounts
+from blueprints.account.models import Accounts
 
 if DATABASE_SELECTION == 'postgre':
     from configs.postgre_config import BASES
@@ -34,6 +34,7 @@ class Tasks(BASES['core']):
     id = Column(Integer, autoincrement=True, primary_key=True)
     task_name = Column(String(20), nullable=False)
     stage_id = Column(Integer, ForeignKey('Stages.id', ondelete='CASCADE'), nullable=True)
+    order = Column(Integer)
     is_active = Column(Boolean, default=True)
     create_time = Column(DateTime)
     last_update_time = Column(DateTime)
@@ -108,6 +109,19 @@ class TaskFlows(BASES['core']):
         s = f'(id: {self.id} f: {self.from_module_id} t: {self.to_module_id})'
         return s
 
+class LearningTypes(BASES['core']):
+    __tablename__ = "LearningTypes"
+
+    id = Column(Integer, autoincrement=True, primary_key=True)
+    type_name = Column(String(20))
+
+    def __str__(self) -> str:
+        s = f'(id: {self.id} n: {self.type_name}'
+        return s
+
+    def __repr__(self) -> str:
+        s = f'(id: {self.id} n: {self.type_name}'
+        return s
 
 
 class TaskAccounts(BASES['core']):
@@ -125,6 +139,7 @@ class TaskAccounts(BASES['core']):
     current_loop = Column(Integer, default=1)
     create_time = Column(DateTime)
     last_update_time = Column(DateTime)
+    learning_type = Column(Integer, nullable=True)
 
     def __str__(self) -> str:
         s = f'(id: {self.id} a: {self.account_id} t: {self.task_id})'
@@ -184,3 +199,4 @@ class VocabsLearningRecords(BASES['core']):
     def __repr__(self) -> str:
         s = f'(id: {self.id} a: {self.account_id}'
         return s
+

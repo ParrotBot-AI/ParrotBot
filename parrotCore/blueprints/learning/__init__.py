@@ -1,9 +1,10 @@
 from flask import Blueprint, request
 from utils.response_tools import (SuccessDataResponse, ArgumentExceptionResponse)
-from blueprints.learning.controllers import VocabLearningController
+from blueprints.learning.controllers import VocabLearningController, TaskController
 import json
 from utils.redis_tools import RedisWrapper
 import uuid as u
+from datetime import datetime, timedelta
 
 bp = Blueprint('learning_api', __name__, url_prefix='/v1/api/learning/')
 
@@ -14,6 +15,24 @@ def get_vocabs_statics(account_id):
     try:
         res, data = VocabLearningController().fetch_account_vocab(
             account_id=account_id
+        )
+        if res:
+            return SuccessDataResponse(data)
+        else:
+            return ArgumentExceptionResponse(msg=f'{data}')
+    except Exception as e:
+        return ArgumentExceptionResponse(msg=f'{e}')
+
+
+@bp.route('get_today_vocab_task/<account_id>/', methods=['GET'])
+def get_today_vocab_task(account_id):
+    try:
+        today = datetime.now()
+        time = datetime(today.year, today.month, today.day, 0, 0)
+        res, data = TaskController().fetch_account_tasks(
+            account_id=account_id,
+            after_time=time,
+            type=1
         )
         if res:
             return SuccessDataResponse(data)

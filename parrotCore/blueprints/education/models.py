@@ -322,6 +322,7 @@ class Submissions(BASES['core']):
     answer_sheet_id = Column(Integer, ForeignKey('AnswerSheetRecord.id', ondelete='CASCADE'), nullable=False)
     question_id = Column(Integer, ForeignKey('Questions.id', ondelete='CASCADE'), nullable=False)
     answer = Column(Text, nullable=True)
+    model_answer = Column(Text, nullable=True)
     stem_weight = Column(Text, nullable=True)
     duration = Column(Float, nullable=True)  # 做题时长
 

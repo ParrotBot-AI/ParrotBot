@@ -10,7 +10,7 @@ from blueprints.account.models import (
 from blueprints.education.models import (
     MenuExams
 )
-from blueprints.learning.controllers import VocabLearningController
+
 from configs.environment import DATABASE_SELECTION
 
 if DATABASE_SELECTION == 'postgre':
@@ -55,6 +55,7 @@ class AccountController(crudController):
             return False, str(e)
 
     def register_user(self, user_id, exam_ids):
+        from blueprints.learning.controllers import VocabLearningController
         with db_session('core') as session:
             record = (
                 session.query(Users)

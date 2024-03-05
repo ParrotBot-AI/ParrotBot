@@ -372,13 +372,34 @@ class MicroServiceRegisterViewSet(CustomModelViewSet):
 
     @action(methods=["GET"], detail=False, permission_classes=[IsAuthenticated],
             url_path="get_vocabs_statics/(?P<account_id>\d+)")
-    def get_score(self, request, account_id):
+    def get_vocabs_statics(self, request, account_id):
         account = 7
         try:
             if True:
                 try:
                     # data = dict(micro.data)
                     url = f"http://{'127.0.0.1'}:{10981}/v1/api/learning/get_vocabs_statics/{account}/"
+                    r = requests.get(url)
+
+                    if r.json()['code'] == 10000:
+                        res_data = r.json()['data']
+                        return DetailResponse(data=res_data, msg='OK.')
+                    else:
+                        return ErrorResponse(msg=r.json()['msg'])
+                except:
+                    return ErrorResponse(msg="微服务故障")
+
+        except:
+            return ErrorResponse(msg='参数格式错误')
+
+    @action(methods=["GET"], detail=False, permission_classes=[IsAuthenticated],
+            url_path="get_vocabs_tasks/(?P<account_id>\d+)")
+    def get_vocabs_statics(self, request, account_id):
+        try:
+            if True:
+                try:
+                    # data = dict(micro.data)
+                    url = f"http://{'127.0.0.1'}:{10981}/v1/api/learning/get_today_vocab_task/{account_id}/"
                     r = requests.get(url)
 
                     if r.json()['code'] == 10000:

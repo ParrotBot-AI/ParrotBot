@@ -177,15 +177,35 @@ class VocabLearningController(crudController):
 
 class TaskController(crudController):
 
-    def fetch_account_tasks(self, account_id, after_time=None, active=None):
+    def fetch_account_tasks(self, account_id, after_time=None, active=None, type=None):
         with db_session('core') as session:
             query = session.query(TaskAccounts).filter(TaskAccounts.account_id == account_id)
             if active is not None:
                 query = query.filter(TaskAccounts.is_active == active)
             if after_time is not None:
                 query = query.filter(TaskAccounts.create_time > after_time)
+            if type is not None:
+                query = query.filter(TaskAccounts.learning_type == type)
             tasks = query.all()
-            return True, s.serialize_list(tasks, self.default_not_show)
+            resp = []
+            for task in tasks:
+                tas = {}
+                record = (
+                    session.query(Tasks)
+                    .filter(Tasks.id == task.task_id)
+                    .one_or_none()
+                )
+                if record:
+                    tas['task_account_id'] = task.id
+                    tas['task_name'] = record.task_name
+                    tas['order'] = record.order
+                    tas['is_complete'] = task.is_complete
+                    tas['complete_p'] = task.complete_percentage
+                    resp.append(tas)
+                else:
+                    return False, "未找到相关任务"
+
+            return True, resp
 
     def search_next_chain(self, response: dict, **kwargs):
         task_id, module_id, payload, condition_id = response['task_id'], response['current_m'], response['payload'], \
@@ -454,11 +474,20 @@ class TaskController(crudController):
 
 
 if __name__ == "__main__":
-    account_id = 7
-    # flow = TaskController()
+    account_id = 20
+    flow = TaskController()
     # pprint(flow.fetch_account_tasks(account_id=account_id, after_time=get_today_midnight(), active=True))
-    flow = VocabLearningController()
-    pprint(flow.fetch_account_vocab(account_id=account_id))
+    # flow = VocabLearningController()
+    # pprint(flow.fetch_account_vocab(account_id=account_id))
+    today = datetime.now()
+    # Get the time at 00:00 AM on today's date
+    time = datetime(today.year, today.month, today.day, 0, 0)
+    print(flow.fetch_account_tasks(
+        account_id=account_id,
+        after_time=time,
+        type=1
+    ))
+
 
     # pprint(flow.start_task(account_id=4, taskAccount_id=2))
     # dic = {'condition_id': 3,
