@@ -85,11 +85,20 @@ class RedisWrapper(object):
     def get_redis_depth(self, exchange, symbol):
         return self.get(f'{exchange}_{symbol}_depth')
 
-    def rpush(self, name, *values, ex=None):
+    def list_push(self, name, *values, side, ex=None):
         lst = [json.dumps(i, ensure_ascii=False, ignore_nan=True) for i in values]
-        self.redis_client.rpush(name, *lst)
+        if side == 'r':
+            self.redis_client.rpush(name, *lst)
+        elif side == 'l':
+            self.redis_client.lpush(name, *lst)
         if ex:
             self.redis_client.expire(name, ex)
+
+    def list_pop(self, name, side, count=1):
+        if side == 'r':
+            return self.redis_client.rpop(name, count)
+        elif side == 'l':
+            return self.redis_client.lpop(name, count)
 
     def ltrim(self, name, start=0, end=-1):
         self.redis_client.ltrim(name, start, end)
@@ -99,8 +108,14 @@ class RedisWrapper(object):
         result = [json.loads(i) for i in byte_res]
         return result
 
+    def list_move(self, name, target_name, src="LEFT", dest="RIGHT"):  # default left pop add to right
+        self.redis_client.lmove(name, target_name, src, dest)
+
     def delete(self, key):
         return self.redis_client.delete(key)
+
+    def flush_all(self):
+        return self.redis_client.flushall()
 
 
 if __name__ == '__main__':

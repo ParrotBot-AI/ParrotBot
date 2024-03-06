@@ -394,7 +394,7 @@ class MicroServiceRegisterViewSet(CustomModelViewSet):
 
     @action(methods=["GET"], detail=False, permission_classes=[IsAuthenticated],
             url_path="get_vocabs_tasks/(?P<account_id>\d+)")
-    def get_vocabs_statics(self, request, account_id):
+    def get_vocabs_tasks(self, request, account_id):
         try:
             if True:
                 try:

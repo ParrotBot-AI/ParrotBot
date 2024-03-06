@@ -474,19 +474,12 @@ class TaskController(crudController):
 
 
 if __name__ == "__main__":
-    account_id = 20
+    account_id = 7
     flow = TaskController()
     # pprint(flow.fetch_account_tasks(account_id=account_id, after_time=get_today_midnight(), active=True))
-    # flow = VocabLearningController()
-    # pprint(flow.fetch_account_vocab(account_id=account_id))
-    today = datetime.now()
+    flow = VocabLearningController()
+    pprint(flow.fetch_account_vocab(account_id=account_id))
     # Get the time at 00:00 AM on today's date
-    time = datetime(today.year, today.month, today.day, 0, 0)
-    print(flow.fetch_account_tasks(
-        account_id=account_id,
-        after_time=time,
-        type=1
-    ))
 
 
     # pprint(flow.start_task(account_id=4, taskAccount_id=2))
