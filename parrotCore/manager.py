@@ -22,7 +22,8 @@ class VocabService(ServiceManager):
     name = 'ParrotCoreVocab'
     file = 'core_vocabs.py'
     dir_path = abspath('services')
-    schedule = '0 1 * * *'
+    schedule = '0 3 * * *'
+    time_zone= "Asia/Shanghai"
 
 
 SERVICES_MAP = {
@@ -30,7 +31,6 @@ SERVICES_MAP = {
     'ParrotCoreStream': Streaming,
     'ParrotCoreVocab': VocabService
 }
-
 
 def run_service(service_name, action):
     """

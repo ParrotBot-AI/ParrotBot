@@ -271,5 +271,5 @@ class VocabsService:
 
 
 if __name__ == "__main__":
-    # 定时晚上执行，前期不考虑速度
+    # 定时晚上1点执行，前期不考虑速度 -> 3与4后期可以两个线程异步进行
     VocabsService().run()

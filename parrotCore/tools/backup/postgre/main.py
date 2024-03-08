@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 # !encoding=utf-8
-"""作者：Hezhilin
+"""作者：
    更新时间：2022.5.25
    名称：Python定时备份数据库（整库、模式、表多功能备份）
 """

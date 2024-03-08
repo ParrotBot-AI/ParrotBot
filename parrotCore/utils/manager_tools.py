@@ -12,6 +12,7 @@ class ServiceManager:
     file = None
     dir_path = None
     schedule = None
+    time_zone = None
 
     def __init__(self, action):
         if action == 'restart':
@@ -71,7 +72,11 @@ class ServiceManager:
             print(f'remove old job: {job}')
             job.delete()
 
-        job = cron.new(command=f'{ENV_PATH}/python {os.path.join(self.dir_path, self.file)}', comment=self.name)
+        if self.time_zone:
+            command = f'TZ={self.time_zone} {ENV_PATH}/python {os.path.join(self.dir_path, self.file)}'
+        else:
+            command = f'{ENV_PATH}/python {os.path.join(self.dir_path, self.file)}'
+        job = cron.new(command=command, comment=self.name)
         job.setall(self.schedule)
         if not job.is_valid():
             raise Exception("Job not valid, please check")
