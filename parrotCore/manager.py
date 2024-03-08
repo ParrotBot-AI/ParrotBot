@@ -6,21 +6,29 @@ import fire
 logger = get_general_logger(name='manager', path=abspath('logs'))
 
 
-
 class DataApi(ServiceManager):
     name = 'ParrotCore'
     file = 'core_web.py'
     dir_path = abspath('services')
 
+
 class Streaming(ServiceManager):
     name = 'ParrotCoreStream'
-    file = 'core_web.py'
+    file = 'core_stream.py'
     dir_path = abspath('services')
+
+
+class VocabService(ServiceManager):
+    name = 'ParrotCoreVocab'
+    file = 'core_vocabs.py'
+    dir_path = abspath('services')
+    schedule = '0 1 * * *'
 
 
 SERVICES_MAP = {
     'ParrotCore': DataApi,
     'ParrotCoreStream': Streaming,
+    'ParrotCoreVocab': VocabService
 }
 
 

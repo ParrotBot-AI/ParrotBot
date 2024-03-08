@@ -220,6 +220,7 @@ def redo_words_study(
             rds = RedisWrapper('core_learning')
 
             # 添加到错题和review库
+            print(account_id)
             wrong_group = rds.get(f"{account_id}:wrong_group")
             if wrong_group:
                 wrong_group += f";{word_id}"

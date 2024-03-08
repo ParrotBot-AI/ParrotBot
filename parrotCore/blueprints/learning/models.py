@@ -185,12 +185,12 @@ class VocabsLearningRecords(BASES['core']):
     __tablename__ = "VocabsLearningRecords"
 
     id = Column(Integer, autoincrement=True, primary_key=True)
-    accounts_id = Column(Integer, ForeignKey('Accounts.id', ondelete='CASCADE'), nullable=False)
+    account_id = Column(Integer, ForeignKey('Accounts.id', ondelete='CASCADE'), nullable=False)
     reviewed_word_id = Column(Integer, ForeignKey('Vocabs.id', ondelete='CASCADE'), nullable=True)
     study_word_id = Column(Integer, ForeignKey('Vocabs.id', ondelete='CASCADE'), nullable=True)
     wrong_word_id = Column(Integer, ForeignKey('Vocabs.id', ondelete='CASCADE'), nullable=True)
     correct_word_id = Column(Integer, ForeignKey('Vocabs.id', ondelete='CASCADE'), nullable=True)
-    time = Column(DateTime)
+    time = Column(DateTime, primary_key=True)
 
     def __str__(self) -> str:
         s = f'(id: {self.id} a: {self.account_id}'

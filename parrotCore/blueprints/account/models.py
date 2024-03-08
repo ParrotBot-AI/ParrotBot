@@ -27,6 +27,7 @@ class Users(BASES['core']):
     task_complete = Column(Integer, default=0)
     vocab_level = Column(String(6), nullable=True)
     total_study_days = Column(Integer, default=0)
+    user_plan = Column(Integer, default=0)
     create_time = Column(DateTime)
     last_update_time = Column(DateTime)
 
