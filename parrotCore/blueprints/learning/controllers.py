@@ -38,6 +38,84 @@ logger = get_general_logger('account', path=abspath('logs', 'core_web'))
 
 class VocabLearningController(crudController):
 
+    def fetch_vocabs_level(self, account_id, exam_id=None):
+        with db_session('core') as session:
+            # 查找对应的exam
+            if exam_id is None:
+                account = (
+                    session.query(Accounts)
+                    .filter(Accounts.id == account_id)
+                    .one_or_none()
+                )
+                if account:
+                    exam_id = account.exam_id
+                else:
+                    return False, "账户"
+
+            vocab_account = (
+                session.query(VocabsLearning)
+                .filter(VocabsLearning.account_id == account_id)
+                .one_or_none()
+            )
+            if not vocab_account:
+                return False, "账户单词本未找到"
+
+            current_cate = vocab_account.current_category
+            if current_cate:
+                redis = RedisWrapper('core_learning')
+                number_to_finish = len(redis.lrange(f"{vocab_account.in_process}"))
+                number_today = len(redis.lrange(f"{vocab_account.today_learn}"))
+
+                # 查找Categorty对应条数
+                raw_sql = text(f"""
+                SELECT
+                VocabsCategorys.id,
+                VocabsCategorys.name,
+                VocabsCategorys.`order`,
+                S.counts
+                FROM VocabsCategorys
+                JOIN (
+                SELECT VCR.category_id, COUNT(VCR.category_id) as counts FROM VocabCategoryRelationships VCR
+                GROUP BY category_id
+                ) S ON VocabsCategorys.id = S.category_id
+                WHERE VocabsCategorys.exam_id = {exam_id} or VocabsCategorys.exam_id IS NULL
+                ORDER BY `order`;
+                """)
+                results = session.execute(raw_sql).fetchall()
+
+                # 逻辑就是总的需要背的，减去还需要背的，就是这个阶段背了的单词数
+                # 无法找finished里面的，因为用户还可以跳词汇category
+                total_amount = 0
+                level_total = 0
+                level_books = []
+                for r in results:
+                    if current_cate <= r.id:
+                        total_amount += r.counts
+                    if current_cate == r.id:
+                        level_total = r.counts
+
+                    level_books.append(dict(
+                        id=r.id,
+                        name=r.name,
+                        order=r.order,
+                        counts=r.counts
+                    ))
+                at_level = total_amount - (number_to_finish +number_today)
+
+                # 响应结果
+                resp = {
+                    "current_level":current_cate,
+                    "level_status": at_level,
+                    "level_total":level_total,
+                    "level_book":level_books
+                }
+                return True, resp
+            else:
+                return False, "词表未生成"
+
+
+
+
     def fetch_past_5_days_list(self, t_interval, account_id):
         with db_session('core') as session:
             date_series_sql = " ".join(
@@ -116,6 +194,9 @@ class VocabLearningController(crudController):
                         s_l.append(r)
 
                     resp['series'] = s_l
+                    # res, data = self.fetch_vocabs_level(account_id, account.exam_id)
+                    # if res:
+                    #     resp['status_book'] = data
 
                     # 缓存
                     redis.set(f'VocabsStatics:{account_id}', resp)
@@ -469,14 +550,14 @@ class TaskController(crudController):
 
 
 if __name__ == "__main__":
-    account_id = 7
-    flow = TaskController()
+    account_id = 20
+    # flow = TaskController()
     # pprint(flow.fetch_account_tasks(account_id=account_id, after_time=get_today_midnight(), active=True))
-    # flow = VocabLearningController()
-    # pprint(flow.fetch_account_vocab(account_id=account_id))
+    flow = VocabLearningController()
+    pprint(flow.fetch_vocabs_level(account_id=account_id))
     # Get the time at 00:00 AM on today's date
     # resp, payload = flow.start_task(task_account_id=2)
-    payload = {'payload': {'endpoint': 'gpt-endpint', 'method': 'sse', 'api_key': 'key', 'execute': True, 'target': ['execute']}}
+    # payload = {'payload': {'endpoint': 'gpt-endpint', 'method': 'sse', 'api_key': 'key', 'execute': True, 'target': ['execute']}}
     # payload = {'payload': {'answer': [0, 0, 0, 0],
     #                 'correct_answer': [1, 0, 0, 0],
     #                 'stem': ['n. 工程；课题、作业', 'n. 建筑', 'n. 发展；生长；开发', 'n. 主动权，自主权'],
@@ -484,7 +565,7 @@ if __name__ == "__main__":
     #                 'word': 'project',
     #                 'word_id': 34001,
     #                 'word_ids': [34001, 35082, 35964, 34573]}}
-    print(flow.rec_module_outcome(task_account_id=2, payload=payload))
+    # print(flow.rec_module_outcome(task_account_id=2, payload=payload))
     # pprint(flow.fetch_module_chains_conditions(task_account_id=2)[1])
     # dic = {'condition_id': 3,
     #         'current_loop': 1,
