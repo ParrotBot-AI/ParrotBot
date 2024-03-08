@@ -724,6 +724,9 @@ class AnsweringScoringController(crudController):
             else:
                 return False, "未查询到考卷信息"
 
+    def model_scoring(self, sheet_id, question_id):
+        pass
+
     def scoring(self, sheet_id):
         with db_session('core') as session:
             record = (
