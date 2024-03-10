@@ -32,7 +32,7 @@ from datetime import datetime, timezone, timedelta, date
 from sqlalchemy import null, select, union_all, and_, or_, join, outerjoin, update, insert
 import json
 from utils.redis_tools import RedisWrapper
-import blueprints.learning.vocab_learning as vocab_learning
+from blueprints.learning import vocab_learning
 
 logger = get_general_logger('account', path=abspath('logs', 'core_web'))
 
@@ -722,6 +722,7 @@ class TaskController(crudController):
                 # modules, method, payload
                 module, method, payload = info['module'], info['method'], info['payload']
                 # 运行下一步返回参数函数
+                from blueprints.learning import vocab_learning
                 module = import_module(module)
                 function = getattr(module, method)
                 print(function.__name__, 726)
