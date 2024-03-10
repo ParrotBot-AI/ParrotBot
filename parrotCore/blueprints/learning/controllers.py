@@ -347,14 +347,11 @@ class VocabLearningController(crudController):
 
                     # 搜索过去5天的正确的与错误的
                     results = self.fetch_past_5_days_list(t_interval=5, account_id=account_id)
-                    s_l = []
+                    s_l = {}
                     for result in results:
-                        r = dict(
-                            day=result.day.strftime('%Y-%m-%d'),
-                            wrong_words=int(result.w_c) if result.w_c else 0,
-                            correct_words=int(result.c_c) if result.c_c else 0
-                        )
-                        s_l.append(r)
+                        s_l[result.day.strftime('%Y-%m-%d')] = {}
+                        s_l[result.day.strftime('%Y-%m-%d')]['wrong_words'] = int(result.w_c) if result.w_c else 0,
+                        s_l[result.day.strftime('%Y-%m-%d')]['correct_words'] = int(result.c_c) if result.w_c else 0,
 
                     resp['series'] = s_l
                     # res, data = self.fetch_vocabs_level(account_id, account.exam_id)
@@ -726,11 +723,12 @@ class TaskController(crudController):
                 # 运行下一步返回参数函数
                 module = import_module(module)
                 function = getattr(module, method)
+                print(function.__name__, 726)
                 resp, data, return_c = function(account_id)
                 if resp:
                     # cache the chain
                     redis = RedisWrapper('core_cache')
-                    redis.set(f"TaskAccount{task_account_id}", res)
+                    redis.set(f"TaskAccount:{task_account_id}", res)
                     if return_c:
                         # to do 更新 start time
                         return True, {
@@ -762,7 +760,7 @@ class TaskController(crudController):
 
                     if return_c:
                         redis = RedisWrapper('core_cache')
-                        redis.set(f"TaskAccount{task_account_id}", response)
+                        redis.set(f"TaskAccount:{task_account_id}", response)
                         return True, {
                             "payload": data
                         }
@@ -786,7 +784,6 @@ class TaskController(crudController):
 
                                 # finished the loop
                                 elif data == "finished":
-
                                     return True, data
                                 else:
                                     return True, data
@@ -811,7 +808,7 @@ class TaskController(crudController):
             **kwargs):
 
         redis = RedisWrapper('core_cache')
-        task_flow = redis.get(f"TaskAccount{task_account_id}")
+        task_flow = redis.get(f"TaskAccount:{task_account_id}")
         if task_flow:
             resp, next_task = self.search_next_chain(response=task_flow, payload=payload['payload'])
             if resp:
@@ -825,8 +822,8 @@ class TaskController(crudController):
 if __name__ == "__main__":
     account_id = 27
     # pprint(flow.fetch_account_tasks(account_id=account_id, after_time=get_today_midnight(), active=True))
-    today = datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))
-    time = datetime(today.year, today.month, today.day, 0, 0)
+    # today = datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))
+    # time = datetime(today.year, today.month, today.day, 0, 0)
     # res, data = TaskController().fetch_account_tasks(
     #     account_id=account_id,
     #     after_time=time,
@@ -834,55 +831,29 @@ if __name__ == "__main__":
     #     is_complete=0,
     # )
     # pprint(data)
-    flow = VocabLearningController()
-    pprint(flow.create_new_vocab_tasks(account_id=27))
-    # Get the time at 00:00 AM on today's date
-    # resp, payload = flow.start_task(task_account_id=2)
-    # payload = {'payload': {'endpoint': 'gpt-endpint', 'method': 'sse', 'api_key': 'key', 'execute': True, 'target': ['execute']}}
-    # payload = {'payload': {'answer': [0, 0, 0, 0],
-    #                 'correct_answer': [1, 0, 0, 0],
-    #                 'stem': ['n. 工程；课题、作业', 'n. 建筑', 'n. 发展；生长；开发', 'n. 主动权，自主权'],
-    #                 'target': ['answer'],
-    #                 'word': 'project',
-    #                 'word_id': 34001,
-    #                 'word_ids': [34001, 35082, 35964, 34573]}}
-    # print(flow.rec_module_outcome(task_account_id=2, payload=payload))
-    # pprint(flow.fetch_module_chains_conditions(task_account_id=2)[1])
-    # dic = {'condition_id': 3,
-    #         'current_loop': 1,
-    #         'current_m': 6,
-    #         'loop': 1,
-    #         'payload': {'answer': [1, 0, 0, 0],
-    #                 'correct_answer': [1, 0, 0, 0],
-    #                 'stem': ['n. 工程；课题、作业', 'n. 建筑', 'n. 发展；生长；开发', 'n. 主动权，自主权'],
-    #                 'target': ['answer'],
-    #                 'word': 'project',
-    #                 'word_id': 34001,
-    #                 'word_ids': [34001, 35082, 35964, 34573]}
-    #         'task_account_id': 2,
-    #         'task_flow_id': 7,
-    #         'task_id': 8,
-    #         'task_name': '学习新单词',
-    #         'account_id': 4
-    #        }
-    # dic = {'condition_id': 2,
-    #         'current_loop': 1,
-    #         'current_m': 7,
-    #         'loop': 1,
-    #         'payload': {
-    #               'api_key': 'key',
-    #             'endpoint': 'gpt-endpint',
-    #             'execute': False,
-    #             'method': 'sse',
-    #             'target': ['execute']},
-    #         'task_account_id': 2,
-    #         'task_flow_id': 5,
-    #         'task_id': 8,
-    #         'task_name': '学习新单词',
-    #         'account_id':4
-    #        }
-    # pprint(flow.rec_module_outcome(response=dic))
-    # print()
-    # pprint(flow._retrieve(model=Modules, restrict_field='id', restrict_value=2))
-    # init = VocabLearningController()
-    # init.allocate_vocabs()
+    flow = TaskController()
+    # resp, payload = flow.start_task(task_account_id=15)
+    # print(payload)
+    # 1.先用5个
+    # payload = {'payload': {'word_id': 37473, 'word': 'grind', 'stem': ['n. 槽', 'v. 磨（碎）；磨利', 'v. 刮；擦 n. 刮；擦伤；擦痕', 'v. 掘，挖；采掘'], 'word_ids': [40069, 37473, 37353, 36791], 'correct_answer': [0, 1, 0, 0], 'answer': [0, 0, 0, 0], 'unknown': False, 'study': False, 'target': ['answer', 'unknown', 'study']}}
+    # 2.
+    # payload = {'payload': {'word_id': 34679, 'word': 'counsel', 'stem': ['n. 律师， 代理人', 'n. 律师；法学家', 'v. 忠告，建议', 'n. 律师， 法律顾问'], 'word_ids': [38497, 35699, 34679, 38247], 'correct_answer': [0, 0, 1, 0], 'answer': [0, 0, 0, 0], 'unknown': False, 'study': False, 'target': ['answer', 'unknown', 'study']}}
+    # 3.
+    # payload = {'payload': {'word_id': 39818, 'word': 'environmental', 'stem': ['adj. 生态学的', 'adj. 环境的，环境产生的', 'n. 污染', 'n. 生态学；个体生态学'], 'word_ids': [38576, 39818, 37402, 39478], 'correct_answer': [0, 1, 0, 0], 'answer': [0, 0, 0, 0], 'unknown': False, 'study': False, 'target': ['answer', 'unknown', 'study']}}
+    # 4.
+    # payload = {'payload': {'word_id': 37716, 'word': 'feeble', 'stem': ['adj. 哀婉动人的；可怜的', 'adj. 不幸的', '瘦的；（土地）不毛的；思想贫乏的', 'adj. 虚弱的；微弱的'], 'word_ids': [40159, 40079, 40882, 37716], 'correct_answer': [0, 0, 0, 1], 'answer': [0, 0, 0, 0], 'unknown': False, 'study': False, 'target': ['answer', 'unknown', 'study']}}
+    # 5.
+    # payload = {'payload': {'word_id': 35851, 'word': 'spark', 'stem': ['v. 引燃，着火', 'n. 火花，火星', 'n. 刺激物 v. 刺激', 'n. 推动， 促进， 刺激； 推动力'], 'word_ids': [39197, 35851, 37697, 40649], 'correct_answer': [0, 1, 0, 0], 'answer': [0, 0, 0, 0], 'unknown': False, 'study': False, 'target': ['answer', 'unknown', 'study']}}
+    ## model fetch
+    # payload = {'payload': {'endpoint': 'gpt-endpint', 'method': 'sse', 'api_key': 'key', 'send': {'counsel': 'v. 忠告，建议', 'spark': 'n. 火花，火星', 'grind': 'v. 磨（碎）；磨利', 'feeble': 'adj. 虚弱的；微弱的', 'environmental': 'adj. 环境的，环境产生的'}, 'response': '建议(counsel), 卸下(grind), 虚弱(feeble), 环境(environmental)', 'execute': True, 'target': ['execute', 'response']}}
+
+    # 开始复习
+    # 1. False
+    # payload = {'payload': {'word_id': 37473, 'word': 'grind', 'stem': ['n. 槽', 'v. 磨（碎）；磨利', 'v. 刮；擦 n. 刮；擦伤；擦痕', 'v. 掘，挖；采掘'], 'word_ids': [40069, 37473, 37353, 36791], 'correct_answer': [0, 1, 0, 0], 'answer': [0, 0, 0, 0], 'unknown': False, 'study': False, 'target': ['answer', 'unknown', 'study'], 'hint': ', 卸下(grind'}}
+    # 2. True
+    # payload = {'payload': {'word_id': 39818, 'word': 'environmental', 'stem': ['adj. 生态学的', 'adj. 环境的，环境产生的', 'n. 污染', 'n. 生态学；个体生态学'], 'word_ids': [38576, 39818, 37402, 39478], 'correct_answer': [0, 1, 0, 0], 'answer': [0, 1, 0, 0], 'unknown': False, 'study': False, 'target': ['answer', 'unknown', 'study'], 'hint': ', 环境(environmental'}}
+    # 3. True
+    # payload = {'payload': {'word_id': 34679, 'word': 'counsel', 'stem': ['n. 律师， 代理人', 'n. 律师；法学家', 'v. 忠告，建议', 'n. 律师， 法律顾问'], 'word_ids': [38497, 35699, 34679, 38247], 'correct_answer': [0, 0, 1, 0], 'answer': [0, 0, 1, 0], 'unknown': False, 'study': False, 'target': ['answer', 'unknown', 'study'], 'hint': '建议(counsel'}}
+    #
+    # print(flow.rec_module_outcome(task_account_id=15, payload=payload)[1])
+

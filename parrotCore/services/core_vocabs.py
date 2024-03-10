@@ -18,7 +18,6 @@ from blueprints.education.models import (
     VocabCategorys
 )
 from sqlalchemy import select, func, Date, cast, and_, text, literal_column, case
-from datetime import datetime, timedelta
 from pprint import pprint
 from configs.environment import DATABASE_SELECTION
 from importlib import import_module
@@ -42,7 +41,7 @@ logger = get_general_logger('vocab_log', path=abspath('logs', 'vocab_service'))
 
 class VocabsService:
     # 每日定时任务，单词本管理
-    # 单词本保持右进左出
+    # 单词本保持 !!!右进左出!!!!!
 
     def __init__(self):
         pass

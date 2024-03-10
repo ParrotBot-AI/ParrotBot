@@ -5,7 +5,7 @@ from blueprints.account.controllers import AccountController
 bp = Blueprint('account_api', __name__, url_prefix='/v1/api/account/')
 
 
-@bp.route('get_menu_exam', methods=['POST'])
+@bp.route('get_menu_exam/', methods=['POST'])
 def get_menu_exam():
     try:
         args = request.json
@@ -21,7 +21,7 @@ def get_menu_exam():
         return ArgumentExceptionResponse(msg=f'{e}')
 
 
-@bp.route('register_user', methods=['POST'])
+@bp.route('register_user/', methods=['POST'])
 def register_user():
     try:
         args = request.json

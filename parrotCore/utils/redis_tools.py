@@ -96,9 +96,19 @@ class RedisWrapper(object):
 
     def list_pop(self, name, side, count=1):
         if side == 'r':
-            return self.redis_client.rpop(name, count)
+            byte_res = self.redis_client.rpop(name, count)
         elif side == 'l':
-            return self.redis_client.lpop(name, count)
+            byte_res = self.redis_client.lpop(name, count)
+        else:
+            return []
+
+        try:
+            try:
+                return [json.loads(x) for x in byte_res]
+            except ValueError as e:
+                return [ast.literal_eval(x) for x in byte_res]
+        except Exception as e:
+            return []
 
     def ltrim(self, name, start=0, end=-1):
         self.redis_client.ltrim(name, start, end)

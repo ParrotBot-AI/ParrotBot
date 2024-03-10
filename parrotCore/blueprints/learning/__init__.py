@@ -55,4 +55,36 @@ def create_new_vocab_tasks(account_id):
     except Exception as e:
         return ArgumentExceptionResponse(msg=f'{e}')
 
+@bp.route('start_task/', methods=['POST'])
+def start_task():
+    try:
+        args = request.json
+        task_account_id = args.get('task_account_id')
+        res, data = TaskController().start_task(
+            task_account_id=task_account_id,
+        )
+        if res:
+            return SuccessDataResponse(data)
+        else:
+            return ArgumentExceptionResponse(msg=f'{data}')
+    except Exception as e:
+        return ArgumentExceptionResponse(msg=f'{e}')
+
+@bp.route('learning_task/', methods=['POST'])
+def learning_task():
+    try:
+        args = request.json
+        task_account_id = args.get('task_account_id')
+        payload = args.get('payload')
+        res, data = TaskController().rec_module_outcome(
+            task_account_id=task_account_id,
+            payload=payload
+        )
+        if res:
+            return SuccessDataResponse(data)
+        else:
+            return ArgumentExceptionResponse(msg=f'{data}')
+    except Exception as e:
+        return ArgumentExceptionResponse(msg=f'{e}')
+
 

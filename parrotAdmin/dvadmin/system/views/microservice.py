@@ -412,3 +412,43 @@ class MicroServiceRegisterViewSet(CustomModelViewSet):
 
         except:
             return ErrorResponse(msg='参数格式错误')
+
+    @action(methods=["POST"], detail=False, permission_classes=[IsAuthenticated])
+    def start_task(self, request):
+        task_account_id = request.data.get("task_account_id")
+        if True:
+            try:
+                # data = dict(micro.data)
+                url = f"http://{'127.0.0.1'}:{10981}/v1/api/learning/start_task/"
+                r = requests.post(url, json={
+                    "task_account_id": task_account_id
+                })
+
+                if r.json()['code'] == 10000:
+                    res_data = r.json()['data']
+                    return DetailResponse(data=res_data, msg='获取成功')
+                else:
+                    return ErrorResponse(msg=r.json()['msg'])
+            except:
+                return ErrorResponse(msg="微服务故障")
+
+    @action(methods=["POST"], detail=False, permission_classes=[IsAuthenticated])
+    def learning_task(self, request):
+        task_account_id = request.data.get("task_account_id")
+        payload = request.data.get("payload")
+        if True:
+            try:
+                # data = dict(micro.data)
+                url = f"http://{'127.0.0.1'}:{10981}/v1/api/learning/learning_task/"
+                r = requests.post(url, json={
+                    "task_account_id": task_account_id,
+                    "payload": payload
+                })
+
+                if r.json()['code'] == 10000:
+                    res_data = r.json()['data']
+                    return DetailResponse(data=res_data, msg='获取成功')
+                else:
+                    return ErrorResponse(msg=r.json()['msg'])
+            except:
+                return ErrorResponse(msg="微服务故障")

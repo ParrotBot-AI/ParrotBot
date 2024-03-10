@@ -238,7 +238,7 @@ class MenuViewSet(CustomModelViewSet):
             # micro = MicroServiceRegisterSerializer(micro_q, many=False, request=request)
             if True:
                 # data = dict(micro.data)
-                url = f"http://{'127.0.0.1'}:{10981}/v1/api/account/get_menu_exam"
+                url = f"http://{'127.0.0.1'}:{10981}/v1/api/account/get_menu_exam/"
                 r = requests.post(url, json={
                     'menu_id': menu_ids,
                 })
