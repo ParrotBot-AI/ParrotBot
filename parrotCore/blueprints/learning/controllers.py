@@ -711,6 +711,9 @@ class TaskController(crudController):
                 res['current_loop'] = record.current_loop
                 res['task_account_id'] = task_account_id
 
+                if record.loop <= record.current_loop:
+                    return False, '任务已经完成'
+
         current_task, pointer = None, None
         if res != {}:
             resp, data = self.fetch_module_chains_conditions(task_account_id=task_account_id)
@@ -730,10 +733,8 @@ class TaskController(crudController):
                 # modules, method, payload
                 module, method, payload = info['module'], info['method'], info['payload']
                 # 运行下一步返回参数函数
-
                 module = import_module(module)
                 function = getattr(module, method)
-                print(function.__name__, 726)
                 resp, data, return_c = function(record.account_id)
                 if resp:
                     # cache the chain
@@ -741,9 +742,20 @@ class TaskController(crudController):
                     redis.set(f"TaskAccount:{task_account_id}", res)
                     if return_c:
                         # to do 更新 start time
-                        return True, {
-                            "payload": data
-                        }
+                        u_record = (
+                            session.query(TaskAccounts)
+                            .filter(TaskAccounts.id == task_account_id)
+                            .update({
+                                TaskAccounts.started_time: datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))),
+                            })
+                        )
+                        try:
+                            session.commit()
+                            return True, {
+                                "payload": data
+                            }
+                        except Exception as e:
+                            return False, f"{str(e)}."
                 else:
                     return False, data
 
@@ -868,8 +880,8 @@ if __name__ == "__main__":
 
     # 复习单词
     flow = TaskController()
-    # resp, payload = flow.start_task(task_account_id=12)
-    # print(payload)
+    resp, payload = flow.start_task(task_account_id=12)
+    print(payload)
     # 1. F
     # payload = {'payload': {'word_id': 37473, 'word': 'grind', 'stem': ['n. 槽', 'v. 磨（碎）；磨利', 'v. 刮；擦 n. 刮；擦伤；擦痕', 'v. 掘，挖；采掘'], 'word_ids': [40069, 37473, 37353, 36791], 'correct_answer': [0, 1, 0, 0], 'answer': [0, 0, 0, 0], 'unknown': False, 'study': False, 'target': ['answer', 'unknown', 'study']}}
     # 2. T

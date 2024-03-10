@@ -106,7 +106,7 @@ def fetch_words_mc(
     # 返回一个简单的词汇题目 #
     # 单词本保持 !!!右进左出!!!!!
     from blueprints.learning.models import VocabsLearning
-    from blueprints.education.models import VocabBase, VocabCategorySimilarities
+    from blueprints.education.models import VocabBase, VocabCategorySimilarities, VocabCategoryRelationships
     redis_cache = RedisWrapper("core_cache")
     rds = RedisWrapper('core_learning')
 
@@ -123,7 +123,6 @@ def fetch_words_mc(
                 current_word_id = today_list[0]
                 word_cache = redis_cache.get(f"Word:{current_word_id}")
                 if word_cache:
-                    print(39)
                     return True, word_cache, True
 
                 # 查找词汇的近义词
@@ -211,7 +210,7 @@ def words_gpt_fetch(
             method='sse',
             api_key="key",
             send=ls,
-            response={},
+            response='',
             execute=False,
             target=['execute', 'response']
         )
@@ -712,6 +711,17 @@ def re_loop(
                 return True, "redo"
             else:
                 # 执行finished
+                record = (
+                    session.query(TaskAccounts)
+                    .filter(TaskAccounts.id == task_account_id)
+                    .update({
+                        TaskAccounts.is_complete: 1,
+                        TaskAccounts.finished_time: datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))),
+                        TaskAccounts.last_update_time: datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))),
+                    })
+                )
+                redis = RedisWrapper('core_cache')
+                redis.delete(f"TaskAccount:{task_account_id}")
                 return True, "finished"
         else:
             return False, "未找到record"

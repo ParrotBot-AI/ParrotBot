@@ -109,7 +109,7 @@ class VocabsService:
                         exam = acc.exam_id
                         cate_records = (
                             session.query(VocabCategorys)
-                            .filter(or_(VocabCategorys.exam_id == exam, VocabCategorys.exam_id == None))
+                            .filter(or_(VocabCategorys.exam_id == exam, VocabCategorys.exam_id is None))
                             .order_by(VocabCategorys.order.asc())
                             .all()
                         )
@@ -225,7 +225,7 @@ class VocabsService:
                                 # 添加任务
                                 new_task = dict(
                                     account_id=record.account_id,
-                                    task_id=8, #背单词
+                                    task_id=8, # 背单词
                                     is_active=1,
                                     create_time=datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))),
                                     last_update_time=datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))),
