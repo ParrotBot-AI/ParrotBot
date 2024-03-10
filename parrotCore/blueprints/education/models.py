@@ -229,7 +229,7 @@ class Questions(BASES['core']):
     # )
 
     id = Column(Integer, autoincrement=True, primary_key=True)
-    question_type = Column(Integer, ForeignKey('QuestionsType.id', ondelete='CASCADE'), nullable=False)
+    question_type = Column(Integer, ForeignKey('QuestionsType.id', ondelete='CASCADE'), nullable=True)
     question_title = Column(Text, nullable=True)
     question_content = Column(Text, nullable=True)
     question_stem = Column(Text, nullable=True)
@@ -239,14 +239,14 @@ class Questions(BASES['core']):
     father_question = Column(Integer, nullable=False)
 
     stem_weights = Column(String(50), nullable=True)  # 题目stem权重
-    cal_method = Column(Integer, nullable=False)  # 计算方式 0 为自动记分
+    cal_method = Column(Integer, nullable=False)  # 计算方式 1 为自动记分， 0 为人为改分
     duration = Column(Float, nullable=True)  # 做题时间
     max_score = Column(Integer, nullable=False)  # 题目最大分值
 
     correct_answer = Column(String(50), nullable=True)  # 题目的正确值
     d_level = Column(Integer, nullable=True)  # 题目难度
     keywords = Column(Text, nullable=True)  # 题目关键词
-    remark = Column(String(30), nullable=True)
+    remark = Column(String(40), nullable=True)
 
     voice_link = Column(Text, nullable=True)  # Link to voice if it requires voice (听力题)
     voice_content = Column(Text, nullable=True)

@@ -147,8 +147,13 @@ class VocabsService:
                     # 1. 按照amount,补齐今日的新表
                     today_left = redis.lrange(f"{record.today_learn}")
                     add_amount = record.amount - len(today_left)
-                    for _ in range(add_amount):
-                        redis.list_move(f"{record.in_process}", f"{record.today_learn}")
+                    l = redis.lrange(f"{record.in_process}")
+                    if len(l) >= add_amount:
+                        for _ in range(add_amount):
+                            redis.list_move(f"{record.in_process}", f"{record.today_learn}")
+                    else:
+                        for _ in range(len(l)):
+                            redis.list_move(f"{record.in_process}", f"{record.today_learn}")
                     # 2. 把昨天错误的加入 to_review
                     now = datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))
                     start_of_today = datetime(now.year, now.month, now.day)
@@ -271,5 +276,5 @@ class VocabsService:
 
 
 if __name__ == "__main__":
-    # 定时晚上1点执行，前期不考虑速度 -> 3与4后期可以两个线程异步进行
+    # 定时晚上12:01点执行，前期不考虑速度 -> 3与4后期可以两个线程异步进行
     VocabsService().run()

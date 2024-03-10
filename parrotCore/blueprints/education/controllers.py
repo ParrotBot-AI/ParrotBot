@@ -1,5 +1,5 @@
-import datetime
-from blueprints.account.models import Accounts
+from datetime import datetime, timezone, timedelta, date
+from blueprints.account.models import Accounts, Users
 from blueprints.education.models import (
     Exams,
     Subjects,
@@ -149,7 +149,7 @@ class QuestionController(crudController):
                     "max_score": result.max_score,
                     "father_id": result.father_question,
                     "question_depth": result.d_level,
-                    "keywords": json.loads(result.keywords),
+                    "keywords": json.loads(result.keywords) if result.keywords else None,
                     "order": result.order
                 }
 
@@ -161,21 +161,30 @@ class QuestionController(crudController):
                 redis_store[result.id] = record
 
             else:
-                if result.question_stem:
-                    merged_detail = {**json.loads(result.detail), **json.loads(result.q_detail),
-                                     'd': result.question_stem.split(";")}
-                else:
-                    merged_detail = {**json.loads(result.detail), **json.loads(result.q_detail),
-                                     'd': []}
-                if not result.q_restriction:
-                    merged_restrict = json.loads(result.restriction)
-                else:
-                    merged_restrict = {**json.loads(result.restriction), **json.loads(result.q_restriction)}
+
+                try:
+                    if result.question_stem:
+                        merged_detail = {**json.loads(result.detail), **json.loads(result.q_detail),
+                                         'd': result.question_stem.split(";")}
+                    else:
+                        merged_detail = {**json.loads(result.detail), **json.loads(result.q_detail),
+                                             'd': []}
+                except:
+                    merged_detail = {}
+
+
+                try:
+                    if not result.q_restriction:
+                        merged_restrict = json.loads(result.restriction)
+                    else:
+                        merged_restrict = {**json.loads(result.restriction), **json.loads(result.q_restriction)}
+                except:
+                    merged_restrict = {}
 
                 if result.keywords:
                     k = json.loads(result.keywords)
                 else:
-                    k = None
+                    k = {}
 
                 account_ans, duration = None, None
                 if ac_type == 'create':
@@ -183,7 +192,10 @@ class QuestionController(crudController):
                         account_ans = [0] * len([int(num) for num in result.stem_weights.split(";")])
                         duration = None
                     else:
-                        account_ans = ''
+                        if result.question_stem and len(result.question_stem.split(";")) > 1:
+                            account_ans = [0] * len(result.question_stem.split(";"))
+                        else:
+                            account_ans = ''
                         duration = None
                 elif ac_type == 'get':
                     if fetch_question[result.id]['a']:
@@ -367,8 +379,8 @@ class AnsweringScoringController(crudController):
                             new_record = {
                                 "answer_sheet_id": sheet_id,
                                 "section_id": section,
-                                'create_time': datetime.datetime.now(tz=datetime.timezone.utc),
-                                'last_update_time': datetime.datetime.now(tz=datetime.timezone.utc)
+                                'create_time': datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))),
+                                'last_update_time': datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))
                             }
                             s_l.append(new_record)
 
@@ -377,12 +389,12 @@ class AnsweringScoringController(crudController):
                             s_l
                         )
 
-                        default_dic = {'last_update_time': datetime.datetime.now(tz=datetime.timezone.utc)}
+                        default_dic = {'last_update_time': datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))}
 
                         update_time = {
                             "id": sheet_id,
-                            "start_time": datetime.datetime.now(tz=datetime.timezone.utc),
-                            "end_time": datetime.datetime.now(tz=datetime.timezone.utc) + datetime.timedelta(
+                            "start_time": datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))),
+                            "end_time": datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))) + timedelta(
                                 seconds=test_duration + 2)
                             # 2 seconds grace period
                         }
@@ -443,7 +455,7 @@ class AnsweringScoringController(crudController):
                         "sheet_id": sheet_id,
                         "is_time": record.is_time,
                         "is_check_answer": record.is_check_answer,
-                        "time_remain": (record.end_time - datetime.datetime.utcnow()).total_seconds(),
+                        "time_remain": (record.end_time.replace(tzinfo=timezone(timedelta(hours=8))) - datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))).total_seconds(),
                         "max_score": record.max_score,
                         "score": record.score if record.score else None,
                         "type": record.type.value,
@@ -560,7 +572,7 @@ class AnsweringScoringController(crudController):
                 return False, "未找到答卷"
 
     def update_question_answer(self, sheet_id, question_id, duration, answer=None, answer_voice_link=None,
-                               answer_video_link=None, upload_file_link=None):
+                               answer_video_link=None, upload_file_link=None, model_answer=None, score=None):
         redis_cli = RedisWrapper('core_cache')
         cache_dict = redis_cli.get(f'Sheet-{sheet_id}')
         if cache_dict:
@@ -573,6 +585,12 @@ class AnsweringScoringController(crudController):
                 cache_dict['questions'][str(question_id)]['answer_video_link'] = answer_video_link
             if upload_file_link:
                 cache_dict['questions'][str(question_id)]['upload_file_link'] = upload_file_link
+            if model_answer:
+                cache_dict['questions'][str(question_id)]['model_answer'] = upload_file_link
+
+            # 支持中途算分
+            if score:
+                cache_dict['questions'][str(question_id)]['score'] = score
             cache_dict['questions'][str(question_id)]['duration'] = duration
             redis_cli.set(f'Sheet-{sheet_id}', cache_dict)
             return True, "OK."
@@ -635,15 +653,17 @@ class AnsweringScoringController(crudController):
                         'duration': value['duration'] if 'duration' in value else None,
                         'voice_link': value['answer_voice_link'] if 'answer_voice_link' in value else None,
                         'video_link': value['answer_video_link'] if 'answer_video_link' in value else None,
+                        'model_answer': value['model_answer'] if 'model_answer' in value else None,
                         'upload_file_link': value['upload_file_link'] if 'upload_file_link' in value else None,
+                        'score':value['score'] if 'score' in value else None,
                         'answer_sheet_id': sheet_id,
                         'max_score': value['max_score'],
                         'is_graded': False,
-                        'submit_time': datetime.datetime.now(tz=datetime.timezone.utc)
+                        'submit_time': datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))
                     }
                     default_dic = {
-                        'create_time': datetime.datetime.now(tz=datetime.timezone.utc),
-                        'last_update_time': datetime.datetime.now(tz=datetime.timezone.utc)
+                        'create_time': datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))),
+                        'last_update_time': datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))
                     }
                     merged_dict = {**default_dic, **answer}
                     record = Submissions(**merged_dict)
@@ -725,7 +745,101 @@ class AnsweringScoringController(crudController):
                 return False, "未查询到考卷信息"
 
     def model_scoring(self, sheet_id, question_id):
-        pass
+        # search for pattern
+        import requests
+        with db_session('core') as session:
+            record = (
+                session.query(
+                    Patterns.id,
+                    Patterns.pattern_name,
+                    Patterns.pattern_eng_name
+                )
+                .join(Sections, Patterns.id == Sections.pattern_id)
+                .join(Questions, Sections.id == Questions.section_id)
+                .one_or_none()
+            )
+            if not record:
+                return False, ""
+
+            account = (
+                session.query(
+                    Users.id,
+                    Accounts.model_today_usage,
+                    Users.user_plan
+                )
+                .join(AnswerSheetRecord, AnswerSheetRecord.account_id == Accounts.id)
+                .join(Users, Users.id == Accounts.user_id)
+                .filter(AnswerSheetRecord.id == sheet_id)
+                .one_or_one()
+            )
+            if not account:
+                return False, ""
+
+            if account.user_plan == 0 or account.user_plan is None:
+                if account.model_today_usage >= 1:
+                    return True, ""
+
+            if record.pattern_eng_name == "Speaking":  # speaking model
+                try:
+                    url = f"http://{'127.0.0.1'}:{10981}/............"
+                    r = requests.post(url, json={
+
+                    })
+
+                    if r.json()['code'] == 10000:
+                        res_data = r.json()['data']
+
+                        redis = RedisWrapper("core_cache")
+                        sheet_data = redis.get(f"Sheet-{sheet_id}")
+                        if not sheet_data:
+                            update = (
+                                session.query(Submissions)
+                                .filter(and_(Submissions.question_id == question_id,
+                                             Submissions.answer_sheet_id == sheet_id))
+                                .update({})
+                            )
+                        else:
+                            # update_:
+                            AnsweringScoringController().update_question_answer(sheet_id=sheet_id,
+                                                                                question_id=question_id,
+                                                                                model_answer=res_data, score=None)
+                        return
+                    else:
+                        return
+                except Exception as e:
+                    return False, f"{str(e)}"
+            elif record.pattern_eng_name == "Writing":  # writing model
+                try:
+                    url = f"http://{'127.0.0.1'}:{10981}/............"
+                    r = requests.post(url, json={
+
+                    })
+
+                    if r.json()['code'] == 10000:
+                        res_data = r.json()['data']
+                        redis = RedisWrapper("core_cache")
+                        sheet_data = redis.get(f"Sheet-{sheet_id}")
+                        if not sheet_data:
+                            update = (
+                                session.query(Submissions)
+                                .filter(
+                                    and_(Submissions.question_id == question_id,
+                                         Submissions.answer_sheet_id == sheet_id))
+                                .update({})
+                            )
+                        else:
+                            # update_:
+                            AnsweringScoringController().update_question_answer(sheet_id=sheet_id,
+                                                                                question_id=question_id,
+                                                                                model_answer=res_data,
+                                                                                score=None)
+                        return
+                    else:
+                        return
+                except Exception as e:
+                    return False, f"{str(e)}"
+            else:
+                return False, ""
 
     def scoring(self, sheet_id):
         with db_session('core') as session:
@@ -756,6 +870,10 @@ class AnsweringScoringController(crudController):
                 S.id.label('submission_id'),
                 S.question_id,
                 S.answer,
+                S.score,
+                S.voice_link,
+                S.video_link,
+                S.upload_file_link,
                 S.cal_method.label('cal_m'),
                 S.max_score,
                 Q.stem_weights.label('question_stem'),
@@ -796,12 +914,16 @@ class AnsweringScoringController(crudController):
             grading_instance = Grading()
             roots = []
             for result in results:
-                if result.father_question != -1:
+                if result.has_ans == 1:
                     # merged_detail = {**json.loads(result.detail), **json.loads(result.q_detail), 'd': result.question_stem.split(";")}
-                    if result.q_restriction:
-                        merged_restrict = {**json.loads(result.restriction), **json.loads(result.q_restriction)}
-                    else:
-                        merged_restrict = json.loads(result.restriction)
+                    try:
+                        if result.q_restriction:
+                            merged_restrict = {**json.loads(result.restriction), **json.loads(result.q_restriction)}
+                        else:
+                            merged_restrict = json.loads(result.restriction)
+                    except:
+                        merged_restrict = {}
+
                     question = {
                         'submission_id': result.submission_id,
                         'question_id': result.question_id,
@@ -812,22 +934,47 @@ class AnsweringScoringController(crudController):
                         'weight': [int(num) for num in
                                    result.question_stem.split(";")] if result.question_stem else None,
                         'max_score': result.max_score,
+                        'voice_link':result.voice_link,
+                        'video_link': result.video_link,
+                        'upload_file_link': result.upload_file_link,
                         'father_id': result.father_question,
-                        'rubric': json.loads(result.q_rubric),
+                        'rubric': json.loads(result.q_rubric) if result.q_rubric else {},
                         # 'detail': merged_detail,
                         'restriction': merged_restrict,
                         'cal_method': result.cal_m,
                         'cal_fun': result.cal_m_B
                     }
-                    score = getattr(grading_instance, question['cal_fun'])(
-                        answer=question['answer'],
-                        correct=question['correct'],
-                        weight=question['weight'],
-                        rubric=question['rubric'],
-                        restriction=question['restriction'],
-                        max_score=question['max_score']
-                    )
-                    question['score'] = score
+                    # 如果之前未算过分
+                    if not result.score:
+                        # 自动计分
+                        try:
+                            if result.is_cal == 1:
+                                score = getattr(grading_instance, question['cal_fun'])(
+                                    answer=question['answer'],
+                                    correct=question['correct'],
+                                    weight=question['weight'],
+                                    rubric=question['rubric'],
+                                    restriction=question['restriction'],
+                                    max_score=question['max_score']
+                                )
+                                question['score'] = score
+                            else:
+                                # 手动/模型 计分方法
+                                score = getattr(grading_instance, question['cal_fun'])(
+                                    sheet_id=sheet_id,
+                                    question_id=question['question_id'],
+                                    answer=question['answer'],
+                                    voice_link=question['voice_link'],
+                                    video_link=question['video_link'],
+                                    upload_file_link=question['upload_file_link']
+                                )
+                                question['score'] = score
+                        except:
+                            # 如果数据源问题道题出错，先默认为0，待修改后，可以重新计分
+                            question['score'] = 0
+                    else:
+                        question['score'] = result.score
+
                     questions.append(question)
                 # else:
                 #     question = {
@@ -871,7 +1018,7 @@ class AnsweringScoringController(crudController):
                         .one_or_none()
                     )
                     if rubric:
-                        s_r = {int(k): v for k, v in json.loads(rubric.rubric).items()}
+                        s_r = {float(k): v for k, v in json.loads(rubric.rubric).items()}
                         max_score = rubric.max_score
 
                     record = (
@@ -888,7 +1035,7 @@ class AnsweringScoringController(crudController):
                             "total_score": d['total_score'],
                             "score": s_r[d['total_score']] if s_r else None,
                             "max_score": max_score if max_score else None,
-                            "last_update_time": datetime.datetime.now(tz=datetime.timezone.utc)
+                            "last_update_time": datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))
                         }
                         u_r.append(new_record)
                 else:
@@ -898,7 +1045,7 @@ class AnsweringScoringController(crudController):
                         "total_score": d['total_score'],
                         "score": s_r[d['total_score']] if s_r else None,
                         "max_score": max_score if max_score else None,
-                        "last_update_time": datetime.datetime.now(tz=datetime.timezone.utc)
+                        "last_update_time": datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))
                     }
                     new_ = Scores(**new_record)
                     session.add(new_)
@@ -910,7 +1057,7 @@ class AnsweringScoringController(crudController):
                     "s_id": question['submission_id'],
                     "is_graded": 1,
                     "score": question['score'],
-                    "last_update_time": datetime.datetime.now(tz=datetime.timezone.utc)
+                    "last_update_time": datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))
                 }
                 commit.append(update_)
 
@@ -1241,8 +1388,8 @@ class InitController(crudController):
                         pattern_id=14,
                         exam_id=1,
                         is_active=1,
-                        create_time=datetime.datetime.now(tz=datetime.timezone.utc),
-                        last_update_time=datetime.datetime.now(tz=datetime.timezone.utc)
+                        create_time=datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))),
+                        last_update_time=datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))
                     )
                     s_l.append(new)
 
@@ -1284,8 +1431,8 @@ class InitController(crudController):
                         #         "pattern_id": pattern_id,
                         #         "exam_id": exam_id,
                         #         "is_active": 1,
-                        #         'create_time': datetime.datetime.now(tz=datetime.timezone.utc),
-                        #         'last_update_time': datetime.datetime.now(tz=datetime.timezone.utc)
+                        #         'create_time': datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))),
+                        #         'last_update_time': datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))
                         #     }
                         #     n_record = Resources(**new_resource)
                         #     session.add(n_record)
@@ -1303,8 +1450,8 @@ class InitController(crudController):
                                 "pattern_id": pattern_id,
                                 "exam_id": exam_id,
                                 "is_active": 1,
-                                'create_time': datetime.datetime.now(tz=datetime.timezone.utc),
-                                'last_update_time': datetime.datetime.now(tz=datetime.timezone.utc)
+                                'create_time': datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))),
+                                'last_update_time': datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))
                             }
                             n_record = Resources(**new_resource)
                             session.add(n_record)
@@ -1333,8 +1480,8 @@ class InitController(crudController):
                         source_id = record.id
                         each['source'] = source_id
                         default_dic = {
-                            'create_time': datetime.datetime.now(tz=datetime.timezone.utc),
-                            'last_update_time': datetime.datetime.now(tz=datetime.timezone.utc)
+                            'create_time': datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))),
+                            'last_update_time': datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))
                         }
                         merged_dict = {**each, **default_dic}
                         record = Questions(**merged_dict)
@@ -1376,8 +1523,8 @@ class InitController(crudController):
                 new_record = {
                     "word_id": i,
                     "category_id": 2,
-                    'create_time': datetime.datetime.now(tz=datetime.timezone.utc),
-                    'last_update_time': datetime.datetime.now(tz=datetime.timezone.utc)
+                    'create_time': datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))),
+                    'last_update_time': datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))
                 }
                 s_l.append(new_record)
 
@@ -1430,8 +1577,8 @@ class InitController(crudController):
                             # "id": int(row['id']),
                             "word": row['word'].lower(),
                             "word_c": row['word_c'],
-                            'create_time': datetime.datetime.now(tz=datetime.timezone.utc),
-                            'last_update_time': datetime.datetime.now(tz=datetime.timezone.utc)
+                            'create_time': datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))),
+                            'last_update_time': datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))
                         }
                         s_l.append(new_record)
                     words[row['word'].lower()] = 1
@@ -1450,6 +1597,15 @@ class InitController(crudController):
                 session.rollback()
                 return False, str(e)
 
+    def import_listening_f(self):
+        file_path = "/Users/zhilinhe/Desktop/听力材料.xlsx"
+        import pandas as pd
+        df = pd.read_csv(file_path)
+        s_l = []
+        with db_session('core') as session:
+            for index, row in df.iterrows():
+                pass
+
     def build_similarities(self):
         import pandas as pd
         df = pd.read_csv('simi.csv')
@@ -1460,8 +1616,8 @@ class InitController(crudController):
                 new_record = {
                     "word_id": int(row['word_id']),
                     "similarities": row['similarity'],
-                    'create_time': datetime.datetime.now(tz=datetime.timezone.utc),
-                    'last_update_time': datetime.datetime.now(tz=datetime.timezone.utc)
+                    'create_time': datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))),
+                    'last_update_time': datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))
                 }
                 s_l.append(new_record)
 
@@ -1486,53 +1642,107 @@ class InitController(crudController):
                 return content[:second_newline_idx] + content[second_newline_idx:].replace("\n", " ")
 
     def build_listening_questions(self):
-        file_path = '/Users/zhilinhe/desktop/听力材料.xlsx'
+        def question_t(number, answer):
+            if number == 1:
+                return 7
+            elif number == 2:
+                if len(answer) == 2:
+                    return 8
+                elif len(answer) == 3:
+                    return 10
+
+            elif number == 3:
+                return 11
+            elif number == 4:
+                return 12
+            return None
+
+        def g_answer(number, answer, stem):
+            s_l = stem.split(";")
+            length = len(s_l)
+            map ={
+                "A":0,
+                "B":1,
+                "C":2,
+                "D":3,
+                "E":4,
+                "F":5,
+                "G":6,
+                "H":7
+            }
+            if number == 1 or number == 2:
+                a = [0] * length
+                for i in answer:
+                    a[map[i]] = 1
+                return ";".join(str(v) for v in a)
+            elif number == 3 or number == 4:
+                a = []
+                for i in answer:
+                    a.append(map[i] + 1)
+                return ";".join(str(v) for v in a)
+
+            return None
+
+        file_path = '/Users/zhilinhe/desktop/听力题目.xlsx'
         import pandas as pd
         df = pd.read_excel(file_path)
+        print(df.shape[0])
+        s_l = []
         with db_session('core') as session:
             for index, row in df.iterrows():
-                record = (
-                    session.query(Resources)
-                    .filter(Resources.resource_name == f'{row["question_source"]}-听力-s{int(row["section_id"])}')
-                    .one_or_none()
-                )
-                if record:
-                    print(f'{row["question_source"]}-听力-s{int(row["section_id"])}')
-                    new_q = {
-                        "question_type": 4,
-                        'question_title': row['question_title'].replace("\n", " ") if not pd.isnull(
-                            row['question_title']) else None,
-                        "question_content": self.helper(row['question_content']) if not pd.isnull(
-                            row['question_content']) else None,
-                        "question_stem": None,
-                        "question_function_type": "exams",
-                        "order": int(row["order"]),
-                        "father_question": -1,
-                        "cal_method": 0,
-                        "max_score": 4,
-                        "stem_weights": None,
-                        'correct_answer': None,
-                        "d_level": 0,
-                        "is_require": 1,
-                        "is_cal": 1,
-                        "is_active": 1,
-                        "voice_link": row['音频url'] if not pd.isnull(row['音频url']) else None,
-                        "voice_content": row['文本内容'] if not pd.isnull(row['文本内容']) else None,
-                        "is_attachable": 1,
-                        "keywords": json.dumps({'p': 15, 'r': 45}) if int(row["order"]) == 1 else json.dumps(
-                            {'p': 30, 'r': 60}),
-                        "remark": f'{row["question_source"]} speaking question {int(row["order"])}',
-                        "has_ans": 1,
-                        "section_id": record.section_id,
-                        "source": record.id,
-                    }
-                    default_dic = {
-                        'create_time': datetime.datetime.now(tz=datetime.timezone.utc),
-                        'last_update_time': datetime.datetime.now(tz=datetime.timezone.utc)
-                    }
-                    merged_dict = {**new_q, **default_dic}
-                    record = Questions(**merged_dict)
-                    session.add(record)
+                if index >= 2:
+                    record = (
+                        session.query(Resources)
+                        .filter(Resources.resource_name == f'{row["question_source"]}-听力-s{int(row["section_id"])}')
+                        .one_or_none()
+                    )
+                    if record:
+                        father = (
+                            session.query(Questions)
+                            .filter(Questions.remark == f'{row["question_source"]} Listening {row["section_name"].replace(" ","")}')
+                            .one_or_none()
+                        )
+                        if father:
+                            print(f'{row["question_source"]}-听力-s{int(row["section_id"])}-{row["section_name"]}-{row["question_order"]}')
+                            new_q = {
+                                "question_type": question_t(row["question_type"], row["correct_answer"]),
+                                'question_title': row['title'] if not pd.isnull(row['title']) else None,
+                                "question_content": row['question_content'] if not pd.isnull(row['question_content']) else None,
+                                "question_stem": row['question_stem'] if not pd.isnull(row['question_stem']) else None,
+                                "question_function_type": "exams",
+                                "order": int(row["question_order"]),
+                                "father_question": father.id,
+                                "cal_method": 1,
+                                "max_score": 1,
+                                "stem_weights": g_answer(row["question_type"], row["correct_answer"], row['question_stem']) if not pd.isnull(row['correct_answer']) else None,
+                                'correct_answer': g_answer(row["question_type"], row["correct_answer"], row['question_stem']) if not pd.isnull(row['correct_answer']) else None,
+                                "d_level": 1,
+                                "is_require": 1,
+                                "is_cal": 1,
+                                "is_active": 1,
+                                "voice_link": row['音频url'] if not pd.isnull(row['音频url']) else None,
+                                "voice_content": None,
+                                "is_attachable": 0,
+                                "keywords": None,
+                                "remark": f'{row["question_source"]} Listening {row["section_name"].replace(" ","")} {int(row["question_order"])}',
+                                "has_ans": 1,
+                                "section_id": record.section_id,
+                                "source": record.id,
+                            }
+                            default_dic = {
+                                'create_time': datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))),
+                                'last_update_time': datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))
+                            }
+                            merged_dict = {**new_q, **default_dic}
+                            # record = Questions(**merged_dict)
+                            s_l.append(merged_dict)
+            print(len(s_l))
+
+            session.execute(
+                insert(Questions),
+                s_l
+            )
+            print("commit")
 
             try:
                 session.commit()
@@ -1588,8 +1798,8 @@ class InitController(crudController):
                         "source": record.id,
                     }
                     default_dic = {
-                        'create_time': datetime.datetime.now(tz=datetime.timezone.utc),
-                        'last_update_time': datetime.datetime.now(tz=datetime.timezone.utc)
+                        'create_time': datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))),
+                        'last_update_time': datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))
                     }
                     merged_dict = {**new_q, **default_dic}
                     record = Questions(**merged_dict)
@@ -1646,8 +1856,8 @@ class InitController(crudController):
                         "source": record.id,
                     }
                     default_dic = {
-                        'create_time': datetime.datetime.now(tz=datetime.timezone.utc),
-                        'last_update_time': datetime.datetime.now(tz=datetime.timezone.utc)
+                        'create_time': datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))),
+                        'last_update_time': datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))
                     }
                     merged_dict = {**new_q, **default_dic}
                     record = Questions(**merged_dict)
@@ -1697,8 +1907,8 @@ class InitController(crudController):
 
                     }
                     default_dic = {
-                        'create_time': datetime.datetime.now(tz=datetime.timezone.utc),
-                        'last_update_time': datetime.datetime.now(tz=datetime.timezone.utc)
+                        'create_time': datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))),
+                        'last_update_time': datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))
                     }
                     merged_dict = {**new_q, **default_dic}
                     record = Questions(**merged_dict)
@@ -1714,9 +1924,10 @@ class InitController(crudController):
 
 if __name__ == '__main__':
     #
-    init = TransactionsController()
-    # pprint.pprint(init._get_all_resources_under_patterns(pattern_id=11, account_id=7))
+    # init = TransactionsController()
+    # pprint.pprint(init._get_all_resources_under_patterns(pattern_id=12, account_id=7))
     # init = InitController()
+    # print(init.build_listening_questions())
     # print(init.helper(None))
     # print(init.build_resources())
     # print(init.import_vocabs())
@@ -1726,25 +1937,24 @@ if __name__ == '__main__':
     # print(init.get_test_answers(sheet_id=7))
     # pprint.pprint(init.save_answer(sheet_id=7))
     # init.get_test_answers_history(account_id=7)
+    # pass
+
+    # print(datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))))
 
     init = AnsweringScoringController()
-    # res = init.create_answer_sheet(account_id=7, question_ids=[1220, 1221, 1222, 1223])
-    # print(init.create_answer_sheet(account_id=7, question_ids=[3, 18]))
+    # res = init.create_answer_sheet(account_id=7, question_ids=[1755, 1756, 1757, 1758, 1760])
     # sheet_id = res[1]['sheet_id']
-    # sheet_id = 59
-    # print(init.get_test_answers(sheet_id=62))
-    # pprint.pprint(init.get_test_answers(63)[1])
-    # pprint.pprint(init.get_sheet_status(sheet_id=sheet_id))
+    # pprint.pprint(init.get_test_answers(sheet_id=sheet_id))
 
     # 做题
     # print(init.update_question_answer(sheet_id=61, question_id=1590, answer='dashdksakhdh dashdkhasjkh dajskhdkhkajsh dashkjdkjh', duration=200))
     # print(init.update_question_answer(sheet_id=sheet_id, question_id=5, answer=[0, 0, 1, 0], duration=200))
 
     # 提交答案
-    pprint.pprint(init.save_answer(sheet_id=63))
+    # pprint.pprint(init.save_answer(sheet_id=133))
 
     # 算分
     # start = time.time()
-    # print(init.scoring(sheet_id=16))
-    # pprint.pprint(init.get_score(answer_sheet_id=61))
+    print(init.scoring(sheet_id=133))
+    # pprint.pprint(init.get_score(answer_sheet_id=133))
     # print(time.time() - start)

@@ -1,5 +1,5 @@
 from collections import Counter
-import datetime
+from datetime import datetime, timezone, timedelta, date
 import statistics
 from blueprints.account.models import (
     Accounts,
@@ -38,8 +38,8 @@ class AccountController(crudController):
 
         for each in exam_ids:
             default_dic = {
-                'create_time': datetime.datetime.now(tz=datetime.timezone.utc),
-                'last_update_time': datetime.datetime.now(tz=datetime.timezone.utc)
+                'create_time': datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))),
+                'last_update_time': datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))
             }
             merged_dict = {**default_dic, **{'user_id': index_id, 'exam_id': each}}
             record = Accounts(**merged_dict)
@@ -73,7 +73,11 @@ class AccountController(crudController):
                     if res[0]:
                         res = VocabLearningController().init_vocabs_learnings(user_id)
                         if res[0]:
-                            return True, 'OK.'
+                            res, data = VocabLearningController().init_vocabs_books(user_id)
+                            if res:
+                                return True, 'OK.'
+                            else:
+                                return data
                         else:
                             return False, res[1]
                 else:
@@ -139,7 +143,7 @@ class AccountController(crudController):
 
 if __name__ == '__main__':
     test = AccountController()
-    user_id = 3
+    user_id = 1
     print(test.register_user(user_id, [1]))
     # print(test.get_user_accounts(40))
     # print(test._create(model=Accounts, create_params={'user_id': 7, 'exam_id': 1}))

@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime, timezone, timedelta, date
 from configs.environment import DATABASE_SELECTION
 
 if DATABASE_SELECTION == 'postgre':
@@ -30,8 +30,12 @@ class crudController:
                 )
                 if old_record is None:
                     default_dic = {
-                        'create_time': datetime.datetime.now(tz=datetime.timezone.utc),
-                        'last_update_time': datetime.datetime.now(tz=datetime.timezone.utc)
+                        'create_time': datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))
+
+,
+                        'last_update_time': datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))
+
+
                     }
                     merged_dict = {**default_dic, **create_params}
                     record = model(**merged_dict)
@@ -41,8 +45,12 @@ class crudController:
 
             else:
                 default_dic = {
-                    'create_time': datetime.datetime.now(tz=datetime.timezone.utc),
-                    'last_update_time': datetime.datetime.now(tz=datetime.timezone.utc)
+                    'create_time': datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))
+
+,
+                    'last_update_time': datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))
+
+
                 }
                 merged_dict = {**create_params, **default_dic}
                 record = model(**merged_dict)
@@ -61,8 +69,12 @@ class crudController:
                     )
                     if old_record is None:
                         default_dic = {
-                            'create_time': datetime.datetime.now(tz=datetime.timezone.utc),
-                            'last_update_time': datetime.datetime.now(tz=datetime.timezone.utc)
+                            'create_time': datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))
+
+,
+                            'last_update_time': datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))
+
+
                         }
                         merged_dict = {**default_dic, **create_params}
                         record = model(**merged_dict)
@@ -72,8 +84,12 @@ class crudController:
 
                 else:
                     default_dic = {
-                        'create_time': datetime.datetime.now(tz=datetime.timezone.utc),
-                        'last_update_time': datetime.datetime.now(tz=datetime.timezone.utc)
+                        'create_time': datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))
+
+,
+                        'last_update_time': datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))
+
+
                     }
                     merged_dict = {**create_params, **default_dic}
                     record = model(**merged_dict)
@@ -114,7 +130,7 @@ class crudController:
             # update_dic = {col: getattr(update_parameters, col) for col in
             #               [column.key for column in self.Model.__table__.columns] if
             #               col != 'id'}
-            default_dic = {'last_update_time': datetime.datetime.now(tz=datetime.timezone.utc)}
+            default_dic = {'last_update_time': datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))}
 
             records = (
                 session.query(model)

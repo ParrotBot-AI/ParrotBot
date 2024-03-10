@@ -38,6 +38,172 @@ logger = get_general_logger('account', path=abspath('logs', 'core_web'))
 
 class VocabLearningController(crudController):
 
+    def create_new_vocab_tasks(self, account_id):
+        s_l = []
+        with db_session('core') as session:
+            acc = (
+                session.query(Accounts)
+                .filter(Accounts.id == account_id)
+                .one_or_none()
+            )
+            if acc:
+                user_id = acc.user_id
+                user = (
+                    session.query(Users)
+                    .filter(Users.id == user_id)
+                    .one_or_none()
+                )
+                if user:
+                    now = datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))
+                    compare_time = user.create_time.replace(tzinfo=timezone(timedelta(hours=8)))
+                    if (user.user_plan != 0 and user.user_plan is not None) or (now - compare_time).total_seconds() <= 86400:
+                        new_task = dict(
+                            account_id=account_id,
+                            task_id=8,  # 背单词
+                            is_active=1,
+                            create_time=datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))),
+                            last_update_time=datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))),
+                            loop=1,
+                            current_loop=1,
+                            learning_type=1,
+                        )
+                        new_task_ = dict(
+                            account_id=account_id,
+                            task_id=9,  # 复习单词
+                            is_active=1,
+                            create_time=datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))),
+                            last_update_time=datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))),
+                            loop=1,
+                            current_loop=1,
+                            learning_type=1,
+                        )
+                        s_l.append(new_task)
+                        s_l.append(new_task_)
+
+            if len(s_l)>0:
+                session.execute(
+                    insert(TaskAccounts),
+                    s_l
+                )
+            else:
+                return False, "账户Plan无创建权限."
+
+            try:
+                session.commit()
+                return True, "创建用户任务成功."
+            except Exception as e:
+                return False, f"创建用户任务失败:{str(e)}."
+
+    def create_vocabs_book(self, account_id):
+        # 创建单词本
+        from blueprints.education.models import VocabCategorys, VocabCategoryRelationships
+        redis = RedisWrapper('core_learning')
+        with db_session('core') as session:
+            record = (
+                session.query(VocabsLearning)
+                .filter(VocabsLearning.account_id == account_id)
+                .one_or_none()
+            )
+            if not record:
+                return False, "未找打账户单词"
+            else:
+                cate = record.current_category
+                in_process = redis.get(f"{record.in_process}")
+                if not in_process and not cate:
+                    # 新用户，生成单词表
+                    new_cate = 1  # 默认从第一个category开始
+                    acc = (
+                        session.query(Accounts)
+                        .filter(Accounts.id == record.account_id)
+                        .one_or_none()
+                    )
+                    if acc:
+                        exam = acc.exam_id
+                        cate_records = (
+                            session.query(VocabCategorys)
+                            .filter(or_(VocabCategorys.exam_id == exam, VocabCategorys.exam_id == None))
+                            .order_by(VocabCategorys.order.asc())
+                            .all()
+                        )
+
+                        for r in cate_records:
+                            words = (
+                                session.query(VocabCategoryRelationships)
+                                .filter(VocabCategoryRelationships.category_id == r.id)
+                                .all()
+                            )
+                            input_list = [x.word_id for x in words]
+                            if len(input_list) > 0:
+                                import random
+                                random.shuffle(input_list)
+                                l = redis.list_push(f"{record.in_process}", *input_list, side="r")
+
+                        # 移动amount词汇到today里面
+                        for _ in range(record.amount):
+                            redis.list_move(f"{record.in_process}", f"{record.today_learn}")
+
+                        update_parameters = dict(
+                            current_category=new_cate
+                        )
+                        default_dic = {
+                            'last_update_time': datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))}
+                        update_ = (
+                            session.query(VocabsLearning)
+                            .filter(VocabsLearning.account_id == record.account_id)
+                            .update({**update_parameters, **default_dic})
+                        )
+                    else:
+                        pass
+                else:
+                    # 老用户，生成明日表
+                    # 1. 按照amount,补齐今日的新表
+                    today_left = redis.lrange(f"{record.today_learn}")
+                    add_amount = record.amount - len(today_left)
+                    l = redis.lrange(f"{record.in_process}")
+                    if len(l) >= add_amount:
+                        for _ in range(add_amount):
+                            redis.list_move(f"{record.in_process}", f"{record.today_learn}")
+                    else:
+                        for _ in range(len(l)):
+                            redis.list_move(f"{record.in_process}", f"{record.today_learn}")
+                    # 2. 把昨天错误的加入 to_review
+                    now = datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))
+                    start_of_today = datetime(now.year, now.month, now.day)
+                    start_of_yesterday = start_of_today - timedelta(days=1)
+                    words_records = (
+                        session.query(VocabsLearningRecords.wrong_word_id)
+                        .filter(VocabsLearningRecords.time > start_of_yesterday)
+                        .filter(VocabsLearningRecords.time < start_of_today)
+                        .filter(VocabsLearningRecords.wrong_word_id.is_not(None))
+                        .all()
+                    )
+                    if len(words_records) > 0:
+                        redis.list_push(f"{record.to_review}", *list(set([x.wrong_word_id for x in words_records])),
+                                        side="r")
+
+                    # 3. 更新statis
+                    default_dic = {
+                        'last_update_time': datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))}
+
+                    update_parameters = dict(
+                        last_day_review=record.today_day_review,
+                        last_day_study=record.today_day_study,
+                        today_day_study=0,
+                        today_day_review=0,
+                    )
+                    update_ = (
+                        session.query(VocabsLearning)
+                        .filter(VocabsLearning.account_id == record.account_id)
+                        .update({**update_parameters, **default_dic})
+                    )
+
+            try:
+                session.commit()
+                return True, logger.info("用户每日任务词表更新成功.")
+            except Exception as e:
+                session.rollback()
+                return False, logger.info(f"用户每日任务词表更新失败：{str(e)}.")
+
     def fetch_vocabs_level(self, account_id, exam_id=None):
         with db_session('core') as session:
             # 查找对应的exam
@@ -100,21 +266,18 @@ class VocabLearningController(crudController):
                         order=r.order,
                         counts=r.counts
                     ))
-                at_level = total_amount - (number_to_finish +number_today)
+                at_level = total_amount - (number_to_finish + number_today)
 
                 # 响应结果
                 resp = {
-                    "current_level":current_cate,
+                    "current_level": current_cate,
                     "level_status": at_level,
-                    "level_total":level_total,
-                    "level_book":level_books
+                    "level_total": level_total,
+                    "level_book": level_books
                 }
                 return True, resp
             else:
                 return False, "词表未生成"
-
-
-
 
     def fetch_past_5_days_list(self, t_interval, account_id):
         with db_session('core') as session:
@@ -207,6 +370,125 @@ class VocabLearningController(crudController):
             else:
                 return False, "未找到该账号单词"
 
+    def init_vocabs_books(self, user_id):
+        from blueprints.education.models import VocabCategorys, VocabCategoryRelationships
+        redis = RedisWrapper('core_learning')
+        user = self._retrieve(model=Users, restrict_field='user_id', restrict_value=user_id)
+        index_id = s.serialize_dic(user, self.default_not_show)['id']
+
+        with db_session('core') as session:
+            accs = (
+                session.query(Accounts)
+                .filter(Accounts.user_id == index_id)
+                .all()
+            )
+            accounts_ids = [record.id for record in accs]
+            records = (
+                session.query(VocabsLearning)
+                .filter(VocabsLearning.account_id.in_(accounts_ids))
+                .all()
+            )
+            for record in records:
+                cate = record.current_category
+                in_process = redis.get(f"{record.in_process}")
+                if not in_process and not cate:
+                    # 新用户，生成单词表
+                    new_cate = 1  # 默认从第一个category开始
+                    acc = (
+                        session.query(Accounts)
+                        .filter(Accounts.id == record.account_id)
+                        .one_or_none()
+                    )
+                    if acc:
+                        exam = acc.exam_id
+                        cate_records = (
+                            session.query(VocabCategorys)
+                            .filter(or_(VocabCategorys.exam_id == exam, VocabCategorys.exam_id == None))
+                            .order_by(VocabCategorys.order.asc())
+                            .all()
+                        )
+
+                        for r in cate_records:
+                            words = (
+                                session.query(VocabCategoryRelationships)
+                                .filter(VocabCategoryRelationships.category_id == r.id)
+                                .all()
+                            )
+                            input_list = [x.word_id for x in words]
+                            if len(input_list) > 0:
+                                import random
+                                random.shuffle(input_list)
+                                l = redis.list_push(f"{record.in_process}", *input_list, side="r")
+
+                        # 移动amount词汇到today里面
+                        for _ in range(record.amount):
+                            redis.list_move(f"{record.in_process}", f"{record.today_learn}")
+
+                        update_parameters = dict(
+                            current_category=new_cate
+                        )
+                        default_dic = {
+                            'last_update_time': datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))}
+                        update_ = (
+                            session.query(VocabsLearning)
+                            .filter(VocabsLearning.account_id == record.account_id)
+                            .update({**update_parameters, **default_dic})
+                        )
+
+                        # 注册今日单词任务（初始化，用户可获得一天的任务s）:
+                        s_l = []
+
+                        # 如果今天没有单词任务，创建
+                        now = datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))
+                        start_of_today = datetime(now.year, now.month, now.day)
+                        tasks = (
+                            session.query(TaskAccounts)
+                            .filter(or_(TaskAccounts.task_id == 8, TaskAccounts.task_id == 9))
+                            .filter(TaskAccounts.create_time > start_of_today)
+                            .all()
+                        )
+                        if len(tasks) == 0:
+                                    # 添加任务
+                            new_task = dict(
+                                        account_id=record.account_id,
+                                        task_id=8,  # 背单词
+                                        is_active=1,
+                                        create_time=datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))),
+                                        last_update_time=datetime.now(timezone.utc).astimezone(
+                                            timezone(timedelta(hours=8))),
+                                        loop=1,
+                                        current_loop=1,
+                                        learning_type=1,
+                            )
+                            new_task_ = dict(
+                                        account_id=record.account_id,
+                                        task_id=9,  # 复习单词
+                                        is_active=1,
+                                        create_time=datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))),
+                                        last_update_time=datetime.now(timezone.utc).astimezone(
+                                            timezone(timedelta(hours=8))),
+                                        loop=1,
+                                        current_loop=1,
+                                        learning_type=1,
+                            )
+                            s_l.append(new_task)
+                            s_l.append(new_task_)
+
+                        if len(s_l) > 0:
+                            session.execute(
+                                insert(TaskAccounts),
+                                s_l
+                            )
+                    else:
+                        pass
+
+
+            try:
+                session.commit()
+                return True, 'OK.'
+            except Exception as e:
+                return False, "创建账户单词词库成功."
+
     def init_vocabs_learnings(self, user_id):
         user = self._retrieve(model=Users, restrict_field='user_id', restrict_value=user_id)
         index_id = s.serialize_dic(user, self.default_not_show)['id']
@@ -226,7 +508,7 @@ class VocabLearningController(crudController):
                     to_review=f'{account_id}:to_review',
                     unknown=f'{account_id}:unknown',
                     today_learn=f'{account_id}:today',
-                    amount=50
+                    amount=200
                 )
                 default_dic = {
                     'create_time': datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))),
@@ -242,22 +524,9 @@ class VocabLearningController(crudController):
             except Exception as e:
                 return False, "创建账户单词学习失败."
 
-    def generate_vocabs_learnings(self):
-        pass
-
-    def allocate_vocabs(self):
-        with db_session('core') as session:
-            records = (
-                session.query(VocabsLearning)
-                .filter(VocabsLearning.current_category.is_(null()))
-                .all()
-            )
-            accounts_need_a = [record.id for record in records]
-
-
 class TaskController(crudController):
 
-    def fetch_account_tasks(self, account_id, after_time=None, active=None, type=None):
+    def fetch_account_tasks(self, account_id, after_time=None, active=None, type=None, is_complete=None):
         with db_session('core') as session:
             query = session.query(TaskAccounts).filter(TaskAccounts.account_id == account_id)
             if active is not None:
@@ -266,6 +535,9 @@ class TaskController(crudController):
                 query = query.filter(TaskAccounts.create_time > after_time)
             if type is not None:
                 query = query.filter(TaskAccounts.learning_type == type)
+
+            if is_complete is not None:
+                query = query.filter(TaskAccounts.is_complete == is_complete) # 获取还未完成的
             tasks = query.all()
             resp = []
             for task in tasks:
@@ -278,6 +550,7 @@ class TaskController(crudController):
                 if record:
                     tas['task_account_id'] = task.id
                     tas['task_name'] = record.task_name
+                    tas['task_id'] = record.task_id
                     tas['order'] = record.order
                     tas['is_complete'] = task.is_complete
                     tas['complete_p'] = task.complete_percentage
@@ -550,11 +823,19 @@ class TaskController(crudController):
 
 
 if __name__ == "__main__":
-    account_id = 20
-    # flow = TaskController()
+    account_id = 27
     # pprint(flow.fetch_account_tasks(account_id=account_id, after_time=get_today_midnight(), active=True))
+    today = datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))
+    time = datetime(today.year, today.month, today.day, 0, 0)
+    # res, data = TaskController().fetch_account_tasks(
+    #     account_id=account_id,
+    #     after_time=time,
+    #     type=1,
+    #     is_complete=0,
+    # )
+    # pprint(data)
     flow = VocabLearningController()
-    pprint(flow.fetch_vocabs_level(account_id=account_id))
+    pprint(flow.create_new_vocab_tasks(account_id=27))
     # Get the time at 00:00 AM on today's date
     # resp, payload = flow.start_task(task_account_id=2)
     # payload = {'payload': {'endpoint': 'gpt-endpint', 'method': 'sse', 'api_key': 'key', 'execute': True, 'target': ['execute']}}

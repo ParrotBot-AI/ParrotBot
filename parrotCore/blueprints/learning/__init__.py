@@ -4,7 +4,7 @@ from blueprints.learning.controllers import VocabLearningController, TaskControl
 import json
 from utils.redis_tools import RedisWrapper
 import uuid as u
-from datetime import datetime, timedelta
+from datetime import datetime, timezone, timedelta, date
 
 bp = Blueprint('learning_api', __name__, url_prefix='/v1/api/learning/')
 
@@ -27,12 +27,13 @@ def get_vocabs_statics(account_id):
 @bp.route('get_today_vocab_task/<account_id>/', methods=['GET'])
 def get_today_vocab_task(account_id):
     try:
-        today = datetime.now()
+        today = datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))
         time = datetime(today.year, today.month, today.day, 0, 0)
         res, data = TaskController().fetch_account_tasks(
             account_id=account_id,
             after_time=time,
-            type=1
+            type=1,
+            is_complete=0,
         )
         if res:
             return SuccessDataResponse(data)
@@ -40,3 +41,18 @@ def get_today_vocab_task(account_id):
             return ArgumentExceptionResponse(msg=f'{data}')
     except Exception as e:
         return ArgumentExceptionResponse(msg=f'{e}')
+
+@bp.route('create_new_vocab_tasks/<account_id>/', methods=['GET'])
+def create_new_vocab_tasks(account_id):
+    try:
+        res, data = VocabLearningController().create_new_vocab_tasks(
+            account_id=account_id,
+        )
+        if res:
+            return SuccessDataResponse(data)
+        else:
+            return ArgumentExceptionResponse(msg=f'{data}')
+    except Exception as e:
+        return ArgumentExceptionResponse(msg=f'{e}')
+
+
