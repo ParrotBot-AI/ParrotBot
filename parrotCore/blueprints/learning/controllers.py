@@ -722,7 +722,14 @@ class TaskController(crudController):
                 # modules, method, payload
                 module, method, payload = info['module'], info['method'], info['payload']
                 # 运行下一步返回参数函数
-                from blueprints.learning import vocab_learning
+                import os
+                import sys
+                current_file_path = os.path.abspath(__file__)
+                parent_directory = os.path.dirname(current_file_path)
+                if parent_directory not in sys.path:
+                    sys.path.append(parent_directory)
+                import vocab_learning
+
                 module = import_module(module)
                 function = getattr(module, method)
                 print(function.__name__, 726)
