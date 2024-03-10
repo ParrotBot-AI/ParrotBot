@@ -22,7 +22,7 @@ class VocabService(ServiceManager):
     name = 'ParrotCoreVocab'
     file = 'core_vocabs.py'
     dir_path = abspath('services')
-    schedule = '0 11 * * *'
+    schedule = '1 0 * * *'
     time_zone = "Asia/Shanghai"
 
 

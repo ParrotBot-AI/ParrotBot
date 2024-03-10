@@ -32,6 +32,7 @@ from datetime import datetime, timezone, timedelta, date
 from sqlalchemy import null, select, union_all, and_, or_, join, outerjoin, update, insert
 import json
 from utils.redis_tools import RedisWrapper
+import blueprints.learning.vocab_learning as vocab_learning
 
 logger = get_general_logger('account', path=abspath('logs', 'core_web'))
 
@@ -832,8 +833,8 @@ if __name__ == "__main__":
     # )
     # pprint(data)
     flow = TaskController()
-    # resp, payload = flow.start_task(task_account_id=15)
-    # print(payload)
+    resp, payload = flow.start_task(task_account_id=11)
+    print(payload)
     # 1.先用5个
     # payload = {'payload': {'word_id': 37473, 'word': 'grind', 'stem': ['n. 槽', 'v. 磨（碎）；磨利', 'v. 刮；擦 n. 刮；擦伤；擦痕', 'v. 掘，挖；采掘'], 'word_ids': [40069, 37473, 37353, 36791], 'correct_answer': [0, 1, 0, 0], 'answer': [0, 0, 0, 0], 'unknown': False, 'study': False, 'target': ['answer', 'unknown', 'study']}}
     # 2.

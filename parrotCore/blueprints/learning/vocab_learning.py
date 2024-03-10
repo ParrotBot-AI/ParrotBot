@@ -92,7 +92,6 @@ def fetch_words_mc(
                     target=["answer", "unknown", "study"]
                 )
                 redis_cache.set(f"Word:{current_word_id}", response, ex=86400)  # 缓存一天
-                print(95)
                 return True, response, True
 
             elif len(today_list) == 0:
