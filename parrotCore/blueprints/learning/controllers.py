@@ -34,6 +34,7 @@ import json
 from utils.redis_tools import RedisWrapper
 import os
 import sys
+
 current_file_path = os.path.abspath(__file__)
 parent_directory = os.path.dirname(current_file_path)
 if parent_directory not in sys.path:
@@ -63,7 +64,8 @@ class VocabLearningController(crudController):
                 if user:
                     now = datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))
                     compare_time = user.create_time.replace(tzinfo=timezone(timedelta(hours=8)))
-                    if (user.user_plan != 0 and user.user_plan is not None) or (now - compare_time).total_seconds() <= 86400:
+                    if (user.user_plan != 0 and user.user_plan is not None) or (
+                            now - compare_time).total_seconds() <= 86400:
                         new_task = dict(
                             account_id=account_id,
                             task_id=8,  # 背单词
@@ -71,7 +73,7 @@ class VocabLearningController(crudController):
                             create_time=datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))),
                             last_update_time=datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))),
                             loop=1,
-                            current_loop=1,
+                            current_loop=0,
                             learning_type=1,
                         )
                         new_task_ = dict(
@@ -81,13 +83,13 @@ class VocabLearningController(crudController):
                             create_time=datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))),
                             last_update_time=datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))),
                             loop=1,
-                            current_loop=1,
+                            current_loop=0,
                             learning_type=1,
                         )
                         s_l.append(new_task)
                         s_l.append(new_task_)
 
-            if len(s_l)>0:
+            if len(s_l) > 0:
                 session.execute(
                     insert(TaskAccounts),
                     s_l
@@ -452,28 +454,28 @@ class VocabLearningController(crudController):
                             .all()
                         )
                         if len(tasks) == 0:
-                                    # 添加任务
+                            # 添加任务
                             new_task = dict(
-                                        account_id=record.account_id,
-                                        task_id=8,  # 背单词
-                                        is_active=1,
-                                        create_time=datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))),
-                                        last_update_time=datetime.now(timezone.utc).astimezone(
-                                            timezone(timedelta(hours=8))),
-                                        loop=1,
-                                        current_loop=1,
-                                        learning_type=1,
+                                account_id=record.account_id,
+                                task_id=8,  # 背单词
+                                is_active=1,
+                                create_time=datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))),
+                                last_update_time=datetime.now(timezone.utc).astimezone(
+                                    timezone(timedelta(hours=8))),
+                                loop=1,
+                                current_loop=1,
+                                learning_type=1,
                             )
                             new_task_ = dict(
-                                        account_id=record.account_id,
-                                        task_id=9,  # 复习单词
-                                        is_active=1,
-                                        create_time=datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))),
-                                        last_update_time=datetime.now(timezone.utc).astimezone(
-                                            timezone(timedelta(hours=8))),
-                                        loop=1,
-                                        current_loop=1,
-                                        learning_type=1,
+                                account_id=record.account_id,
+                                task_id=9,  # 复习单词
+                                is_active=1,
+                                create_time=datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))),
+                                last_update_time=datetime.now(timezone.utc).astimezone(
+                                    timezone(timedelta(hours=8))),
+                                loop=1,
+                                current_loop=1,
+                                learning_type=1,
                             )
                             s_l.append(new_task)
                             s_l.append(new_task_)
@@ -485,7 +487,6 @@ class VocabLearningController(crudController):
                             )
                     else:
                         pass
-
 
             try:
                 session.commit()
@@ -528,6 +529,7 @@ class VocabLearningController(crudController):
             except Exception as e:
                 return False, "创建账户单词学习失败."
 
+
 class TaskController(crudController):
 
     def fetch_account_tasks(self, account_id, after_time=None, active=None, type=None, is_complete=None):
@@ -541,7 +543,7 @@ class TaskController(crudController):
                 query = query.filter(TaskAccounts.learning_type == type)
 
             if is_complete is not None:
-                query = query.filter(TaskAccounts.is_complete == is_complete) # 获取还未完成的
+                query = query.filter(TaskAccounts.is_complete == is_complete)  # 获取还未完成的
             tasks = query.all()
             resp = []
             for task in tasks:
@@ -839,9 +841,8 @@ if __name__ == "__main__":
     #     is_complete=0,
     # )
     # pprint(data)
-    flow = TaskController()
-    resp, payload = flow.start_task(task_account_id=11)
-    print(payload)
+
+    # 背单词
     # 1.先用5个
     # payload = {'payload': {'word_id': 37473, 'word': 'grind', 'stem': ['n. 槽', 'v. 磨（碎）；磨利', 'v. 刮；擦 n. 刮；擦伤；擦痕', 'v. 掘，挖；采掘'], 'word_ids': [40069, 37473, 37353, 36791], 'correct_answer': [0, 1, 0, 0], 'answer': [0, 0, 0, 0], 'unknown': False, 'study': False, 'target': ['answer', 'unknown', 'study']}}
     # 2.
@@ -855,7 +856,7 @@ if __name__ == "__main__":
     ## model fetch
     # payload = {'payload': {'endpoint': 'gpt-endpint', 'method': 'sse', 'api_key': 'key', 'send': {'counsel': 'v. 忠告，建议', 'spark': 'n. 火花，火星', 'grind': 'v. 磨（碎）；磨利', 'feeble': 'adj. 虚弱的；微弱的', 'environmental': 'adj. 环境的，环境产生的'}, 'response': '建议(counsel), 卸下(grind), 虚弱(feeble), 环境(environmental)', 'execute': True, 'target': ['execute', 'response']}}
 
-    # 开始复习
+    # 开始复习错误词汇
     # 1. False
     # payload = {'payload': {'word_id': 37473, 'word': 'grind', 'stem': ['n. 槽', 'v. 磨（碎）；磨利', 'v. 刮；擦 n. 刮；擦伤；擦痕', 'v. 掘，挖；采掘'], 'word_ids': [40069, 37473, 37353, 36791], 'correct_answer': [0, 1, 0, 0], 'answer': [0, 0, 0, 0], 'unknown': False, 'study': False, 'target': ['answer', 'unknown', 'study'], 'hint': ', 卸下(grind'}}
     # 2. True
@@ -865,3 +866,26 @@ if __name__ == "__main__":
     #
     # print(flow.rec_module_outcome(task_account_id=15, payload=payload)[1])
 
+    # 复习单词
+    flow = TaskController()
+    # resp, payload = flow.start_task(task_account_id=12)
+    # print(payload)
+    # 1. F
+    # payload = {'payload': {'word_id': 37473, 'word': 'grind', 'stem': ['n. 槽', 'v. 磨（碎）；磨利', 'v. 刮；擦 n. 刮；擦伤；擦痕', 'v. 掘，挖；采掘'], 'word_ids': [40069, 37473, 37353, 36791], 'correct_answer': [0, 1, 0, 0], 'answer': [0, 0, 0, 0], 'unknown': False, 'study': False, 'target': ['answer', 'unknown', 'study']}}
+    # 2. T
+    # payload = {'payload': {'word_id': 34679, 'word': 'counsel', 'stem': ['n. 律师， 代理人', 'n. 律师；法学家', 'v. 忠告，建议', 'n. 律师， 法律顾问'], 'word_ids': [38497, 35699, 34679, 38247], 'correct_answer': [0, 0, 1, 0], 'answer': [0, 0, 1, 0], 'unknown': False, 'study': False, 'target': ['answer', 'unknown', 'study']}}
+    # 3. T
+    # payload = {'payload': {'word_id': 39818, 'word': 'environmental', 'stem': ['adj. 生态学的', 'adj. 环境的，环境产生的', 'n. 污染', 'n. 生态学；个体生态学'], 'word_ids': [38576, 39818, 37402, 39478], 'correct_answer': [0, 1, 0, 0], 'answer': [0, 1, 0, 0], 'unknown': False, 'study': False, 'target': ['answer', 'unknown', 'study']}}
+    # 4 . F
+    # payload = {'payload': {'word_id': 37716, 'word': 'feeble', 'stem': ['adj. 哀婉动人的；可怜的', 'adj. 不幸的', '瘦的；（土地）不毛的；思想贫乏的', 'adj. 虚弱的；微弱的'], 'word_ids': [40159, 40079, 40882, 37716], 'correct_answer': [0, 0, 0, 1], 'answer': [1, 0, 0, 0], 'unknown': False, 'study': False, 'target': ['answer', 'unknown', 'study']}}
+    # 5. T
+    # payload = {'payload': {'word_id': 35851, 'word': 'spark', 'stem': ['v. 引燃，着火', 'n. 火花，火星', 'n. 刺激物 v. 刺激', 'n. 推动， 促进， 刺激； 推动力'], 'word_ids': [39197, 35851, 37697, 40649], 'correct_answer': [0, 1, 0, 0], 'answer': [0, 1, 0, 0], 'unknown': False, 'study': False, 'target': ['answer', 'unknown', 'study']}}
+    # 6. F
+    # payload = {'payload': {'word_id': 34679, 'word': 'counsel', 'stem': ['n. 律师， 代理人', 'n. 律师；法学家', 'v. 忠告，建议', 'n. 律师， 法律顾问'], 'word_ids': [38497, 35699, 34679, 38247], 'correct_answer': [0, 0, 1, 0], 'answer': [0, 0, 0, 0], 'unknown': False, 'study': False, 'target': ['answer', 'unknown', 'study']}}
+    # 7. T
+    # payload = {'payload': {'word_id': 37473, 'word': 'grind', 'stem': ['n. 槽', 'v. 磨（碎）；磨利', 'v. 刮；擦 n. 刮；擦伤；擦痕', 'v. 掘，挖；采掘'], 'word_ids': [40069, 37473, 37353, 36791], 'correct_answer': [0, 1, 0, 0], 'answer': [0, 1, 0, 0], 'unknown': False, 'study': False, 'target': ['answer', 'unknown', 'study']}}
+    # 8. T
+    # payload = {'payload': {'word_id': 37716, 'word': 'feeble', 'stem': ['adj. 哀婉动人的；可怜的', 'adj. 不幸的', '瘦的；（土地）不毛的；思想贫乏的', 'adj. 虚弱的；微弱的'], 'word_ids': [40159, 40079, 40882, 37716], 'correct_answer': [0, 0, 0, 1], 'answer': [0, 0, 0, 1], 'unknown': False, 'study': False, 'target': ['answer', 'unknown', 'study']}}
+    # 9. T
+    # payload = {'payload': {'word_id': 34679, 'word': 'counsel', 'stem': ['n. 律师， 代理人', 'n. 律师；法学家', 'v. 忠告，建议', 'n. 律师， 法律顾问'], 'word_ids': [38497, 35699, 34679, 38247], 'correct_answer': [0, 0, 1, 0], 'answer': [0, 0, 1, 0], 'unknown': False, 'study': False, 'target': ['answer', 'unknown', 'study']}}
+    # print(flow.rec_module_outcome(task_account_id=12, payload=payload)[1])

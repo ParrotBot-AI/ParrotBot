@@ -230,7 +230,7 @@ class VocabsService:
                                     create_time=datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))),
                                     last_update_time=datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))),
                                     loop=1,
-                                    current_loop=1,
+                                    current_loop=0,
                                     learning_type=1,
                                 )
                                 new_task_ = dict(
@@ -240,7 +240,7 @@ class VocabsService:
                                     create_time=datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))),
                                     last_update_time=datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))),
                                     loop=1,
-                                    current_loop=1,
+                                    current_loop=0,
                                     learning_type=1,
                                 )
                                 s_l.append(new_task)

@@ -11,10 +11,97 @@ from utils import iso_ts
 from sqlalchemy import null, select, union_all, and_, or_, join, outerjoin, update, insert, delete
 from datetime import datetime, timedelta, timezone
 
+def review_fetch_words_mc(
+    account_id=None,
+    **kwargs
+):
+    # 返回一个简单的词汇题目 #
+    # 单词本保持 !!!右进左出!!!!!
+    from blueprints.learning.models import VocabsLearning
+    from blueprints.education.models import VocabBase, VocabCategorySimilarities
+    redis_cache = RedisWrapper("core_cache")
+    rds = RedisWrapper('core_learning')
+
+    with db_session('core') as session:
+        record = (
+            session.query(VocabsLearning)
+            .filter(VocabsLearning.account_id == account_id)
+            .one_or_none()
+        )
+        if record:
+            today_list = rds.list_pop(f"{record.to_review}", side="l")
+
+            if len(today_list) == 1:
+                current_word_id = today_list[0]
+                word_cache = redis_cache.get(f"Word:{current_word_id}")
+                if word_cache:
+                    return True, word_cache, True
+
+                # 查找词汇的近义词
+                record = (
+                    session.query(VocabCategorySimilarities)
+                    .filter(VocabCategorySimilarities.word_id == current_word_id)
+                    .one_or_none()
+                )
+                if record:
+                    words_return = None
+                    if record.similarities is not None:
+                        words_return = [int(id) for id in record.similarities.split(";")[:3]]
+
+                    else:
+                        # random generate
+                        l = []
+                        for value in session.query(VocabBase.id).distinct():
+                            if value != current_word_id:
+                                l.append(value[0])
+
+                        words_return = random.sample(l, 3)
+
+                position = random.randint(0, len(words_return))
+                words_return.insert(position, current_word_id)
+                rl = {}
+                for i in range(len(words_return)):
+                    rl[words_return[i]] = i
+
+                w_records = (
+                    session.query(VocabBase)
+                    .filter(VocabBase.id.in_(words_return))
+                    .all()
+                )
+
+                eng = ""
+                stem = [None] * len(words_return)
+                for word in w_records:
+                    stem[rl[word.id]] = word.word_c
+                    if word.id == current_word_id:
+                        eng = word.word
+
+                answer = [0] * len(words_return)
+                answer[position] = 1
+                response = dict(
+                    word_id=current_word_id,
+                    word=eng,
+                    stem=stem,
+                    word_ids=words_return,
+                    correct_answer=answer,
+                    answer=[0] * len(words_return),
+                    unknown=False,
+                    study=False,
+                    target=["answer", "unknown", "study"]
+                )
+                redis_cache.set(f"Word:{current_word_id}", response, ex=86400)  # 缓存一天
+                return True, response, True
+
+            elif len(today_list) == 0:
+                return False, {}, True
+            else:
+                return False, "缓存出错", True
+        else:
+            return False, "无注册词汇学习表信息", True
 
 def fetch_words_mc(
-        account_id=None,
-        **kwargs
+    account_id=None,
+    **kwargs
 ):
     # 返回一个简单的词汇题目 #
     # 单词本保持 !!!右进左出!!!!!
@@ -265,6 +352,108 @@ def out_loop(
 
 
 # =================== out functions (only two response) ======================== #
+def reviews_redo_words_study(
+    payload,
+    account_id,
+    **kwargs
+):
+    # 缓存 statiscs
+    # 数据库 statisc: vocablearning: today study, total study
+    # 数据库 records 词表， study word, correct word, wrong word
+    from blueprints.learning.models import VocabsLearning, VocabsLearningRecords
+    word_id, correct_answer, answer, unknown, study = payload['word_id'], payload['correct_answer'], payload['answer'], \
+                                                      payload['unknown'], payload['study']
+    with db_session('core') as session:
+        record = (
+            session.query(VocabsLearning)
+            .filter(VocabsLearning.account_id == account_id)
+            .one_or_none()
+        )
+        if not record:
+            return False, "未找到单词账户"
+
+        try:
+            rds = RedisWrapper('core_learning')
+            redis = RedisWrapper('core_cache')
+            statistic_cache = redis.get(f'VocabsStatics:{account_id}')
+            now = datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))
+            tody = now.strftime('%Y-%m-%d')
+
+            if correct_answer != answer:
+                # wrong word 1 条记录
+
+                if statistic_cache:
+                    if tody in statistic_cache['series']:
+                        statistic_cache['series'][tody]['wrong_words'] += 1
+
+                rds.list_push(f"{record.to_review}", *[word_id], side="r")
+
+                total_len = len(rds.lrange(f"{record.to_review}"))
+
+                wrong_add = dict(
+                    wrong_word_id=word_id,
+                    account_id=account_id,
+                    time=datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))
+                )
+                session.add(VocabsLearningRecords(**wrong_add))
+
+                try:
+                    session.commit()
+                    redis.set(f'VocabsStatics:{account_id}', statistic_cache)
+
+                    # 如果今天的已经复习了,下一步
+                    if total_len > 0:
+                        return True, False
+                    else:
+                        return True, True
+
+                except Exception as e:
+                    return False, "单词学习过程中入库失败."
+
+            elif correct_answer == answer:
+                # 加入finished group
+                if statistic_cache:
+                    statistic_cache['today_day_review'] += 1
+                    statistic_cache['total_review'] += 1
+
+                    if tody in statistic_cache['series']:
+                        statistic_cache['series'][tody]['correct_words'] += 1
+
+                # correct word 1 条记录
+                study_add = dict(
+                    account_id=account_id,
+                    correct_word_id=word_id,
+                    time=datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))
+                )
+                session.add(VocabsLearningRecords(**study_add))
+
+                # 更新learning （大量写入，可能会导致瓶颈）
+                update_p = dict(
+                    today_day_review=record.today_day_review + 1,
+                    total_review=record.total_review + 1,
+                    last_update_time=datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))
+                )
+
+                record_update = (
+                    session.query(VocabsLearning)
+                    .filter(VocabsLearning.account_id == account_id)
+                    .update({**update_p})
+                )
+
+                try:
+                    session.commit()
+                    redis.set(f'VocabsStatics:{account_id}', statistic_cache)
+                    total_len = len(rds.lrange(f"{record.to_review}"))
+                    if total_len > 0:
+                        return True, False
+                    else:
+                        return True, True
+                except Exception as e:
+                    return False, "单词学习过程中入库失败."
+
+        except Exception as e:
+            return False, str(e)
+
 def redo_words_study(
         payload,
         account_id,
@@ -375,7 +564,7 @@ def redo_words_study(
                 record_update = (
                     session.query(VocabsLearning)
                     .filter(VocabsLearning.account_id == account_id)
-                    .update(**update_p)
+                    .update({**update_p})
                 )
 
                 rds.list_push(f"{account_id}:finished", *[word_id], side="r")
@@ -519,7 +708,7 @@ def re_loop(
             .one_or_none()
         )
         if record:
-            if record.loop >= record.current_loop:
+            if record.loop > record.current_loop:
                 return True, "redo"
             else:
                 # 执行finished
