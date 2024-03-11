@@ -146,6 +146,8 @@ class QuestionController(crudController):
                     "question_content": result.question_content,
                     "question_type": result.type_name,
                     "question_stem": result.question_stem,
+                    "voice_link": result.voice_link,
+                    "voice_content": result.voice_content,
                     "max_score": result.max_score,
                     "father_id": result.father_question,
                     "question_depth": result.d_level,
