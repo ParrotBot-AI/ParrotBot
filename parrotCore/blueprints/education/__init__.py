@@ -45,7 +45,7 @@ def fetch_resource_p(account_id, pattern_id):
         return ArgumentExceptionResponse(msg=f'{e}')
 
 @bp.route('fetch_past_scores/<account_id>/', methods=['GET'])
-def fetch_past_scores(exam_id, account_id):
+def fetch_past_scores(account_id):
     try:
         res = TransactionsController().get_recent_pattern_scores(
             account_id=account_id,
