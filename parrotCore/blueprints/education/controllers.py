@@ -1178,11 +1178,19 @@ class TransactionsController(crudController):
     支持所有事务表单(Projects, 问卷s, Sections, Resources)
     init: 先创建Projects => 问卷s => Sections, Resources
     """
-    def get_recent_pattern_scores(self, exam_id, account_id, offset):
+    def get_recent_pattern_scores(self, account_id, offset):
         with db_session('core') as session:
+            account = (
+                session.query(Accounts)
+                .filter(Accounts.id == account_id)
+                .one_or_none()
+            )
+            if not account:
+                return False, ""
+
             exam_r = (
                 session.query(Exams)
-                .filter(or_(Exams.id == exam_id, Exams.father_exam == exam_id))
+                .filter(or_(Exams.id == account.exam_id, Exams.father_exam == account.exam_id))
                 .all()
             )
 
