@@ -24,7 +24,7 @@ import pprint
 from utils.structure import Tree, TreeNode
 from utils.redis_tools import RedisWrapper
 from configs.environment import DATABASE_SELECTION
-from sqlalchemy import null, select, union_all, and_, or_, join, outerjoin, update, insert, delete
+from sqlalchemy import null, select, union_all, and_, or_, join, outerjoin, update, insert, delete, text
 import time
 from sqlalchemy.orm import aliased
 from sqlalchemy.sql.expression import bindparam
@@ -60,7 +60,8 @@ class QuestionController(crudController):
         top_two = sorted_group[:2]
         rest = sorted_group[2:]
         random_selection = random.sample(rest, min(len(rest), number - 2)) if len(rest) > number - 2 else rest
-        return top_two + random_selection
+        sorted_group = sorted(top_two + random_selection, key=lambda x: x['order'])
+        return sorted_group
 
     def _get_all_questions_under_section(self, section_id, active=None):
         with db_session('core') as session:
@@ -160,10 +161,9 @@ class QuestionController(crudController):
                 else:
                     refine_questions.append(record)
 
-                redis_store[result.id] = record
+                # redis_store[result.id] = record
 
             else:
-
                 try:
                     if result.question_stem:
                         merged_detail = {**json.loads(result.detail), **json.loads(result.q_detail),
@@ -240,7 +240,7 @@ class QuestionController(crudController):
                 else:
                     refine_questions.append(record)
 
-                redis_store[result.id] = record
+                # redis_store[result.id] = record
 
         # --------- 跟section的题目进行比对，检查是否有过多题目，如果多于section的题目数，随机抽取 ---- #
         for key in sections.keys():
@@ -264,7 +264,7 @@ class QuestionController(crudController):
                 if num <= sections[section_id]:
                     selected_records.extend(group_l)
                 else:
-                    selected_records.extend(QuestionController.select_records(group_l, sections[section_id]))
+                    selected_records.extend(QuestionController().select_records(group_l, sections[section_id]))
             else:
                 selected_records.extend(group_l)
 
@@ -274,7 +274,9 @@ class QuestionController(crudController):
         tree = Tree()
         for question in root_questions:
             tree.add_root(question)
+            redis_store[question['question_id']] = question
         for question in selected_records:
+            redis_store[question['question_id']] = question
             tree.add_node("question_id", question["father_id"], question)
 
         res_questions = tree.print_tree()
@@ -699,9 +701,17 @@ class AnsweringScoringController(crudController):
                 if answer_record.status == 0:
                     l = s.serialize_dic(answer_record, self.default_not_show)
                     l['type'] = l['type'].value
+
+                    # 获取小分
+                    res, data = self.get_score_question_detail(answer_sheet_id=answer_sheet_id, session=session)
+                    if not res:
+                        return False,data
+
                     resp, questions = self.get_test_answers(sheet_id=answer_sheet_id)
+
                     if resp:
                         l["questions_r"] = questions
+                        l["score_d"] = data
                         return True, l
                     else:
                         return False, "未找到打分试卷"
@@ -722,12 +732,21 @@ class AnsweringScoringController(crudController):
                     }
                     self._update(model=AnswerSheetRecord, update_parameters=update_s, restrict_field="id")
                     re_s = s.serialize_dic(answer_record, self.default_not_show)
+
+                    # 获取小分
+                    res, data = self.get_score_question_detail(answer_sheet_id=answer_sheet_id, session=session)
+                    if not res:
+                        return False, data
+
+                    # 生成答案:
+
                     re_s['score'] = t_score
                     re_s['type'] = re_s['type'].value
                     re_s["status"] = 0
                     resp, questions = self.get_test_answers(sheet_id=answer_sheet_id)
                     if resp:
                         re_s["questions_r"] = questions
+                        re_s["score_d"] = data
                     else:
                         return False, '未找到打分试卷'
 
@@ -1101,6 +1120,55 @@ class AnsweringScoringController(crudController):
                 session.rollback()
                 session.close()
                 return False, str(e)
+
+    def get_score_question_detail(self, answer_sheet_id, session):
+        try:
+            raw_sql = text(f"""
+                SELECT
+                Submissions.question_id,
+                CASE WHEN Submissions.score = Submissions.max_score THEN 1 ELSE 0 END AS IsMaxScore,
+                Q.father_question,
+                Q.section_id,
+                Q.remark
+                FROM Submissions
+                JOIN Questions Q ON Q.id = Submissions.question_id
+                WHERE Submissions.answer_sheet_id = {answer_sheet_id}
+                ORDER BY father_question ASC
+                """)
+            scores_d = session.execute(raw_sql).fetchall()
+
+            q_s = {}
+            father_q = {}
+            remark = {}
+            q = {}
+            for score_d in scores_d:
+                if score_d.father_question == -1:
+                    if score_d.question_id not in father_q:
+                        father_q[score_d.question_id] = 0
+                        q[score_d.question_id] = 0
+                        remark[score_d.question_id] = score_d.remark
+                        if score_d.section_id not in q_s:
+                            q_s[score_d.section_id] = [score_d.question_id]
+                        else:
+                            q_s[score_d.section_id].append(score_d.question_id)
+                else:
+                    if score_d.father_question in father_q:
+                        father_q[score_d.father_question] += 1
+                        q[score_d.father_question] += score_d.IsMaxScore
+
+            res = {}
+            for section in sorted(list(q_s.keys())):
+                se = []
+                for i in q_s[section]:
+                    _q = {}
+                    _q['name'] = remark[i]
+                    _q['count'] = q[i]
+                    _q['total'] = father_q[i]
+                    se.append(_q)
+                res[section] = se
+            return True, res
+        except Exception as e:
+            return False, str(e)
 
 
 class TransactionsController(crudController):
@@ -1944,7 +2012,7 @@ if __name__ == '__main__':
     # print(datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))))
 
     init = AnsweringScoringController()
-    # res = init.create_answer_sheet(account_id=7, question_ids=[1755, 1756, 1757, 1758, 1760])
+    # res = init.create_answer_sheet(account_id=27, question_ids=[3, 18])
     # sheet_id = res[1]['sheet_id']
     # pprint.pprint(init.get_test_answers(sheet_id=sheet_id))
 
@@ -1953,10 +2021,10 @@ if __name__ == '__main__':
     # print(init.update_question_answer(sheet_id=sheet_id, question_id=5, answer=[0, 0, 1, 0], duration=200))
 
     # 提交答案
-    # pprint.pprint(init.save_answer(sheet_id=133))
+    # pprint.pprint(init.save_answer(sheet_id=279))
 
     # 算分
     # start = time.time()
-    print(init.scoring(sheet_id=133))
-    # pprint.pprint(init.get_score(answer_sheet_id=133))
+    # print(init.scoring(sheet_id=279))
+    # pprint.pprint(init.get_score(answer_sheet_id=279))
     # print(time.time() - start)
