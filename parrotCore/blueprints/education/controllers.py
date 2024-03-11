@@ -1178,6 +1178,65 @@ class TransactionsController(crudController):
     支持所有事务表单(Projects, 问卷s, Sections, Resources)
     init: 先创建Projects => 问卷s => Sections, Resources
     """
+    def get_recent_pattern_scores(self, exam_id, account_id, offset):
+        with db_session('core') as session:
+            exam_r = (
+                session.query(Exams)
+                .filter(or_(Exams.id == exam_id, Exams.father_exam == exam_id))
+                .all()
+            )
+
+            exam_ids = [x.id for x in exam_r]
+            records = (
+                session.query(Patterns)
+                .filter(Patterns.exam_id.in_(exam_ids))
+                .all()
+            )
+
+            _records = (
+                session.query(
+                    Patterns.pattern_name
+                )
+                .filter(Patterns.exam_id.in_(exam_ids))
+                .group_by(Patterns.pattern_name)
+                .all()
+            )
+
+            patterns = []
+            for i in records:
+                patterns.append(i.id)
+
+            if len(patterns) > 0:
+                current_date = datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))
+                date_days_ago = current_date - timedelta(days=offset)
+                date_days_ago = date_days_ago.strftime("%Y-%m-%d")
+                raw_sql = text(f"""
+                    SELECT DISTINCTROW
+                        Patterns.pattern_name,
+                        ROUND(AVG(ASR.score), 2) as score
+                    FROM Patterns
+                    JOIN Sections S on Patterns.id = S.pattern_id
+                    JOIN Scores S3 on S.id = S3.section_id
+                    JOIN AnswerSheetRecord ASR on S3.answer_sheet_id = ASR.id
+                    WHERE Patterns.id IN {tuple(patterns)}
+                    AND ASR.account_id = {account_id}
+                    AND ASR.status = 0
+                    AND ASR.last_update_time > {date_days_ago}
+                    GROUP BY Patterns.pattern_name;
+                """)
+                scores = session.execute(raw_sql).fetchall()
+
+                res = {}
+                for score in scores:
+                    res[score.pattern_name] = float(score.score)
+
+                for record in _records:
+                    if record.pattern_name not in res:
+                        res[record.pattern_name] = None
+
+                return True, res
+            else:
+                return False, ""
 
     def _get_all_exams(self, active=None):
         with db_session('core') as session:
@@ -1994,7 +2053,8 @@ class InitController(crudController):
 
 if __name__ == '__main__':
     #
-    # init = TransactionsController()
+    init = TransactionsController()
+    pprint.pprint(init.get_recent_pattern_scores(1, 20, 14))
     # pprint.pprint(init._get_all_resources_under_patterns(pattern_id=12, account_id=7))
     # init = InitController()
     # print(init.build_listening_questions())
@@ -2011,7 +2071,7 @@ if __name__ == '__main__':
 
     # print(datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))))
 
-    init = AnsweringScoringController()
+    # init = AnsweringScoringController()
     # res = init.create_answer_sheet(account_id=27, question_ids=[3, 18])
     # sheet_id = res[1]['sheet_id']
     # pprint.pprint(init.get_test_answers(sheet_id=sheet_id))

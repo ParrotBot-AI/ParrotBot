@@ -44,6 +44,21 @@ def fetch_resource_p(account_id, pattern_id):
     except Exception as e:
         return ArgumentExceptionResponse(msg=f'{e}')
 
+@bp.route('fetch_past_scores/<exam_id>/<account_id>/', methods=['GET'])
+def fetch_past_scores(exam_id, account_id):
+    try:
+        res = TransactionsController().get_recent_pattern_scores(
+            exam_id=exam_id,
+            account_id=account_id,
+            offset=14
+        )
+        if res[0]:
+            return SuccessDataResponse(res[1])
+        else:
+            return ArgumentExceptionResponse(msg=f'{res[1]}')
+    except Exception as e:
+        return ArgumentExceptionResponse(msg=f'{e}')
+
 
 # ----------------------------------------   做题   ---------------------------------------- #
 @bp.route('create_sheet', methods=['POST'])
@@ -160,6 +175,7 @@ def get_score(sheet_id):
             return ArgumentExceptionResponse(msg=f'{res[1]}')
     except Exception as e:
         return ArgumentExceptionResponse(msg=f'{e}')
+
 
 
 # heart beat

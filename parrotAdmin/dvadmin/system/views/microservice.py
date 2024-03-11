@@ -166,8 +166,7 @@ class MicroServiceRegisterViewSet(CustomModelViewSet):
     def resource(self, request):
         exam_id = request.data.get("exam_id")
         pattern_id = request.data.get("pattern_id")
-        # account_id = request.data.get("account_id")
-        account_id = 7
+        account_id = request.data.get("account_id")
 
         # whether_zt = request.data.get("is_real_problem") # 目前默认false
         whether_zt = False
@@ -199,6 +198,25 @@ class MicroServiceRegisterViewSet(CustomModelViewSet):
 
         # output: resource list with sub question
         return SuccessResponse(data=res_data, msg='获取成功', page=page, limit=limit, total=len(res_data))
+
+    @action(methods=["POST"], detail=False, permission_classes=[IsAuthenticated])
+    def get_past_scores(self, request):
+        exam_id = request.data.get("exam_id")
+        account_id = request.data.get("account_id")
+        # request send to microservices
+        if True:
+            try:
+                # data = dict(micro.data)
+                url = f"http://{'127.0.0.1'}:{10981}/v1/api/education/fetch_past_scores/{exam_id}/{account_id}"
+                r = requests.get(url)
+
+                if r.json()['code'] == 10000:
+                    res_data = r.json()['data']
+                    return DetailResponse(data=res_data, msg='获取成功')
+                else:
+                    return ErrorResponse(msg=r.json()['msg'])
+            except:
+                return ErrorResponse(msg="微服务故障")
 
     @action(methods=["POST"], detail=False, permission_classes=[IsAuthenticated])
     def create_mock(self, request):
