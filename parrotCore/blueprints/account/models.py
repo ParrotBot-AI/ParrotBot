@@ -50,6 +50,7 @@ class Accounts(BASES['core']):
     user_id = Column(Integer, ForeignKey('Users.id', ondelete='CASCADE'), nullable=False)
     # exam_id = Column(Integer, nullable=False)
     exam_id = Column(Integer, ForeignKey('Exams.id', ondelete='CASCADE'), nullable=False)
+    model_today_used = Column(Integer, default=0)
     create_time = Column(DateTime)
     last_update_time = Column(DateTime)
     last_request_time = Column(DateTime)

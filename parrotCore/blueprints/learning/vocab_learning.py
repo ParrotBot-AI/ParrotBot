@@ -11,9 +11,10 @@ from utils import iso_ts
 from sqlalchemy import null, select, union_all, and_, or_, join, outerjoin, update, insert, delete
 from datetime import datetime, timedelta, timezone
 
+
 def review_fetch_words_mc(
-    account_id=None,
-    **kwargs
+        account_id=None,
+        **kwargs
 ):
     # 返回一个简单的词汇题目 #
     # 单词本保持 !!!右进左出!!!!!
@@ -99,9 +100,10 @@ def review_fetch_words_mc(
         else:
             return False, "无注册词汇学习表信息", True
 
+
 def fetch_words_mc(
-    account_id=None,
-    **kwargs
+        account_id=None,
+        **kwargs
 ):
     # 返回一个简单的词汇题目 #
     # 单词本保持 !!!右进左出!!!!!
@@ -325,10 +327,10 @@ def review_words(
 
 
 def out_loop(
-    current_loop,
-    loop,
-    task_account_id,
-    **kwargs
+        current_loop,
+        loop,
+        task_account_id,
+        **kwargs
 ):
     from blueprints.learning.models import TaskAccounts
     with db_session('core') as session:
@@ -352,9 +354,9 @@ def out_loop(
 
 # =================== out functions (only two response) ======================== #
 def reviews_redo_words_study(
-    payload,
-    account_id,
-    **kwargs
+        payload,
+        account_id,
+        **kwargs
 ):
     # 缓存 statiscs
     # 数据库 statisc: vocablearning: today study, total study
@@ -453,6 +455,7 @@ def reviews_redo_words_study(
         except Exception as e:
             return False, str(e)
 
+
 def redo_words_study(
         payload,
         account_id,
@@ -461,6 +464,7 @@ def redo_words_study(
     # 缓存 statiscs
     # 数据库 statisc: vocablearning: today study, total study
     # 数据库 records 词表， study word, correct word, wrong word
+    from blueprints.education.models import VocabCategoryRelationships
     from blueprints.learning.models import VocabsLearning, VocabsLearningRecords
     word_id, correct_answer, answer, unknown, study = payload['word_id'], payload['correct_answer'], payload['answer'], \
                                                       payload['unknown'], payload['study']
@@ -475,6 +479,7 @@ def redo_words_study(
             return False, "未找到单词账户"
 
         try:
+            cate = record.current_category
             rds = RedisWrapper('core_learning')
             redis = RedisWrapper('core_cache')
             statistic_cache = redis.get(f'VocabsStatics:{account_id}')
@@ -488,8 +493,8 @@ def redo_words_study(
 
             elif unknown:
                 rds.list_push(f"{record.unknown}", *[word_id], side="r")
-                rds.list_push(f"{record.to_review}",*[word_id], side="r")
-                rds.list_push(f"{account_id}:wrong_group",*[word_id], side="r")
+                rds.list_push(f"{record.to_review}", *[word_id], side="r")
+                rds.list_push(f"{account_id}:wrong_group", *[word_id], side="r")
 
                 total_len = len(rds.lrange(f"{account_id}:wrong_group"))
 
@@ -500,7 +505,6 @@ def redo_words_study(
 
             elif correct_answer != answer:
                 # wrong word 1 条记录
-
                 if statistic_cache:
                     if tody in statistic_cache['series']:
                         statistic_cache['series'][tody]['wrong_words'] += 1
@@ -544,6 +548,24 @@ def redo_words_study(
                     if tody in statistic_cache['series']:
                         statistic_cache['series'][tody]['correct_words'] += 1
 
+                word = (
+                    session.query(VocabCategoryRelationships)
+                    .filter(VocabCategoryRelationships.word_id == word_id)
+                )
+                if word:
+                    if word.category_id > cate:
+                        record = (
+                            session.query(VocabsLearning)
+                            .filter(VocabsLearning.id == account_id)
+                            .update({VocabsLearning.current_category == word.category_id})
+                        )
+                        if statistic_cache:
+                            statistic_cache['status_book']["current_level"] = word.category_id
+                            statistic_cache['status_book']["level_status"] = 0
+                            for each in statistic_cache['status_book']['level_book']:
+                                if each['id'] == word.category_id:
+                                    statistic_cache['status_book']["level_total"] = each['counts']
+
                 # study word, correct word 2 条记录
                 study_add = dict(
                     account_id=account_id,
@@ -555,8 +577,8 @@ def redo_words_study(
 
                 # 更新learning （大量写入，可能会导致瓶颈）
                 update_p = dict(
-                    today_day_study=record.today_day_study+1,
-                    total_study=record.total_study+1,
+                    today_day_study=record.today_day_study + 1,
+                    total_study=record.total_study + 1,
                     last_update_time=datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))
                 )
 
@@ -632,9 +654,9 @@ def redo_review_study(
                 rds.list_push(f"{record.to_review}", *[word_id], side="r")
 
                 wrong_add = dict(
-                        wrong_word_id=word_id,
-                        account_id=account_id,
-                        time=datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))
+                    wrong_word_id=word_id,
+                    account_id=account_id,
+                    time=datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))
                 )
                 session.add(VocabsLearningRecords(**wrong_add))
 
@@ -658,24 +680,24 @@ def redo_review_study(
 
                 # study word, correct word 2 条记录
                 study_add = dict(
-                        account_id=account_id,
-                        study_word_id=word_id,
-                        correct_word_id=word_id,
-                        time=datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))
+                    account_id=account_id,
+                    study_word_id=word_id,
+                    correct_word_id=word_id,
+                    time=datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))
                 )
                 session.add(VocabsLearningRecords(**study_add))
 
                 # 更新learning （大量写入，可能会导致瓶颈）
                 update_p = dict(
-                        today_day_study=record.today_day_study + 1,
-                        total_study=record.total_study + 1,
-                        last_update_time=datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))
+                    today_day_study=record.today_day_study + 1,
+                    total_study=record.total_study + 1,
+                    last_update_time=datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))
                 )
 
                 record_update = (
-                        session.query(VocabsLearning)
-                        .filter(VocabsLearning.account_id == account_id)
-                        .update({**update_p})
+                    session.query(VocabsLearning)
+                    .filter(VocabsLearning.account_id == account_id)
+                    .update({**update_p})
                 )
 
                 rds.list_push(f"{account_id}:finished", *[word_id], side="r")
@@ -717,7 +739,8 @@ def re_loop(
                     .update({
                         TaskAccounts.is_complete: 1,
                         TaskAccounts.finished_time: datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))),
-                        TaskAccounts.last_update_time: datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))),
+                        TaskAccounts.last_update_time: datetime.now(timezone.utc).astimezone(
+                            timezone(timedelta(hours=8))),
                     })
                 )
                 redis = RedisWrapper('core_cache')

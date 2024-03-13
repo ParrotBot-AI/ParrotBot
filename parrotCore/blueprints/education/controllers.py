@@ -575,7 +575,7 @@ class AnsweringScoringController(crudController):
             else:
                 return False, "未找到答卷"
 
-    def update_question_answer(self, sheet_id, question_id, duration, answer=None, answer_voice_link=None,
+    def update_question_answer(self, sheet_id, question_id, duration=None, answer=None, answer_voice_link=None,
                                answer_video_link=None, upload_file_link=None, model_answer=None, score=None):
         redis_cli = RedisWrapper('core_cache')
         cache_dict = redis_cli.get(f'Sheet-{sheet_id}')
@@ -591,11 +591,12 @@ class AnsweringScoringController(crudController):
                 cache_dict['questions'][str(question_id)]['upload_file_link'] = upload_file_link
             if model_answer:
                 cache_dict['questions'][str(question_id)]['model_answer'] = upload_file_link
-
+            if duration:
+                cache_dict['questions'][str(question_id)]['duration'] = duration
             # 支持中途算分
             if score:
                 cache_dict['questions'][str(question_id)]['score'] = score
-            cache_dict['questions'][str(question_id)]['duration'] = duration
+
             redis_cli.set(f'Sheet-{sheet_id}', cache_dict)
             return True, "OK."
         else:
@@ -785,7 +786,8 @@ class AnsweringScoringController(crudController):
             account = (
                 session.query(
                     Users.id,
-                    Accounts.model_today_usage,
+                    Accounts.id.label('account_id'),
+                    Accounts.model_today_used,
                     Users.user_plan
                 )
                 .join(AnswerSheetRecord, AnswerSheetRecord.account_id == Accounts.id)
@@ -796,73 +798,100 @@ class AnsweringScoringController(crudController):
             if not account:
                 return False, ""
 
+            score, model_answer = 0, "{}"
+            contine_fetch = True
+
             if account.user_plan == 0 or account.user_plan is None:
                 if account.model_today_usage >= 1:
-                    return True, ""
+                    model_answer = '{"msg":"用量已超使用上限制"}'
+                    contine_fetch = False
 
-            if record.pattern_eng_name == "Speaking":  # speaking model
-                try:
-                    url = f"http://{'127.0.0.1'}:{10981}/............"
-                    r = requests.post(url, json={
+            if contine_fetch:
+                if record.pattern_eng_name == "Speaking":  # speaking model
+                    try:
+                        url = f"http://{'127.0.0.1'}:{10981}/............"
+                        r = requests.post(url, json={
 
-                    })
+                        })
 
-                    if r.json()['code'] == 10000:
-                        res_data = r.json()['data']
-
-                        redis = RedisWrapper("core_cache")
-                        sheet_data = redis.get(f"Sheet-{sheet_id}")
-                        if not sheet_data:
+                        if r.json()['code'] == 10000:
+                            res_data = r.json()['data']
+                            score = None
+                            model_answer = json.dumps(res_data)
                             update = (
-                                session.query(Submissions)
-                                .filter(and_(Submissions.question_id == question_id,
-                                             Submissions.answer_sheet_id == sheet_id))
-                                .update({})
-                            )
+                                session.query(Accounts)
+                                .filter(Accounts.id == account.account_id)
+                                .update({
+                                    Accounts.model_today_used: account.model_today_used + 1
+                                }))
+
                         else:
-                            # update_:
-                            AnsweringScoringController().update_question_answer(sheet_id=sheet_id,
-                                                                                question_id=question_id,
-                                                                                model_answer=res_data, score=None)
-                        return
-                    else:
-                        return
-                except Exception as e:
-                    return False, f"{str(e)}"
-            elif record.pattern_eng_name == "Writing":  # writing model
-                try:
-                    url = f"http://{'127.0.0.1'}:{10981}/............"
-                    r = requests.post(url, json={
+                            score = None
+                            model_answer = '{"msg":"访问AI模型失败"}'
 
-                    })
+                    except Exception as e:
+                        score = None
+                        model_answer = '{"msg":"访问AI模型失败"}'
 
-                    if r.json()['code'] == 10000:
-                        res_data = r.json()['data']
-                        redis = RedisWrapper("core_cache")
-                        sheet_data = redis.get(f"Sheet-{sheet_id}")
-                        if not sheet_data:
+                elif record.pattern_eng_name == "Writing":  # writing model
+                    try:
+                        url = f"http://{'127.0.0.1'}:{10981}/............"
+                        r = requests.post(url, json={
+
+                        })
+
+                        if r.json()['code'] == 10000:
+                            res_data = r.json()['data']
+                            score = None
+                            model_answer = json.dumps(res_data)
                             update = (
-                                session.query(Submissions)
-                                .filter(
-                                    and_(Submissions.question_id == question_id,
-                                         Submissions.answer_sheet_id == sheet_id))
-                                .update({})
-                            )
+                                session.query(Accounts)
+                                .filter(Accounts.id == account.account_id)
+                                .update({
+                                    Accounts.model_today_used: account.model_today_used + 1
+                                }))
                         else:
-                            # update_:
-                            AnsweringScoringController().update_question_answer(sheet_id=sheet_id,
-                                                                                question_id=question_id,
-                                                                                model_answer=res_data,
-                                                                                score=None)
-                        return
-                    else:
-                        return
-                except Exception as e:
-                    return False, f"{str(e)}"
+                            score = None
+                            model_answer = '{"msg":"访问AI模型失败"}'
+
+                    except Exception as e:
+                        score = None
+                        model_answer = '{"msg":"访问AI模型失败"}'
+                else:
+                    score = None
+                    model_answer = '{"msg":"AI模型批改未开放"}'
+
+            redis = RedisWrapper("core_cache")
+            sheet_data = redis.get(f"Sheet-{sheet_id}")
+            if not sheet_data:
+                update = (
+                    session.query(Submissions)
+                    .filter(and_(Submissions.question_id == question_id,
+                                 Submissions.answer_sheet_id == sheet_id))
+                    .update({
+                        Submissions.last_update_time: datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))),
+                        Submissions.score: score,
+                        Submissions.model_answer: model_answer
+                    })
+                )
             else:
-                return False, ""
+                # update_:
+                self.update_question_answer(
+                    sheet_id=sheet_id,
+                    question_id=question_id,
+                    model_answer=model_answer,
+                    score=score
+                )
 
-    def scoring(self, sheet_id):
+            try:
+                session.commit()
+                return True, score
+            except Exception as e:
+                session.rollback()
+                return False, 0
+
+
+    def scoring(self, sheet_id, re_score=False):
         with db_session('core') as session:
             record = (
                 session.query(AnswerSheetRecord)
@@ -897,6 +926,7 @@ class AnsweringScoringController(crudController):
                 S.upload_file_link,
                 S.cal_method.label('cal_m'),
                 S.max_score,
+                S.model_answer,
                 Q.stem_weights.label('question_stem'),
                 Q.question_type,
                 Q.correct_answer,
@@ -965,11 +995,12 @@ class AnsweringScoringController(crudController):
                         'cal_method': result.cal_m,
                         'cal_fun': result.cal_m_B
                     }
-                    # 如果之前未算过分
-                    if not result.score:
-                        # 自动计分
-                        try:
-                            if result.is_cal == 1:
+
+
+                    # 自动计分
+                    try:
+                        if result.is_cal == 1:
+                            if re_score:
                                 score = getattr(grading_instance, question['cal_fun'])(
                                     answer=question['answer'],
                                     correct=question['correct'],
@@ -980,7 +1011,22 @@ class AnsweringScoringController(crudController):
                                 )
                                 question['score'] = score
                             else:
-                                # 手动/模型 计分方法
+                                if not result.score:
+                                    score = getattr(grading_instance, question['cal_fun'])(
+                                        answer=question['answer'],
+                                        correct=question['correct'],
+                                        weight=question['weight'],
+                                        rubric=question['rubric'],
+                                        restriction=question['restriction'],
+                                        max_score=question['max_score']
+                                    )
+                                    question['score'] = score
+                                else:
+                                    question['score'] = result.score
+
+                        else:
+                            # 手动/模型 计分方法
+                            if re_score:
                                 score = getattr(grading_instance, question['cal_fun'])(
                                     sheet_id=sheet_id,
                                     question_id=question['question_id'],
@@ -990,39 +1036,24 @@ class AnsweringScoringController(crudController):
                                     upload_file_link=question['upload_file_link']
                                 )
                                 question['score'] = score
-                        except:
-                            # 如果数据源问题道题出错，先默认为0，待修改后，可以重新计分
-                            question['score'] = 0
-                    else:
-                        question['score'] = result.score
+                            else:
+                                if not result.score:
+                                    score = getattr(grading_instance, question['cal_fun'])(
+                                        sheet_id=sheet_id,
+                                        question_id=question['question_id'],
+                                        answer=question['answer'],
+                                        voice_link=question['voice_link'],
+                                        video_link=question['video_link'],
+                                        upload_file_link=question['upload_file_link']
+                                    )
+                                    question['score'] = score
+                                else:
+                                    question['score'] = result.score
+                    except:
+                        # 如果数据源问题道题出错，先默认为0，待修改后，可以重新计分
+                        question['score'] = 0
 
                     questions.append(question)
-                # else:
-                #     question = {
-                #         'submission_id': result.submission_id,
-                #         'father_id': result.father_question,
-                #         'question_id': result.question_id,
-                #         'max_score': result.max_score,
-                #         'score':None,
-                #         'section_id': result.section_id,
-                #     }
-                #     q = question.copy()
-                #     q['q'] = question
-                #     roots.append(q)
-
-            # tree = Tree()
-            # for question in roots:
-            #     tree.add_root(question)
-            #
-            # for question in questions:
-            #     tree.add_node("question_id", question["father_id"], question)
-            #
-            # # 计算分数每个的root的分数
-            # for root in tree.roots:
-            #     root_score = tree.sum_children_scores(root)
-            #     root_q = root.q.copy()
-            #     root_q['score'] = root_score
-            #     questions.append(root_q)
 
             from collections import defaultdict
             result = defaultdict(float)

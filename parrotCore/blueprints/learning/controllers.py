@@ -9,8 +9,6 @@ from blueprints.learning.models import (
 )
 from blueprints.account.models import (
     Accounts,
-    AccountsVocab,
-    AccountsScores,
     Users,
 )
 from sqlalchemy import select, func, Date, cast, and_, text, literal_column, case
@@ -45,6 +43,96 @@ logger = get_general_logger('account', path=abspath('logs', 'core_web'))
 
 
 class VocabLearningController(crudController):
+
+    def jump_to_vocabs(self, account_id, category_id, exam_id):
+        from blueprints.education.models import (VocabCategorys, VocabCategoryRelationships)
+        redis = RedisWrapper('core_learning')
+        cache = RedisWrapper('core_cache')
+        with db_session('core') as session:
+            record = (
+                session.query(VocabsLearning)
+                .filter(VocabsLearning.account_id == account_id)
+                .one_or_none()
+            )
+            if not record:
+                return False, "未找到该用户"
+
+            cate = record.current_category
+            records = (
+                session.query(VocabCategorys)
+                .filter(or_(VocabCategorys.id == cate, VocabCategorys.id == category_id))
+                .all()
+            )
+            _r = -1
+            c_id = None
+            for r in records:
+                if r.order > _r:
+                    _r = r.order
+                    c_id = r.id
+
+            # 暂不支持往回跳
+            if c_id == cate:
+                return False, "不支持往回跳过词汇"
+            else:
+                records = (
+                    session.query(VocabCategorys)
+                    .filter(VocabCategorys.exam_id == exam_id)
+                    .filter(VocabCategorys.order >= _r)
+                    .all()
+                )
+                cate_ids = [x.id for x in records]
+                words = (
+                    session.query(VocabCategoryRelationships)
+                    .filter(VocabCategoryRelationships.category_id.in_(cate_ids))
+                )
+                input_list = [x.word_id for x in words]
+                in_process = redis.lrange(f"{record.in_process}")
+                redis.list_pop(f"{record.in_process}", "l", len(in_process))
+                today = redis.lrange(f"{record.today_learn}")
+                redis.list_pop(f"{record.today_learn}", "l", len(today))
+                if len(input_list) > 0:
+                    import random
+                    random.shuffle(input_list)
+                    l = redis.list_push(f"{record.in_process}", *input_list, side="r")
+                    for _ in range(record.amount):
+                        redis.list_move(f"{record.in_process}", f"{record.today_learn}")
+                cache.delete(f"VocabsStatics:{account_id}")
+
+                record_update = (
+                    session.query(VocabsLearning)
+                    .filter(VocabsLearning.account_id == account_id)
+                    .update({
+                        VocabsLearning.current_category: c_id})
+                )
+
+            try:
+                session.commit()
+                return True, "跳过成功"
+            except Exception as e:
+                session.rollback()
+                return False, {str(e)}
+
+
+    def add_new_word_category(self, category_id):
+        from blueprints.education.models import (VocabCategoryRelationships)
+        redis = RedisWrapper('core_learning')
+        with db_session('core') as session:
+            records = (session.query(VocabsLearning).all())
+            for record in records:
+                in_process = redis.lrange(f"{record.in_process}")
+                if len(in_process) > 0:
+                    # redis.list_pop(f"{record.in_process}", "r", 335)
+                    words = (
+                        session.query(VocabCategoryRelationships)
+                        .filter(VocabCategoryRelationships.category_id == category_id)
+                        .all()
+                    )
+                    input_list = [x.word_id for x in words]
+                    if len(input_list) > 0:
+                        import random
+                        random.shuffle(input_list)
+                        l = redis.list_push(f"{record.in_process}", *input_list, side="r")
+            return True, "更新成功"
 
     def create_new_vocab_tasks(self, account_id):
         s_l = []
@@ -311,7 +399,7 @@ class VocabLearningController(crudController):
                 AND time >= CURDATE() - INTERVAL {t_interval - 1} DAY
             ) AS Data ON DateSeries.day = Data.day
             GROUP BY DateSeries.day
-            ORDER BY DateSeries.day DESC;
+            ORDER BY DateSeries.day ASC;
             """)
 
             # Execute the raw SQL query
@@ -360,15 +448,15 @@ class VocabLearningController(crudController):
                     for result in results:
                         s_l[result.day.strftime('%Y-%m-%d')] = {}
                         s_l[result.day.strftime('%Y-%m-%d')]['wrong_words'] = int(result.w_c) if result.w_c else 0,
-                        s_l[result.day.strftime('%Y-%m-%d')]['correct_words'] = int(result.c_c) if result.w_c else 0,
+                        s_l[result.day.strftime('%Y-%m-%d')]['correct_words'] = int(result.c_c) if result.c_c else 0,
 
                     resp['series'] = s_l
-                    # res, data = self.fetch_vocabs_level(account_id, account.exam_id)
-                    # if res:
-                    #     resp['status_book'] = data
+                    res, data = self.fetch_vocabs_level(account_id, account.exam_id)
+                    if res:
+                        resp['status_book'] = data
 
                     # 缓存
-                    redis.set(f'VocabsStatics:{account_id}', resp)
+                    redis.set(f'VocabsStatics:{account_id}', resp, 7200)
 
                     return True, resp
                 else:
@@ -556,7 +644,7 @@ class TaskController(crudController):
                 if record:
                     tas['task_account_id'] = task.id
                     tas['task_name'] = record.task_name
-                    tas['task_id'] = record.task_id
+                    tas['task_id'] = record.id
                     tas['order'] = record.order
                     tas['is_complete'] = task.is_complete
                     tas['complete_p'] = task.complete_percentage
@@ -714,6 +802,12 @@ class TaskController(crudController):
                 if record.loop <= record.current_loop:
                     return False, '任务已经完成'
 
+                now = datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))
+                start_of_today = datetime(now.year, now.month, now.day)
+                if record.create_time < start_of_today:
+                    return False, '任务已过期'
+
+
         current_task, pointer = None, None
         if res != {}:
             resp, data = self.fetch_module_chains_conditions(task_account_id=task_account_id)
@@ -842,17 +936,19 @@ class TaskController(crudController):
 
 
 if __name__ == "__main__":
-    account_id = 27
-    # pprint(flow.fetch_account_tasks(account_id=account_id, after_time=get_today_midnight(), active=True))
-    # today = datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))
-    # time = datetime(today.year, today.month, today.day, 0, 0)
-    # res, data = TaskController().fetch_account_tasks(
-    #     account_id=account_id,
-    #     after_time=time,
-    #     type=1,
-    #     is_complete=0,
-    # )
-    # pprint(data)
+    account_id = 20
+    # pprint(VocabLearningController().jump_to_vocabs(account_id=12, category_id=1, exam_id=1))
+    # pprint(VocabLearningController().fetch_account_vocab(12))
+    # pprint(TaskController().fetch_account_tasks(account_id=account_id, after_time=get_today_midnight(), active=True))
+    today = datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))
+    time = datetime(today.year, today.month, today.day, 0, 0)
+    res, data = TaskController().fetch_account_tasks(
+        account_id=account_id,
+        after_time=time,
+        type=1,
+        is_complete=0,
+    )
+    pprint(data)
 
     # 背单词
     # 1.先用5个
@@ -879,9 +975,9 @@ if __name__ == "__main__":
     # print(flow.rec_module_outcome(task_account_id=15, payload=payload)[1])
 
     # 复习单词
-    flow = TaskController()
-    resp, payload = flow.start_task(task_account_id=12)
-    print(payload)
+    # flow = TaskController()
+    # resp, payload = flow.start_task(task_account_id=5)
+    # print(payload)
     # 1. F
     # payload = {'payload': {'word_id': 37473, 'word': 'grind', 'stem': ['n. 槽', 'v. 磨（碎）；磨利', 'v. 刮；擦 n. 刮；擦伤；擦痕', 'v. 掘，挖；采掘'], 'word_ids': [40069, 37473, 37353, 36791], 'correct_answer': [0, 1, 0, 0], 'answer': [0, 0, 0, 0], 'unknown': False, 'study': False, 'target': ['answer', 'unknown', 'study']}}
     # 2. T

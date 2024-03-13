@@ -97,7 +97,7 @@ class VocabsService:
             for record in records:
                 cate = record.current_category
                 in_process = redis.get(f"{record.in_process}")
-                if not in_process and not cate:
+                if not cate:
                     # 新用户，生成单词表
                     new_cate = 1  # 从第一个category开始
                     acc = (
