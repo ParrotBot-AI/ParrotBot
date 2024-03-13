@@ -390,12 +390,12 @@ class MicroServiceRegisterViewSet(CustomModelViewSet):
     @action(methods=["GET"], detail=False, permission_classes=[IsAuthenticated],
             url_path="get_vocabs_statics/(?P<account_id>\d+)")
     def get_vocabs_statics(self, request, account_id):
-        account = 7
+        # account = 7
         try:
             if True:
                 try:
                     # data = dict(micro.data)
-                    url = f"http://{'127.0.0.1'}:{10981}/v1/api/learning/get_vocabs_statics/{account}/"
+                    url = f"http://{'127.0.0.1'}:{10981}/v1/api/learning/get_vocabs_statics/{account_id}/"
                     r = requests.get(url)
 
                     if r.json()['code'] == 10000:
@@ -453,6 +453,7 @@ class MicroServiceRegisterViewSet(CustomModelViewSet):
     def learning_task(self, request):
         task_account_id = request.data.get("task_account_id")
         payload = request.data.get("payload")
+        print(payload, 456)
         if True:
             try:
                 # data = dict(micro.data)
