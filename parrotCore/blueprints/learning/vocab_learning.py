@@ -550,7 +550,7 @@ def redo_words_study(
                     statistic_cache['total_study'] += 1
 
                     if tody in statistic_cache['series']:
-                        statistic_cache['series'][tody]['correct_words'] += 1
+                        statistic_cache['series'][tody]['correct_words'][0] += 1
 
                 print("here", 551)
 
