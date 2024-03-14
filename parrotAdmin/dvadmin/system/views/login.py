@@ -1,5 +1,6 @@
 import base64
 import hashlib
+from django.core.exceptions import ObjectDoesNotExist
 from datetime import datetime, timedelta
 from django.contrib.auth import authenticate, get_user_model
 from django.contrib.auth.models import AbstractBaseUser, update_last_login
@@ -244,9 +245,14 @@ class LoginSerializer(TokenObtainPairWithoutPasswordSerializer):
                             user = Users.objects.filter(username=user_name).first()
 
                             # 注册该用户到用户表
-                            role = Role.objects.get(name='用户').first()
-                            user.role.add(role)
-                            user.save()
+                            if user:
+                                try:
+                                    role = Role.objects.get(name='用户')
+                                    user.role.add(role)
+                                    user.save()
+                                except ObjectDoesNotExist:
+                                    # Handle the error, for example, by creating the role or notifying someone.
+                                    print("Role does not exist.")
 
                             # 注册用户到 microservices
                             self.register_mic(user.id)
@@ -294,10 +300,14 @@ class LoginSerializer(TokenObtainPairWithoutPasswordSerializer):
                     serializer.save()
                     user = Users.objects.filter(username=attrs["username"]).first()
 
-                    # 注册该用户到用户表
-                    role = Role.objects.get(name='用户').first()
-                    user.role.add(role)
-                    user.save()
+                    if user:
+                        try:
+                            role = Role.objects.get(name='用户')
+                            user.role.add(role)
+                            user.save()
+                        except ObjectDoesNotExist:
+                            # Handle the error, for example, by creating the role or notifying someone.
+                            print("Role does not exist.")
 
                     # 注册用户到 microservices
                     self.register_mic(user.id)
