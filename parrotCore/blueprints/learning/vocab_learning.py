@@ -387,7 +387,10 @@ def reviews_redo_words_study(
 
                 if statistic_cache:
                     if tody in statistic_cache['series']:
-                        statistic_cache['series'][tody]['wrong_words'] += 1
+                        if type(statistic_cache['series'][tody]['correct_words']) == list:
+                            statistic_cache['series'][tody]['wrong_words'][0] += 1
+                        elif type(statistic_cache['series'][tody]['correct_words']) == int:
+                            statistic_cache['series'][tody]['wrong_words'] += 1
 
                 rds.list_push(f"{record.to_review}", *[word_id], side="r")
 
@@ -420,7 +423,10 @@ def reviews_redo_words_study(
                     statistic_cache['total_review'] += 1
 
                     if tody in statistic_cache['series']:
-                        statistic_cache['series'][tody]['correct_words'] += 1
+                        if type(statistic_cache['series'][tody]['correct_words']) == list:
+                            statistic_cache['series'][tody]['wrong_words'][0] += 1
+                        elif type(statistic_cache['series'][tody]['correct_words']) == int:
+                            statistic_cache['series'][tody]['wrong_words'] += 1
 
                 # correct word 1 条记录
                 study_add = dict(
