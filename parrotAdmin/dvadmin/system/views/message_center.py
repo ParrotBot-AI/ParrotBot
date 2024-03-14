@@ -118,6 +118,7 @@ class MessageCenterCreateSerializer(CustomModelSerializer):
             users = Users.objects.values_list('id', flat=True)
             websocket_push("dvadmin", message={"sender": 'system', "contentType": 'SYSTEM',
                                                "content": '您有一条新消息~', "refresh_unread": True})
+
         targetuser_data = []
         for user in users:
             targetuser_data.append({
@@ -164,6 +165,22 @@ class MessageCenterViewSet(CustomModelViewSet):
         """
         pk = kwargs.get('pk')
         user_id = self.request.user.id
+        queryset = MessageCenterTargetUser.objects.filter(users__id=user_id, messagecenter__id=pk).first()
+        if queryset:
+            queryset.is_read = True
+            queryset.save()
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+        # 主动推送消息
+        room_name = f"user_{user_id}"
+        websocket_push(room_name, message={"sender": 'system', "contentType": 'TEXT',
+                                 "content": '您查看了一条消息~', "refresh_unread": True})
+        return DetailResponse(data=serializer.data, msg="获取成功")
+
+    @action(methods=['GET'], detail=False, permission_classes=[IsAuthenticated], url_path="mark_message_read/(?P<message_id>\d+)")
+    def mark_message_read(self, request, message_id):
+        user_id = self.request.user.id
+        pk = message_id
         queryset = MessageCenterTargetUser.objects.filter(users__id=user_id, messagecenter__id=pk).first()
         if queryset:
             queryset.is_read = True
