@@ -509,7 +509,10 @@ def redo_words_study(
                 # wrong word 1 条记录
                 if statistic_cache:
                     if tody in statistic_cache['series']:
-                        statistic_cache['series'][tody]['wrong_words'] += 1
+                        if type(statistic_cache['series'][tody]['correct_words']) == list:
+                            statistic_cache['series'][tody]['wrong_words'][0] += 1
+                        elif type(statistic_cache['series'][tody]['correct_words']) == int:
+                            statistic_cache['series'][tody]['wrong_words'] += 1
 
                 rds.list_push(f"{account_id}:wrong_group", *[word_id], side="r")
                 rds.list_push(f"{record.to_review}", *[word_id], side="r")
@@ -552,10 +555,8 @@ def redo_words_study(
                     if tody in statistic_cache['series']:
                         if type(statistic_cache['series'][tody]['correct_words']) == list:
                             statistic_cache['series'][tody]['correct_words'][0] += 1
-                        elif type(statistic_cache['series'][tody]['correct_words']) == i:
+                        elif type(statistic_cache['series'][tody]['correct_words']) == int:
                             statistic_cache['series'][tody]['correct_words'] += 1
-
-                print("here", 551)
 
                 word = (
                     session.query(VocabCategoryRelationships)
