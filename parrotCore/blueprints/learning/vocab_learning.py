@@ -548,6 +548,8 @@ def redo_words_study(
                     if tody in statistic_cache['series']:
                         statistic_cache['series'][tody]['correct_words'] += 1
 
+                print("here", 551)
+
                 word = (
                     session.query(VocabCategoryRelationships)
                     .filter(VocabCategoryRelationships.word_id == word_id)
@@ -566,6 +568,8 @@ def redo_words_study(
                             for each in statistic_cache['status_book']['level_book']:
                                 if each['id'] == word.category_id:
                                     statistic_cache['status_book']["level_total"] = each['counts']
+
+                print("here", 572)
 
                 # study word, correct word 2 条记录
                 study_add = dict(
@@ -590,10 +594,11 @@ def redo_words_study(
                 )
 
                 rds.list_push(f"{account_id}:finished", *[word_id], side="r")
-
+                print("here", 597)
                 try:
                     session.commit()
-                    redis.set(f'VocabsStatics:{account_id}', statistic_cache)
+                    if statistic_cache:
+                        redis.set(f'VocabsStatics:{account_id}', statistic_cache)
                     return True, False
                 except Exception as e:
                     return False, "单词学习过程中入库失败."
