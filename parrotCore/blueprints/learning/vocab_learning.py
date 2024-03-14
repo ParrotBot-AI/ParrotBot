@@ -551,6 +551,7 @@ def redo_words_study(
                 word = (
                     session.query(VocabCategoryRelationships)
                     .filter(VocabCategoryRelationships.word_id == word_id)
+                    .one_or_none()
                 )
                 if word:
                     if word.category_id > cate:

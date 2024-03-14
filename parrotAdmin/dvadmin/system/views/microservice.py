@@ -453,7 +453,6 @@ class MicroServiceRegisterViewSet(CustomModelViewSet):
     def learning_task(self, request):
         task_account_id = request.data.get("task_account_id")
         payload = request.data.get("payload")
-        print(payload, 456)
         if True:
             try:
                 # data = dict(micro.data)
