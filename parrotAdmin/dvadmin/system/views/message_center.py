@@ -180,8 +180,7 @@ class MessageCenterViewSet(CustomModelViewSet):
     @action(methods=['GET'], detail=False, permission_classes=[IsAuthenticated], url_path="mark_message_read/(?P<message_id>\d+)")
     def mark_message_read(self, request, message_id):
         user_id = self.request.user.id
-        pk = message_id
-        queryset = MessageCenterTargetUser.objects.filter(users__id=user_id, messagecenter__id=pk).first()
+        queryset = MessageCenterTargetUser.objects.filter(users__id=user_id, messagecenter__id=message_id).first()
         if queryset:
             queryset.is_read = True
             queryset.save()
