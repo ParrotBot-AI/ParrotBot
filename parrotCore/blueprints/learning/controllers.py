@@ -923,6 +923,23 @@ class TaskController(crudController):
             payload,
             **kwargs):
 
+
+        with db_session('core') as session:
+            record = (
+                session.query(TaskAccounts)
+                .filter(TaskAccounts.id == task_account_id)
+                .one_or_none()
+            )
+            if not record:
+                return False, '找不到任务信息'
+            if record.loop <= record.current_loop:
+                return False, '任务已经完成'
+
+            now = datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))
+            start_of_today = datetime(now.year, now.month, now.day)
+            if record.create_time < start_of_today:
+                return False, '任务已过期'
+
         redis = RedisWrapper('core_cache')
         task_flow = redis.get(f"TaskAccount:{task_account_id}")
         if task_flow:
