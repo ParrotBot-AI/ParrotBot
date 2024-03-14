@@ -1,3 +1,5 @@
+import pprint
+
 from configs.environment import DATABASE_SELECTION
 
 if DATABASE_SELECTION == 'postgre':
@@ -542,6 +544,8 @@ def redo_words_study(
                 # 加入finished group
 
                 if statistic_cache:
+
+                    pprint.pprint(statistic_cache)
                     statistic_cache['today_day_study'] += 1
                     statistic_cache['total_study'] += 1
 
