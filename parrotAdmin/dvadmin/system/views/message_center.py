@@ -177,10 +177,10 @@ class MessageCenterViewSet(CustomModelViewSet):
                                  "content": '您查看了一条消息~', "refresh_unread": True})
         return DetailResponse(data=serializer.data, msg="获取成功")
 
-    @action(methods=['GET'], detail=False, permission_classes=[IsAuthenticated], url_path="mark_message_read/(?P<message_id>\d+)")
-    def mark_message_read(self, request, message_id):
+    @action(methods=['GET'], detail=False, permission_classes=[IsAuthenticated], url_path="mark_message_read/(?P<pk>\d+)")
+    def mark_message_read(self, request, pk):
         user_id = self.request.user.id
-        queryset = MessageCenterTargetUser.objects.filter(users__id=user_id, messagecenter__id=message_id).first()
+        queryset = MessageCenterTargetUser.objects.filter(users__id=user_id, messagecenter__id=pk).first()
         if queryset:
             queryset.is_read = True
             queryset.save()
