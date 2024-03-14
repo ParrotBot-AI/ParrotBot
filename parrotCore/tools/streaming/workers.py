@@ -14,9 +14,11 @@ core_worker = Worker()
 @core_worker.on('broker', "account_register")
 def account_register(user_id=None):
     if user_id:
-        AccountController().register_user(int(user_id), [1])
-        print(f"Create account {user_id} processed.")
-        return True
+        res, data = AccountController().register_user(int(user_id), [1])
+        if res:
+            print(f"Create account {user_id} processed.")
+        else:
+            print(f"Create account {user_id} Failed: {str(data)}.")
     else:
         print(f"Create account {user_id} failed.")
 

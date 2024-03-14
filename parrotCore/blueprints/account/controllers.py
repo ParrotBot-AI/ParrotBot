@@ -77,7 +77,7 @@ class AccountController(crudController):
                             if res:
                                 return True, 'OK.'
                             else:
-                                return data
+                                return False, data
                         else:
                             return False, res[1]
                 else:
