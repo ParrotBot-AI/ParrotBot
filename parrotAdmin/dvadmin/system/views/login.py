@@ -79,7 +79,7 @@ class TokenObtainPairWithoutPasswordSerializer(TokenObtainPairSerializer):
         if 'mobile' in attrs:
             user = Users.objects.filter(mobile=attrs['mobile']).first()
             attrs.update({'username': user.username})
-            attrs.update({'password': ''})
+            attrs.update({'password': user.password})
 
             # data = super().validate(attrs)
             authenticate_kwargs = {
@@ -87,6 +87,7 @@ class TokenObtainPairWithoutPasswordSerializer(TokenObtainPairSerializer):
                 "password": attrs["password"],
                 "mobile": attrs["mobile"]
             }
+            print(attrs, 90)
             try:
                 authenticate_kwargs["request"] = self.context["request"]
             except KeyError:
@@ -161,7 +162,6 @@ class LoginSerializer(TokenObtainPairWithoutPasswordSerializer):
         # print(dispatch.get_system_config_values("base.single_login"))
         # if dispatch.get_system_config_values("base.single_login"):
         #     # 将之前登录用户的token加入黑名单
-        #     print(165)
         #     user = Users.objects.filter(id=self.user.id).values('last_token').first()
         #     last_token = user.get('last_token')
         #     if last_token:
@@ -180,14 +180,14 @@ class LoginSerializer(TokenObtainPairWithoutPasswordSerializer):
             captcha = self.initial_data.get("captcha", None)
             if dispatch.get_system_config_values("base.captcha_state"):
                 if captcha is None:
-                    raise CustomValidationError("验证码不能为空")
+                    raise CustomValidationError("图形验证码不能为空")
                 self.image_code = CaptchaStore.objects.filter(
                     id=self.initial_data["captchaKey"]
                 ).first()
                 five_minute_ago = datetime.now() - timedelta(hours=0, minutes=5, seconds=0)
                 if self.image_code and five_minute_ago > self.image_code.expiration:
                     self.image_code and self.image_code.delete()
-                    raise CustomValidationError("验证码过期")
+                    raise CustomValidationError("图形验证码过期")
                 else:
                     if self.image_code and (
                             self.image_code.response == captcha
@@ -203,8 +203,10 @@ class LoginSerializer(TokenObtainPairWithoutPasswordSerializer):
             # sms 方式登录
             if type == 'sms':
                 phone = self.initial_data.get("mobile", None)
-                code = self.initial_data.get('code', None)
+                code = self.initial_data.get("code", None)
                 login_code = code
+
+                # 暂时隐藏掉方便测试
                 # login_code = get_sms_code(phone)
                 if login_code:
                     if login_code == code:
@@ -251,7 +253,6 @@ class LoginSerializer(TokenObtainPairWithoutPasswordSerializer):
                                     user.role.add(role)
                                     user.save()
                                 except ObjectDoesNotExist:
-                                    # Handle the error, for example, by creating the role or notifying someone.
                                     print("Role does not exist.")
 
                             # 注册用户到 microservices
@@ -306,7 +307,6 @@ class LoginSerializer(TokenObtainPairWithoutPasswordSerializer):
                             user.role.add(role)
                             user.save()
                         except ObjectDoesNotExist:
-                            # Handle the error, for example, by creating the role or notifying someone.
                             print("Role does not exist.")
 
                     # 注册用户到 microservices

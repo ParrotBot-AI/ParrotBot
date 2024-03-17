@@ -143,7 +143,7 @@ class AccountController(crudController):
 
 if __name__ == '__main__':
     test = AccountController()
-    user_id = 1
+    user_id = 6
     print(test.register_user(user_id, [1]))
     # print(test.get_user_accounts(40))
     # print(test._create(model=Accounts, create_params={'user_id': 7, 'exam_id': 1}))
