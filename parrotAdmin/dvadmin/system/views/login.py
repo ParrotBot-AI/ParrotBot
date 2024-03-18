@@ -100,13 +100,15 @@ class TokenObtainPairWithoutPasswordSerializer(TokenObtainPairSerializer):
                     self.error_messages["no_active_account"],
                     "no_active_account",
                 )
-            # data = super(TokenObtainPairWithoutPasswordSerializer, self).validate(attrs)
-            data = {}
+            data = super(TokenObtainPairWithoutPasswordSerializer, self).validate(attrs)
+            # data = {}
 
             print(self.token_class, 106)
             refresh = self.get_token(self.user)
             data["refresh"] = str(refresh)
             data["access"] = str(refresh.access_token)
+            print(refresh.access_token)
+
             update_last_login(None, self.user)
             return data
 
