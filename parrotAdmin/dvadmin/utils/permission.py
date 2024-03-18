@@ -97,7 +97,6 @@ class CustomPermission(BasePermission):
                 if matchObj is None:
                     continue
                 else:
-                    print("here", 100)
                     return True
             else:
                 return False

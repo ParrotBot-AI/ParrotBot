@@ -44,6 +44,7 @@ class CustomModelViewSet(ModelViewSet, ImportSerializerMixin, ExportSerializerMi
     permission_classes = [CustomPermission]
     import_field_dict = {}
     export_field_label = {}
+    print("Here", 47)
 
     def filter_queryset(self, queryset):
         for backend in set(set(self.filter_backends) | set(self.extra_filter_backends or [])):
@@ -93,10 +94,13 @@ class CustomModelViewSet(ModelViewSet, ImportSerializerMixin, ExportSerializerMi
         return DetailResponse(data=serializer.data, msg="获取成功")
 
     def update(self, request, *args, **kwargs):
+        print('here', 97)
         partial = kwargs.pop('partial', False)
         instance = self.get_object()
+        print('here', 98)
         serializer = self.get_serializer(instance, data=request.data, request=request, partial=partial)
         serializer.is_valid(raise_exception=True)
+        print('here', 100)
         self.perform_update(serializer)
 
         if getattr(instance, '_prefetched_objects_cache', None):
