@@ -308,7 +308,9 @@ REST_FRAMEWORK = {
 # ******************** 登录方式配置 ******************** #
 # ================================================= #
 
-AUTHENTICATION_BACKENDS = ["dvadmin.utils.backends.CustomBackend"]
+AUTHENTICATION_BACKENDS = [
+    "dvadmin.utils.backends.CustomBackend"
+]
 # ================================================= #
 # ****************** simplejwt配置 ***************** #
 # ================================================= #

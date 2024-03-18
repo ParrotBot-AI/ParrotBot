@@ -103,6 +103,7 @@ class TokenObtainPairWithoutPasswordSerializer(TokenObtainPairSerializer):
             # data = super(TokenObtainPairWithoutPasswordSerializer, self).validate(attrs)
             data = {}
 
+            print(self.token_class, 106)
             refresh = self.get_token(self.user)
             data["refresh"] = str(refresh)
             data["access"] = str(refresh.access_token)
