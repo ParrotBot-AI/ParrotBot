@@ -59,8 +59,9 @@ def _get_object_or_404(klass, *args, **kwargs):
             "First argument to get_object_or_404() must be a Model, Manager, "
             "or QuerySet, not '%s'." % klass__name
         )
-    print("dhsakhdk", 62)
     try:
+        print(args, kwargs, 63)
+        print(queryset, 64)
         return queryset.get(*args, **kwargs)
     except queryset.model.DoesNotExist:
         raise Http404(
