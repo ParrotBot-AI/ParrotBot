@@ -57,6 +57,7 @@ class CustomModelViewSet(ModelViewSet, ImportSerializerMixin, ExportSerializerMi
 
     def get_serializer_class(self):
         action_serializer_name = f"{self.action}_serializer_class"
+        print(action_serializer_name, 60)
         action_serializer_class = getattr(self, action_serializer_name, None)
         if action_serializer_class:
             return action_serializer_class

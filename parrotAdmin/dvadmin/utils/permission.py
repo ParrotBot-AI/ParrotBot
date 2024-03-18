@@ -71,10 +71,11 @@ class CustomPermission(BasePermission):
             return True
         else:
             api = request.path  # 当前请求接口
+            print(api, 74)
             if api in self.allowed_anonymous_url:
                 return True
-            else:
-                return False
+            # else:
+            #     return False
             method = request.method  # 当前请求方法
             methodList = ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH']
             method = methodList.index(method)
@@ -92,9 +93,10 @@ class CustomPermission(BasePermission):
                     item.get('permission__method')) + '$' for item in userApiList if item.get('permission__api')]
             new_api_ist = api_white_list + ApiList
             new_api = api + ":" + str(method)
-            print(new_api, 88)
+            print(new_api, ApiList, 96)
             for item in new_api_ist:
                 matchObj = re.match(item, new_api, re.M | re.I)
+                print(matchObj, 99)
                 if matchObj is None:
                     continue
                 else:
