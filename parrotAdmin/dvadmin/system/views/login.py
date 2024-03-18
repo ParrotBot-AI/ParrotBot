@@ -85,6 +85,7 @@ class TokenObtainPairWithoutPasswordSerializer(TokenObtainPairSerializer):
             authenticate_kwargs = {
                 self.username_field: attrs[self.username_field],
                 "password": attrs["password"],
+                "username": user.username,
                 "mobile": attrs["mobile"]
             }
             print(attrs, 90)
