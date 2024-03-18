@@ -59,7 +59,6 @@ class CustomPermission(BasePermission):
     ]
 
     def has_permission(self, request, view):
-        print(request.user, 62)
         if isinstance(request.user, AnonymousUser):
             api = request.path
             if api in self.allowed_anonymous_url:
@@ -98,6 +97,7 @@ class CustomPermission(BasePermission):
                 if matchObj is None:
                     continue
                 else:
+                    print("here", 100)
                     return True
             else:
                 return False
