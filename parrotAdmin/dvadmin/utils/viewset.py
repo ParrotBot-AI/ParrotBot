@@ -20,6 +20,7 @@ from dvadmin.utils.json_response import SuccessResponse, ErrorResponse, DetailRe
 from dvadmin.utils.permission import CustomPermission
 from django_restql.mixins import QueryArgumentsMixin
 import logging
+
 logger = logging.getLogger(__name__)
 
 
@@ -95,7 +96,7 @@ class CustomModelViewSet(ModelViewSet, ImportSerializerMixin, ExportSerializerMi
         partial = kwargs.pop('partial', False)
         instance = self.get_object()
         serializer = self.get_serializer(instance, data=request.data, request=request, partial=partial)
-        # serializer.is_valid(raise_exception=True)
+        serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
 
         if getattr(instance, '_prefetched_objects_cache', None):
@@ -107,7 +108,7 @@ class CustomModelViewSet(ModelViewSet, ImportSerializerMixin, ExportSerializerMi
         if "user_type" in data:
             if data['user_type'] == 1:
                 reserved_list = ["username", "email", 'mobile', 'avatar', "name", 'gender',
-                  'first_name', 'last_name']
+                                 'first_name', 'last_name']
                 data = {k: data[k] for k in reserved_list if k in data}
                 return DetailResponse(data=data, msg="更新成功")
         return DetailResponse(data=data, msg="更新成功")

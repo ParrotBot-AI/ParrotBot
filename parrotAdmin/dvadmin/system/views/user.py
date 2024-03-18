@@ -438,7 +438,7 @@ class UserViewSet(CustomModelViewSet):
     @action(methods=["PUT"], detail=False, permission_classes=[IsAuthenticated])
     def update_user_info(self, request):
         """修改当前用户信息"""
-        serializer = UserInfoUpdateSerializer(request.user, data=request.data, request=request)
+        serializer = UserInfoUpdateSerializer(request.user, data=request.data, request=request, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return DetailResponse(data=None, msg="修改成功")
