@@ -89,6 +89,11 @@ class DataLevelPermissionsFilter(BaseFilterBackend):
         如果不是超级管理员,则进入下一步权限判断
         """
         if request.user.is_superuser == 0:
+            user_id = getattr(request.user, "id", None)
+            user_type = getattr(request.user, "user_type", None)
+            if user_type == 1:
+                print(user_id, user_type, 95)
+                return queryset.filter(id=user_id)
             # # 0. 获取用户的部门id，没有部门则返回空
             # user_dept_id = getattr(request.user, "dept_id", None)
             # if not user_dept_id:
