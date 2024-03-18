@@ -94,10 +94,9 @@ class CustomModelViewSet(ModelViewSet, ImportSerializerMixin, ExportSerializerMi
         return DetailResponse(data=serializer.data, msg="获取成功")
 
     def update(self, request, *args, **kwargs):
-        print('here', 97)
         partial = kwargs.pop('partial', False)
-        print('here', 98)
         instance = self.get_object()
+        print(instance)
         print('here', 99)
         serializer = self.get_serializer(instance, data=request.data, request=request, partial=partial)
         serializer.is_valid(raise_exception=True)
