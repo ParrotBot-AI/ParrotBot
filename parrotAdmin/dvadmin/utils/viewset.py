@@ -20,14 +20,52 @@ from dvadmin.utils.json_response import SuccessResponse, ErrorResponse, DetailRe
 from dvadmin.utils.permission import CustomPermission
 from django_restql.mixins import QueryArgumentsMixin
 import logging
-from django.shortcuts import get_object_or_404 as _get_object_or_404
+# from django.shortcuts import get_object_or_404 as _get_object_or_404
 from django.core.exceptions import ValidationError
 from django.http import Http404
 
 logger = logging.getLogger(__name__)
 
+def _get_queryset(klass):
+    """
+    Return a QuerySet or a Manager.
+    Duck typing in action: any class with a `get()` method (for
+    get_object_or_404) or a `filter()` method (for get_list_or_404) might do
+    the job.
+    """
+    # If it is a model class or anything else with ._default_manager
+    if hasattr(klass, "_default_manager"):
+        return klass._default_manager.all()
+    return klass
 
 
+def _get_object_or_404(klass, *args, **kwargs):
+    """
+    Use get() to return an object, or raise an Http404 exception if the object
+    does not exist.
+
+    klass may be a Model, Manager, or QuerySet object. All other passed
+    arguments and keyword arguments are used in the get() query.
+
+    Like with QuerySet.get(), MultipleObjectsReturned is raised if more than
+    one object is found.
+    """
+    queryset = _get_queryset(klass)
+    if not hasattr(queryset, "get"):
+        klass__name = (
+            klass.__name__ if isinstance(klass, type) else klass.__class__.__name__
+        )
+        raise ValueError(
+            "First argument to get_object_or_404() must be a Model, Manager, "
+            "or QuerySet, not '%s'." % klass__name
+        )
+    print("dhsakhdk", 62)
+    try:
+        return queryset.get(*args, **kwargs)
+    except queryset.model.DoesNotExist:
+        raise Http404(
+            "No %s matches the given query." % queryset.model._meta.object_name
+        )
 
 
 def get_object_or_404(queryset, *filter_args, **filter_kwargs):
@@ -37,7 +75,8 @@ def get_object_or_404(queryset, *filter_args, **filter_kwargs):
     """
     try:
         return _get_object_or_404(queryset, *filter_args, **filter_kwargs)
-    except (TypeError, ValueError, ValidationError):
+    except (TypeError, ValueError, ValidationError) as e:
+        print(str(e), 78)
         raise Http404
 
 
@@ -61,7 +100,6 @@ class CustomModelViewSet(ModelViewSet, ImportSerializerMixin, ExportSerializerMi
     permission_classes = [CustomPermission]
     import_field_dict = {}
     export_field_label = {}
-    print("Here", 47)
 
     def get_object_over(self):
         """
