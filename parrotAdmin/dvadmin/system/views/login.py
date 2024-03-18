@@ -88,7 +88,6 @@ class TokenObtainPairWithoutPasswordSerializer(TokenObtainPairSerializer):
                 "username": attrs["username"],
                 "mobile": attrs["mobile"]
             }
-            print(attrs, 90)
             try:
                 authenticate_kwargs["request"] = self.context["request"]
             except KeyError:
