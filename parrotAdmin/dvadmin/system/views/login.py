@@ -101,14 +101,12 @@ class TokenObtainPairWithoutPasswordSerializer(TokenObtainPairSerializer):
                     self.error_messages["no_active_account"],
                     "no_active_account",
                 )
-            data = super(TokenObtainPairWithoutPasswordSerializer, self).validate(attrs)
-            # data = {}
+            # data = super(TokenObtainPairWithoutPasswordSerializer, self).validate(attrs)
+            data = {}
 
-            print(self.token_class, 106)
             refresh = self.get_token(self.user)
             data["refresh"] = str(refresh)
             data["access"] = str(refresh.access_token)
-            print(refresh.access_token)
 
             update_last_login(None, self.user)
             return data
@@ -322,15 +320,13 @@ class LoginSerializer(TokenObtainPairWithoutPasswordSerializer):
                 user = Users.objects.filter(username=attrs['username']).first()
                 if user:
                     return self.login(attrs)
-
-
         except:
-            username = self.initial_data.get("username", None)
-            user = Users.objects.filter(username=username).first()
-            if user.username == 'test12142':
-                attrs.update({'password': 'test12138'})
-            if user:
-                return self.login(attrs)
+            # username = self.initial_data.get("username", None)
+            # user = Users.objects.filter(username=username).first()
+            # if user.username == 'test12142':
+            #     attrs.update({'password': 'test12138'})
+            # if user:
+            #     return self.login(attrs)
             raise CustomValidationError("登录认证失败")
 
 
