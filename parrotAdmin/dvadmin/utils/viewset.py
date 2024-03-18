@@ -96,11 +96,11 @@ class CustomModelViewSet(ModelViewSet, ImportSerializerMixin, ExportSerializerMi
     def update(self, request, *args, **kwargs):
         print('here', 97)
         partial = kwargs.pop('partial', False)
-        instance = self.get_object()
         print('here', 98)
+        instance = self.get_object()
+        print('here', 99)
         serializer = self.get_serializer(instance, data=request.data, request=request, partial=partial)
         serializer.is_valid(raise_exception=True)
-        print('here', 100)
         self.perform_update(serializer)
 
         if getattr(instance, '_prefetched_objects_cache', None):
