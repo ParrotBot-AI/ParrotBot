@@ -322,7 +322,8 @@ class UserViewSet(CustomModelViewSet):
         "role": {"title": "角色", "choices": {"queryset": Role.objects.filter(status=True), "values_name": "name"}},
     }
 
-    @action(methods=["POST"], detail=False, permission_classes=[IsAuthenticated], url_path="get_user_accounts/(?P<userID>\d+)")
+    @action(methods=["POST"], detail=False, permission_classes=[IsAuthenticated],
+            url_path="get_user_accounts/(?P<userID>\d+)")
     def get_user_accounts(self, request, userID):
         if userID:
             exam_id = request.data.get('exam_id')
@@ -333,7 +334,7 @@ class UserViewSet(CustomModelViewSet):
                     # data = dict(micro.data)
                     url = f"http://{'127.0.0.1'}:{10981}/v1/api/account/get_user_accounts/{userID}/"
                     r = requests.post(url, json={
-                        "exam_id":exam_id
+                        "exam_id": exam_id
                     })
                     if r.json()['code'] == 10000:
                         res_data = r.json()['data']
@@ -341,10 +342,9 @@ class UserViewSet(CustomModelViewSet):
                         return ErrorResponse(msg=r.json()['msg'])
                 except:
                     return ErrorResponse(msg='服务器故障')
-            return DetailResponse(data=res_data , msg="获取成功")
+            return DetailResponse(data=res_data, msg="获取成功")
         else:
             ErrorResponse(msg="请传入正确id值")
-
 
     @action(methods=["GET"], detail=False, permission_classes=[IsAuthenticated], url_path="get_user/(?P<userID>\d+)")
     def get_user_id(self, request, userID):

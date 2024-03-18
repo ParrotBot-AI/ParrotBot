@@ -95,10 +95,14 @@ class CustomModelViewSet(ModelViewSet, ImportSerializerMixin, ExportSerializerMi
     def update(self, request, *args, **kwargs):
         partial = kwargs.pop('partial', False)
         instance = self.get_object()
+        print("here", 98)
         serializer = self.get_serializer(instance, data=request.data, request=request, partial=partial)
+        print("here", 100)
         serializer.is_valid(raise_exception=True)
+        print("here", 101)
         self.perform_update(serializer)
 
+        print("here", 102)
         if getattr(instance, '_prefetched_objects_cache', None):
             # If 'prefetch_related' has been applied to a queryset, we need to
             # forcibly invalidate the prefetch cache on the instance.
