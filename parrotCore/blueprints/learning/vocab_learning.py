@@ -215,7 +215,8 @@ def words_gpt_fetch(
                     "url": f"http://54.169.8.123:57875/v1/modelapi/streaming/",
                     "method": "post",
                     "input": ls,
-                    "output": "clientId"
+                    "output": "clientId",
+                    "successCode":10000
                 },
                 "streaming":{
                     "url": "http://54.169.8.123:57875/v1/modelapi/getVocabContent/{ClientID}/",
