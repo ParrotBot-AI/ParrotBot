@@ -218,7 +218,7 @@ def words_gpt_fetch(
                     "output": "clientId"
                 },
                 "streaming":{
-                    "url": "http://localhost:8000/v1/modelapi/getVocabContent/{ClientID}/",
+                    "url": "http://54.169.8.123:57875/v1/modelapi/getVocabContent/{ClientID}/",
                     "method": "sse",
                 }
             },
