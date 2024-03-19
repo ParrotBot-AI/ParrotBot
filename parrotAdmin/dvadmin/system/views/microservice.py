@@ -331,7 +331,7 @@ class MicroServiceRegisterViewSet(CustomModelViewSet):
                 try:
                     admin = AdminStream()
                     response = admin.grade_single_prob(sheet_id=sheet_id, question_id=question_id)
-                    return DetailResponse(msg=response[1])
+                    return DetailResponse(data=[], msg=response[1])
                 except:
                     return ErrorResponse(msg="微服务故障")
         except:

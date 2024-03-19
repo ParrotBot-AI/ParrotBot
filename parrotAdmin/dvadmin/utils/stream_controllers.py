@@ -17,4 +17,4 @@ class AdminStream:
 
     @ep.event("grade_single_prob")
     def grade_single_prob(self, **kwargs):
-        return True, "broker grade_single_prob"
+        return True, "单题打分开始"
