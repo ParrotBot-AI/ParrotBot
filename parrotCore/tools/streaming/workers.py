@@ -36,11 +36,11 @@ def pause_sheet(sheet_id=None):
 @core_worker.on('broker', "grade_single_prob")
 def pause_sheet(sheet_id=None, question_id=None):
     if sheet_id and question_id:
-        # AnsweringScoringController().model_scoring(sheet_id=sheet_id, question_id=question_id)
+        # await AnsweringScoringController().model_scoring(sheet_id=sheet_id, question_id=question_id)
         print(f"Grade for {sheet_id} question {question_id}.")
         return True
     else:
-        print(f"Pause sheet {sheet_id} failed.")
+        print(f"Grade for {sheet_id} question {question_id}. failed.")
 
 
 def main():

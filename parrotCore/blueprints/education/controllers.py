@@ -31,6 +31,7 @@ from sqlalchemy.sql.expression import bindparam
 from itertools import groupby
 from operator import itemgetter
 import random
+import asyncio
 
 if DATABASE_SELECTION == 'postgre':
     from configs.postgre_config import get_db_session as db_session
@@ -581,8 +582,7 @@ class AnsweringScoringController(crudController):
         cache_dict = redis_cli.get(f'Sheet-{sheet_id}')
         if cache_dict:
             if answer:
-                cache_dict['questions'][str(question_id)][
-                    'answer'] = answer  # Replace 'new_value' with the desired value
+                cache_dict['questions'][str(question_id)]['answer'] = answer  # Replace 'new_value' with the desired value
             if answer_voice_link:
                 cache_dict['questions'][str(question_id)]['answer_voice_link'] = answer_voice_link
             if answer_video_link:
@@ -766,7 +766,7 @@ class AnsweringScoringController(crudController):
             else:
                 return False, "未查询到考卷信息"
 
-    def model_scoring(self, sheet_id, question_id):
+    async def model_scoring(self, sheet_id, question_id):
         # search for pattern
         import requests
         with db_session('core') as session:
@@ -807,16 +807,52 @@ class AnsweringScoringController(crudController):
                     contine_fetch = False
 
             if contine_fetch:
+                # 查看sheet状态：
+                redis = RedisWrapper("core_cache")
+                cache_dict = redis.get(f"Sheet-{sheet_id}")
+                # 直接取
+                if cache_dict:
+                    answer_voice_link = cache_dict['questions'][str(question_id)]['answer_voice_link']
+                    answer = cache_dict['questions'][str(question_id)]['answer']
+                else:
+                    # 取数据库
+                    sub_record = (
+                        session.query(Submissions)
+                        .filter(and_(Submissions.question_id == question_id,
+                                     Submissions.answer_sheet_id == sheet_id))
+                    )
+                    if sub_record:
+                        answer_voice_link = sub_record.voice_link
+                        answer = sub_record.answer
+
+                q_record = (
+                    session.query(
+                        Questions.id,
+                        Questions.voice_content,
+                        Questions.question_content,
+                        Questions.question_title,
+                        Questions.section_id
+                    )
+                    .filter(Questions.id == question_id)
+                    .one_or_none()
+                )
                 if record.pattern_eng_name == "Speaking":  # speaking model
                     try:
-                        url = f"http://{'127.0.0.1'}:{10981}/............"
+                        url = f"http://{'54.169.8.123'}:{57875}/v1/modelapi/speaking/gradeSpeaking/"
+                        prompt = f"""Prompt: {q_record.question_title}"""
+                        if q_record.voice_content:
+                            prompt += f"""Source: {q_record.question_content}; {q_record.voice_title}"""
                         r = requests.post(url, json={
-
+                            "prompt": prompt,
+                            "audioLink": answer_voice_link,
+                            "gradeType": "Independent Speaking"
                         })
 
                         if r.json()['code'] == 10000:
                             res_data = r.json()['data']
-                            score = None
+                            score = res_data.get("Overall")
+                            if score:
+                                score = float(score)
                             model_answer = json.dumps(res_data)
                             update = (
                                 session.query(Accounts)
@@ -835,14 +871,21 @@ class AnsweringScoringController(crudController):
 
                 elif record.pattern_eng_name == "Writing":  # writing model
                     try:
-                        url = f"http://{'127.0.0.1'}:{10981}/............"
+                        url = f"http://{'54.169.8.123'}:{57875}/v1/modelapi/writing/gradeWriting/"
+                        prompt = f"""Prompt: {q_record.question_title} {q_record.question_content}"""
+                        if q_record.voice_content:
+                            prompt += f"""Source: {q_record.voice_title}"""
                         r = requests.post(url, json={
-
+                            "prompt": prompt,
+                            "content":answer,
+                            "gradeType": "Academic Discussion" if q_record.section_id == 12 else "Integrated Writing"
                         })
 
                         if r.json()['code'] == 10000:
                             res_data = r.json()['data']
-                            score = None
+                            score = res_data.get("Overall")
+                            if score:
+                                score = float(score)
                             model_answer = json.dumps(res_data)
                             update = (
                                 session.query(Accounts)
@@ -861,9 +904,9 @@ class AnsweringScoringController(crudController):
                     score = None
                     model_answer = '{"msg":"AI模型批改未开放"}'
 
-            redis = RedisWrapper("core_cache")
-            sheet_data = redis.get(f"Sheet-{sheet_id}")
-            if not sheet_data:
+            # 超存结果
+            cache_dict = redis.get(f"Sheet-{sheet_id}")
+            if not cache_dict:
                 update = (
                     session.query(Submissions)
                     .filter(and_(Submissions.question_id == question_id,
@@ -874,6 +917,13 @@ class AnsweringScoringController(crudController):
                         Submissions.model_answer: model_answer
                     })
                 )
+
+                try:
+                    session.commit()
+                    return True, score
+                except Exception as e:
+                    session.rollback()
+                    return False, 0
             else:
                 # update_:
                 self.update_question_answer(
@@ -882,13 +932,7 @@ class AnsweringScoringController(crudController):
                     model_answer=model_answer,
                     score=score
                 )
-
-            try:
-                session.commit()
                 return True, score
-            except Exception as e:
-                session.rollback()
-                return False, 0
 
 
     def scoring(self, sheet_id, re_score=False):
