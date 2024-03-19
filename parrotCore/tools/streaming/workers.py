@@ -33,6 +33,16 @@ def pause_sheet(sheet_id=None):
         print(f"Pause sheet {sheet_id} failed.")
 
 
+@core_worker.on('broker', "grade_single_prob")
+def pause_sheet(sheet_id=None, question_id=None):
+    if sheet_id and question_id:
+        # AnsweringScoringController().model_scoring(sheet_id=sheet_id, question_id=question_id)
+        print(f"Grade for {sheet_id} question {question_id}.")
+        return True
+    else:
+        print(f"Pause sheet {sheet_id} failed.")
+
+
 def main():
     print("开始监听....")
     core_worker.listen(listen_name='broker')

@@ -302,18 +302,14 @@ class MicroServiceRegisterViewSet(CustomModelViewSet):
         elif type(request.data.get('answer')) == list:
             answer = request.data.get('answer')
         duration = request.data.get('duration')
+
         try:
             # answer = list(answer)
             if True:
                 try:
                     # data = dict(micro.data)
                     url = f"http://{'127.0.0.1'}:{10981}/v1/api/education/update_ans"
-                    r = requests.post(url, json={
-                        "sheet_id": sheet_id,
-                        "question_id": question_id,
-                        "answer": answer,
-                        "duration": duration
-                    })
+                    r = requests.post(url, json=request.data)
 
                     if r.json()['code'] == 10000:
                         res_data = r.json()['data']
@@ -321,6 +317,21 @@ class MicroServiceRegisterViewSet(CustomModelViewSet):
                     else:
                         return ErrorResponse(msg=r.json()['msg'])
 
+                except:
+                    return ErrorResponse(msg="微服务故障")
+        except:
+            return ErrorResponse(msg='参数格式错误')
+
+    @action(methods=["POST"], detail=False, permission_classes=[IsAuthenticated])
+    def grade_answer(self, request):
+        sheet_id = request.data.get('sheet_id')
+        question_id = request.data.get('question_id')
+        try:
+            if True:
+                try:
+                    admin = AdminStream()
+                    response = admin.grade_single_prob(sheet_id=sheet_id, question_id=question_id)
+                    return DetailResponse(msg=response[1])
                 except:
                     return ErrorResponse(msg="微服务故障")
         except:
