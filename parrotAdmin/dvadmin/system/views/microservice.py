@@ -360,12 +360,15 @@ class MicroServiceRegisterViewSet(CustomModelViewSet):
 
     @action(methods=["POST"], detail=False, permission_classes=[IsAuthenticated], url_path="scoring/(?P<sheet_id>\d+)")
     def scoring(self, request, sheet_id):
+        redo = request.data.get("redo")
         try:
             if True:
                 try:
                     # data = dict(micro.data)
                     url = f"http://{'127.0.0.1'}:{10981}/v1/api/education/scoring/{sheet_id}/"
-                    r = requests.post(url)
+                    r = requests.post(url, json={
+                        "redo": redo if redo else False
+                    })
 
                     if r.json()['code'] == 10000:
                         res_data = r.json()['data']

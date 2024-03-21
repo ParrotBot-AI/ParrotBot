@@ -1108,7 +1108,6 @@ class AnsweringScoringController(crudController):
                         'cal_fun': result.cal_m_B
                     }
 
-
                     # 自动计分
                     try:
                         if result.cal_m_q == 1:
