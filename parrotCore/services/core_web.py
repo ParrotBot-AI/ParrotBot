@@ -6,6 +6,7 @@ project_root = os.path.join(root_path, '..')
 sys.path.append(project_root)
 from gevent import monkey
 from gevent.pywsgi import WSGIServer
+from multiprocessing import Process
 
 monkey.patch_all()
 
@@ -27,4 +28,9 @@ def main():
 
 
 if __name__ == '__main__':
+    # workers = 4
+    # for _ in range(workers):
+    #     p = Process(target=main)
+    #     p.start()
+
     main()
