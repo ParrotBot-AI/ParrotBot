@@ -151,9 +151,12 @@ def save_answer(sheet_id):
 
 @bp.route('scoring/<sheet_id>/', methods=['POST'])
 def scoring(sheet_id):
+    args = request.json
+    redo = args.get('redo')
     try:
         res = AnsweringScoringController().scoring(
-            sheet_id=sheet_id
+            sheet_id=sheet_id,
+            re_score=redo
         )
         if res[0]:
             return SuccessDataResponse(res[1])
@@ -166,7 +169,7 @@ def scoring(sheet_id):
 def get_score(sheet_id):
     try:
         res = AnsweringScoringController().get_score(
-            answer_sheet_id=sheet_id
+            answer_sheet_id=sheet_id,
         )
         if res[0]:
             return SuccessDataResponse(res[1])

@@ -159,6 +159,10 @@ class Indicators(BASES['core']):
 
     id = Column(Integer, autoincrement=True, primary_key=True)
     indicator_name = Column(String(20), nullable=False)
+    indicator_descriptions = Column(Text, nullable=True)
+    identifier = Column(Text, nullable=True)
+    solve_steps = Column(Text, nullable=True)
+    skills = Column(Text, nullable=True)
     indicator_weight = Column(Integer, nullable=True)
     father_indicator = Column(Integer, nullable=False)
     is_active = Column(Boolean, default=True)
@@ -220,7 +224,6 @@ class QuestionsType(BASES['core']):
     def __repr__(self) -> str:
         s = f'(id: {self.id} n: {self.type_name})'
         return s
-
 
 class Questions(BASES['core']):
     __tablename__ = "Questions"
@@ -333,7 +336,7 @@ class Submissions(BASES['core']):
 
     cal_method = Column(Text, nullable=True)
     max_score = Column(Integer, nullable=True)
-    score = Column(Integer, nullable=True)
+    score = Column(Float, nullable=True)
     is_graded = Column(Boolean, nullable=False)  # 是否打分完成
     submit_time = Column(DateTime)
     create_time = Column(DateTime)

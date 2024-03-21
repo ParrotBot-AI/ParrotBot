@@ -189,7 +189,7 @@ class QuestionController(crudController):
                 else:
                     k = {}
 
-                account_ans, duration = None, None
+                account_ans, duration, answer_voice_link, model_answer, answer_video_link, upload_file_link = None, None, None, None, None, None
                 if ac_type == 'create':
                     if result.stem_weights:
                         account_ans = [0] * len([int(num) for num in result.stem_weights.split(";")])
@@ -202,11 +202,18 @@ class QuestionController(crudController):
                         duration = None
                 elif ac_type == 'get':
                     if fetch_question[result.id]['a']:
-                        account_ans = [int(num) for num in fetch_question[result.id]['a'].split(";")]
-                        duration = fetch_question[result.id]['d']
+                        try:
+                            account_ans = [int(num) for num in fetch_question[result.id]['a'].split(";")]
+                        except:
+                            account_ans = fetch_question[result.id]['a']
                     else:
                         account_ans = fetch_question[result.id]['a']
-                        duration = fetch_question[result.id]['d']
+
+                    duration = fetch_question[result.id]['d']
+                    model_answer = fetch_question[result.id]['m']
+                    answer_voice_link = fetch_question[result.id]['voice']
+                    answer_video_link = fetch_question[result.id]['video']
+                    upload_file_link = fetch_question[result.id]['f']
 
                 if result.section_id and result.section_id not in sections:
                     sections[result.section_id] = 1
@@ -224,14 +231,23 @@ class QuestionController(crudController):
                     "voice_content": result.voice_content,
                     "keywords": k,
                     "order": result.order,
-                    "detail": merged_detail['d'] if 'd' in merged_detail else None,
-                    "options_label": merged_detail['ol'] if 'ol' in merged_detail else None,
-                    "answer_weight": [int(num) for num in
-                                      result.stem_weights.split(";")] if result.stem_weights else None,
                     "answer": account_ans,
                     "duration": duration,
-                    "restriction": merged_restrict
                 }
+                # not required, to save more space
+                fields = [
+                    ("restriction", merged_restrict),
+                    ("detail", merged_detail['d'] if 'd' in merged_detail else None),
+                    ("options_label", merged_detail['ol'] if 'ol' in merged_detail else None),
+                    ("answer_weight", [int(num) for num in result.stem_weights.split(";")] if result.stem_weights else None),
+                    ("model_answer", model_answer if model_answer else None),
+                    ("answer_voice_link", answer_voice_link if answer_voice_link else None),
+                    ("answer_video_link", answer_video_link if answer_video_link else None),
+                    ("upload_file_link", upload_file_link if upload_file_link else None),
+                ]
+                for key, value in fields:
+                    if value is not None:
+                        record[key] = value
 
                 if ac_type == 'get':
                     record['score'] = fetch_question[result.id]['s']
@@ -540,6 +556,26 @@ class AnsweringScoringController(crudController):
                             else:
                                 question_dic[each.question_id]['s'] = None
 
+                            if each.video_link is not None:
+                                question_dic[each.question_id]['video'] = each.video_link
+                            else:
+                                question_dic[each.question_id]['video'] = None
+
+                            if each.upload_file_link is not None:
+                                question_dic[each.question_id]['f'] = each.upload_file_link
+                            else:
+                                question_dic[each.question_id]['f'] = None
+
+                            if each.model_answer is not None:
+                                question_dic[each.question_id]['m'] = each.model_answer
+                            else:
+                                question_dic[each.question_id]['m'] = None
+
+                            if each.voice_link is not None:
+                                question_dic[each.question_id]['voice'] = each.voice_link
+                            else:
+                                question_dic[each.question_id]['voice'] = None
+
                         res_questions, redis_store, sections = QuestionController().fetch_questions(
                             question_ids=question_ids,
                             session=session,
@@ -581,20 +617,20 @@ class AnsweringScoringController(crudController):
         redis_cli = RedisWrapper('core_cache')
         cache_dict = redis_cli.get(f'Sheet-{sheet_id}')
         if cache_dict:
-            if answer:
+            if answer is not None:
                 cache_dict['questions'][str(question_id)]['answer'] = answer  # Replace 'new_value' with the desired value
-            if answer_voice_link:
+            if answer_voice_link is not None:
                 cache_dict['questions'][str(question_id)]['answer_voice_link'] = answer_voice_link
-            if answer_video_link:
+            if answer_video_link is not None:
                 cache_dict['questions'][str(question_id)]['answer_video_link'] = answer_video_link
-            if upload_file_link:
+            if upload_file_link is not None:
                 cache_dict['questions'][str(question_id)]['upload_file_link'] = upload_file_link
-            if model_answer:
-                cache_dict['questions'][str(question_id)]['model_answer'] = upload_file_link
-            if duration:
+            if model_answer is not None:
+                cache_dict['questions'][str(question_id)]['model_answer'] = model_answer
+            if duration is not None:
                 cache_dict['questions'][str(question_id)]['duration'] = duration
             # 支持中途算分
-            if score:
+            if score is not None:
                 cache_dict['questions'][str(question_id)]['score'] = score
 
             redis_cli.set(f'Sheet-{sheet_id}', cache_dict)
@@ -611,10 +647,16 @@ class AnsweringScoringController(crudController):
             questions_li = []
             for value in questions_dic.values():
                 if 'answer' in value:
-                    if value['answer'] != [0] * 4:
-                        value['is_answer'] = True
+                    if type(value['answer']) ==list:
+                        if value['answer'] != [0] * len(value['answer']):
+                            value['is_answer'] = True
+                        else:
+                            value['is_answer'] = False
                     else:
-                        value['is_answer'] = False
+                        if type(value['answer']) == str:
+                            value['is_answer'] = True
+                        else:
+                            value['is_answer'] = False
                     questions_li.append(value)
             return True, questions_li
         else:
@@ -691,7 +733,7 @@ class AnsweringScoringController(crudController):
         else:
             return False, "无法找到题目缓存"
 
-    def get_score(self, answer_sheet_id):
+    def get_score(self, answer_sheet_id, re_score=False):
         with db_session('core') as session:
             answer_record = (
                 session.query(AnswerSheetRecord)
@@ -716,7 +758,7 @@ class AnsweringScoringController(crudController):
                         return True, l
                     else:
                         return False, "未找到打分试卷"
-                elif answer_record.status == 5 and answer_record.is_graded == 1:  # 完成批改但未登分
+                elif (answer_record.status == 5 and answer_record.is_graded == 1) or re_score:  # 完成批改但未登分
                     records = (
                         session.query(Scores)
                         .filter(Scores.answer_sheet_id == answer_sheet_id)
@@ -724,7 +766,11 @@ class AnsweringScoringController(crudController):
                     )
                     t_score = 0
                     for record in records:
-                        t_score += record.score
+                        if record.score is None:
+                            t_score = record.score
+                            break
+                        else:
+                            t_score += record.score
 
                     update_s = {
                         "id": answer_sheet_id,
@@ -770,6 +816,7 @@ class AnsweringScoringController(crudController):
         # search for pattern
         import requests
         with db_session('core') as session:
+            redis = RedisWrapper("core_cache")
             record = (
                 session.query(
                     Patterns.id,
@@ -778,6 +825,7 @@ class AnsweringScoringController(crudController):
                 )
                 .join(Sections, Patterns.id == Sections.pattern_id)
                 .join(Questions, Sections.id == Questions.section_id)
+                .filter(Questions.id == question_id)
                 .one_or_none()
             )
             if not record:
@@ -793,7 +841,7 @@ class AnsweringScoringController(crudController):
                 .join(AnswerSheetRecord, AnswerSheetRecord.account_id == Accounts.id)
                 .join(Users, Users.id == Accounts.user_id)
                 .filter(AnswerSheetRecord.id == sheet_id)
-                .one_or_one()
+                .one_or_none()
             )
             if not account:
                 return False, ""
@@ -802,17 +850,18 @@ class AnsweringScoringController(crudController):
             contine_fetch = True
 
             if account.user_plan == 0 or account.user_plan is None:
-                if account.model_today_usage >= 1:
+                if account.model_today_used >= 1:
                     model_answer = '{"msg":"用量已超使用上限制"}'
                     contine_fetch = False
 
             if contine_fetch:
                 # 查看sheet状态：
-                redis = RedisWrapper("core_cache")
+                redis.set(f"InGrading-{sheet_id}-{question_id}", 1)
+                redis.set(f"InGrading-{sheet_id}", 1)
                 cache_dict = redis.get(f"Sheet-{sheet_id}")
                 # 直接取
                 if cache_dict:
-                    answer_voice_link = cache_dict['questions'][str(question_id)]['answer_voice_link']
+                    answer_voice_link = cache_dict['questions'][str(question_id)]['answer_voice_link'] if 'answer_voice_link' in cache_dict['questions'][str(question_id)] else None
                     answer = cache_dict['questions'][str(question_id)]['answer']
                 else:
                     # 取数据库
@@ -820,6 +869,7 @@ class AnsweringScoringController(crudController):
                         session.query(Submissions)
                         .filter(and_(Submissions.question_id == question_id,
                                      Submissions.answer_sheet_id == sheet_id))
+                        .one_or_none()
                     )
                     if sub_record:
                         answer_voice_link = sub_record.voice_link
@@ -838,18 +888,21 @@ class AnsweringScoringController(crudController):
                 )
                 if record.pattern_eng_name == "Speaking":  # speaking model
                     try:
+                        print("开始")
                         url = f"http://{'54.169.8.123'}:{57875}/v1/modelapi/speaking/gradeSpeaking/"
                         prompt = f"""Prompt: {q_record.question_title}"""
                         if q_record.voice_content:
-                            prompt += f"""Source: {q_record.question_content}; {q_record.voice_title}"""
+                            prompt += f"""Source: {q_record.question_content}; {q_record.voice_content}"""
                         r = requests.post(url, json={
                             "prompt": prompt,
                             "audioLink": answer_voice_link,
                             "gradeType": "Independent Speaking"
                         })
 
+                        print(r.status_code, 901)
                         if r.json()['code'] == 10000:
                             res_data = r.json()['data']
+                            print(res_data)
                             score = res_data.get("Overall")
                             if score:
                                 score = float(score)
@@ -874,10 +927,11 @@ class AnsweringScoringController(crudController):
                         url = f"http://{'54.169.8.123'}:{57875}/v1/modelapi/writing/gradeWriting/"
                         prompt = f"""Prompt: {q_record.question_title} {q_record.question_content}"""
                         if q_record.voice_content:
-                            prompt += f"""Source: {q_record.voice_title}"""
+                            prompt += f"""Source: {q_record.voice_content}"""
+
                         r = requests.post(url, json={
                             "prompt": prompt,
-                            "content":answer,
+                            "content": answer,
                             "gradeType": "Academic Discussion" if q_record.section_id == 12 else "Integrated Writing"
                         })
 
@@ -906,6 +960,9 @@ class AnsweringScoringController(crudController):
 
             # 超存结果
             cache_dict = redis.get(f"Sheet-{sheet_id}")
+            redis.delete(f"InGrading-{sheet_id}-{question_id}")
+            redis.delete(f"InGrading-{sheet_id}")
+            print(score, model_answer, 952)
             if not cache_dict:
                 update = (
                     session.query(Submissions)
@@ -918,12 +975,6 @@ class AnsweringScoringController(crudController):
                     })
                 )
 
-                try:
-                    session.commit()
-                    return True, score
-                except Exception as e:
-                    session.rollback()
-                    return False, 0
             else:
                 # update_:
                 self.update_question_answer(
@@ -933,6 +984,14 @@ class AnsweringScoringController(crudController):
                     score=score
                 )
                 return True, score
+
+
+            try:
+                session.commit()
+                return True, score
+            except Exception as e:
+                session.rollback()
+                return False, 0
 
 
     def scoring(self, sheet_id, re_score=False):
@@ -975,6 +1034,7 @@ class AnsweringScoringController(crudController):
                 Q.question_type,
                 Q.correct_answer,
                 Q.section_id,
+                Q.cal_method.label('cal_m_q'),
                 Q.is_cal,
                 Q.has_ans,
                 Q.father_question
@@ -1019,11 +1079,19 @@ class AnsweringScoringController(crudController):
                     except:
                         merged_restrict = {}
 
+                    if result.answer:
+                        try:
+                            single_answer = [int(num) for num in result.answer.split(";")]
+                        except:
+                            single_answer = result.answer
+                    else:
+                        single_answer = None
+
                     question = {
                         'submission_id': result.submission_id,
                         'question_id': result.question_id,
                         'section_id': result.section_id,
-                        'answer': [int(num) for num in result.answer.split(";")] if result.answer else None,
+                        'answer': single_answer,
                         'correct': [int(num) for num in
                                     result.correct_answer.split(";")] if result.correct_answer else None,
                         'weight': [int(num) for num in
@@ -1043,7 +1111,7 @@ class AnsweringScoringController(crudController):
 
                     # 自动计分
                     try:
-                        if result.is_cal == 1:
+                        if result.cal_m_q == 1:
                             if re_score:
                                 score = getattr(grading_instance, question['cal_fun'])(
                                     answer=question['answer'],
@@ -1055,7 +1123,7 @@ class AnsweringScoringController(crudController):
                                 )
                                 question['score'] = score
                             else:
-                                if not result.score:
+                                if result.score is None:
                                     score = getattr(grading_instance, question['cal_fun'])(
                                         answer=question['answer'],
                                         correct=question['correct'],
@@ -1081,16 +1149,21 @@ class AnsweringScoringController(crudController):
                                 )
                                 question['score'] = score
                             else:
-                                if not result.score:
-                                    score = getattr(grading_instance, question['cal_fun'])(
-                                        sheet_id=sheet_id,
-                                        question_id=question['question_id'],
-                                        answer=question['answer'],
-                                        voice_link=question['voice_link'],
-                                        video_link=question['video_link'],
-                                        upload_file_link=question['upload_file_link']
-                                    )
-                                    question['score'] = score
+                                if result.score is None:
+                                    redis = RedisWrapper('core_cache')
+                                    grading_record = redis.get(f"InGrading-{sheet_id}-{question['question_id']}")
+                                    if grading_record:
+                                        question['score'] = None
+                                    else:
+                                        score = getattr(grading_instance, question['cal_fun'])(
+                                            sheet_id=sheet_id,
+                                            question_id=question['question_id'],
+                                            answer=question['answer'],
+                                            voice_link=question['voice_link'],
+                                            video_link=question['video_link'],
+                                            upload_file_link=question['upload_file_link']
+                                        )
+                                        question['score'] = score
                                 else:
                                     question['score'] = result.score
                     except:
@@ -1101,8 +1174,14 @@ class AnsweringScoringController(crudController):
 
             from collections import defaultdict
             result = defaultdict(float)
+
+            # 如果里面有任何一道题score为none，都记做计算总分失败
+            whether_success = {}
             for d in questions:
-                result[d["section_id"]] += d["score"]
+                if d['score'] is None:
+                    whether_success[d["section_id"]] = True
+
+                result[d["section_id"]] += d["score"] if d['score'] else 0
             result_list = [{"section_id": section_id, "total_score": total_score} for section_id, total_score in
                            result.items()]
             u_r = []
@@ -1133,6 +1212,10 @@ class AnsweringScoringController(crudController):
                             "max_score": max_score if max_score else None,
                             "last_update_time": datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))
                         }
+                        # 需要每道题score都不为none才能计算总分 （口语、写作可能打分失败）
+                        if d['section_id'] in whether_success:
+                            new_record["total_score"] = None
+                            new_record['score'] = None
                         u_r.append(new_record)
                 else:
                     new_record = {
@@ -1143,8 +1226,10 @@ class AnsweringScoringController(crudController):
                         "max_score": max_score if max_score else None,
                         "last_update_time": datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))
                     }
-                    new_ = Scores(**new_record)
-                    session.add(new_)
+                    if 'w' in d:
+                        new_record["total_score"] = None
+                        new_record['score'] = None
+                    u_r.append(new_record)
 
             # 更新成绩
             commit = []
@@ -1203,6 +1288,7 @@ class AnsweringScoringController(crudController):
                 Submissions.question_id,
                 CASE WHEN Submissions.score = Submissions.max_score THEN 1 ELSE 0 END AS IsMaxScore,
                 Q.father_question,
+                Q.has_ans,
                 Q.section_id,
                 Q.remark
                 FROM Submissions
@@ -1220,12 +1306,16 @@ class AnsweringScoringController(crudController):
                 if score_d.father_question == -1:
                     if score_d.question_id not in father_q:
                         father_q[score_d.question_id] = 0
-                        q[score_d.question_id] = 0
+                        if score_d.has_ans == 0:
+                            q[score_d.question_id] = 0
+                        else:
+                            q[score_d.question_id] = score_d.IsMaxScore
                         remark[score_d.question_id] = score_d.remark
                         if score_d.section_id not in q_s:
                             q_s[score_d.section_id] = [score_d.question_id]
                         else:
                             q_s[score_d.section_id].append(score_d.question_id)
+
                 else:
                     if score_d.father_question in father_q:
                         father_q[score_d.father_question] += 1
@@ -2137,8 +2227,8 @@ class InitController(crudController):
 if __name__ == '__main__':
     #
     init = TransactionsController()
-    pprint.pprint(init.get_recent_pattern_scores(1, 20, 14))
-    # pprint.pprint(init._get_all_resources_under_patterns(pattern_id=12, account_id=7))
+    # pprint.pprint(init.get_recent_pattern_scores(1, 20, 14))
+    # pprint.pprint(init._get_all_resources_under_patterns(pattern_id=13, account_id=7))
     # init = InitController()
     # print(init.build_listening_questions())
     # print(init.helper(None))
@@ -2146,6 +2236,7 @@ if __name__ == '__main__':
     # print(init.import_vocabs())
     # print(init.build_similarities())
     # print(init.build_questions())
+
     # pprint.pprint(init.create_answer_sheet(account_id=7))
     # print(init.get_test_answers(sheet_id=7))
     # pprint.pprint(init.save_answer(sheet_id=7))
@@ -2154,20 +2245,23 @@ if __name__ == '__main__':
 
     # print(datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))))
 
-    # init = AnsweringScoringController()
-    # res = init.create_answer_sheet(account_id=27, question_ids=[3, 18])
+    init = AnsweringScoringController()
+    # res = init.create_answer_sheet(account_id=27, question_ids=[1220, 1221, 1222, 1223])
     # sheet_id = res[1]['sheet_id']
     # pprint.pprint(init.get_test_answers(sheet_id=sheet_id))
 
     # 做题
-    # print(init.update_question_answer(sheet_id=61, question_id=1590, answer='dashdksakhdh dashdkhasjkh dajskhdkhkajsh dashkjdkjh', duration=200))
+    # print(init.update_question_answer(sheet_id=617, question_id=1223, answer_voice_link="https://obs-parrotcore.obs.cn-east-3.myhuaweicloud.com/Speaking_Grading_Sample.mp3"))
     # print(init.update_question_answer(sheet_id=sheet_id, question_id=5, answer=[0, 0, 1, 0], duration=200))
 
+    # 中途批改
+    # print(asyncio.run(AnsweringScoringController().model_scoring(sheet_id=617, question_id=1223)))
+
     # 提交答案
-    # pprint.pprint(init.save_answer(sheet_id=279))
+    # pprint.pprint(init.save_answer(sheet_id=617))
 
     # 算分
     # start = time.time()
-    # print(init.scoring(sheet_id=279))
-    # pprint.pprint(init.get_score(answer_sheet_id=279))
+    # print(init.scoring(sheet_id=617))
+    pprint.pprint(init.get_score(answer_sheet_id=617, re_score=True))
     # print(time.time() - start)

@@ -1,3 +1,5 @@
+import asyncio
+from concurrent.futures import ThreadPoolExecutor
 import numpy as np
 
 class Grading:
@@ -41,24 +43,38 @@ class Grading:
     @staticmethod
     def grading_speaking(sheet_id, question_id, **kwargs):
         from blueprints.education.controllers import AnsweringScoringController
-        res, score = AnsweringScoringController().model_scoring(sheet_id=sheet_id, question_id=question_id)
-        if res:
-            return score
+        # async def run_async():
+        #     return await AnsweringScoringController().model_scoring(sheet_id=sheet_id, question_id=question_id)
+        #
+        # # Execute the coroutine in a ThreadPoolExecutor
+        # with ThreadPoolExecutor() as executor:
+        #     loop = asyncio.get_event_loop()
+        #     future = loop.run_in_executor(executor, asyncio.run, run_async())
+        #     res, score = loop.run_until_complete(future)
+        #     print(res, score)
+        #     return score if res else 0
+
+        loop = asyncio.get_event_loop()
+        if loop.is_running():
+            raise RuntimeError("Cannot run grading_speaking synchronously from an asynchronous context.")
         else:
-            return 0
+            res, score = loop.run_until_complete(
+                AnsweringScoringController().model_scoring(sheet_id=sheet_id, question_id=question_id)
+            )
+            return score if res else None
 
     @staticmethod
     def grading_writing(sheet_id, question_id, **kwargs):
         from blueprints.education.controllers import AnsweringScoringController
-        res, score = AnsweringScoringController().model_scoring(sheet_id=sheet_id, question_id=question_id)
-        if res:
-            return score
+        loop = asyncio.get_event_loop()
+
+        if loop.is_running():
+            raise RuntimeError("Cannot run grading_writing synchronously from an asynchronous context.")
         else:
-            return 0
-
-
-
-
+            res, score = loop.run_until_complete(
+                AnsweringScoringController().model_scoring(sheet_id=sheet_id, question_id=question_id)
+            )
+            return score if res else None
 
 
 if __name__ == "__main__":

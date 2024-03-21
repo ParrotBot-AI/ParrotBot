@@ -973,17 +973,17 @@ class TaskController(crudController):
 if __name__ == "__main__":
     account_id = 20
     # pprint(VocabLearningController().jump_to_vocabs(account_id=12, category_id=1, exam_id=1))
-    # pprint(VocabLearningController().fetch_account_vocab(12))
+    pprint(VocabLearningController().fetch_account_vocab(20))
     # pprint(TaskController().fetch_account_tasks(account_id=account_id, after_time=get_today_midnight(), active=True))
-    today = datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))
-    time = datetime(today.year, today.month, today.day, 0, 0)
-    res, data = TaskController().fetch_account_tasks(
-        account_id=account_id,
-        after_time=time,
-        type=1,
-        is_complete=0,
-    )
-    pprint(data)
+    # today = datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))
+    # time = datetime(today.year, today.month, today.day, 0, 0)
+    # res, data = TaskController().fetch_account_tasks(
+    #     account_id=account_id,
+    #     after_time=time,
+    #     type=1,
+    #     is_complete=0,
+    # )
+    # pprint(data)
 
     # 背单词
     # 1.先用5个
