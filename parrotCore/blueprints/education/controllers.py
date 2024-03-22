@@ -1393,14 +1393,15 @@ class TransactionsController(crudController):
                     WHERE Patterns.id IN {tuple(patterns)}
                     AND ASR.account_id = {account_id}
                     AND ASR.status = 0
-                    AND ASR.last_update_time > {date_days_ago}
+                    AND ASR.last_update_time >= {date_days_ago}
+                    AND ASR.score IS NOT NULL
                     GROUP BY Patterns.pattern_name;
                 """)
                 scores = session.execute(raw_sql).fetchall()
 
                 res = {}
                 for score in scores:
-                    res[score.pattern_name] = float(score.score) if score.score is not None else None
+                    res[score.pattern_name] = float(score.score)
 
                 for record in _records:
                     if record.pattern_name not in res:
