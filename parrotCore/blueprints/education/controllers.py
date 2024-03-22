@@ -1400,7 +1400,7 @@ class TransactionsController(crudController):
 
                 res = {}
                 for score in scores:
-                    res[score.pattern_name] = float(score.score)
+                    res[score.pattern_name] = float(score.score) if score.score is not None else None
 
                 for record in _records:
                     if record.pattern_name not in res:
@@ -2320,8 +2320,8 @@ class InitController(crudController):
 if __name__ == '__main__':
     #
     init = TransactionsController()
-    pprint.pprint(init._get_all_resources_under_exams(1, 7))
-    # pprint.pprint(init.get_recent_pattern_scores(1, 20, 14))
+    # pprint.pprint(init._get_all_resources_under_exams(1, 7))
+    pprint.pprint(init.get_recent_pattern_scores(20, 14))
     # pprint.pprint(init._get_all_resources_under_patterns(pattern_id=13, account_id=7))
     # init = InitController()
     # print(init.build_listening_questions())
