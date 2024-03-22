@@ -298,7 +298,7 @@ class MicroServiceRegisterViewSet(CustomModelViewSet):
         question_id = request.data.get('question_id')
         answer = None
         if type(request.data.get('answer')) == str:
-            answer = json.loads(request.data.get('answer'))
+            answer = request.data.get('answer')
         elif type(request.data.get('answer')) == list:
             answer = request.data.get('answer')
         duration = request.data.get('duration')
@@ -398,6 +398,25 @@ class MicroServiceRegisterViewSet(CustomModelViewSet):
                 except:
                     return ErrorResponse(msg="微服务故障")
 
+        except:
+            return ErrorResponse(msg='参数格式错误')
+
+    @action(methods=["GET"], detail=False, permission_classes=[IsAuthenticated], url_path="get_score_repeat/(?P<sheet_id>\d+)")
+    def get_score_repeat(self, request, sheet_id):
+        try:
+            if True:
+                try:
+                    # data = dict(micro.data)
+                    url = f"http://{'127.0.0.1'}:{10981}/v1/api/education/get_score_repeat/{sheet_id}/"
+                    r = requests.get(url)
+
+                    if r.json()['code'] == 10000:
+                        res_data = r.json()['data']
+                        return DetailResponse(data=res_data, msg='OK.')
+                    else:
+                        return ErrorResponse(msg=r.json()['msg'])
+                except:
+                    return ErrorResponse(msg="微服务故障")
         except:
             return ErrorResponse(msg='参数格式错误')
 

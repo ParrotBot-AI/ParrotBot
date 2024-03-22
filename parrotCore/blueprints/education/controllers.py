@@ -1471,6 +1471,100 @@ class TransactionsController(crudController):
             else:
                 return 'Invalid Pattern Id'
 
+    def _get_all_resources_under_exams(self, exam_id, account_id):
+        with db_session('core') as session:
+            start = time.time()
+            # 首先查找所有相关的exams
+            exam_record = (
+                session.query(Exams)
+                .filter(or_(Exams.id == exam_id, Exams.father_exam == exam_id))
+                .all()
+            )
+            ids = tuple([record.id for record in exam_record])
+
+            raw_sql = text(f"""
+            WITH RECURSIVE tree AS (
+                SELECT
+                    id,
+                    father_resource,
+                    resource_name,
+                    1 AS depth
+                FROM Resources
+                WHERE father_resource = -1
+                AND exam_id IN {ids}
+                UNION ALL
+                SELECT
+                    c.id,
+                    c.father_resource,
+                    c.resource_name,
+                    p.depth + 1 AS depth
+                FROM
+                    Resources c
+                JOIN tree p ON c.father_resource = p.id
+                )
+                SELECT T.*, Q.id As Q_id FROM tree T
+                JOIN Questions Q on T.id = Q.source
+                WHERE Q.father_question = -1
+                ORDER BY father_resource, Q.`order`;
+                """)
+
+            questions_relations = session.execute(raw_sql).fetchall()
+            q_r = {}
+            for record in questions_relations:
+                if record.father_resource not in q_r:
+                    q_r[record.father_resource] = [record.Q_id]
+                else:
+                    q_r[record.father_resource].append(record.Q_id)
+
+            raw_sql = text(f"""
+            WITH RECURSIVE tree AS (
+                SELECT
+                    id,
+                    father_resource,
+                    resource_name,
+                    1 AS depth
+                FROM Resources
+                WHERE father_resource = -1
+                AND exam_id IN {ids}
+                UNION ALL
+                SELECT
+                    c.id,
+                    c.father_resource,
+                    c.resource_name,
+                    p.depth + 1 AS depth
+                FROM
+                    Resources c
+                JOIN tree p ON c.father_resource = p.id
+                )
+                SELECT * FROM tree T
+            """)
+
+            resources = session.execute(raw_sql).fetchall()
+            tree = Tree()
+
+            for record in resources:
+                father_id = record.father_resource
+                if record.father_resource == -1:
+                    c_r = {
+                        "id": record.id,
+                        # "father_id": -1,
+                        "resource_name": record.resource_name
+                    }
+                    tree.add_root(c_r)
+                else:
+                    if record.depth <= 3:
+                        c_r = {
+                            "id": record.id,
+                            # "father_id": record.father_recource,
+                            "resource_name": record.resource_name
+                        }
+                        if record.id in q_r:
+                            c_r['questions'] = q_r[record.id]
+                        tree.add_node("id", father_id, c_r)
+
+            display_resource = [x for x in tree.print_tree() if x['resource_name'] == "TPO题库"]
+            pprint.pprint(display_resource)
+
     def _get_all_resources_under_patterns(self, pattern_id, account_id, page=0, limit=20):
         with db_session('core') as session:
             start = time.time()
@@ -2226,6 +2320,7 @@ class InitController(crudController):
 if __name__ == '__main__':
     #
     init = TransactionsController()
+    pprint.pprint(init._get_all_resources_under_exams(1, 7))
     # pprint.pprint(init.get_recent_pattern_scores(1, 20, 14))
     # pprint.pprint(init._get_all_resources_under_patterns(pattern_id=13, account_id=7))
     # init = InitController()
@@ -2244,7 +2339,7 @@ if __name__ == '__main__':
 
     # print(datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))))
 
-    init = AnsweringScoringController()
+    # init = AnsweringScoringController()
     # res = init.create_answer_sheet(account_id=27, question_ids=[1220, 1221, 1222, 1223])
     # sheet_id = res[1]['sheet_id']
     # pprint.pprint(init.get_test_answers(sheet_id=sheet_id))
@@ -2262,5 +2357,5 @@ if __name__ == '__main__':
     # 算分
     # start = time.time()
     # print(init.scoring(sheet_id=617))
-    pprint.pprint(init.get_score(answer_sheet_id=617, re_score=True))
+    # pprint.pprint(init.get_score(answer_sheet_id=617, re_score=True))
     # print(time.time() - start)

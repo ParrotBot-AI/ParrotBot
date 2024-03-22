@@ -178,6 +178,20 @@ def get_score(sheet_id):
     except Exception as e:
         return ArgumentExceptionResponse(msg=f'{e}')
 
+@bp.route('get_score_repeat/<sheet_id>/', methods=['GET'])
+def get_score_repeat(sheet_id):
+    try:
+        res = AnsweringScoringController().get_score(
+            answer_sheet_id=sheet_id,
+            re_score=True
+        )
+        if res[0]:
+            return SuccessDataResponse(res[1])
+        else:
+            return ArgumentExceptionResponse(msg=f'{res[1]}')
+    except Exception as e:
+        return ArgumentExceptionResponse(msg=f'{e}')
+
 
 
 # heart beat
