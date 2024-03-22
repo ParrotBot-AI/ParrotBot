@@ -44,6 +44,25 @@ def fetch_resource_p(account_id, pattern_id):
     except Exception as e:
         return ArgumentExceptionResponse(msg=f'{e}')
 
+@bp.route('fetch_resource_e/<account_id>/<exam_id>/', methods=['POST'])
+def fetch_resource_p(account_id, exam_id):
+    args = request.json
+    page = args.get('page')
+    limit = args.get('limit')
+    try:
+        res = TransactionsController()._get_all_resources_under_exams(
+            exam_id=exam_id,
+            account_id=account_id,
+            page=page,
+            limit=limit,
+        )
+        if res[0]:
+            return SuccessDataResponse(res[1])
+        else:
+            return ArgumentExceptionResponse(msg=f'{res[1]}')
+    except Exception as e:
+        return ArgumentExceptionResponse(msg=f'{e}')
+
 @bp.route('fetch_past_scores/<account_id>/', methods=['GET'])
 def fetch_past_scores(account_id):
     try:

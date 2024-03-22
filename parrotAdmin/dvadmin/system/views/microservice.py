@@ -199,6 +199,42 @@ class MicroServiceRegisterViewSet(CustomModelViewSet):
         # output: resource list with sub question
         return SuccessResponse(data=res_data, msg='获取成功', page=page, limit=limit, total=len(res_data))
 
+    @action(methods=["POST"], detail=False, permission_classes=[IsAuthenticated])
+    def resource_exam(self, request):
+        exam_id = request.data.get("exam_id")
+        account_id = request.data.get("account_id")
+
+        # whether_zt = request.data.get("is_real_problem") # 目前默认false
+        whether_zt = False
+        page = request.data.get("page")
+        limit = request.data.get("limit")
+
+        if not page:
+            page = 1
+        else:
+            page = int(page)
+        if not limit:
+            limit = 20
+        else:
+            limit = int(limit)
+
+        # request send to microservices
+        if True:
+            # data = dict(micro.data)
+            url = f"http://{'127.0.0.1'}:{10981}/v1/api/education/fetch_resource_e/{account_id}/{exam_id}/"
+            r = requests.post(url, json={
+                'page': page,
+                'limit': limit
+            })
+
+            if r.json()['code'] == 10000:
+                res_data = r.json()['data']
+            else:
+                return ErrorResponse(msg="微服务故障")
+
+        # output: resource list with sub question
+        return SuccessResponse(data=res_data, msg='获取成功', page=page, limit=limit, total=len(res_data))
+
     @action(methods=["GET"], detail=False, permission_classes=[IsAuthenticated],
             url_path="get_past_scores/(?P<account_id>\d+)")
     def get_past_scores(self, request, account_id):

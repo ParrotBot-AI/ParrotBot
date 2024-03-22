@@ -1471,7 +1471,7 @@ class TransactionsController(crudController):
             else:
                 return 'Invalid Pattern Id'
 
-    def _get_all_resources_under_exams(self, exam_id, account_id):
+    def _get_all_resources_under_exams(self, exam_id, account_id, page=0, limit=20):
         with db_session('core') as session:
             start = time.time()
             # 首先查找所有相关的exams
@@ -1563,7 +1563,7 @@ class TransactionsController(crudController):
                         tree.add_node("id", father_id, c_r)
 
             display_resource = [x for x in tree.print_tree() if x['resource_name'] == "TPO题库"]
-            pprint.pprint(display_resource)
+            return True, display_resource
 
     def _get_all_resources_under_patterns(self, pattern_id, account_id, page=0, limit=20):
         with db_session('core') as session:
