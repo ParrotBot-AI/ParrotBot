@@ -127,9 +127,6 @@ class crudController:
 
     def _update(self, model, update_parameters, restrict_field, callback_function=None):
         with db_session('core') as session:
-            # update_dic = {col: getattr(update_parameters, col) for col in
-            #               [column.key for column in self.Model.__table__.columns] if
-            #               col != 'id'}
             default_dic = {'last_update_time': datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))}
 
             records = (
@@ -144,11 +141,11 @@ class crudController:
             try:
                 session.commit()
                 session.close()
-                return True
+                return True, "Ok"
             except Exception as e:
                 session.rollback()
                 session.close()
-                return False
+                return False, "更新失败"
 
     def _delete(self, model, restrict_field, restrict_value):
         with db_session('core') as session:

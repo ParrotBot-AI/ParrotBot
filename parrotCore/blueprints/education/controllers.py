@@ -24,7 +24,7 @@ import pprint
 from utils.structure import Tree, TreeNode
 from utils.redis_tools import RedisWrapper
 from configs.environment import DATABASE_SELECTION
-from sqlalchemy import null, select, union_all, and_, or_, join, outerjoin, update, insert, delete, text
+from sqlalchemy import null, select, union_all, and_, or_, join, outerjoin, update, insert, delete, text, asc
 import time
 from sqlalchemy.orm import aliased
 from sqlalchemy.sql.expression import bindparam
@@ -171,10 +171,9 @@ class QuestionController(crudController):
                                          'd': result.question_stem.split(";")}
                     else:
                         merged_detail = {**json.loads(result.detail), **json.loads(result.q_detail),
-                                             'd': []}
+                                         'd': []}
                 except:
                     merged_detail = {}
-
 
                 try:
                     if not result.q_restriction:
@@ -239,7 +238,8 @@ class QuestionController(crudController):
                     ("restriction", merged_restrict),
                     ("detail", merged_detail['d'] if 'd' in merged_detail else None),
                     ("options_label", merged_detail['ol'] if 'ol' in merged_detail else None),
-                    ("answer_weight", [int(num) for num in result.stem_weights.split(";")] if result.stem_weights else None),
+                    ("answer_weight",
+                     [int(num) for num in result.stem_weights.split(";")] if result.stem_weights else None),
                     ("model_answer", model_answer if model_answer else None),
                     ("answer_voice_link", answer_voice_link if answer_voice_link else None),
                     ("answer_video_link", answer_video_link if answer_video_link else None),
@@ -301,7 +301,76 @@ class QuestionController(crudController):
 
 
 class AnsweringScoringController(crudController):
-    def create_answer_sheet(self, account_id=None, type='practice', question_ids=None):
+    def create_mock_answer_sheet(self, account_id=None, type='mock'):
+        if account_id is None:
+            return False, "未知账户"
+
+        new_answer_sheet = {
+            "account_id": account_id,
+            "status": 1,
+            "type": type,
+            "max_score": 0,
+            "is_time": True,
+            "father_sheet": -1,
+            "is_check_answer": False,
+            "is_active": 1,
+            "is_graded": 0
+        }
+        create_new = self._create(model=AnswerSheetRecord, create_params=new_answer_sheet)
+
+        if not create_new[0]:
+            return False, "创建sheet失败"
+
+        sheet_id = create_new[1]
+        response = {
+            "sheet_id": sheet_id,
+            "is_time": True,
+            "is_check_answer": False,
+            "children_sheets": []
+        }
+        return True, response
+
+    def get_mock_answer_sheet(self, sheet_id, contin=False):
+        with db_session('core') as session:
+            record = (
+                session.query(AnswerSheetRecord)
+                .filter(AnswerSheetRecord.id == sheet_id)
+                .one_or_none()
+            )
+
+            if not record:
+                return False, '找不到答题卡'
+
+            children_record = (
+                session.query(AnswerSheetRecord)
+                .filter(AnswerSheetRecord.father_sheet == sheet_id)
+                .all()
+            )
+            children_sheets = []
+
+            success = True
+            for record in children_record:
+                resp, data = self.get_test_answers(sheet_id, contin=False)
+                if not resp:
+                    success = False
+                    break
+                else:
+                    children_sheets.append(data)
+
+            if not success:
+                children_sheets = []
+
+            response = {
+                "sheet_id": record.id,
+                "is_time": record.is_time,
+                "is_check_answer": record.section_id,
+                "count": len(children_record),
+                "children_sheets": children_sheets
+            }
+
+            return True, response
+
+    def create_answer_sheet(self, account_id=None, type='practice', question_ids=None, father_sheet=None):
         if account_id:
             # 查找exam_ids下面所有的sections_id
             with db_session('core') as session:
@@ -361,6 +430,7 @@ class AnsweringScoringController(crudController):
                         "account_id": account_id,
                         "status": 1,
                         "type": type,
+                        "father_sheet": father_sheet if father_sheet is not None else -1,
                         "max_score": total_max,
                         "is_time": is_time,
                         "is_check_answer": is_check_answer,
@@ -410,7 +480,8 @@ class AnsweringScoringController(crudController):
                             s_l
                         )
 
-                        default_dic = {'last_update_time': datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))}
+                        default_dic = {
+                            'last_update_time': datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))}
 
                         update_time = {
                             "id": sheet_id,
@@ -476,7 +547,8 @@ class AnsweringScoringController(crudController):
                         "sheet_id": sheet_id,
                         "is_time": record.is_time,
                         "is_check_answer": record.is_check_answer,
-                        "time_remain": (record.end_time.replace(tzinfo=timezone(timedelta(hours=8))) - datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))).total_seconds(),
+                        "time_remain": (record.end_time.replace(tzinfo=timezone(timedelta(hours=8))) - datetime.now(
+                            timezone.utc).astimezone(timezone(timedelta(hours=8)))).total_seconds(),
                         "max_score": record.max_score,
                         "score": record.score if record.score else None,
                         "type": record.type.value,
@@ -582,12 +654,13 @@ class AnsweringScoringController(crudController):
                             ac_type="get",
                             fetch_question=question_dic)
 
+                        test_remain = (
+                                record.end_time - record.last_pause_time).total_seconds() if record.status == 2 else 0
                         redis_dic = {
                             "sheet_id": sheet_id,
                             "is_time": record.is_time,
                             "is_check_answer": record.is_check_answer,
-                            "time_remain": (
-                                    record.end_time - record.last_pause_time).total_seconds() if record.status == 2 else 0,
+                            "time_remain": test_remain,
                             "max_score": record.max_score,
                             "score": record.score if record.score else None,
                             "type": record.type.value,
@@ -599,11 +672,17 @@ class AnsweringScoringController(crudController):
 
                         if contin:
                             try:
+                                if record.status != 2:
+                                    return False, "该前单题卡状态不支持继续"
+
                                 update_s = {
                                     "id": sheet_id,
-                                    "status": 1
+                                    "status": 1,
+                                    "end_time": datetime.now(timezone.utc).astimezone(
+                                        timezone(timedelta(hours=8))) + timedelta(seconds=test_remain + 2)
                                 }
                                 self._update(model=AnswerSheetRecord, update_parameters=update_s, restrict_field="id")
+                                redis_cli.set(f'Sheet-{sheet_id}', redis_dic)
                                 session.commit()
                             except Exception as e:
                                 session.rollback()
@@ -618,7 +697,8 @@ class AnsweringScoringController(crudController):
         cache_dict = redis_cli.get(f'Sheet-{sheet_id}')
         if cache_dict:
             if answer is not None:
-                cache_dict['questions'][str(question_id)]['answer'] = answer  # Replace 'new_value' with the desired value
+                cache_dict['questions'][str(question_id)][
+                    'answer'] = answer  # Replace 'new_value' with the desired value
             if answer_voice_link is not None:
                 cache_dict['questions'][str(question_id)]['answer_voice_link'] = answer_voice_link
             if answer_video_link is not None:
@@ -647,7 +727,7 @@ class AnsweringScoringController(crudController):
             questions_li = []
             for value in questions_dic.values():
                 if 'answer' in value:
-                    if type(value['answer']) ==list:
+                    if type(value['answer']) == list:
                         if value['answer'] != [0] * len(value['answer']):
                             value['is_answer'] = True
                         else:
@@ -702,7 +782,7 @@ class AnsweringScoringController(crudController):
                         'video_link': value['answer_video_link'] if 'answer_video_link' in value else None,
                         'model_answer': value['model_answer'] if 'model_answer' in value else None,
                         'upload_file_link': value['upload_file_link'] if 'upload_file_link' in value else None,
-                        'score':value['score'] if 'score' in value else None,
+                        'score': value['score'] if 'score' in value else None,
                         'answer_sheet_id': sheet_id,
                         'max_score': value['max_score'],
                         'is_graded': False,
@@ -741,6 +821,46 @@ class AnsweringScoringController(crudController):
                 .one_or_none()
             )
             if answer_record:
+                children_record = (
+                    session.query(AnswerSheetRecord)
+                    .filter(AnswerSheetRecord.father_sheet == answer_sheet_id)
+                    .order_by(asc(AnswerSheetRecord.create_time))
+                    .all()
+                )
+
+                # 给所有的children打分
+                if len(children_record) > 0:
+                    max_score = 0
+                    score = 0
+                    success = True
+
+                    detail = []
+                    for record in children_record:
+                        if record.score is not None:
+                            score += record.score
+                        else:
+                            success = False
+                        if record.max_score is not None:
+                            max_score += record.max_score
+
+                        _record = {
+                            "sheet_id": record.id,
+                            "max_score": record.max_score,
+                            "score": record.score
+                        }
+                        detail.append(_record)
+
+                    rs = {
+                        "sheet_id": answer_record.id,
+                        "is_time": answer_record.is_time,
+                        "is_check_answer": answer_record.is_check_answer,
+                        "max_score": record.max_score,
+                        "score": score if success else None,
+                        "detail": detail,
+                        "type": record.type.value
+                    }
+                    return True, rs
+
                 if answer_record.status == 0:
                     l = s.serialize_dic(answer_record, self.default_not_show)
                     l['type'] = l['type'].value
@@ -748,7 +868,7 @@ class AnsweringScoringController(crudController):
                     # 获取小分
                     res, data = self.get_score_question_detail(answer_sheet_id=answer_sheet_id, session=session)
                     if not res:
-                        return False,data
+                        return False, data
 
                     resp, questions = self.get_test_answers(sheet_id=answer_sheet_id)
 
@@ -861,7 +981,9 @@ class AnsweringScoringController(crudController):
                 cache_dict = redis.get(f"Sheet-{sheet_id}")
                 # 直接取
                 if cache_dict:
-                    answer_voice_link = cache_dict['questions'][str(question_id)]['answer_voice_link'] if 'answer_voice_link' in cache_dict['questions'][str(question_id)] else None
+                    answer_voice_link = cache_dict['questions'][str(question_id)][
+                        'answer_voice_link'] if 'answer_voice_link' in cache_dict['questions'][
+                        str(question_id)] else None
                     answer = cache_dict['questions'][str(question_id)]['answer']
                 else:
                     # 取数据库
@@ -969,7 +1091,8 @@ class AnsweringScoringController(crudController):
                     .filter(and_(Submissions.question_id == question_id,
                                  Submissions.answer_sheet_id == sheet_id))
                     .update({
-                        Submissions.last_update_time: datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))),
+                        Submissions.last_update_time: datetime.now(timezone.utc).astimezone(
+                            timezone(timedelta(hours=8))),
                         Submissions.score: score,
                         Submissions.model_answer: model_answer
                     })
@@ -985,14 +1108,12 @@ class AnsweringScoringController(crudController):
                 )
                 return True, score
 
-
             try:
                 session.commit()
                 return True, score
             except Exception as e:
                 session.rollback()
                 return False, 0
-
 
     def scoring(self, sheet_id, re_score=False):
         with db_session('core') as session:
@@ -1010,6 +1131,24 @@ class AnsweringScoringController(crudController):
                 "status": 4
             }
             self._update(model=AnswerSheetRecord, update_parameters=update_s, restrict_field="id")
+
+            children_record = (
+                session.query(AnswerSheetRecord)
+                .filter(AnswerSheetRecord.father_sheet == sheet_id)
+                .all()
+            )
+
+            # 给所有的children打分
+            if len(children_record) > 0:
+                success = True
+                for _ in range(len(children_record)):
+                    res, data = self.scoring(sheet_id=children_record.id, re_score=re_score)
+                    if not res:
+                        success = False
+                        break
+
+                if not success:
+                    return False, "打分失败"
 
             #  ----------------------------------开始打分------------------------------------------#
             # 把submission questions join 过来
@@ -1097,7 +1236,7 @@ class AnsweringScoringController(crudController):
                         'weight': [int(num) for num in
                                    result.question_stem.split(";")] if result.question_stem else None,
                         'max_score': result.max_score,
-                        'voice_link':result.voice_link,
+                        'voice_link': result.voice_link,
                         'video_link': result.video_link,
                         'upload_file_link': result.upload_file_link,
                         'father_id': result.father_question,
@@ -1342,6 +1481,7 @@ class TransactionsController(crudController):
     支持所有事务表单(Projects, 问卷s, Sections, Resources)
     init: 先创建Projects => 问卷s => Sections, Resources
     """
+
     def get_recent_pattern_scores(self, account_id, offset):
         with db_session('core') as session:
             account = (
@@ -2056,15 +2196,15 @@ class InitController(crudController):
         def g_answer(number, answer, stem):
             s_l = stem.split(";")
             length = len(s_l)
-            map ={
-                "A":0,
-                "B":1,
-                "C":2,
-                "D":3,
-                "E":4,
-                "F":5,
-                "G":6,
-                "H":7
+            map = {
+                "A": 0,
+                "B": 1,
+                "C": 2,
+                "D": 3,
+                "E": 4,
+                "F": 5,
+                "G": 6,
+                "H": 7
             }
             if number == 1 or number == 2:
                 a = [0] * length
@@ -2095,23 +2235,30 @@ class InitController(crudController):
                     if record:
                         father = (
                             session.query(Questions)
-                            .filter(Questions.remark == f'{row["question_source"]} Listening {row["section_name"].replace(" ","")}')
+                            .filter(
+                                Questions.remark == f'{row["question_source"]} Listening {row["section_name"].replace(" ", "")}')
                             .one_or_none()
                         )
                         if father:
-                            print(f'{row["question_source"]}-听力-s{int(row["section_id"])}-{row["section_name"]}-{row["question_order"]}')
+                            print(
+                                f'{row["question_source"]}-听力-s{int(row["section_id"])}-{row["section_name"]}-{row["question_order"]}')
                             new_q = {
                                 "question_type": question_t(row["question_type"], row["correct_answer"]),
                                 'question_title': row['title'] if not pd.isnull(row['title']) else None,
-                                "question_content": row['question_content'] if not pd.isnull(row['question_content']) else None,
+                                "question_content": row['question_content'] if not pd.isnull(
+                                    row['question_content']) else None,
                                 "question_stem": row['question_stem'] if not pd.isnull(row['question_stem']) else None,
                                 "question_function_type": "exams",
                                 "order": int(row["question_order"]),
                                 "father_question": father.id,
                                 "cal_method": 1,
                                 "max_score": 1,
-                                "stem_weights": g_answer(row["question_type"], row["correct_answer"], row['question_stem']) if not pd.isnull(row['correct_answer']) else None,
-                                'correct_answer': g_answer(row["question_type"], row["correct_answer"], row['question_stem']) if not pd.isnull(row['correct_answer']) else None,
+                                "stem_weights": g_answer(row["question_type"], row["correct_answer"],
+                                                         row['question_stem']) if not pd.isnull(
+                                    row['correct_answer']) else None,
+                                'correct_answer': g_answer(row["question_type"], row["correct_answer"],
+                                                           row['question_stem']) if not pd.isnull(
+                                    row['correct_answer']) else None,
                                 "d_level": 1,
                                 "is_require": 1,
                                 "is_cal": 1,
@@ -2120,7 +2267,7 @@ class InitController(crudController):
                                 "voice_content": None,
                                 "is_attachable": 0,
                                 "keywords": None,
-                                "remark": f'{row["question_source"]} Listening {row["section_name"].replace(" ","")} {int(row["question_order"])}',
+                                "remark": f'{row["question_source"]} Listening {row["section_name"].replace(" ", "")} {int(row["question_order"])}',
                                 "has_ans": 1,
                                 "section_id": record.section_id,
                                 "source": record.id,
@@ -2160,7 +2307,7 @@ class InitController(crudController):
 
                 record = (
                     session.query(Resources)
-                    .filter(Resources.resource_name == f'{row["question_source"].replace(" ","")}-写作-s{section_n}')
+                    .filter(Resources.resource_name == f'{row["question_source"].replace(" ", "")}-写作-s{section_n}')
                     .one_or_none()
                 )
                 if record:
@@ -2186,7 +2333,7 @@ class InitController(crudController):
                         "voice_link": row['音频url'] if not pd.isnull(row['音频url']) else None,
                         "voice_content": row['音频文件'] if not pd.isnull(row['音频文件']) else None,
                         "is_attachable": 1,
-                        "keywords": json.dumps({'r': 20*10}) if section_n == 1 else json.dumps(
+                        "keywords": json.dumps({'r': 20 * 10}) if section_n == 1 else json.dumps(
                             {'r': 600}),
                         "remark": f'{row["question_source"]} writing section {section_n}',
                         "has_ans": 1,
@@ -2207,7 +2354,6 @@ class InitController(crudController):
             except Exception as e:
                 session.rollback()
                 return False, str(e)
-
 
     def build_speaking_questions(self):
         file_path = '/Users/zhilinhe/desktop/口语题目材料.xlsx'
@@ -2322,7 +2468,7 @@ if __name__ == '__main__':
     #
     init = TransactionsController()
     # pprint.pprint(init._get_all_resources_under_exams(1, 7))
-    pprint.pprint(init.get_recent_pattern_scores(20, 14))
+    # pprint.pprint(init.get_recent_pattern_scores(20, 14))
     # pprint.pprint(init._get_all_resources_under_patterns(pattern_id=13, account_id=7))
     # init = InitController()
     # print(init.build_listening_questions())
@@ -2340,7 +2486,7 @@ if __name__ == '__main__':
 
     # print(datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))))
 
-    # init = AnsweringScoringController()
+    init = AnsweringScoringController()
     # res = init.create_answer_sheet(account_id=27, question_ids=[1220, 1221, 1222, 1223])
     # sheet_id = res[1]['sheet_id']
     # pprint.pprint(init.get_test_answers(sheet_id=sheet_id))

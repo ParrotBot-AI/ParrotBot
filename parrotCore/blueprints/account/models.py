@@ -1,6 +1,7 @@
-from sqlalchemy import Column, String, Integer, DateTime, ForeignKey
+from sqlalchemy import Column, String, Integer, DateTime, ForeignKey, Enum
 from sqlalchemy import UniqueConstraint
 from configs.environment import DATABASE_SELECTION
+import enum
 
 # from blueprints.education.models import (Exams)
 
@@ -8,6 +9,33 @@ if DATABASE_SELECTION == 'postgre':
     from configs.postgre_config import BASES
 elif DATABASE_SELECTION == 'mysql':
     from configs.mysql_config import BASES
+
+
+class level(enum.Enum):
+    middle_school = 1
+    high_school = 2
+    college = 3
+    toefl = 4
+    gre = 5
+    grad = 6
+
+
+class status(enum.Enum):
+    middle_school = 1
+    high_school = 2
+    college = 3
+    prof = 4
+
+
+class purpose(enum.Enum):
+    study_board = 1
+    work_demand = 2
+    personal_improve = 3
+
+class study(enum.Enum):
+    studying = 1
+    prepare_studying = 2
+    self_studying = 3
 
 
 class Users(BASES['core']):
@@ -51,6 +79,13 @@ class Accounts(BASES['core']):
     # exam_id = Column(Integer, nullable=False)
     exam_id = Column(Integer, ForeignKey('Exams.id', ondelete='CASCADE'), nullable=False)
     model_today_used = Column(Integer, default=0)
+
+    # 问卷内容
+    current_status = Column(Enum(status), nullable=True)
+    purpose = Column(Enum(purpose), nullable=True)
+    study_type = Column(Enum(study), nullable=True)
+    next_test_time = Column(DateTime)
+
     create_time = Column(DateTime)
     last_update_time = Column(DateTime)
     last_request_time = Column(DateTime)

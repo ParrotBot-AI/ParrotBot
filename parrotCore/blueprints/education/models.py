@@ -225,6 +225,7 @@ class QuestionsType(BASES['core']):
         s = f'(id: {self.id} n: {self.type_name})'
         return s
 
+
 class Questions(BASES['core']):
     __tablename__ = "Questions"
     # __table_args__ = (
@@ -295,6 +296,33 @@ class IndicatorQuestion(BASES['core']):
         return s
 
 
+# class AnswerMockSheetRecord(BASES['core']):
+#     __tablename__ = "AnswerMockSheetRecord"
+#
+#     id = Column(Integer, autoincrement=True, primary_key=True)
+#     account_id = Column(Integer, ForeignKey('Accounts.id', ondelete='CASCADE'), nullable=False)
+#     start_time = Column(DateTime)
+#     end_time = Column(DateTime, nullable=True)
+#     last_pause_time = Column(DateTime, nullable=True)
+#     answer_sheet_amount = Column(Integer, nullable=True, default=0)
+#
+#     max_score = Column(Integer, nullable=True)
+#     score = Column(Integer, nullable=True)
+#
+#     is_graded = Column(Boolean, default=True)  # 是否打分完成 # 所有seet
+#     create_time = Column(DateTime)
+#     last_update_time = Column(DateTime)
+#
+# class AnswerMockSheetRelationships(BASES['core']):
+#     __tablename__ = "AnswerMockSheetRelationships"
+#
+#     id = Column(Integer, autoincrement=True, primary_key=True)
+#     mock_exam_id = Column(Integer, ForeignKey('AnswerMockSheetRecord.id', ondelete='CASCADE'), nullable=False)
+#     answer_sheet_id = Column(Integer, ForeignKey('AnswerSheetRecord.id', ondelete='CASCADE'), nullable=False)
+#     create_time = Column(DateTime)
+#     last_update_time = Column(DateTime)
+
+
 class AnswerSheetRecord(BASES['core']):
     __tablename__ = "AnswerSheetRecord"
 
@@ -303,6 +331,7 @@ class AnswerSheetRecord(BASES['core']):
     start_time = Column(DateTime)
     end_time = Column(DateTime, nullable=True)
     last_pause_time = Column(DateTime, nullable=True)
+    father_sheet = Column(Integer, default=-1, nullable=True)
 
     status = Column(Integer)  # 0为已完成答题，批改问卷; 1为正在答题; 2为答题暂停; 3为已完成答题，题目已保存，未批改; 4为正在批改, 5为批改完成，未登分
     type = Column(Enum(answerType))

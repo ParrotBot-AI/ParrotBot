@@ -10,6 +10,21 @@ elif DATABASE_SELECTION == 'mysql':
     from configs.mysql_config import BASES
 
 
+class StudyPulseRecords(BASES['core']):
+    __tablename__ = "StudyPulseRecords"
+
+    id = Column(Integer, autoincrement=True, primary_key=True)
+    account_id = Column(Integer, ForeignKey('Accounts.id', ondelete='CASCADE'), nullable=True)
+    time_length = Column(Float, nullable=True)
+    counter = Column(Integer, default=1, nullable=True)
+    create_time = Column(DateTime)
+    last_update_time = Column(DateTime)
+
+    def __str__(self) -> str:
+        s = f'(id: {self.id} t: {self.time_length})'
+        return s
+
+
 class Stages(BASES['core']):
     __tablename__ = "Stages"
 
@@ -65,6 +80,7 @@ class Modules(BASES['core']):
         s = f'(id: {self.id} n: {self.module_name})'
         return s
 
+
 class TaskFlowsConditions(BASES['core']):
     __tablename__ = "TaskFlowsConditions"
 
@@ -108,6 +124,7 @@ class TaskFlows(BASES['core']):
     def __repr__(self) -> str:
         s = f'(id: {self.id} f: {self.from_module_id} t: {self.to_module_id})'
         return s
+
 
 class LearningTypes(BASES['core']):
     __tablename__ = "LearningTypes"
@@ -158,7 +175,7 @@ class VocabsLearning(BASES['core']):
     in_process = Column(String(20), nullable=False)  # key to redis
     finished = Column(String(20), nullable=False)  # key to redis
     to_review = Column(String(20), nullable=False)  # key to redis
-    today_learn = Column(String(20), nullable=False) # key to redis
+    today_learn = Column(String(20), nullable=False)  # key to redis
     unknown = Column(String(20), nullable=False)  # key to redis
     amount = Column(Integer, nullable=False)  # key to redis
 
@@ -181,6 +198,7 @@ class VocabsLearning(BASES['core']):
         s = f'(id: {self.id} a: {self.account_id}'
         return s
 
+
 class VocabsLearningRecords(BASES['core']):
     __tablename__ = "VocabsLearningRecords"
 
@@ -199,4 +217,3 @@ class VocabsLearningRecords(BASES['core']):
     def __repr__(self) -> str:
         s = f'(id: {self.id} a: {self.account_id}'
         return s
-

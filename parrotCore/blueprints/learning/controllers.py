@@ -5,7 +5,8 @@ from blueprints.learning.models import (
     Modules,
     VocabsLearning,
     VocabsLearningRecords,
-    TaskFlowsConditions
+    TaskFlowsConditions,
+    StudyPulseRecords
 )
 from blueprints.account.models import (
     Accounts,
@@ -617,6 +618,19 @@ class VocabLearningController(crudController):
             except Exception as e:
                 return False, "创建账户单词学习失败."
 
+
+class StudyPulseController(crudController):
+    # 打卡
+    def add_pulse_time(self, account_id, time_length):
+        add = {
+            "account_id": account_id,
+            "time_length": time_length if time_length is not None else None,
+            "counter": 1
+        }
+        return self._create(model=StudyPulseRecords, create_params=add)
+
+    def get_pulse_time(self, account_id):
+        pass
 
 class TaskController(crudController):
 

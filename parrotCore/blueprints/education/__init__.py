@@ -44,6 +44,7 @@ def fetch_resource_p(account_id, pattern_id):
     except Exception as e:
         return ArgumentExceptionResponse(msg=f'{e}')
 
+
 @bp.route('fetch_resource_e/<account_id>/<exam_id>/', methods=['POST'])
 def fetch_resource_e(account_id, exam_id):
     args = request.json
@@ -63,6 +64,7 @@ def fetch_resource_e(account_id, exam_id):
     except Exception as e:
         return ArgumentExceptionResponse(msg=f'{e}')
 
+
 @bp.route('fetch_past_scores/<account_id>/', methods=['GET'])
 def fetch_past_scores(account_id):
     try:
@@ -79,6 +81,22 @@ def fetch_past_scores(account_id):
 
 
 # ----------------------------------------   做题   ---------------------------------------- #
+@bp.route('create_mock_sheet', methods=['POST'])
+def create_mock_sheet():
+    try:
+        args = request.json
+        account_id = args.get('account_id')
+        res = AnsweringScoringController().create_mock_answer_sheet(
+            account_id=account_id,
+        )
+        if res[0]:
+            return SuccessDataResponse(res[1])
+        else:
+            return ArgumentExceptionResponse(msg=f'{res[1]}')
+    except Exception as e:
+        return ArgumentExceptionResponse(msg=f'{e}')
+
+
 @bp.route('create_sheet', methods=['POST'])
 def create_sheet():
     try:
@@ -86,10 +104,26 @@ def create_sheet():
         account_id = args.get('account_id')
         q_type = args.get('q_type')
         question_ids = args.get('question_ids')
+        father_sheet = args.get('father_sheet')
         res = AnsweringScoringController().create_answer_sheet(
             account_id=account_id,
             type=q_type,
-            question_ids=question_ids
+            question_ids=question_ids,
+            father_sheet=father_sheet
+        )
+        if res[0]:
+            return SuccessDataResponse(res[1])
+        else:
+            return ArgumentExceptionResponse(msg=f'{res[1]}')
+    except Exception as e:
+        return ArgumentExceptionResponse(msg=f'{e}')
+
+
+@bp.route('get_mock_sheet/<sheet_id>/', methods=['GET'])
+def get_mock_sheet(sheet_id):
+    try:
+        res = AnsweringScoringController().get_mock_answer_sheet(
+            sheet_id=sheet_id
         )
         if res[0]:
             return SuccessDataResponse(res[1])
@@ -111,6 +145,7 @@ def get_sheet(sheet_id):
             return ArgumentExceptionResponse(msg=f'{res[1]}')
     except Exception as e:
         return ArgumentExceptionResponse(msg=f'{e}')
+
 
 @bp.route('get_sheet_status/<sheet_id>/', methods=['GET'])
 def get_sheet_status(sheet_id):
@@ -168,6 +203,7 @@ def save_answer(sheet_id):
     except Exception as e:
         return ArgumentExceptionResponse(msg=f'{e}')
 
+
 @bp.route('scoring/<sheet_id>/', methods=['POST'])
 def scoring(sheet_id):
     args = request.json
@@ -184,6 +220,7 @@ def scoring(sheet_id):
     except Exception as e:
         return ArgumentExceptionResponse(msg=f'{e}')
 
+
 @bp.route('get_score/<sheet_id>/', methods=['GET'])
 def get_score(sheet_id):
     try:
@@ -196,6 +233,7 @@ def get_score(sheet_id):
             return ArgumentExceptionResponse(msg=f'{res[1]}')
     except Exception as e:
         return ArgumentExceptionResponse(msg=f'{e}')
+
 
 @bp.route('get_score_repeat/<sheet_id>/', methods=['GET'])
 def get_score_repeat(sheet_id):
@@ -210,7 +248,6 @@ def get_score_repeat(sheet_id):
             return ArgumentExceptionResponse(msg=f'{res[1]}')
     except Exception as e:
         return ArgumentExceptionResponse(msg=f'{e}')
-
 
 
 # heart beat

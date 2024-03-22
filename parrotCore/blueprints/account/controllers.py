@@ -32,6 +32,12 @@ class AccountController(crudController):
     account 继承crudController
     调用CRUD: _create; _retrieve; _update; _delete
     """
+    def update_questionary(self, account_id, param):
+        if "id" not in id:
+            param['id'] = account_id
+
+        return self._update(model=Accounts, update_parameters=param, restrict_field='id')
+
     def register_user_exams(self, user_id, exam_ids, session):
         user = self._retrieve(model=Users, restrict_field='user_id', restrict_value=user_id)
         index_id = s.serialize_dic(user, self.default_not_show)['id']

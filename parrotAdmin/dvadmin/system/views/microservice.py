@@ -214,41 +214,36 @@ class MicroServiceRegisterViewSet(CustomModelViewSet):
         # output: resource list with sub question
         return SuccessResponse(data=res_data, msg='获取成功', page=page, limit=limit, total=len(res_data))
 
-    # @action(methods=["POST"], detail=False, permission_classes=[IsAuthenticated])
-    # def resource_exam(self, request):
-    #     exam_id = request.data.get("exam_id")
-    #     account_id = request.data.get("account_id")
-    #
-    #     # whether_zt = request.data.get("is_real_problem") # 目前默认false
-    #     whether_zt = False
-    #     page = request.data.get("page")
-    #     limit = request.data.get("limit")
-    #
-    #     if not page:
-    #         page = 1
-    #     else:
-    #         page = int(page)
-    #     if not limit:
-    #         limit = 20
-    #     else:
-    #         limit = int(limit)
-    #
-    #     # request send to microservices
-    #     if True:
-    #         # data = dict(micro.data)
-    #         url = f"http://{'127.0.0.1'}:{10981}/v1/api/education/fetch_resource_e/{account_id}/{exam_id}/"
-    #         r = requests.post(url, json={
-    #             'page': page,
-    #             'limit': limit
-    #         })
-    #
-    #         if r.json()['code'] == 10000:
-    #             res_data = r.json()['data']
-    #         else:
-    #             return ErrorResponse(msg="微服务故障")
-    #
-    #     # output: resource list with sub question
-    #     return SuccessResponse(data=res_data, msg='获取成功', page=page, limit=limit, total=len(res_data))
+    @action(methods=["POST"], detail=False, permission_classes=[IsAuthenticated])
+    def update_questionnaire(self, request):
+
+        account_id = request.data.get('account_id')
+        purpose = request.data.get('purpose')  # list
+        status = request.data.get('status')
+        study_type = request.data.get('study_type')
+        next_exam_date = request.data.get('next_exam_date')
+
+        # request send to microservices
+        # input: account_id, question_ids, question_type
+        if True:
+            try:
+                # data = dict(micro.data)
+                url = f"http://{'127.0.0.1'}:{10981}/v1/api/account/questionnaire/"
+                r = requests.post(url, json=dict(
+                    account_id=account_id,
+                    purpose=purpose,
+                    status=status,
+                    study_type=study_type,
+                    next_exam_date=next_exam_date,
+                ))
+
+                if r.json()['code'] == 10000:
+                    res_data = r.json()['data']
+                    return DetailResponse(data=res_data, msg='获取成功')
+                else:
+                    return ErrorResponse(msg=r.json()['msg'])
+            except:
+                return ErrorResponse(msg="微服务故障")
 
     @action(methods=["GET"], detail=False, permission_classes=[IsAuthenticated],
             url_path="get_past_scores/(?P<account_id>\d+)")
@@ -273,6 +268,7 @@ class MicroServiceRegisterViewSet(CustomModelViewSet):
 
         question_ids = None
         account_id = request.data.get("account_id")
+        father_sheet = request.data.get("father_sheet")
         if type(request.data.get('question_ids')) == str:
             question_ids = json.loads(request.data.get('question_ids'))
         elif type(request.data.get('question_ids')) == list:
@@ -296,8 +292,50 @@ class MicroServiceRegisterViewSet(CustomModelViewSet):
                 r = requests.post(url, json={
                     "account_id": account_id,
                     "question_ids": question_ids,
-                    "q_type": q_type
+                    "q_type": q_type,
+                    "father_sheet": father_sheet
                 })
+
+                if r.json()['code'] == 10000:
+                    res_data = r.json()['data']
+                    return DetailResponse(data=res_data, msg='获取成功')
+                else:
+                    return ErrorResponse(msg=r.json()['msg'])
+            except:
+                return ErrorResponse(msg="微服务故障")
+
+    @action(methods=["POST"], detail=False, permission_classes=[IsAuthenticated])
+    def create_mock_sheet(self, request):
+        account_id = request.data.get("account_id")
+
+        # request send to microservices
+        # input: account_id, question_ids, question_type
+        if True:
+            try:
+                # data = dict(micro.data)
+                url = f"http://{'127.0.0.1'}:{10981}/v1/api/education/create_mock_sheet"
+                r = requests.post(url, json={
+                    "account_id": account_id,
+                })
+
+                if r.json()['code'] == 10000:
+                    res_data = r.json()['data']
+                    return DetailResponse(data=res_data, msg='获取成功')
+                else:
+                    return ErrorResponse(msg=r.json()['msg'])
+            except:
+                return ErrorResponse(msg="微服务故障")
+
+    @action(methods=["GET"], detail=False, permission_classes=[IsAuthenticated],
+            url_path="get_mock_sheet/(?P<sheet_id>\d+)")
+    def get_mock(self, request, sheet_id):
+        # request send to microservices
+        # input: sheet_id
+        if True:
+            try:
+                # data = dict(micro.data)
+                url = f"http://{'127.0.0.1'}:{10981}/v1/api/education/get_mock_sheet/{sheet_id}/"
+                r = requests.get(url)
 
                 if r.json()['code'] == 10000:
                     res_data = r.json()['data']

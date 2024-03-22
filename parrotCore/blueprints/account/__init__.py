@@ -1,7 +1,7 @@
 from flask import Blueprint, request
 from utils.response_tools import (SuccessDataResponse, ArgumentExceptionResponse)
 from blueprints.account.controllers import AccountController
-
+from datetime import datetime
 bp = Blueprint('account_api', __name__, url_prefix='/v1/api/account/')
 
 
@@ -39,6 +39,35 @@ def register_user():
         return ArgumentExceptionResponse(msg=f'{e}')
 
 
+@bp.route('questionnaire/', methods=['POST'])
+def questionnaire():
+    try:
+        args = request.json
+        account_id = args.get('account_id')
+        purpose = args.get('purpose')  # list
+        status = args.get('status')
+        study_type = args.get('study_type')
+        next_exam_date = args.get('next_exam_date')
+
+        param = dict(
+            current_status=status,
+            purpose=purpose,
+            study_type=study_type,
+            next_test_time=datetime.strptime(next_exam_date, '%Y-%m-%d').date() if next_exam_date else None
+        )
+
+        res = AccountController().update_questionary(
+            account_id=account_id,
+            param=param
+        )
+        if res[0]:
+            return SuccessDataResponse(res[1])
+        else:
+            return ArgumentExceptionResponse(msg=f'{res[1]}')
+    except Exception as e:
+        return ArgumentExceptionResponse(msg=f'{e}')
+
+
 @bp.route('get_user_accounts/<user_id>/', methods=['POST'])
 def get_user_accounts(user_id):
     try:
@@ -54,6 +83,7 @@ def get_user_accounts(user_id):
             return ArgumentExceptionResponse(msg=f'{res[1]}')
     except Exception as e:
         return ArgumentExceptionResponse(msg=f'{e}')
+
 
 @bp.route('get_user_info/<user_id>/', methods=['GET'])
 def get_user_info(user_id):
