@@ -45,7 +45,7 @@ def fetch_resource_p(account_id, pattern_id):
         return ArgumentExceptionResponse(msg=f'{e}')
 
 @bp.route('fetch_resource_e/<account_id>/<exam_id>/', methods=['POST'])
-def fetch_resource_p(account_id, exam_id):
+def fetch_resource_e(account_id, exam_id):
     args = request.json
     page = args.get('page')
     limit = args.get('limit')
