@@ -184,8 +184,13 @@ class MicroServiceRegisterViewSet(CustomModelViewSet):
 
         # request send to microservices
         if True:
-            # data = dict(micro.data)
-            url = f"http://{'127.0.0.1'}:{10981}/v1/api/education/fetch_resource_p/{account_id}/{pattern_id}/"
+            if exam_id and not pattern_id:
+                url = f"http://{'127.0.0.1'}:{10981}/v1/api/education/fetch_resource_e/{account_id}/{exam_id}/"
+            elif pattern_id:
+                url = f"http://{'127.0.0.1'}:{10981}/v1/api/education/fetch_resource_p/{account_id}/{pattern_id}/"
+            else:
+                return ErrorResponse(msg="未知pattern和exam")
+
             r = requests.post(url, json={
                 'page': page,
                 'limit': limit
