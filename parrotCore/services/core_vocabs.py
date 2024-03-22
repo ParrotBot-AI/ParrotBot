@@ -162,6 +162,7 @@ class VocabsService:
                         .filter(VocabsLearningRecords.time > start_of_yesterday)
                         .filter(VocabsLearningRecords.time < start_of_today)
                         .filter(VocabsLearningRecords.wrong_word_id.is_not(None))
+                        .filter(VocabsLearningRecords.account_id == record.account_id)
                         .all()
                     )
                     if len(words_records) > 0:
