@@ -267,6 +267,14 @@ class MenuViewSet(CustomModelViewSet):
         data = serializer.data
         return SuccessResponse(data=data, total=len(data), msg="获取成功")
 
+    @action(methods=['GET'], detail=False, permission_classes=[IsAuthenticated])
+    def menu_ad(self, request):
+        data = {
+            "url": "https://obs-parrotcore.obs.cn-east-3.myhuaweicloud.com/9.9%E5%85%83%E4%BC%9A%E5%91%98%E7%A4%BC%E5%8C%85.png"
+        }
+        return SuccessResponse(data=data, msg="获取成功")
+
+
     def list(self, request):
         """懒加载"""
         params = request.query_params
