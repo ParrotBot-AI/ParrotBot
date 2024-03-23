@@ -328,7 +328,7 @@ class MicroServiceRegisterViewSet(CustomModelViewSet):
 
     @action(methods=["GET"], detail=False, permission_classes=[IsAuthenticated],
             url_path="get_mock_sheet/(?P<sheet_id>\d+)")
-    def get_mock(self, request, sheet_id):
+    def get_mock_sheet(self, request, sheet_id):
         # request send to microservices
         # input: sheet_id
         if True:

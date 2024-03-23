@@ -830,7 +830,7 @@ class AnsweringScoringController(crudController):
                 )
 
                 # 给所有的children打分
-                if len(children_record) > 0:
+                if len(children_record) > 0 or answer_record.end_time is None:
                     max_score = 0
                     score = 0
                     success = True
@@ -855,13 +855,14 @@ class AnsweringScoringController(crudController):
                         "sheet_id": answer_record.id,
                         "is_time": answer_record.is_time,
                         "is_check_answer": answer_record.is_check_answer,
-                        "max_score": record.max_score,
+                        "max_score": max_score if success else None,
                         "score": score if success else None,
                         "detail": detail,
-                        "type": record.type.value
+                        "type": answer_record.type.value
                     }
                     update_s = {
                         "id": answer_sheet_id,
+                        "is_graded": 1,
                         "status": 0,
                     }
                     self._update(model=AnswerSheetRecord, update_parameters=update_s, restrict_field="id")
@@ -1136,7 +1137,7 @@ class AnsweringScoringController(crudController):
                 )
 
                 # 给所有的children打分
-                if len(children_record) > 0:
+                if len(children_record) > 0 or record.end_time is None:
                     success = True
                     for _ in range(len(children_record)):
                         res, data = self.scoring(sheet_id=children_record.id, re_score=re_score)
@@ -2500,7 +2501,7 @@ if __name__ == '__main__':
     # pprint.pprint(res)
     # sheet_id = res[1]['sheet_id']
     # pprint.pprint(init.get_test_answers(sheet_id=898))
-    # pprint.pprint(init.get_mock_answer_sheet(sheet_id=898))
+    pprint.pprint(init.get_mock_answer_sheet(sheet_id=906))
 
     # 做题
     # print(init.update_question_answer(sheet_id=617, question_id=1223, answer_voice_link="https://obs-parrotcore.obs.cn-east-3.myhuaweicloud.com/Speaking_Grading_Sample.mp3"))
@@ -2510,10 +2511,10 @@ if __name__ == '__main__':
     # print(asyncio.run(AnsweringScoringController().model_scoring(sheet_id=617, question_id=1223)))
 
     # 提交答案
-    # pprint.pprint(init.save_answer(sheet_id=898))
+    # pprint.pprint(init.save_answer(sheet_id=906))
 
     # 算分
     # start = time.time()
-    # print(init.scoring(sheet_id=898))
-    pprint.pprint(init.get_score(answer_sheet_id=898))
+    # print(init.scoring(sheet_id=906))
+    # pprint.pprint(init.get_score(answer_sheet_id=906))
     # print(time.time() - start)
