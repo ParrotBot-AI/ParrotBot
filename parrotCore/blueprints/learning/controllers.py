@@ -986,8 +986,8 @@ class TaskController(crudController):
 
 if __name__ == "__main__":
     account_id = 20
-    pprint(VocabLearningController().create_new_vocab_tasks(account_id=37))
-    # pprint(VocabLearningController().fetch_account_vocab(20))
+    # pprint(VocabLearningController().create_new_vocab_tasks(account_id=37))
+    pprint(VocabLearningController().fetch_account_vocab(37))
 
     # pprint(TaskController().fetch_account_tasks(account_id=account_id, after_time=get_today_midnight(), active=True))
     # today = datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))

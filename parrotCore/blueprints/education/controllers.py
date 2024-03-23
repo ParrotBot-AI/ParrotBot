@@ -301,7 +301,7 @@ class QuestionController(crudController):
 
 
 class AnsweringScoringController(crudController):
-    def create_mock_answer_sheet(self, account_id=None, type='mock'):
+    def create_mock_answer_sheet(self, account_id=None, type='mock_exam'):
         if account_id is None:
             return False, "未知账户"
 
@@ -319,7 +319,7 @@ class AnsweringScoringController(crudController):
         create_new = self._create(model=AnswerSheetRecord, create_params=new_answer_sheet)
 
         if not create_new[0]:
-            return False, "创建sheet失败"
+            return False, create_new[1]
 
         sheet_id = create_new[1]
         response = {
@@ -349,8 +349,8 @@ class AnsweringScoringController(crudController):
             children_sheets = []
 
             success = True
-            for record in children_record:
-                resp, data = self.get_test_answers(sheet_id, contin=False)
+            for _record in children_record:
+                resp, data = self.get_test_answers(_record.id, contin=False)
                 if not resp:
                     success = False
                     break
@@ -363,7 +363,7 @@ class AnsweringScoringController(crudController):
             response = {
                 "sheet_id": record.id,
                 "is_time": record.is_time,
-                "is_check_answer": record.section_id,
+                "is_check_answer": record.is_check_answer,
                 "count": len(children_record),
                 "children_sheets": children_sheets
             }
@@ -548,7 +548,8 @@ class AnsweringScoringController(crudController):
                         "is_time": record.is_time,
                         "is_check_answer": record.is_check_answer,
                         "time_remain": (record.end_time.replace(tzinfo=timezone(timedelta(hours=8))) - datetime.now(
-                            timezone.utc).astimezone(timezone(timedelta(hours=8)))).total_seconds(),
+                            timezone.utc).astimezone(
+                            timezone(timedelta(hours=8)))).total_seconds() if record.end_time is not None else None,
                         "max_score": record.max_score,
                         "score": record.score if record.score else None,
                         "type": record.type.value,
@@ -859,6 +860,11 @@ class AnsweringScoringController(crudController):
                         "detail": detail,
                         "type": record.type.value
                     }
+                    update_s = {
+                        "id": answer_sheet_id,
+                        "status": 0,
+                    }
+                    self._update(model=AnswerSheetRecord, update_parameters=update_s, restrict_field="id")
                     return True, rs
 
                 if answer_record.status == 0:
@@ -1123,6 +1129,26 @@ class AnsweringScoringController(crudController):
                 .one_or_none()
             )
             if record:
+                children_record = (
+                    session.query(AnswerSheetRecord)
+                    .filter(AnswerSheetRecord.father_sheet == sheet_id)
+                    .all()
+                )
+
+                # 给所有的children打分
+                if len(children_record) > 0:
+                    success = True
+                    for _ in range(len(children_record)):
+                        res, data = self.scoring(sheet_id=children_record.id, re_score=re_score)
+                        if not res:
+                            success = False
+                            break
+
+                    if not success:
+                        return False, "打分失败"
+                    else:
+                        return True, "打分成功"
+
                 if record.status == 1:
                     return False, "正在答题"
 
@@ -1131,24 +1157,6 @@ class AnsweringScoringController(crudController):
                 "status": 4
             }
             self._update(model=AnswerSheetRecord, update_parameters=update_s, restrict_field="id")
-
-            children_record = (
-                session.query(AnswerSheetRecord)
-                .filter(AnswerSheetRecord.father_sheet == sheet_id)
-                .all()
-            )
-
-            # 给所有的children打分
-            if len(children_record) > 0:
-                success = True
-                for _ in range(len(children_record)):
-                    res, data = self.scoring(sheet_id=children_record.id, re_score=re_score)
-                    if not res:
-                        success = False
-                        break
-
-                if not success:
-                    return False, "打分失败"
 
             #  ----------------------------------开始打分------------------------------------------#
             # 把submission questions join 过来
@@ -2487,9 +2495,12 @@ if __name__ == '__main__':
     # print(datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))))
 
     init = AnsweringScoringController()
-    # res = init.create_answer_sheet(account_id=27, question_ids=[1220, 1221, 1222, 1223])
+    # res = init.create_answer_sheet(account_id=27, question_ids=[1220, 1221, 1222, 1223], father_sheet=898)
+    # res = init.create_mock_answer_sheet(account_id=27)
+    # pprint.pprint(res)
     # sheet_id = res[1]['sheet_id']
-    # pprint.pprint(init.get_test_answers(sheet_id=sheet_id))
+    # pprint.pprint(init.get_test_answers(sheet_id=898))
+    # pprint.pprint(init.get_mock_answer_sheet(sheet_id=898))
 
     # 做题
     # print(init.update_question_answer(sheet_id=617, question_id=1223, answer_voice_link="https://obs-parrotcore.obs.cn-east-3.myhuaweicloud.com/Speaking_Grading_Sample.mp3"))
@@ -2499,10 +2510,10 @@ if __name__ == '__main__':
     # print(asyncio.run(AnsweringScoringController().model_scoring(sheet_id=617, question_id=1223)))
 
     # 提交答案
-    # pprint.pprint(init.save_answer(sheet_id=617))
+    # pprint.pprint(init.save_answer(sheet_id=898))
 
     # 算分
     # start = time.time()
-    # print(init.scoring(sheet_id=617))
-    # pprint.pprint(init.get_score(answer_sheet_id=617, re_score=True))
+    # print(init.scoring(sheet_id=898))
+    pprint.pprint(init.get_score(answer_sheet_id=898))
     # print(time.time() - start)

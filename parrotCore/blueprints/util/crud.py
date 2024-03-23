@@ -84,11 +84,8 @@ class crudController:
 
                 else:
                     default_dic = {
-                        'create_time': datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))
-
-,
+                        'create_time': datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))),
                         'last_update_time': datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))
-
 
                     }
                     merged_dict = {**create_params, **default_dic}
