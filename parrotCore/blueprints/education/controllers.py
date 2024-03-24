@@ -1017,7 +1017,6 @@ class AnsweringScoringController(crudController):
                 )
                 if record.pattern_eng_name == "Speaking":  # speaking model
                     try:
-                        print("开始")
                         url = f"http://{'54.169.8.123'}:{57875}/v1/modelapi/speaking/gradeSpeaking/"
                         prompt = f"""Prompt: {q_record.question_title}"""
                         if q_record.voice_content:
@@ -1028,7 +1027,7 @@ class AnsweringScoringController(crudController):
                             "gradeType": "Independent Speaking"
                         })
 
-                        print(r.status_code, 901)
+                        logger.info(f"Sheet:{sheet_id}-Question:{question_id} 开始访问speaking模型")
                         if r.json()['code'] == 10000:
                             res_data = r.json()['data']
                             print(res_data)
@@ -1042,22 +1041,25 @@ class AnsweringScoringController(crudController):
                                 .update({
                                     Accounts.model_today_used: account.model_today_used + 1
                                 }))
+                            logger.info(f"Sheet:{sheet_id}-Question:{question_id} 响应成功..")
 
                         else:
                             score = None
                             model_answer = '{"msg":"访问AI模型失败"}'
+                            logger.info(f"Sheet:{sheet_id}-Question:{question_id} 响应失败：不是成功code: {r.json()['code']}:{r.json()['msg']}（gpt出错）")
 
                     except Exception as e:
                         score = None
-                        model_answer = '{"msg":"访问AI模型失败"}'
+                        model_answer = f'{"msg":"访问AI模型失败:{str(e)}"}'
 
                 elif record.pattern_eng_name == "Writing":  # writing model
                     try:
                         url = f"http://{'54.169.8.123'}:{57875}/v1/modelapi/writing/gradeWriting/"
-                        prompt = f"""Prompt: {q_record.question_title} {q_record.question_content}"""
+                        prompt = f"""Prompt: {q_record.question_title} {q_record.question_content}\n"""
                         if q_record.voice_content:
                             prompt += f"""Source: {q_record.voice_content}"""
 
+                        logger.info(f"Sheet:{sheet_id}-Question:{question_id} 开始访问writing模型")
                         r = requests.post(url, json={
                             "prompt": prompt,
                             "content": answer,
@@ -1076,13 +1078,15 @@ class AnsweringScoringController(crudController):
                                 .update({
                                     Accounts.model_today_used: account.model_today_used + 1
                                 }))
+                            logger.info(f"Sheet:{sheet_id}-Question:{question_id} 响应成功..")
                         else:
                             score = None
                             model_answer = '{"msg":"访问AI模型失败"}'
+                            logger.info(f"Sheet:{sheet_id}-Question:{question_id} 响应失败：不是成功code（model出错）")
 
                     except Exception as e:
                         score = None
-                        model_answer = '{"msg":"访问AI模型失败"}'
+                        model_answer = f'{"msg":"访问AI模型失败:{str(e)}"}'
                 else:
                     score = None
                     model_answer = '{"msg":"AI模型批改未开放"}'
@@ -1302,6 +1306,7 @@ class AnsweringScoringController(crudController):
                                     if grading_record:
                                         question['score'] = None
                                     else:
+                                        print("here")
                                         score = getattr(grading_instance, question['cal_fun'])(
                                             sheet_id=sheet_id,
                                             question_id=question['question_id'],
@@ -1315,7 +1320,7 @@ class AnsweringScoringController(crudController):
                                     question['score'] = result.score
                     except:
                         # 如果数据源问题道题出错，先默认为0，待修改后，可以重新计分
-                        question['score'] = 0
+                        question['score'] = None
 
                     questions.append(question)
 
@@ -2501,7 +2506,7 @@ if __name__ == '__main__':
     # pprint.pprint(res)
     # sheet_id = res[1]['sheet_id']
     # pprint.pprint(init.get_test_answers(sheet_id=898))
-    pprint.pprint(init.get_mock_answer_sheet(sheet_id=906))
+    # pprint.pprint(init.get_mock_answer_sheet(sheet_id=906))
 
     # 做题
     # print(init.update_question_answer(sheet_id=617, question_id=1223, answer_voice_link="https://obs-parrotcore.obs.cn-east-3.myhuaweicloud.com/Speaking_Grading_Sample.mp3"))
@@ -2515,6 +2520,6 @@ if __name__ == '__main__':
 
     # 算分
     # start = time.time()
-    # print(init.scoring(sheet_id=906))
-    # pprint.pprint(init.get_score(answer_sheet_id=906))
+    print(init.scoring(sheet_id=916))
+    # pprint.pprint(init.get_score(answer_sheet_id=911))
     # print(time.time() - start)

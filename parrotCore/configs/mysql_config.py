@@ -7,7 +7,7 @@ from configs.version import VERSION_ENV
 
 if VERSION_ENV == 'local':
     MYSQL_PORT_DEV = 19782
-    MYSQL_HOST_DEV = 'yingwuzhixue.com'
+    MYSQL_HOST_DEV = '1.94.23.138'
 elif VERSION_ENV == 'dev':
     MYSQL_PORT_DEV = 19782
     MYSQL_HOST_DEV = 'localhost'
