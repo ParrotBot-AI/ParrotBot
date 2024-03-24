@@ -591,3 +591,47 @@ class MicroServiceRegisterViewSet(CustomModelViewSet):
                     return ErrorResponse(msg=r.json()['msg'])
             except:
                 return ErrorResponse(msg="微服务故障")
+
+    @action(methods=["POST"], detail=False, permission_classes=[IsAuthenticated], url_path="error_report/(?P<question_id>\d+)")
+    def error_report(self, request, question_id):
+        text = request.data.get("text")
+        try:
+            if True:
+                try:
+                    # data = dict(micro.data)
+                    url = f"http://{'127.0.0.1'}:{10981}/v1/api/education/error_report/{question_id}/"
+                    r = requests.post(url, json={
+                        "text": text
+                    })
+
+                    if r.json()['code'] == 10000:
+                        res_data = r.json()['data']
+                        return DetailResponse(data=res_data, msg='OK.')
+                    else:
+                        return ErrorResponse(msg=r.json()['msg'])
+                except:
+                    return ErrorResponse(msg="微服务故障")
+
+        except:
+            return ErrorResponse(msg='参数格式错误')
+
+    @action(methods=["POST"], detail=False, permission_classes=[IsAuthenticated],
+            url_path="refuse_jump_vocabs/(?P<account_id>\d+)")
+    def refuse_jump_vocabs(self, request, account_id):
+        try:
+            if True:
+                try:
+                    # data = dict(micro.data)
+                    url = f"http://{'127.0.0.1'}:{10981}/v1/api/learning/refuse_jump/{account_id}/"
+                    r = requests.post(url)
+
+                    if r.json()['code'] == 10000:
+                        res_data = r.json()['data']
+                        return DetailResponse(data=res_data, msg='OK.')
+                    else:
+                        return ErrorResponse(msg=r.json()['msg'])
+                except:
+                    return ErrorResponse(msg="微服务故障")
+
+        except:
+            return ErrorResponse(msg='参数格式错误')

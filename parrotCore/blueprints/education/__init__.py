@@ -250,6 +250,22 @@ def get_score_repeat(sheet_id):
         return ArgumentExceptionResponse(msg=f'{e}')
 
 
+@bp.route('error_report/<question_id>/', methods=['POST'])
+def error_report(question_id):
+    args = request.json
+    text = args.get('text')
+    try:
+        res = QuestionController().question_error_feedback(
+            question_id=question_id,
+            text=text
+        )
+        if res[0]:
+            return SuccessDataResponse(res[1])
+        else:
+            return ArgumentExceptionResponse(msg=f'{res[1]}')
+    except Exception as e:
+        return ArgumentExceptionResponse(msg=f'{e}')
+
 # heart beat
 @bp.route('test_hb', methods=['GET'])
 def test_hb():

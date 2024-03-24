@@ -346,6 +346,49 @@ class UserViewSet(CustomModelViewSet):
         else:
             ErrorResponse(msg="请传入正确id值")
 
+    @action(methods=["GET"], detail=False, permission_classes=[IsAuthenticated],
+            url_path="get_account_checkin/(?P<account_id>\d+)")
+    def get_account_checkin(self, request, account_id):
+        if account_id:
+            # request user statis from another app
+            if True:
+                try:
+                    # data = dict(micro.data)
+                    url = f"http://{'127.0.0.1'}:{10981}/v1/api/learning/get_checkin_info/{account_id}/"
+                    r = requests.get(url)
+                    if r.json()['code'] == 10000:
+                        res_data = r.json()['data']
+                        return DetailResponse(data=res_data, msg='OK.')
+                    else:
+                        return ErrorResponse(msg=r.json()['msg'])
+                except:
+                    return ErrorResponse(msg='服务器故障')
+        else:
+            ErrorResponse(msg="请传入正确account_id值")
+
+    @action(methods=["POST"], detail=False, permission_classes=[IsAuthenticated],
+            url_path="update_account_checkin/(?P<account_id>\d+)")
+    def update_account_checkin(self, request, account_id):
+        if account_id:
+            time_length = request.data.get("time_length")
+            # request user statis from another app
+            if True:
+                try:
+                    # data = dict(micro.data)
+                    url = f"http://{'127.0.0.1'}:{10981}/v1/api/learning/add_pulse_time/{account_id}/"
+                    r = requests.post(url, json={
+                        "time_length": time_length
+                    })
+                    if r.json()['code'] == 10000:
+                        res_data = r.json()['data']
+                        return DetailResponse(data=res_data, msg='OK.')
+                    else:
+                        return ErrorResponse(msg=r.json()['msg'])
+                except:
+                    return ErrorResponse(msg='服务器故障')
+        else:
+            ErrorResponse(msg="请传入正确account_id值")
+
     @action(methods=["GET"], detail=False, permission_classes=[IsAuthenticated], url_path="get_user/(?P<userID>\d+)")
     def get_user_id(self, request, userID):
         if userID:
@@ -369,37 +412,33 @@ class UserViewSet(CustomModelViewSet):
             for key in res_data.keys():
                 data[key] = res_data[key]
 
-            today_t = [
-                {
-                    'id': 12,
-                    'task_name': '完成学习阅读204',
-                    'status': 0,
-                },
-                {
-                    'id': 12,
-                    'task_name': '模考阅读',
-                    'status': 1,
-                },
-                {
-                    'id': 12,
-                    'task_name': '模考阅读',
-                    'status': 1,
-                }
-            ]
-            tomm_t = [
-                {
-                    'id': 12,
-                    'task_name': '复习阅读204',
-                    'status': 0,
-                },
-                {
-                    'id': 12,
-                    'task_name': '背诵单词200',
-                    'status': 0,
-                },
-            ]
-            data['tdy'] = today_t
-            data['tmr'] = tomm_t
+            if True:
+                try:
+                    # data = dict(micro.data)
+                    url = f"http://{'127.0.0.1'}:{10981}/v1/api/learning/get_today_tasks/{userID}/"
+                    r = requests.get(url)
+                    if r.json()['code'] == 10000:
+                        _res_data = r.json()['data']
+                    else:
+                        return ErrorResponse(msg=r.json()['msg'])
+                except:
+                    return ErrorResponse(msg='服务器故障')
+
+            data['tdy'] = _res_data
+
+            # tomm_t = [
+            #     {
+            #         'id': 12,
+            #         'task_name': '复习阅读204',
+            #         'status': 0,
+            #     },
+            #     {
+            #         'id': 12,
+            #         'task_name': '背诵单词200',
+            #         'status': 0,
+            #     },
+            # ]
+            data['tmr'] = []
             return DetailResponse(data=data, msg="获取成功")
         else:
             ErrorResponse(msg="请传入正确id值")

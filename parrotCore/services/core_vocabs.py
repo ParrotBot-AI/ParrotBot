@@ -17,24 +17,20 @@ from blueprints.education.models import (
     VocabCategoryRelationships,
     VocabCategorys
 )
-from sqlalchemy import select, func, Date, cast, and_, text, literal_column, case
-from pprint import pprint
 from configs.environment import DATABASE_SELECTION
-from importlib import import_module
+from sqlalchemy.sql.expression import bindparam
 
 if DATABASE_SELECTION == 'postgre':
     from configs.postgre_config import get_db_session as db_session
 elif DATABASE_SELECTION == 'mysql':
     from configs.mysql_config import get_db_session_sql as db_session
 
-from utils import abspath, iso_ts, get_today_midnight
+from utils import abspath
 from utils.logger_tools import get_general_logger
-from blueprints.util.crud import crudController
-from blueprints.util.serializer import Serializer as s
-from datetime import datetime, timezone, timedelta, date
+from datetime import datetime, timezone, timedelta
 from sqlalchemy import null, select, union_all, and_, or_, join, outerjoin, update, insert
-import json
 from utils.redis_tools import RedisWrapper
+from configs.operation import JUMP_NEED_PERCENTAGE, JUMP_NEED_STUDY_AMOUNT
 
 logger = get_general_logger('vocab_log', path=abspath('logs', 'vocab_service'))
 
@@ -226,7 +222,7 @@ class VocabsService:
                                 # 添加任务
                                 new_task = dict(
                                     account_id=record.account_id,
-                                    task_id=8, # 背单词
+                                    task_id=8,  # 背单词
                                     is_active=1,
                                     create_time=datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))),
                                     last_update_time=datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))),
@@ -236,7 +232,7 @@ class VocabsService:
                                 )
                                 new_task_ = dict(
                                     account_id=record.account_id,
-                                    task_id=9, #复习单词
+                                    task_id=9,  # 复习单词
                                     is_active=1,
                                     create_time=datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))),
                                     last_update_time=datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))),
@@ -252,7 +248,6 @@ class VocabsService:
                     insert(TaskAccounts),
                     s_l
                 )
-
                 try:
                     session.commit()
                     return True, logger.info("创建用户任务成功.")
@@ -261,6 +256,67 @@ class VocabsService:
             else:
                 return True, logger.info("创建用户任务成功,无需更新.")
 
+    def check_whether_jump(self):
+        with db_session('core') as session:
+            records = (
+                session.query(VocabsLearning)
+                .all()
+            )
+            u_r = []
+            for record in records:
+                account_id = record.account_id
+                cate = record.current_category
+                is_skip_triggered = record.is_skip_remind
+                is_refused = record.refuse_skip
+
+                vocabs_records = (
+                    session.query(
+                        VocabsLearningRecords.study_word_id,
+                        VocabsLearningRecords.wrong_word_id,
+                        VocabsLearningRecords.correct_word_id,
+                        VocabsLearning.current_category
+                    )
+                    .join(VocabCategoryRelationships,
+                        (VocabCategoryRelationships.word_id == VocabsLearningRecords.correct_word_id) |
+                        (VocabCategoryRelationships.word_id == VocabsLearningRecords.wrong_word_id))
+                    .join(VocabsLearning, VocabsLearningRecords.account_id == VocabsLearning.account_id)
+                    .join(VocabCategorys, VocabsLearning.current_category == VocabCategorys.id)
+                    .filter(VocabsLearningRecords.account_id == account_id)
+                    .all()
+                )
+                total_current_study = sum([1 for x in vocabs_records if x.study_word_id is not None])
+                correct_number = len(list(set([x.correct_word_id for x in vocabs_records if x.correct_word_id is not None])))
+                wrong_number = len(list(set([x.wrong_word_id for x in vocabs_records if x.wrong_word_id is not None])))
+                if total_current_study > JUMP_NEED_STUDY_AMOUNT:
+                    if correct_number / (correct_number + wrong_number) * 100 > JUMP_NEED_PERCENTAGE:
+
+                        # 如果之前已经拒绝升级，不再提醒升级
+                        if not (is_skip_triggered is not None and is_refused is None):
+                            update_u = {
+                                "u_id": account_id,
+                                "is_skip_remind": 1,
+                                "refuse_skip": False
+                            }
+                            logger.info(f"账户{account_id}满足升级条件.")
+                            u_r.append(update_u)
+
+            if len(u_r) == 0:
+                return True, logger.info("无需用户需要词汇升级，成功.")
+
+            session.execute(
+                update(VocabsLearning).where(VocabsLearning.id == bindparam('u_id')).values(
+                    is_skip_remind=bindparam('is_skip_remind'),
+                    refuse_skip=bindparam('refuse_skip'),
+                ),
+                u_r
+            )
+            try:
+                session.commit()
+                return True, logger.info("用户词汇升级检查成功.")
+            except Exception as e:
+                return False, logger.info("用户词汇升级检查失败.")
+
+
     def run(self):
         # 1.先查看单词本与账户是否匹配 (X)
         # 2.每日的缓存数据移入主数据库, 包括（暂时保留）
@@ -268,10 +324,12 @@ class VocabsService:
         # ==> (2) 单词答题缓存数据
         # 3.每日生成新的单词本 (X)
         # 4.生成新的单词任务 (X)
+        # 5.检测用户是否需要跳级词汇， 目前满足条件 (该阶段学满35个 & 该阶段有90%的正确率)
         logger.info(">>>>>>>>>> 开始自动化单词服务 <<<<<<<<<")
         self.check_accounts_words_book()
         self.generate_new_words()
         self.generate_new_tasks()
+        self.check_whether_jump()
         logger.info(">>>>>>>>>> 单词自动化服务结束 <<<<<<<<<")
 
 

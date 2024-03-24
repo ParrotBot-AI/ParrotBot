@@ -28,11 +28,13 @@ from utils.logger_tools import get_general_logger
 from blueprints.util.crud import crudController
 from blueprints.util.serializer import Serializer as s
 from datetime import datetime, timezone, timedelta, date
-from sqlalchemy import null, select, union_all, and_, or_, join, outerjoin, update, insert
+from sqlalchemy import null, select, union_all, and_, or_, join, outerjoin, update, insert, func
 import json
 from utils.redis_tools import RedisWrapper
 import os
 import sys
+
+from configs.operation import DAILY_STUDY_TIME_TARGET, DAILY_STUDY_LOGIN_COUNT_TARGET, NON_MEMBER_VOCAB_GREEN_TIME
 
 current_file_path = os.path.abspath(__file__)
 parent_directory = os.path.dirname(current_file_path)
@@ -44,6 +46,14 @@ logger = get_general_logger('account', path=abspath('logs', 'core_web'))
 
 
 class VocabLearningController(crudController):
+
+    def refuse_jump(self, account_id):
+        update_s = {
+            "account_id": account_id,
+            "refuse_skip": True
+        }
+        res, data = self._update(model=VocabsLearning, update_parameters=update_s, restrict_field="id")
+        return res, data
 
     def jump_to_vocabs(self, account_id, category_id, exam_id):
         from blueprints.education.models import (VocabCategorys, VocabCategoryRelationships)
@@ -103,7 +113,10 @@ class VocabLearningController(crudController):
                     session.query(VocabsLearning)
                     .filter(VocabsLearning.account_id == account_id)
                     .update({
-                        VocabsLearning.current_category: c_id})
+                        VocabsLearning.current_category: c_id,
+                        VocabsLearning.is_skip_remind: None,
+                        VocabsLearning.refuse_skip: None
+                    })
                 )
 
             try:
@@ -112,7 +125,6 @@ class VocabLearningController(crudController):
             except Exception as e:
                 session.rollback()
                 return False, {str(e)}
-
 
     def add_new_word_category(self, category_id):
         from blueprints.education.models import (VocabCategoryRelationships)
@@ -154,7 +166,7 @@ class VocabLearningController(crudController):
                     now = datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))
                     compare_time = user.create_time.replace(tzinfo=timezone(timedelta(hours=8)))
                     if (user.user_plan != 0 and user.user_plan is not None) or (
-                            now - compare_time).total_seconds() <= 86400:
+                            now - compare_time).total_seconds() <= NON_MEMBER_VOCAB_GREEN_TIME:
                         new_task = dict(
                             account_id=account_id,
                             task_id=8,  # 背单词
@@ -330,7 +342,7 @@ class VocabLearningController(crudController):
                 number_to_finish = len(redis.lrange(f"{vocab_account.in_process}"))
                 number_today = len(redis.lrange(f"{vocab_account.today_learn}"))
 
-                # 查找Categorty对应条数
+                # 查找Category对应条数
                 raw_sql = text(f"""
                 SELECT
                 VocabsCategorys.id,
@@ -629,11 +641,104 @@ class StudyPulseController(crudController):
         }
         return self._create(model=StudyPulseRecords, create_params=add)
 
-    def get_pulse_time(self, account_id):
-        pass
+    def get_pulse_check_information(self, account_id):
+        """
+        查看打卡的信息
+        1.查看登录次数（后期不会用）
+        2.查看学习时间 (过去7天）
+        """
+        counter_target = DAILY_STUDY_LOGIN_COUNT_TARGET
+        time_target = DAILY_STUDY_TIME_TARGET
+
+        def get_weekday(date_str):
+            date_obj = datetime.strptime(date_str, '%Y-%m-%d')
+            # 返回星期几的整数值和对应的星期字符串（例如，'Monday'）
+            return date_obj.strftime('%A')
+
+        end_date = datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))).date()
+        start_date = end_date - timedelta(days=7 - 1)
+        # 生成日期范围
+        date_range = [start_date + timedelta(days=x) for x in range((end_date - start_date).days + 1)]
+        with db_session('core') as session:
+            # 查看过去7天登录次数和学习时间：
+            records = (
+                session.query(
+                    func.date(StudyPulseRecords.create_time).label('date'),
+                    func.sum(StudyPulseRecords.counter).label('count'),
+                    func.sum(StudyPulseRecords.time_length).label('study_time')
+                )
+                .filter(StudyPulseRecords.account_id == account_id)
+                .filter(and_(
+                    StudyPulseRecords.create_time >= start_date,
+                    StudyPulseRecords.create_time <= end_date))
+                .group_by(
+                    func.date(StudyPulseRecords.create_time)
+                )
+                .order_by(
+                    func.date(StudyPulseRecords.create_time)
+                )
+                .all()
+            )
+            date_dic = []
+            # 将查询结果转换为字典，便于快速查找
+            results_dict = {result[0]: result for result in records}
+            new = {}
+
+            for date in date_range:
+                if date in results_dict:
+                    record = {
+                        "date": date.strftime('%Y-%m-%d'),
+                        "week_day": get_weekday(date.strftime('%Y-%m-%d')),
+                        "login_count": int(results_dict[date][1]) if results_dict[date][1] is not None else 0,
+                        "study_time": int(results_dict[date][2]) if results_dict[date][2] is not None else 0
+                    }
+                else:
+                    record = {
+                        "date": date.strftime('%Y-%m-%d'),
+                        "week_day": get_weekday(date.strftime('%Y-%m-%d')),
+                        "login_count": 0,
+                        "study_time": 0
+                    }
+                date_dic.append(record)
+                new[record["date"]] = record
+
+            # 打开状态：
+            status = []
+            remaining_week = [end_date + timedelta(days=i) for i in range(7 - end_date.weekday())]
+            sorted_week = sorted(remaining_week, key=lambda x: x.weekday())
+
+            for date in sorted_week:
+                if date.strftime('%Y-%m-%d') in new:
+                    record = {
+                        "date": date.strftime('%Y-%m-%d'),
+                        "week_day": get_weekday(date.strftime('%Y-%m-%d')),
+                        "count_process": new[date.strftime('%Y-%m-%d')]['login_count'],
+                        "count_target": counter_target,
+                        "study_time": new[date.strftime('%Y-%m-%d')]['study_time'],
+                        "time_target": time_target,
+                        "lock": False
+                    }
+                else:
+                    record = {
+                        "date": date.strftime('%Y-%m-%d'),
+                        "week_day": get_weekday(date.strftime('%Y-%m-%d')),
+                        "count_process": 0,
+                        "count_target": counter_target,
+                        "study_time": 0,
+                        "time_target": time_target,
+                        "lock": True
+                    }
+                status.append(record)
+
+            response = {
+                "current": end_date.strftime('%Y-%m-%d'),
+                "charts": date_dic,
+                "daka": status
+            }
+            return True, response
+
 
 class TaskController(crudController):
-
     def fetch_account_tasks(self, account_id, after_time=None, active=None, type=None, is_complete=None):
         with db_session('core') as session:
             query = session.query(TaskAccounts).filter(TaskAccounts.account_id == account_id)
@@ -821,6 +926,17 @@ class TaskController(crudController):
                 if record.create_time < start_of_today:
                     return False, '任务已过期'
 
+                if res['task_name'] == "复习旧单词":
+                    # 查找今日背诵单词是否完成:
+                    learn_records = (
+                        session.query(TaskAccounts)
+                        .filter(TaskAccounts.task_id == 8)
+                        .filter(TaskAccounts.create_time > start_of_today)
+                        .all()
+                    )
+                    for learn_record in learn_records:
+                        if not learn_record.loop <= learn_record.current_loop:
+                            return False, '今日还有未完成的单词学习任务'
 
         current_task, pointer = None, None
         if res != {}:
@@ -847,14 +963,15 @@ class TaskController(crudController):
                 if resp:
                     # cache the chain
                     redis = RedisWrapper('core_cache')
-                    redis.set(f"TaskAccount:{task_account_id}", res)
+                    redis.set(f"TaskAccount:{task_account_id}", res, ex=1 * 24 * 60 * 60) # 一天后自动过期
                     if return_c:
                         # to do 更新 start time
                         u_record = (
                             session.query(TaskAccounts)
                             .filter(TaskAccounts.id == task_account_id)
                             .update({
-                                TaskAccounts.started_time: datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))),
+                                TaskAccounts.started_time: datetime.now(timezone.utc).astimezone(
+                                    timezone(timedelta(hours=8))),
                             })
                         )
                         try:
@@ -890,7 +1007,7 @@ class TaskController(crudController):
 
                     if return_c:
                         redis = RedisWrapper('core_cache')
-                        redis.set(f"TaskAccount:{task_account_id}", response)
+                        redis.set(f"TaskAccount:{task_account_id}", response, ex=1 * 24 * 60 * 60) #一天后自动过期
                         return True, {
                             "payload": data
                         }
@@ -903,7 +1020,7 @@ class TaskController(crudController):
                             # 运行下一步返回参数函数
                             module = import_module(module)
                             function = getattr(module, method)
-
+                            print(function.__name__)
                             resp, data = function(**response)
                             if resp:
                                 response['condition_id'] = next_task['condition_id']
@@ -936,7 +1053,6 @@ class TaskController(crudController):
             task_account_id,
             payload,
             **kwargs):
-
 
         with db_session('core') as session:
             record = (
@@ -982,12 +1098,11 @@ class TaskController(crudController):
                 return False, '学习失败'
 
 
-
-
 if __name__ == "__main__":
     account_id = 20
     # pprint(VocabLearningController().create_new_vocab_tasks(account_id=37))
-    pprint(VocabLearningController().fetch_account_vocab(37))
+    # pprint(VocabLearningController().fetch_account_vocab(37))
+    pprint(StudyPulseController().get_pulse_check_information(account_id=27))
 
     # pprint(TaskController().fetch_account_tasks(account_id=account_id, after_time=get_today_midnight(), active=True))
     # today = datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))

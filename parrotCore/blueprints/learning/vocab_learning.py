@@ -48,17 +48,20 @@ def review_fetch_words_mc(
                 )
                 if record:
                     words_return = None
-                    if record.similarities is not None:
-                        words_return = [int(id) for id in record.similarities.split(";")[:3]]
 
-                    else:
-                        # random generate
+                    # if record.similarities is not None:
+                    #     words_return = [int(id) for id in record.similarities.split(";")[:3]]
+                    #
+                    # else:
+
+                    # random generate
+                    if True:
                         l = []
                         for value in session.query(VocabBase.id).distinct():
                             if value != current_word_id:
                                 l.append(value[0])
 
-                        words_return = random.sample(l, 3)
+                    words_return = random.sample(l, 3)
 
                 position = random.randint(0, len(words_return))
                 words_return.insert(position, current_word_id)
@@ -137,11 +140,13 @@ def fetch_words_mc(
                 )
                 if record:
                     words_return = None
-                    if record.similarities is not None:
-                        words_return = [int(id) for id in record.similarities.split(";")[:3]]
+                    # if record.similarities is not None:
+                    #     words_return = [int(id) for id in record.similarities.split(";")[:3]]
+                    #
+                    # else:
 
-                    else:
-                        # random generate
+                    # random generate
+                    if True:
                         l = []
                         for value in session.query(VocabBase.id).distinct():
                             if value != current_word_id:
@@ -274,10 +279,11 @@ def review_words(
                 )
                 if record:
                     words_return = None
-                    if record.similarities is not None:
-                        words_return = [int(id) for id in record.similarities.split(";")[:3]]
-
-                    else:
+                    # if record.similarities is not None:
+                    #     words_return = [int(id) for id in record.similarities.split(";")[:3]]
+                    #
+                    # else:
+                    if True:
                         # random generate
                         l = []
                         for value in session.query(VocabBase.id).distinct():
@@ -592,8 +598,6 @@ def redo_words_study(
                                 if each['id'] == word.category_id:
                                     statistic_cache['status_book']["level_total"] = each['counts']
 
-                print("here", 572)
-
                 # study word, correct word 2 条记录
                 study_add = dict(
                     account_id=account_id,
@@ -617,7 +621,6 @@ def redo_words_study(
                 )
 
                 rds.list_push(f"{account_id}:finished", *[word_id], side="r")
-                print("here", 597)
                 try:
                     session.commit()
                     if statistic_cache:

@@ -71,7 +71,6 @@ class Exams(BASES['core']):
     is_active = Column(Boolean, default=True)
     is_current_use = Column(Boolean, default=True)
     father_exam = Column(Integer, nullable=True)
-    # father_exam = Column(Integer, nullable=False, default=-1)
     no_patterns = Column(Integer, nullable=True)
     create_time = Column(DateTime)
     last_update_time = Column(DateTime)
@@ -259,6 +258,9 @@ class Questions(BASES['core']):
     is_active = Column(Boolean, default=True)
     is_attachable = Column(Boolean, default=True)  # 是否可以上传文件
     has_ans = Column(Boolean, default=True)  # 是否有答题
+
+    # error字段反馈
+    error_feedback = Column(Text, nullable=True)
 
     # foreign keys
     section_id = Column(Integer, ForeignKey('Sections.id', ondelete='CASCADE'), nullable=True)

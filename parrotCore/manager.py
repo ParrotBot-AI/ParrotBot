@@ -25,11 +25,19 @@ class VocabService(ServiceManager):
     schedule = '1 0 * * *'
     time_zone = "Asia/Shanghai"
 
+class DailyService(ServiceManager):
+    name = 'ParrotCoreDaily'
+    file = 'core_daily_tasks.py'
+    dir_path = abspath('services')
+    schedule = '1 1 * * *'
+    time_zone = "Asia/Shanghai"
+
 
 SERVICES_MAP = {
     'ParrotCore': DataApi,
     'ParrotCoreStream': Streaming,
-    'ParrotCoreVocab': VocabService
+    'ParrotCoreVocab': VocabService,
+    'ParrotCoreDaily': DailyService,
 }
 
 

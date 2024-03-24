@@ -24,7 +24,8 @@ import pprint
 from utils.structure import Tree, TreeNode
 from utils.redis_tools import RedisWrapper
 from configs.environment import DATABASE_SELECTION
-from sqlalchemy import null, select, union_all, and_, or_, join, outerjoin, update, insert, delete, text, asc
+from configs.operation import NON_MEMBER_MODEL_AMOUNT
+from sqlalchemy import select, and_, or_, join, outerjoin, update, insert, delete, text, asc
 import time
 from sqlalchemy.orm import aliased
 from sqlalchemy.sql.expression import bindparam
@@ -54,6 +55,15 @@ class QuestionController(crudController):
     支持所有事务表单(Projects, 问卷s, Sections, Resources)
     init: 先创建Projects => 问卷s => Sections, Resources
     """
+
+    def question_error_feedback(self, question_id, text):
+        update_s = {
+            "id":question_id,
+            "error_feedback":text
+        }
+        res, data = self._update(model=AnswerSheetRecord, update_parameters=update_s, restrict_field="id")
+        return res, data
+
 
     @staticmethod
     def select_records(group_, number):
@@ -977,7 +987,7 @@ class AnsweringScoringController(crudController):
             contine_fetch = True
 
             if account.user_plan == 0 or account.user_plan is None:
-                if account.model_today_used >= 1:
+                if account.model_today_used >= NON_MEMBER_MODEL_AMOUNT:
                     model_answer = '{"msg":"用量已超使用上限制"}'
                     contine_fetch = False
 
@@ -1030,7 +1040,6 @@ class AnsweringScoringController(crudController):
                         logger.info(f"Sheet:{sheet_id}-Question:{question_id} 开始访问speaking模型")
                         if r.json()['code'] == 10000:
                             res_data = r.json()['data']
-                            print(res_data)
                             score = res_data.get("Overall")
                             if score:
                                 score = float(score)
@@ -1041,12 +1050,12 @@ class AnsweringScoringController(crudController):
                                 .update({
                                     Accounts.model_today_used: account.model_today_used + 1
                                 }))
-                            logger.info(f"Sheet:{sheet_id}-Question:{question_id} 响应成功..")
+                            logger.info(f"Sheet:{sheet_id}-Question:{question_id} speaking响应成功..")
 
                         else:
                             score = None
                             model_answer = '{"msg":"访问AI模型失败"}'
-                            logger.info(f"Sheet:{sheet_id}-Question:{question_id} 响应失败：不是成功code: {r.json()['code']}:{r.json()['msg']}（gpt出错）")
+                            logger.info(f"Sheet:{sheet_id}-Question:{question_id} speaking响应失败：不是成功code: {r.json()['code']}:{r.json()['msg']}（gpt出错）")
 
                     except Exception as e:
                         score = None
@@ -1078,11 +1087,11 @@ class AnsweringScoringController(crudController):
                                 .update({
                                     Accounts.model_today_used: account.model_today_used + 1
                                 }))
-                            logger.info(f"Sheet:{sheet_id}-Question:{question_id} 响应成功..")
+                            logger.info(f"Sheet:{sheet_id}-Question:{question_id} writing 响应成功..")
                         else:
                             score = None
                             model_answer = '{"msg":"访问AI模型失败"}'
-                            logger.info(f"Sheet:{sheet_id}-Question:{question_id} 响应失败：不是成功code（model出错）")
+                            logger.info(f"Sheet:{sheet_id}-Question:{question_id} writing 响应失败：不是成功code: {r.json()['code']}:{r.json()['msg']}（gpt出错）")
 
                     except Exception as e:
                         score = None

@@ -179,8 +179,13 @@ class VocabsLearning(BASES['core']):
     unknown = Column(String(20), nullable=False)  # key to redis
     amount = Column(Integer, nullable=False)  # key to redis
 
+    # 是否打开跳过词汇
+    is_skip_remind = Column(Integer, nullable=True)
+    refuse_skip = Column(Boolean, nullable=True)
+
     # statistics
     current_category = Column(Integer, ForeignKey('VocabsCategorys.id', ondelete='CASCADE'), nullable=True)
+    # next_category = Column(Integer, ForeignKey('VocabsCategorys.id', ondelete='CASCADE'), nullable=True)
     last_day_review = Column(Integer, default=0)
     last_day_study = Column(Integer, default=0)
     today_day_study = Column(Integer, default=0)
