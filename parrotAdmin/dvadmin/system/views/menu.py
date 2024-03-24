@@ -12,7 +12,7 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from dvadmin.system.models import Menu, MenuButton, MicroServiceRegister
 from dvadmin.system.views.menu_button import MenuButtonInitSerializer
 # from dvadmin.system.views.microservice import MicroServiceRegisterSerializer
-from dvadmin.utils.json_response import SuccessResponse, ErrorResponse
+from dvadmin.utils.json_response import SuccessResponse, ErrorResponse, DetailResponse
 from dvadmin.utils.serializers import CustomModelSerializer
 from dvadmin.utils.viewset import CustomModelViewSet
 import requests
@@ -272,7 +272,7 @@ class MenuViewSet(CustomModelViewSet):
         data = {
             "url": "https://obs-parrotcore.obs.cn-east-3.myhuaweicloud.com/9.9%E5%85%83%E4%BC%9A%E5%91%98%E7%A4%BC%E5%8C%85.png"
         }
-        return SuccessResponse(data=data, msg="获取成功")
+        return DetailResponse(data=data, msg="获取成功")
 
 
     def list(self, request):
