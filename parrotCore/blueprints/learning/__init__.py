@@ -117,7 +117,7 @@ def get_today_task(user_id):
         try:
             today = datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))
             time = datetime(today.year, today.month, today.day, 0, 0)
-            res = []
+            _res = []
             for account in accounts:
                 res, data = TaskController().fetch_account_tasks(
                     account_id=account.id,
@@ -126,10 +126,11 @@ def get_today_task(user_id):
                 if res:
                     for each in data:
                         each['exam_id'] = account.exam_id
-                    res = res + data
+
+                    _res = _res + data
                 else:
                     return ArgumentExceptionResponse(msg=f'{data}')
-            return SuccessDataResponse(res)
+            return SuccessDataResponse(_res)
         except Exception as e:
             return ArgumentExceptionResponse(msg=f'{e}')
 
