@@ -48,6 +48,12 @@ logger = get_general_logger('account', path=abspath('logs', 'core_web'))
 class VocabLearningController(crudController):
 
     def refuse_jump(self, account_id):
+        redis = RedisWrapper('core_cache')
+        cache_resp = redis.get(f'VocabsStatics:{account_id}')
+        if cache_resp:
+            if "refuse_skip" in cache_resp:
+                cache_resp['refuse_skip'] = True
+
         update_s = {
             "account_id": account_id,
             "refuse_skip": True
@@ -454,6 +460,8 @@ class VocabLearningController(crudController):
                     resp['today_day_review'] = record.today_day_review
                     resp['total_study'] = record.total_study
                     resp['total_review'] = record.total_review
+                    resp['is_skip_remind'] = record.is_skip_remind
+                    resp['refuse_skip'] = record.refuse_skip
 
                     # 搜索过去5天的正确的与错误的
                     results = self.fetch_past_5_days_list(t_interval=5, account_id=account_id)
