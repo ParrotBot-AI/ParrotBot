@@ -45,7 +45,7 @@ from blueprints.util.crud import crudController
 from blueprints.util.serializer import Serializer as s
 import json
 
-logger = get_general_logger('account', path=abspath('logs', 'core_web'))
+logger = get_general_logger('education', path=abspath('logs', 'core_web'))
 
 
 class QuestionController(crudController):
@@ -951,6 +951,7 @@ class AnsweringScoringController(crudController):
 
     async def model_scoring(self, sheet_id, question_id):
         # search for pattern
+        logger.info(f"{sheet_id}-{question_id}开始模型打分任务")
         import requests
         with db_session('core') as session:
             redis = RedisWrapper("core_cache")
