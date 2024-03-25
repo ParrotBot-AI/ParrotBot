@@ -58,10 +58,10 @@ class QuestionController(crudController):
 
     def question_error_feedback(self, question_id, text):
         update_s = {
-            "id":question_id,
-            "error_feedback":text
+            "id": question_id,
+            "error_feedback": text
         }
-        res, data = self._update(model=AnswerSheetRecord, update_parameters=update_s, restrict_field="id")
+        res, data = self._update(model=Questions, update_parameters=update_s, restrict_field="id")
         return res, data
 
 
