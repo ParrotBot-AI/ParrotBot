@@ -951,7 +951,7 @@ class AnsweringScoringController(crudController):
 
     async def model_scoring(self, sheet_id, question_id):
         # search for pattern
-        logger.info(f"{sheet_id}-{question_id}开始模型打分任务")
+        logger.info(f"Sheet:{sheet_id}-question{question_id} - 开始模型打分任务")
         import requests
         with db_session('core') as session:
             redis = RedisWrapper("core_cache")

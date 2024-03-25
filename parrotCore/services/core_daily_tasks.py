@@ -30,12 +30,11 @@ class DailyService:
                 session.query(Accounts)
                 .all()
             )
-            accounts = [x.id for x in records]
             s_l = []
             for account in records:
                 if account.model_today_used > 0:
                     r = {
-                        "a_id":account.account_id,
+                        "a_id": account.id,
                         "model_today_used":0
                     }
                     s_l.append(r)
