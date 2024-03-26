@@ -100,6 +100,7 @@ class AccountController(crudController):
             return True, s.serialize_list(records)
 
     def get_user_accounts(self, user_id, exam_id=None):
+        print("here", 103)
         with db_session('core') as session:
             record = (
                 session.query(Users)
@@ -117,6 +118,9 @@ class AccountController(crudController):
                     )
                     if record:
                         l = s.serialize_dic(record, self.default_not_show + ['user_id', 'last_request_time'])
+                        l['current_status'] = l['current_status'].name if l['current_status'] is not None else None
+                        l['purpose'] = l['purpose'].name if l['purpose'] is not None else None
+                        l['study_type'] = l['study_type'].name if l['study_type'] is not None else None
                         l['account_id'] = l['id']
                         del l['id']
                         return True, l
@@ -129,6 +133,9 @@ class AccountController(crudController):
                     l = s.serialize_list(records, self.default_not_show + ['user_id', 'last_request_time'])
                     for e in l:
                         e['account_id'] = e['id']
+                        e['current_status'] = e['current_status'].name if e['current_status'] is not None else None
+                        e['purpose'] = e['purpose'].name if e['purpose'] is not None else None
+                        e['study_type'] = e['study_type'].name if e['study_type'] is not None else None
                         del e['id']
                     return True, l
 
@@ -151,11 +158,11 @@ if __name__ == '__main__':
     test = AccountController()
     user_id = 18
     # print(test.register_user(user_id, [1]))
-    print(test.update_questionary(27, param={
-        "current_status": "high_school",
-        "purpose": "study_board",
-        "study_type":  "studying",
-        "next_test_time": "2024-06-10"
-    }))
-    # print(test.get_user_accounts(40))
+    # print(test.update_questionary(27, param={
+    #     "current_status": "high_school",
+    #     "purpose": "study_board",
+    #     "study_type":  "studying",
+    #     "next_test_time": "2024-06-10"
+    # }))
+    print(test.get_user_accounts(25, 1))
     # print(test._create(model=Accounts, create_params={'user_id': 7, 'exam_id': 1}))
