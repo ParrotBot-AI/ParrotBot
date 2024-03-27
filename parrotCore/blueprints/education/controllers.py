@@ -773,6 +773,7 @@ class AnsweringScoringController(crudController):
             questions_dic = cache_dict['questions']
             with db_session('core') as session:
                 for value in questions_dic.values():
+                    single_answer = None
                     if 'answer' in value and value['answer']:
                         if type(value['answer']) == list:
                             single_answer = ';'.join(map(str, value['answer']))
