@@ -164,12 +164,15 @@ class DailyService:
                     )
                     if sheet:
                         if sheet.end_time < start_of_day and sheet.status == 1:
-                            res, data = AnsweringScoringController().save_answer(sheet_id=sheet_id)
-                            logger.info(f"移除过期试卷{sheet_id}记录成功.")
-                            if res:
-                                redis.delete(key)
-                            else:
-                                logger.info(f"移除过期试卷{sheet_id}记录失败 {str(data)}.")
+                            try:
+                                res, data = AnsweringScoringController().save_answer(sheet_id=sheet_id)
+                                logger.info(f"移除过期试卷{sheet_id}记录成功.")
+                                if res:
+                                    redis.delete(key)
+                                else:
+                                    logger.info(f"移除过期试卷{sheet_id}记录失败 {str(data)}.")
+                            except Exception as e:
+                                logger.info(f"移除过期试卷{sheet_id}记录失败 {str(e)}.")
 
             return True, logger.info("移除过期试卷记录成功.")
 
@@ -180,9 +183,9 @@ class DailyService:
         # 3.清除过期的缓存里过期的task
         # 4.保存，清除过期的试卷
         logger.info(">>>>>>>>>> 开始每日事务服务 <<<<<<<<<")
-        self.clean_model_usage()
-        self.users_tasks()
-        self.clean_old_tasks()
+        # self.clean_model_usage()
+        # self.users_tasks()
+        # self.clean_old_tasks()
         self.clean_old_sheets()
         logger.info(">>>>>>>>>> 每日事务服自动化服务结束 <<<<<<<<<")
 

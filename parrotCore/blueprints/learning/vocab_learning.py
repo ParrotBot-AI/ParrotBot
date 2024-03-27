@@ -419,7 +419,7 @@ def reviews_redo_words_study(
 
                 try:
                     session.commit()
-                    redis.set(f'VocabsStatics:{account_id}', statistic_cache)
+                    redis.set(f'VocabsStatics:{account_id}', statistic_cache, 7200)
 
                     # 如果今天的已经复习了,下一步
                     if total_len > 0:
@@ -465,7 +465,7 @@ def reviews_redo_words_study(
 
                 try:
                     session.commit()
-                    redis.set(f'VocabsStatics:{account_id}', statistic_cache)
+                    redis.set(f'VocabsStatics:{account_id}', statistic_cache, 7200)
                     total_len = len(rds.lrange(f"{record.to_review}"))
                     if total_len > 0:
                         return True, False
@@ -549,7 +549,7 @@ def redo_words_study(
                 study_left = len(rds.lrange(f"{record.today_learn}"))
                 try:
                     session.commit()
-                    redis.set(f'VocabsStatics:{account_id}', statistic_cache)
+                    redis.set(f'VocabsStatics:{account_id}', statistic_cache, 7200)
 
                     # 如果今天的已经学完了，直接请求model,下一步
                     if study_left == 0:
@@ -621,7 +621,7 @@ def redo_words_study(
                 try:
                     session.commit()
                     if statistic_cache:
-                        redis.set(f'VocabsStatics:{account_id}', statistic_cache)
+                        redis.set(f'VocabsStatics:{account_id}', statistic_cache, 7200)
                     return True, False
                 except Exception as e:
                     return False, "单词学习过程中入库失败."
@@ -695,7 +695,7 @@ def redo_review_study(
                 study_left = len(rds.lrange(f"{record.total_study}"))
                 try:
                     session.commit()
-                    redis.set(f'VocabsStatics:{account_id}', statistic_cache)
+                    redis.set(f'VocabsStatics:{account_id}', statistic_cache, 7200)
                     return True, False
 
                 except Exception as e:
@@ -739,7 +739,7 @@ def redo_review_study(
 
                 try:
                     session.commit()
-                    redis.set(f'VocabsStatics:{account_id}', statistic_cache)
+                    redis.set(f'VocabsStatics:{account_id}', statistic_cache, 7200)
 
                     study_left = len(rds.lrange(f"{account_id}:wrong_group"))
                     if study_left > 0:

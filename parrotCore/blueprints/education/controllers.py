@@ -2530,6 +2530,6 @@ if __name__ == '__main__':
 
     # 算分
     # start = time.time()
-    print(init.scoring(sheet_id=916))
+    print(init.scoring(sheet_id=1129))
     # pprint.pprint(init.get_score(answer_sheet_id=911))
     # print(time.time() - start)
