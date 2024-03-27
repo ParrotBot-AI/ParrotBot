@@ -7,7 +7,6 @@ if DATABASE_SELECTION == 'postgre':
 elif DATABASE_SELECTION == 'mysql':
     from configs.mysql_config import get_db_session_sql as db_session
 from utils.redis_tools import RedisWrapper
-import json
 import random
 from utils import iso_ts
 from sqlalchemy import null, select, union_all, and_, or_, join, outerjoin, update, insert, delete
@@ -402,9 +401,9 @@ def reviews_redo_words_study(
 
                 if statistic_cache:
                     if tody in statistic_cache['series']:
-                        if type(statistic_cache['series'][tody]['correct_words']) == list:
+                        if type(statistic_cache['series'][tody]['wrong_words']) == list:
                             statistic_cache['series'][tody]['wrong_words'][0] += 1
-                        elif type(statistic_cache['series'][tody]['correct_words']) == int:
+                        elif type(statistic_cache['series'][tody]['wrong_words']) == int:
                             statistic_cache['series'][tody]['wrong_words'] += 1
 
                 rds.list_push(f"{record.to_review}", *[word_id], side="r")
@@ -439,9 +438,9 @@ def reviews_redo_words_study(
 
                     if tody in statistic_cache['series']:
                         if type(statistic_cache['series'][tody]['correct_words']) == list:
-                            statistic_cache['series'][tody]['wrong_words'][0] += 1
+                            statistic_cache['series'][tody]['correct_words'][0] += 1
                         elif type(statistic_cache['series'][tody]['correct_words']) == int:
-                            statistic_cache['series'][tody]['wrong_words'] += 1
+                            statistic_cache['series'][tody]['correct_words'] += 1
 
                 # correct word 1 条记录
                 study_add = dict(
@@ -530,9 +529,9 @@ def redo_words_study(
                 # wrong word 1 条记录
                 if statistic_cache:
                     if tody in statistic_cache['series']:
-                        if type(statistic_cache['series'][tody]['correct_words']) == list:
+                        if type(statistic_cache['series'][tody]['wrong_words']) == list:
                             statistic_cache['series'][tody]['wrong_words'][0] += 1
-                        elif type(statistic_cache['series'][tody]['correct_words']) == int:
+                        elif type(statistic_cache['series'][tody]['wrong_words']) == int:
                             statistic_cache['series'][tody]['wrong_words'] += 1
 
                 rds.list_push(f"{account_id}:wrong_group", *[word_id], side="r")
@@ -568,8 +567,6 @@ def redo_words_study(
                 # 加入finished group
 
                 if statistic_cache:
-
-                    pprint.pprint(statistic_cache)
                     statistic_cache['today_day_study'] += 1
                     statistic_cache['total_study'] += 1
 
@@ -680,7 +677,10 @@ def redo_review_study(
                 # 还不对，继续添加到最后
                 if statistic_cache:
                     if tody in statistic_cache['series']:
-                        statistic_cache['series'][tody]['wrong_words'] += 1
+                        if type(statistic_cache['series'][tody]['wrong_words']) == list:
+                            statistic_cache['series'][tody]['wrong_words'][0] += 1
+                        elif type(statistic_cache['series'][tody]['wrong_words']) == int:
+                            statistic_cache['series'][tody]['wrong_words'] += 1
 
                 rds.list_push(f"{account_id}:wrong_group", *[word_id], side="r")
                 rds.list_push(f"{record.to_review}", *[word_id], side="r")
@@ -708,7 +708,10 @@ def redo_review_study(
                     statistic_cache['total_study'] += 1
 
                     if tody in statistic_cache['series']:
-                        statistic_cache['series'][tody]['correct_words'] += 1
+                        if type(statistic_cache['series'][tody]['correct_words']) == list:
+                            statistic_cache['series'][tody]['correct_words'][0] += 1
+                        elif type(statistic_cache['series'][tody]['correct_words']) == int:
+                            statistic_cache['series'][tody]['correct_words'] += 1
 
                 # study word, correct word 2 条记录
                 study_add = dict(

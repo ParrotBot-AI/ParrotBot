@@ -168,6 +168,8 @@ class DailyService:
                             logger.info(f"移除过期试卷{sheet_id}记录成功.")
                             if res:
                                 redis.delete(key)
+                            else:
+                                logger.info(f"移除过期试卷{sheet_id}记录失败 {str(data)}.")
 
             return True, logger.info("移除过期试卷记录成功.")
 

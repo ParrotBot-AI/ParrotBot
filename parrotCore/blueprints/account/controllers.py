@@ -3,8 +3,6 @@ from datetime import datetime, timezone, timedelta, date
 import statistics
 from blueprints.account.models import (
     Accounts,
-    AccountsVocab,
-    AccountsScores,
     Users
 )
 from blueprints.education.models import (
@@ -151,18 +149,15 @@ class AccountController(crudController):
             else:
                 return False, '用户未找到'
 
-
-
-
 if __name__ == '__main__':
     test = AccountController()
-    user_id = 18
-    # print(test.register_user(user_id, [1]))
+    user_id = 30
+    print(test.register_user(user_id, [1]))
     # print(test.update_questionary(27, param={
     #     "current_status": "high_school",
     #     "purpose": "study_board",
     #     "study_type":  "studying",
     #     "next_test_time": "2024-06-10"
     # }))
-    print(test.get_user_accounts(25, 1))
+    # print(test.get_user_accounts(25, 1))
     # print(test._create(model=Accounts, create_params={'user_id': 7, 'exam_id': 1}))

@@ -79,6 +79,7 @@ class Accounts(BASES['core']):
     # exam_id = Column(Integer, nullable=False)
     exam_id = Column(Integer, ForeignKey('Exams.id', ondelete='CASCADE'), nullable=False)
     model_today_used = Column(Integer, default=0)
+    account_vocab_level = Column(Integer, default=0)
 
     # 问卷内容
     current_status = Column(Enum(status), nullable=True)
@@ -99,8 +100,9 @@ class Accounts(BASES['core']):
         return s
 
 
-class AccountsVocab(BASES['core']):
-    __tablename__ = "account_vocab"
+class AccountsConfigs(BASES['core']):
+    # 可以存储account的自定义键值对，这个仅存Core相关的
+    __tablename__ = "AccountConfigs"
     account_id = Column(Integer, primary_key=True)
     config_link = Column(String(20))  # redis key "user_id:account_id:"
 
@@ -113,19 +115,19 @@ class AccountsVocab(BASES['core']):
         return s
 
 
-class AccountsScores(BASES['core']):
-    __tablename__ = "account_scores"
-
-    account_id = Column(Integer, primary_key=True)
-    config_link = Column(String(20))  # redis key "vocab:user_id"
-
-    def __str__(self) -> str:
-        s = f'(A: {self.account_id} C: {self.config_link}'
-        return s
-
-    def __repr__(self) -> str:
-        s = f'(A: {self.account_id} C: {self.config_link}'
-        return s
+# class AccountsScores(BASES['core']):
+#     __tablename__ = "account_scores"
+#
+#     account_id = Column(Integer, primary_key=True)
+#     config_link = Column(String(20))  # redis key "vocab:user_id"
+#
+#     def __str__(self) -> str:
+#         s = f'(A: {self.account_id} C: {self.config_link}'
+#         return s
+#
+#     def __repr__(self) -> str:
+#         s = f'(A: {self.account_id} C: {self.config_link}'
+#         return s
 
 
 if __name__ == "__main__":
