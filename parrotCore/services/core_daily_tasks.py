@@ -163,6 +163,7 @@ class DailyService:
                         .one_or_none()
                     )
                     if sheet:
+                        logger.info(f"移除过期试卷{sheet_id}中......")
                         if sheet.end_time < start_of_day and sheet.status == 1:
                             try:
                                 res, data = AnsweringScoringController().save_answer(sheet_id=sheet_id)
