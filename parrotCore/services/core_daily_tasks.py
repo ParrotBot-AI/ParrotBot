@@ -164,16 +164,16 @@ class DailyService:
                     )
                     if sheet:
                         logger.info(f"移除过期试卷{sheet_id}中......")
-                        if sheet.end_time < start_of_day and sheet.status == 1:
-                            try:
+                        try:
+                            if sheet.end_time < start_of_day and sheet.status == 1:
                                 res, data = AnsweringScoringController().save_answer(sheet_id=sheet_id)
                                 logger.info(f"移除过期试卷{sheet_id}记录成功.")
                                 if res:
                                     redis.delete(key)
                                 else:
                                     logger.info(f"移除过期试卷{sheet_id}记录失败 {str(data)}.")
-                            except Exception as e:
-                                logger.info(f"移除过期试卷{sheet_id}记录失败 {str(e)}.")
+                        except Exception as e:
+                            logger.info(f"移除过期试卷{sheet_id}记录失败 {str(e)}.")
 
             return True, logger.info("移除过期试卷记录成功.")
 
