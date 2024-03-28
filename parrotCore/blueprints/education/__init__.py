@@ -153,9 +153,9 @@ def get_mock_sheet(sheet_id):
 @bp.route('get_sheet/<sheet_id>/', methods=['GET'])
 def get_sheet(sheet_id):
     try:
-        print("here", 156)
         args = request.json
         con = args.get('continue')
+        print(con, 159)
         res = AnsweringScoringController().get_test_answers(
             sheet_id=sheet_id,
             contin=True if con == True else False
