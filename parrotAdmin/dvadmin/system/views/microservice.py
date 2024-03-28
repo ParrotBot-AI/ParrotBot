@@ -372,7 +372,7 @@ class MicroServiceRegisterViewSet(CustomModelViewSet):
             try:
                 # data = dict(micro.data)
                 url = f"http://{'127.0.0.1'}:{10981}/v1/api/education/get_sheet/{sheet_id}/"
-                r = requests.get(url)
+                r = requests.get(url, json={})
                 if r.json()['code'] == 10000:
                     res_data = r.json()['data']
                     return DetailResponse(data=res_data, msg='获取成功')
