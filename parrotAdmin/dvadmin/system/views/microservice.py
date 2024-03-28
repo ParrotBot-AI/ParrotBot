@@ -345,6 +345,24 @@ class MicroServiceRegisterViewSet(CustomModelViewSet):
             except:
                 return ErrorResponse(msg="微服务故障")
 
+    @action(methods=["GET"], detail=False, permission_classes=[IsAuthenticated], url_path="continue_mock_sheet/(?P<sheet_id>\d+)")
+    def continue_mock_sheet(self, request, sheet_id):
+        # request send to microservices
+        # input: sheet_id
+        if True:
+            try:
+                # data = dict(micro.data)
+                url = f"http://{'127.0.0.1'}:{10981}/v1/api/education/get_mock_sheet/{sheet_id}/"
+                r = requests.get(url, json={"continue": True})
+
+                if r.json()['code'] == 10000:
+                    res_data = r.json()['data']
+                    return DetailResponse(data=res_data, msg='获取成功')
+                else:
+                    return ErrorResponse(msg=r.json()['msg'])
+            except:
+                return ErrorResponse(msg="微服务故障")
+
     @action(methods=["GET"], detail=False, permission_classes=[IsAuthenticated],
             url_path="get_mock/(?P<sheet_id>\d+)")
     def get_mock(self, request, sheet_id):
@@ -355,6 +373,25 @@ class MicroServiceRegisterViewSet(CustomModelViewSet):
                 # data = dict(micro.data)
                 url = f"http://{'127.0.0.1'}:{10981}/v1/api/education/get_sheet/{sheet_id}/"
                 r = requests.get(url)
+
+                if r.json()['code'] == 10000:
+                    res_data = r.json()['data']
+                    return DetailResponse(data=res_data, msg='获取成功')
+                else:
+                    return ErrorResponse(msg=r.json()['msg'])
+            except:
+                return ErrorResponse(msg="微服务故障")
+
+    @action(methods=["GET"], detail=False, permission_classes=[IsAuthenticated],
+            url_path="continue_mock/(?P<sheet_id>\d+)")
+    def continue_mock(self, request, sheet_id):
+        # request send to microservices
+        # input: sheet_id
+        if True:
+            try:
+                # data = dict(micro.data)
+                url = f"http://{'127.0.0.1'}:{10981}/v1/api/education/get_sheet/{sheet_id}/"
+                r = requests.get(url, json={"continue": True})
 
                 if r.json()['code'] == 10000:
                     res_data = r.json()['data']
@@ -434,6 +471,26 @@ class MicroServiceRegisterViewSet(CustomModelViewSet):
                 try:
                     # data = dict(micro.data)
                     url = f"http://{'127.0.0.1'}:{10981}/v1/api/education/save_answer/{sheet_id}/"
+                    r = requests.post(url)
+
+                    if r.json()['code'] == 10000:
+                        res_data = r.json()['data']
+                        return DetailResponse(data=res_data, msg='OK.')
+                    else:
+                        return ErrorResponse(msg=r.json()['msg'])
+                except:
+                    return ErrorResponse(msg="微服务故障")
+
+        except:
+            return ErrorResponse(msg='参数格式错误')
+
+    @action(methods=["POST"], detail=False, permission_classes=[IsAuthenticated], url_path="pause_sheet/(?P<sheet_id>\d+)")
+    def pause_sheet(self, request, sheet_id):
+        try:
+            if True:
+                try:
+                    # data = dict(micro.data)
+                    url = f"http://{'127.0.0.1'}:{10981}/v1/api/education/pause_sheet/{sheet_id}/"
                     r = requests.post(url)
 
                     if r.json()['code'] == 10000:
@@ -615,8 +672,7 @@ class MicroServiceRegisterViewSet(CustomModelViewSet):
         except:
             return ErrorResponse(msg='参数格式错误')
 
-    @action(methods=["POST"], detail=False, permission_classes=[IsAuthenticated],
-            url_path="refuse_jump_vocabs/(?P<account_id>\d+)")
+    @action(methods=["POST"], detail=False, permission_classes=[IsAuthenticated], url_path="refuse_jump_vocabs/(?P<account_id>\d+)")
     def refuse_jump_vocabs(self, request, account_id):
         try:
             if True:

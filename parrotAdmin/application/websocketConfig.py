@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import time
 import urllib
 
 from asgiref.sync import sync_to_async, async_to_sync
@@ -9,7 +10,7 @@ import json
 from channels.layers import get_channel_layer
 from jwt import InvalidSignatureError
 from rest_framework.request import Request
-
+from dvadmin.utils.stream_controllers import AdminStream
 from application import settings
 
 send_dict = {}
@@ -136,6 +137,9 @@ class QuestionWebSocket(AsyncJsonWebsocketConsumer):
             import jwt
             self.service_uid = self.scope["url_route"]["kwargs"]["service_uid"]
             decoded_result = jwt.decode(self.service_uid, settings.SECRET_KEY, algorithms=["HS256"])
+            self.sheet_id = self.scope["url_route"]["kwargs"]["sheet_id"]
+            self.account_id = self.scope["url_route"]["kwargs"]["account_id"]
+            self.start_time = time.time()
             if decoded_result:
                 self.user_id = decoded_result.get('user_id')
                 self.room_name = "user_" + str(self.user_id)
@@ -158,8 +162,56 @@ class QuestionWebSocket(AsyncJsonWebsocketConsumer):
         # Leave room group
         await self.channel_layer.group_discard(self.room_name, self.channel_name)
         await self.channel_layer.group_discard("dvadmin", self.channel_name)
+        study_time = time.time() - self.start_time
         print("连接关闭")
         print("===存入题目===")
+        admin = AdminStream()
+        admin.pause_sheet(sheet_id=self.sheet_id)
+        print("===增加学习时间===")
+        admin.save_study_time(account_id=self.account_id, study_time=study_time)
+        try:
+            await self.close(close_code)
+        except Exception:
+            pass
+
+
+# === question websocket ==== #
+class StudyGeneralWebSocket(AsyncJsonWebsocketConsumer):
+    async def connect(self):
+        try:
+            import jwt
+            self.service_uid = self.scope["url_route"]["kwargs"]["service_uid"]
+            self.account_id = self.scope["url_route"]["kwargs"]["account_id"]
+
+            self.start_time = time.time()
+            decoded_result = jwt.decode(self.service_uid, settings.SECRET_KEY, algorithms=["HS256"])
+            if decoded_result:
+                self.user_id = decoded_result.get('user_id')
+                self.room_name = "user_" + str(self.user_id)
+                # 收到连接时候处理，
+                await self.channel_layer.group_add(
+                    "dvadmin",
+                    self.channel_name
+                )
+                await self.channel_layer.group_add(
+                    self.room_name,
+                    self.channel_name
+                )
+                await self.accept()
+                # 发送连接成功
+                await self.send_json(set_message('system', 'SYSTEM', '学习websocket连接成功'))
+        except InvalidSignatureError:
+            await self.disconnect(None)
+
+    async def disconnect(self, close_code):
+        # Leave room group
+        await self.channel_layer.group_discard(self.room_name, self.channel_name)
+        await self.channel_layer.group_discard("dvadmin", self.channel_name)
+        study_time = time.time() - self.start_time
+        print("连接关闭")
+        print("===增加学习时间===")
+        admin = AdminStream()
+        admin.save_study_time(account_id=self.account_id, study_time=study_time)
         try:
             await self.close(close_code)
         except Exception:

@@ -1728,6 +1728,41 @@ class TransactionsController(crudController):
             """)
 
             resources = session.execute(raw_sql).fetchall()
+
+            # 获取历史成绩记录
+            raw_sql = text(f"""
+                       WITH RankedSubmissions AS (
+                          SELECT
+                            ASR.id as sheet_id,
+                            ASR.status,
+                            ASR.father_sheet,
+                            ASR.score,
+                            ASR.max_score,
+                            ROW_NUMBER() OVER(PARTITION BY ASR.id ORDER BY ASR.create_time DESC) AS rn,
+                            R.father_resource
+                          FROM AnswerSheetRecord ASR
+                          JOIN Submissions S on ASR.id = S.answer_sheet_id
+                          JOIN Questions Q on S.question_id = Q.id
+                          JOIN Resources R on Q.source = R.id
+                          JOIN Patterns P on R.pattern_id = P.id
+                          LEFT JOIN Resources R2 on R.father_resource = R2.id
+                          WHERE ASR.account_id = {account_id}
+                            AND ASR.father_sheet != -1
+                            # AND ASR.status = 0
+                        )
+                        SELECT *
+                        FROM RankedSubmissions
+                        WHERE rn = 1;
+                        """)
+
+            grades = session.execute(raw_sql).fetchall()
+
+            # 键值，加快检索速度
+            grade_value = {}
+            for grade in grades:
+                if grade.father_resource not in grade_value:
+                    grade_value[grade.father_resource] = grade
+
             tree = Tree()
 
             for record in resources:
@@ -1748,6 +1783,20 @@ class TransactionsController(crudController):
                         }
                         if record.id in q_r:
                             c_r['questions'] = q_r[record.id]
+                        if record.id in grade_value:
+                            grade = grade_value[record.id]
+                            c_r['sheet_id'] = grade.sheet_id
+                            c_r['statue'] = grade.status
+                            c_r['father_sheet'] = grade.father_sheet
+                            c_r['score'] = grade.score
+                            c_r['max_score'] = grade.max_score
+                        else:
+                            c_r['sheet_id'] = None
+                            c_r['statue'] = None
+                            c_r['father_sheet'] = None
+                            c_r['score'] = None
+                            c_r['max_score'] = None
+
                         tree.add_node("id", father_id, c_r)
 
             display_resource = [x for x in tree.print_tree() if x['resource_name'] == "TPO题库"]
@@ -1782,8 +1831,6 @@ class TransactionsController(crudController):
                 Parent = aliased(Resources, name='parent')
                 Child = aliased(Resources, name='child')
                 Question = aliased(Questions, name='Q')
-                Submission = aliased(Submissions, name='S')
-                Answer = aliased(AnswerSheetRecord, name='R')
 
                 # Subquery J
                 subquery_j = session.query(
@@ -1802,7 +1849,7 @@ class TransactionsController(crudController):
                 ).subquery('j')
 
                 # Subquery for Questions linked to subquery J
-                subquery_q = session.query(
+                resources = session.query(
                     subquery_j.c.parent_id.label('resource_id'),
                     subquery_j.c.parent_resource_name.label('resource_name'),
                     subquery_j.c.child_id.label('section_id'),
@@ -1815,35 +1862,61 @@ class TransactionsController(crudController):
                     Question, subquery_j.c.child_id == Question.source
                 ).filter(
                     Question.father_question == -1
-                ).subquery('T')
-
-                # Subquery for AnswerSheetRecord and Submission
-                subquery_a = session.query(
-                    Submission.id.label('submission_id'),
-                    Submission.question_id.label('question_id'),
-                    Answer.account_id.label('account_id'),
-                    Answer.status.label('status'),
-                    Submission.score.label('last_record')
-                ).select_from(
-                    Submission
-                ).join(
-                    Answer, Submission.answer_sheet_id == Answer.id
-                ).filter(
-                    Answer.account_id == account_id,
-                ).order_by(
-                    Submission.last_update_time.desc()
-                ).limit(1).subquery('A')
-
-                # Final outer query
-                resources = session.query(
-                    subquery_q,
-                    subquery_a.c.submission_id,
-                    subquery_a.c.account_id,
-                    subquery_a.c.status,
-                    subquery_a.c.last_record
-                ).outerjoin(
-                    subquery_a, subquery_q.c.question_id == subquery_a.c.question_id
                 ).all()
+
+                # 获取历史做题数据 (性能会随数据增长而降低) => 后期可以考虑设一个时间范围或者单开表来存储最近的记录
+                raw_sql = text(f"""
+                            WITH SUB AS (
+                                SELECT
+                                father_question,
+                                SUM(Submissions.score) AS child_score
+                                FROM Submissions
+                                JOIN Questions Q2 on Q2.id = Submissions.question_id
+                                WHERE Q2.father_question != -1
+                                GROUP BY Submissions.answer_sheet_id, Q2.father_question
+                            ),
+                            QuestionChildCount AS (
+                              SELECT
+                                father_question,
+                                COUNT(*) AS child_count
+                              FROM Questions
+                              WHERE father_question != -1
+                              GROUP BY father_question
+                            ),
+                            RankedSubmissions AS (
+                              SELECT
+                                S.question_id,
+                                ASR.status,
+                                S.score,
+                                S.max_score,
+                                ROW_NUMBER() OVER(PARTITION BY Q.id ORDER BY ASR.create_time DESC) AS rn,
+                                COALESCE(QCC.child_count, 0) AS child_question_count,
+                                SUB.child_score,
+                                Q.remark
+                              FROM Submissions S
+                              JOIN AnswerSheetRecord ASR ON S.answer_sheet_id = ASR.id
+                              JOIN Questions Q ON S.question_id = Q.id
+                              LEFT JOIN QuestionChildCount QCC ON Q.id = QCC.father_question -- Added LEFT JOIN to include child question count
+                              LEFT JOIN SUB ON S.question_id = SUB.father_question
+                              JOIN Resources R ON Q.source = R.id
+                              JOIN Patterns P ON R.pattern_id = P.id
+                              WHERE P.id IN {tuple(pattern_ids)}
+                                AND ASR.account_id = {account_id}
+                                AND ASR.status = 0
+                                AND Q.father_question = -1
+                                AND (ASR.father_sheet = -1 OR ASR.father_sheet IS NULL)
+                            )
+                            SELECT *
+                            FROM RankedSubmissions
+                            WHERE rn = 1;
+                            """)
+
+                grades = session.execute(raw_sql).fetchall()
+                grade_value = {}
+                # 键值，加快检索速度
+                for grade in grades:
+                    if grade.question_id not in grade_value:
+                        grade_value[grade.question_id] = grade
 
                 # 数据解析
                 resources_dic = {}
@@ -1856,74 +1929,120 @@ class TransactionsController(crudController):
                         if result.section_id not in section:
                             section[result.section_id] = 1
                             resources_dic[result.resource_id]['section'] = []
+                            question_dic = {
+                                    "question_id": result.question_id,
+                                    "question_name": result.question_title,
+                                    # "question_account": 10,
+                                    "order": result.order,
+                                    "remark": result.remark,
+                                    }
+                            if result.question_id in grade_value:
+                                grade = grade_value[result.question_id]
+                                if grade_value[result.question_id].child_score is None:
+                                    question_dic['last_record'] = grade.score
+                                    question_dic['total'] = grade.max_score
+                                    question_dic['status'] = grade.status
+                                else:
+                                    question_dic['last_record'] = grade.child_score
+                                    question_dic['total'] = grade.child_question_count
+                                    question_dic['status'] = grade.status
+                            else:
+                                question_dic['last_record'] = None
+                                question_dic['total'] = None
+                                question_dic['status'] = None
+
                             question_record = {
                                 "section_id": result.section_id,
                                 "section_name": result.section_name,
-                                "questions": [
-                                    {
-                                        "question_id": result.question_id,
-                                        "question_name": result.question_title,
-                                        "question_account": 10,
-                                        "order": result.order,
-                                        "remark": result.remark,
-                                        "last_record": result.last_record,
-                                        "status": result.status
-                                    }
-                                ]
+                                "questions": [question_dic]
                             }
                             resources_dic[result.resource_id]['section'].append(question_record)
                         else:
+                            question_dic = {
+                                "question_id": result.question_id,
+                                "question_name": result.question_title,
+                                # "question_account": 10,
+                                "order": result.order,
+                                "remark": result.remark,
+                            }
+                            if result.question_id in grade_value:
+                                grade = grade_value[result.question_id]
+                                if grade_value[result.question_id].child_score is None:
+                                    question_dic['last_record'] = grade.score
+                                    question_dic['total'] = grade.max_score
+                                    question_dic['status'] = grade.status
+                                else:
+                                    question_dic['last_record'] = grade.child_score
+                                    question_dic['total'] = grade.child_question_count
+                                    question_dic['status'] = grade.status
+                            else:
+                                question_dic['last_record'] = None
+                                question_dic['total'] = None
+                                question_dic['status'] = None
+
                             question_record = {
                                 "section_id": result.section_id,
                                 "section_name": result.section_name,
-                                "questions": [
-                                    {
-                                        "question_id": result.question_id,
-                                        "question_name": result.question_title,
-                                        "question_account": 10,
-                                        "order": result.order,
-                                        "remark": result.remark,
-                                        "last_record": result.last_record,
-                                        "status": result.status
-                                    }
-                                ]
+                                "questions": [question_dic]
                             }
                             resources_dic[result.resource_id]['section'].append(question_record)
-                        # response.append(resource_record)
                     else:
                         if result.section_id not in section:
                             section[result.section_id] = 1
+                            question_dic = {
+                                "question_id": result.question_id,
+                                "question_name": result.question_title,
+                                # "question_account": 10,
+                                "order": result.order,
+                                "remark": result.remark,
+                            }
+                            if result.question_id in grade_value:
+                                grade = grade_value[result.question_id]
+                                if grade_value[result.question_id].child_score is None:
+                                    question_dic['last_record'] = grade.score
+                                    question_dic['total'] = grade.max_score
+                                    question_dic['status'] = grade.status
+                                else:
+                                    question_dic['last_record'] = grade.child_score
+                                    question_dic['total'] = grade.child_question_count
+                                    question_dic['status'] = grade.status
+                            else:
+                                question_dic['last_record'] = None
+                                question_dic['total'] = None
+                                question_dic['status'] = None
+
                             question_record = {
                                 "section_id": result.section_id,
                                 "section_name": result.section_name,
-                                "questions": [
-                                    {
-                                        "question_id": result.question_id,
-                                        "question_name": result.question_title,
-                                        "question_account": 10,
-                                        "order": result.order,
-                                        "remark": result.remark,
-                                        "last_record": result.last_record,
-                                        "status": result.status
-                                    }
-                                ]
+                                "questions": [question_dic]
                             }
                             resources_dic[result.resource_id]['section'].append(question_record)
                         else:
+                            question_dic = {
+                                "question_id": result.question_id,
+                                "question_name": result.question_title,
+                                # "question_account": 10,
+                                "order": result.order,
+                                "remark": result.remark,
+                            }
+                            if result.question_id in grade_value:
+                                grade = grade_value[result.question_id]
+                                if grade_value[result.question_id].child_score is None:
+                                    question_dic['last_record'] = grade.score
+                                    question_dic['total'] = grade.max_score
+                                    question_dic['status'] = grade.status
+                                else:
+                                    question_dic['last_record'] = grade.child_score
+                                    question_dic['total'] = grade.child_question_count
+                                    question_dic['status'] = grade.status
+                            else:
+                                question_dic['last_record'] = None
+                                question_dic['total'] = None
+                                question_dic['status'] = None
                             question_record = {
                                 "section_id": result.section_id,
                                 "section_name": result.section_name,
-                                "questions": [
-                                    {
-                                        "question_id": result.question_id,
-                                        "question_name": result.question_title,
-                                        "question_account": 10,
-                                        "order": result.order,
-                                        "remark": result.remark,
-                                        "last_record": result.last_record,
-                                        "status": result.status
-                                    }
-                                ]
+                                "questions": [question_dic]
                             }
                             resources_dic[result.resource_id]['section'].append(question_record)
 
@@ -1942,7 +2061,6 @@ class InitController(crudController):
     支持所有问题相关表单(Questions, QuestionsType, Indicators, IndicatorQuestion)
     init: 先定义Indicators, QuestionsType => Questions => IndicatorQuestion
     """
-
     def build_listening_resources(self):
         indexes = list(range(2, 76))
         s_l = []
@@ -2513,10 +2631,10 @@ class InitController(crudController):
 
 if __name__ == '__main__':
     #
-    # init = TransactionsController()
-    # pprint.pprint(init._get_all_resources_under_exams(1, 7))
+    init = TransactionsController()
+    pprint.pprint(init._get_all_resources_under_exams(1, 27))
     # pprint.pprint(init.get_recent_pattern_scores(20, 14))
-    # pprint.pprint(init._get_all_resources_under_patterns(pattern_id=13, account_id=7))
+    # pprint.pprint(init._get_all_resources_under_patterns(pattern_id=13, account_id=20))
     # init = InitController()
     # print(init.build_listening_questions())
     # print(init.helper(None))
@@ -2533,7 +2651,7 @@ if __name__ == '__main__':
 
     # print(datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))))
 
-    init = AnsweringScoringController()
+    # init = AnsweringScoringController()
     # res = init.create_answer_sheet(account_id=27, question_ids=[1220, 1221, 1222, 1223])
     # res = init.create_mock_answer_sheet(account_id=27)
     # pprint.pprint(res)

@@ -12,9 +12,12 @@ class AdminStream:
 
     @ep.event("pause_sheet")
     def pause_sheet(self, **kwargs):
-        # ep.send_event("account_register", {"core": str(True), "test": str(True)})
-        return True, "broker pause_sheet"
+        return True, "答题卡已暂停。"
 
     @ep.event("grade_single_prob")
     def grade_single_prob(self, **kwargs):
-        return True, "单题打分开始"
+        return True, "单题打分开始。"
+
+    @ep.event("save_study_time")
+    def save_study_time(self, **kwargs):
+        return True, "学习时间已保存。"
