@@ -87,8 +87,8 @@ class VocabLearningController(crudController):
                     _r = r.order
                     c_id = r.id
 
-            # 暂不支持往回跳
             if c_id == cate:
+                # 暂不支持往回跳
                 return False, "不支持往回跳过词汇"
             else:
                 records = (
@@ -98,22 +98,52 @@ class VocabLearningController(crudController):
                     .all()
                 )
                 cate_ids = [x.id for x in records]
+
                 words = (
                     session.query(VocabCategoryRelationships)
                     .filter(VocabCategoryRelationships.category_id.in_(cate_ids))
+                    .all()
                 )
+
+                # 查看跳了多少词
+                jump_words = (
+                    session.query(VocabCategoryRelationships)
+                    .join(VocabCategorys, VocabCategoryRelationships.category_id == VocabCategorys.id)
+                    .filter(VocabCategorys.exam_id == exam_id)
+                    .filter(and_(VocabCategorys.order < _r, VocabCategorys.order >= cate))
+                    # .filter(VocabCategoryRelationships.category_id.in_(jump_ids))
+                    .all()
+                )
+                jump_words_len = len(jump_words)
+
+                # 重构词表
                 input_list = [x.word_id for x in words]
                 in_process = redis.lrange(f"{record.in_process}")
                 redis.list_pop(f"{record.in_process}", "l", len(in_process))
                 today = redis.lrange(f"{record.today_learn}")
                 redis.list_pop(f"{record.today_learn}", "l", len(today))
+
                 if len(input_list) > 0:
                     import random
                     random.shuffle(input_list)
                     l = redis.list_push(f"{record.in_process}", *input_list, side="r")
                     for _ in range(record.amount):
                         redis.list_move(f"{record.in_process}", f"{record.today_learn}")
+
                 cache.delete(f"VocabsStatics:{account_id}")
+
+                # 更新user vocab 词汇:
+                user = (
+                    session.query(Users)
+                    .join(Accounts, Accounts.user_id == Users.id)
+                    .filter(Accounts.id == account_id)
+                    .update({
+                        Users.vocab_level: Users.vocab_level + jump_words_len if Users.vocab_level is not None else jump_words_len,
+                        Users.last_update_time: datetime.now(timezone.utc).astimezone(
+                            timezone(timedelta(hours=8))),
+
+                    })
+                )
 
                 record_update = (
                     session.query(VocabsLearning)
@@ -453,7 +483,7 @@ class VocabLearningController(crudController):
                     .one_or_none()
                 )
                 if user:
-                    resp['vocab'] = user.vocab_level
+                    resp['vocab'] = user.vocab_level if user.vocab_level is not None else 0
                     resp['last_day_review'] = record.last_day_review
                     resp['last_day_study'] = record.last_day_study
                     resp['today_day_study'] = record.today_day_study
@@ -1109,8 +1139,8 @@ class TaskController(crudController):
 if __name__ == "__main__":
     account_id = 20
     # pprint(VocabLearningController().create_new_vocab_tasks(account_id=37))
-    # pprint(VocabLearningController().fetch_account_vocab(37))
-    pprint(StudyPulseController().get_pulse_check_information(account_id=27))
+    pprint(VocabLearningController().fetch_account_vocab(37))
+    # pprint(StudyPulseController().get_pulse_check_information(account_id=27))
 
     # pprint(TaskController().fetch_account_tasks(account_id=account_id, after_time=get_today_midnight(), active=True))
     # today = datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))

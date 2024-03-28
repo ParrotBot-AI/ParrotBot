@@ -360,7 +360,7 @@ class AnsweringScoringController(crudController):
 
             success = True
             for _record in children_record:
-                resp, data = self.get_test_answers(_record.id, contin=False)
+                resp, data = self.get_test_answers(_record.id, contin=contin)
                 if not resp:
                     success = False
                     break
@@ -755,13 +755,35 @@ class AnsweringScoringController(crudController):
 
     def pause_sheet(self, sheet_id):
         with db_session('core') as session:
+            children_record = (
+                session.query(AnswerSheetRecord)
+                .filter(AnswerSheetRecord.father_sheet == sheet_id)
+                .order_by(asc(AnswerSheetRecord.create_time))
+                .all()
+            )
+
+            # 给所有的children打分
             try:
+                if len(children_record) > 0:
+                    for record in children_record:
+                        self.save_answer(sheet_id=record.id)
+                        update_s = {
+                            "id": record.id,
+                            "status": 2,
+                            'last_pause_time': datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))
+                        }
+                        self._update(model=AnswerSheetRecord, update_parameters=update_s, restrict_field="id")
+                else:
+                    self.save_answer(sheet_id)
+
                 update_s = {
                     "id": sheet_id,
-                    "status": 2
+                    "status": 2,
+                    'last_pause_time': datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))
                 }
                 self._update(model=AnswerSheetRecord, update_parameters=update_s, restrict_field="id")
                 session.commit()
+                return True, "暂停成功"
             except Exception as e:
                 session.rollback()
                 return False, str(e)
@@ -1029,7 +1051,7 @@ class AnsweringScoringController(crudController):
                 )
                 if record.pattern_eng_name == "Speaking":  # speaking model
                     try:
-                        url = f"http://{'54.169.8.123'}:{57875}/v1/modelapi/speaking/gradeSpeaking/"
+                        url = f"http://{'18.136.105.171'}:{57875}/v1/modelapi/speaking/gradeSpeaking/"
                         prompt = f"""Prompt: {q_record.question_title}"""
                         if q_record.voice_content:
                             prompt += f"""Source: {q_record.question_content}; {q_record.voice_content}"""
@@ -1065,7 +1087,7 @@ class AnsweringScoringController(crudController):
 
                 elif record.pattern_eng_name == "Writing":  # writing model
                     try:
-                        url = f"http://{'54.169.8.123'}:{57875}/v1/modelapi/writing/gradeWriting/"
+                        url = f"http://{'18.136.105.171'}:{57875}/v1/modelapi/writing/gradeWriting/"
                         prompt = f"""Prompt: {q_record.question_title} {q_record.question_content}\n"""
                         if q_record.voice_content:
                             prompt += f"""Source: {q_record.voice_content}"""
@@ -2491,7 +2513,7 @@ class InitController(crudController):
 
 if __name__ == '__main__':
     #
-    init = TransactionsController()
+    # init = TransactionsController()
     # pprint.pprint(init._get_all_resources_under_exams(1, 7))
     # pprint.pprint(init.get_recent_pattern_scores(20, 14))
     # pprint.pprint(init._get_all_resources_under_patterns(pattern_id=13, account_id=7))
@@ -2512,25 +2534,29 @@ if __name__ == '__main__':
     # print(datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))))
 
     init = AnsweringScoringController()
-    # res = init.create_answer_sheet(account_id=27, question_ids=[1220, 1221, 1222, 1223], father_sheet=898)
+    # res = init.create_answer_sheet(account_id=27, question_ids=[1220, 1221, 1222, 1223])
     # res = init.create_mock_answer_sheet(account_id=27)
     # pprint.pprint(res)
     # sheet_id = res[1]['sheet_id']
-    # pprint.pprint(init.get_test_answers(sheet_id=898))
+    # pprint.pprint(init.get_test_answers(sheet_id=sheet_id))
     # pprint.pprint(init.get_mock_answer_sheet(sheet_id=906))
 
+    # 暂停、继续试卷
+    # print(init.pause_sheet(sheet_id=1148))
+    # pprint.pprint(init.get_test_answers(sheet_id=1148, contin=True))
+
     # 做题
-    # print(init.update_question_answer(sheet_id=617, question_id=1223, answer_voice_link="https://obs-parrotcore.obs.cn-east-3.myhuaweicloud.com/Speaking_Grading_Sample.mp3"))
+    # print(init.update_question_answer(sheet_id=1148, question_id=1220, answer_voice_link="https://obs-parrotcore.obs.cn-east-3.myhuaweicloud.com/Speaking_Grading_Sample.mp3"))
     # print(init.update_question_answer(sheet_id=sheet_id, question_id=5, answer=[0, 0, 1, 0], duration=200))
 
     # 中途批改
     # print(asyncio.run(AnsweringScoringController().model_scoring(sheet_id=617, question_id=1223)))
 
     # 提交答案
-    # pprint.pprint(init.save_answer(sheet_id=906))
+    # pprint.pprint(init.save_answer(sheet_id=1148))
 
     # 算分
     # start = time.time()
-    print(init.scoring(sheet_id=1129))
+    # print(init.scoring(sheet_id=1129))
     # pprint.pprint(init.get_score(answer_sheet_id=911))
     # print(time.time() - start)

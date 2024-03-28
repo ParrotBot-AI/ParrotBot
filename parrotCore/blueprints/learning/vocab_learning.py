@@ -216,14 +216,14 @@ def words_gpt_fetch(
         payload = dict(
             endpoints={
                 "init":{
-                    "url": f"http://54.169.8.123:57875/v1/modelapi/streaming/",
+                    "url": f"http://18.136.105.171:57875/v1/modelapi/streaming/",
                     "method": "post",
                     "input": ls,
                     "output": "clientId",
                     "successCode":10000
                 },
                 "streaming":{
-                    "url": "http://54.169.8.123:57875/v1/modelapi/getVocabContent/{ClientID}/",
+                    "url": "http://18.136.105.171:57875/v1/modelapi/getVocabContent/{ClientID}/",
                     "method": "sse",
                 }
             },
@@ -488,6 +488,7 @@ def redo_words_study(
     # 数据库 records 词表， study word, correct word, wrong word
     from blueprints.education.models import VocabCategoryRelationships
     from blueprints.learning.models import VocabsLearning, VocabsLearningRecords
+    from blueprints.account.models import Users, Accounts
     word_id, correct_answer, answer, unknown, study = payload['word_id'], payload['correct_answer'], payload['answer'], \
                                                       payload['unknown'], payload['study']
     default_learn = 5
@@ -569,6 +570,7 @@ def redo_words_study(
                 if statistic_cache:
                     statistic_cache['today_day_study'] += 1
                     statistic_cache['total_study'] += 1
+                    statistic_cache['vocab'] += 1
 
                     if tody in statistic_cache['series']:
                         if type(statistic_cache['series'][tody]['correct_words']) == list:
@@ -603,6 +605,19 @@ def redo_words_study(
                     time=datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))
                 )
                 session.add(VocabsLearningRecords(**study_add))
+
+                # 更新user vocab 词汇:
+                user = (
+                    session.query(Users)
+                    .join(Accounts, Accounts.user_id == Users.id)
+                    .filter(Accounts.id == account_id)
+                    .update({
+                        Users.vocab_level: Users.vocab_level + 1 if Users.vocab_level is not None else 1,
+                        Users.last_update_time: datetime.now(timezone.utc).astimezone(
+                            timezone(timedelta(hours=8))),
+
+                    })
+                )
 
                 # 更新learning （大量写入，可能会导致瓶颈）
                 update_p = dict(
@@ -652,6 +667,7 @@ def redo_review_study(
         **kwargs
 ):
     from blueprints.learning.models import VocabsLearning, VocabsLearningRecords
+    from blueprints.account.models import Users, Accounts
     word_id, correct_answer, answer = payload['word_id'], payload['correct_answer'], payload['answer']
     with db_session('core') as session:
         record = (
@@ -706,6 +722,7 @@ def redo_review_study(
                 if statistic_cache:
                     statistic_cache['today_day_study'] += 1
                     statistic_cache['total_study'] += 1
+                    statistic_cache['vocab'] += 1
 
                     if tody in statistic_cache['series']:
                         if type(statistic_cache['series'][tody]['correct_words']) == list:
@@ -714,6 +731,19 @@ def redo_review_study(
                             statistic_cache['series'][tody]['correct_words'] += 1
 
                 # study word, correct word 2 条记录
+                # user vocab 词汇:
+                user = (
+                    session.query(Users)
+                    .join(Accounts, Accounts.user_id == Users.id)
+                    .filter(Accounts.id == account_id)
+                    .update({
+                        Users.vocab_level: Users.vocab_level+1 if Users.vocab_level is not None else 1,
+                        Users.last_update_time: datetime.now(timezone.utc).astimezone(
+                                timezone(timedelta(hours=8))),
+
+                    })
+                )
+
                 study_add = dict(
                     account_id=account_id,
                     study_word_id=word_id,

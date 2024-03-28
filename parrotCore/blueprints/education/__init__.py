@@ -97,6 +97,20 @@ def create_mock_sheet():
         return ArgumentExceptionResponse(msg=f'{e}')
 
 
+@bp.route('pause_sheet/<sheet_id>/', methods=['POST'])
+def pause_sheet(sheet_id):
+    try:
+        res = AnsweringScoringController().pause_sheet(
+            sheet_id=sheet_id,
+        )
+        if res[0]:
+            return SuccessDataResponse(res[1])
+        else:
+            return ArgumentExceptionResponse(msg=f'{res[1]}')
+    except Exception as e:
+        return ArgumentExceptionResponse(msg=f'{e}')
+
+
 @bp.route('create_sheet', methods=['POST'])
 def create_sheet():
     try:
@@ -122,8 +136,11 @@ def create_sheet():
 @bp.route('get_mock_sheet/<sheet_id>/', methods=['GET'])
 def get_mock_sheet(sheet_id):
     try:
+        args = request.json
+        con = args.get('continue')
         res = AnsweringScoringController().get_mock_answer_sheet(
-            sheet_id=sheet_id
+            sheet_id=sheet_id,
+            contin=True if con == True else False
         )
         if res[0]:
             return SuccessDataResponse(res[1])
@@ -136,8 +153,11 @@ def get_mock_sheet(sheet_id):
 @bp.route('get_sheet/<sheet_id>/', methods=['GET'])
 def get_sheet(sheet_id):
     try:
+        args = request.json
+        con = args.get('continue')
         res = AnsweringScoringController().get_test_answers(
-            sheet_id=sheet_id
+            sheet_id=sheet_id,
+            contin=True if con == True else False
         )
         if res[0]:
             return SuccessDataResponse(res[1])
@@ -265,6 +285,7 @@ def error_report(question_id):
             return ArgumentExceptionResponse(msg=f'{res[1]}')
     except Exception as e:
         return ArgumentExceptionResponse(msg=f'{e}')
+
 
 # heart beat
 @bp.route('test_hb', methods=['GET'])

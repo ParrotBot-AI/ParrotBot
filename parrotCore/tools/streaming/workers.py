@@ -1,12 +1,7 @@
 from tools.streaming.revents import Worker
 from blueprints.account.controllers import AccountController
 from blueprints.education.controllers import AnsweringScoringController
-from blueprints.account.models import (
-    Accounts,
-    AccountsVocab,
-    AccountsScores,
-    Users
-)
+
 import asyncio
 core_worker = Worker()
 
@@ -26,15 +21,34 @@ def account_register(user_id=None):
 @core_worker.on('broker', "pause_sheet")
 def pause_sheet(sheet_id=None):
     if sheet_id:
-        AnsweringScoringController().pause_sheet(int(sheet_id))
-        print(f"Pause sheet for user {sheet_id}.")
-        return True
+        res, data = AnsweringScoringController().pause_sheet(sheet_id=sheet_id)
+        if res:
+            print(f"Pause sheet for user {sheet_id}.")
+            return True
+        else:
+            print(f"Pause sheet for user {sheet_id} failed: {str(data)}")
+            return False
     else:
         print(f"Pause sheet {sheet_id} failed.")
 
 
+@core_worker.on('broker', "save_study_time")
+def save_study_time(account_id=None, study_time=None, **kwargs):
+    from blueprints.learning.controllers import StudyPulseController
+    if account_id and study_time:
+        res, data = StudyPulseController().add_pulse_time(account_id=account_id, time_length=study_time)
+        if res:
+            print(f"Study time record for Account {account_id}.")
+            return True
+        else:
+            print(f"Study time record for Account {account_id} failed: {str(data)}")
+            return False
+    else:
+        print(f"Study time record for Account {account_id} failed.")
+
+
 @core_worker.on('broker', "grade_single_prob")
-def pause_sheet(sheet_id=None, question_id=None):
+def grade_single_prob(sheet_id=None, question_id=None):
     if sheet_id and question_id:
         asyncio.run(AnsweringScoringController().model_scoring(sheet_id=sheet_id, question_id=question_id))
         print(f"Grade for {sheet_id} question {question_id}.")
