@@ -154,15 +154,13 @@ def get_mock_sheet(sheet_id):
 def get_sheet(sheet_id):
     try:
         args = request.json
-        con = args.get('continue')
-        print(con, 159)
+        con = args.get('continue', False)
+        print(con, 158)
         res = AnsweringScoringController().get_test_answers(
             sheet_id=sheet_id,
             contin=True if con == True else False
         )
-        print(res[0], 162)
         if res[0]:
-            print(res[1], 164)
             return SuccessDataResponse(res[1])
         else:
             return ArgumentExceptionResponse(msg=f'{res[1]}')
