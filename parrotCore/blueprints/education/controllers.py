@@ -2631,8 +2631,8 @@ class InitController(crudController):
 
 if __name__ == '__main__':
     #
-    init = TransactionsController()
-    pprint.pprint(init._get_all_resources_under_exams(1, 27))
+    #init = TransactionsController()
+    #pprint.pprint(init._get_all_resources_under_exams(1, 27))
     # pprint.pprint(init.get_recent_pattern_scores(20, 14))
     # pprint.pprint(init._get_all_resources_under_patterns(pattern_id=13, account_id=20))
     # init = InitController()
@@ -2651,12 +2651,12 @@ if __name__ == '__main__':
 
     # print(datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))))
 
-    # init = AnsweringScoringController()
+    init = AnsweringScoringController()
     # res = init.create_answer_sheet(account_id=27, question_ids=[1220, 1221, 1222, 1223])
     # res = init.create_mock_answer_sheet(account_id=27)
     # pprint.pprint(res)
     # sheet_id = res[1]['sheet_id']
-    # pprint.pprint(init.get_test_answers(sheet_id=sheet_id))
+    pprint.pprint(init.get_test_answers(sheet_id=1158))
     # pprint.pprint(init.get_mock_answer_sheet(sheet_id=906))
 
     # 暂停、继续试卷

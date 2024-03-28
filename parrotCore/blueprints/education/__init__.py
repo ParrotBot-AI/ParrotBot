@@ -159,7 +159,9 @@ def get_sheet(sheet_id):
             sheet_id=sheet_id,
             contin=True if con == True else False
         )
+        print(res[0])
         if res[0]:
+            print(res[1])
             return SuccessDataResponse(res[1])
         else:
             return ArgumentExceptionResponse(msg=f'{res[1]}')
