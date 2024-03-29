@@ -304,6 +304,7 @@ def review_words(
                     .filter(VocabBase.id.in_(words_return))
                     .all()
                 )
+                print("here", 307)
 
                 eng = ""
                 stem = [None] * len(words_return)
@@ -311,6 +312,8 @@ def review_words(
                     stem[rl[word.id]] = word.word_c
                     if word.id == current_word_id:
                         eng = word.word
+
+                print("here", 316)
 
                 answer = [0] * len(words_return)
                 answer[position] = 1
