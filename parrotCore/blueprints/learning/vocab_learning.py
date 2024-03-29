@@ -265,6 +265,7 @@ def review_words(
                         for each in resp_l:
                             if word in each:
                                 hint = each
+                                break
                         word_cache['hint'] = hint
                         return True, word_cache, True
                     else:
@@ -285,7 +286,6 @@ def review_words(
                     if True:
                         # random generate
                         l = []
-                        print("here", 288)
                         for value in session.query(VocabBase.id).distinct():
                             if value != current_word_id:
                                 l.append(value[0])
@@ -298,22 +298,18 @@ def review_words(
                 for i in range(len(words_return)):
                     rl[words_return[i]] = i
 
-                print("here", words_return, 301)
                 w_records = (
                     session.query(VocabBase)
                     .filter(VocabBase.id.in_(words_return))
                     .all()
                 )
-                print("here", 307)
 
                 eng = ""
                 stem = [None] * len(words_return)
-                for word in w_records:
-                    stem[rl[word.id]] = word.word_c
-                    if word.id == current_word_id:
-                        eng = word.word
-
-                print("here", 316)
+                for _word in w_records:
+                    stem[rl[_word.id]] = _word.word_c
+                    if _word.id == current_word_id:
+                        eng = _word.word
 
                 answer = [0] * len(words_return)
                 answer[position] = 1
@@ -333,8 +329,9 @@ def review_words(
                     hint = None
                     resp_l = model_response.split(")")
                     for each in resp_l:
-                        if word in each:
+                        if eng in each:
                             hint = each
+                            break
                     response['hint'] = hint
                     return True, response, True
                 else:
