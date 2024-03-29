@@ -1,8 +1,8 @@
 from configs.version import VERSION_ENV
 
 if VERSION_ENV == 'local':
-    REDIS_HOST = '1.94.23.138'
-    REDIS_PORT = 19783
+    REDIS_HOST = '127.0.0.1'
+    REDIS_PORT = 6379
 elif VERSION_ENV == 'dev':
     REDIS_HOST = '127.0.0.1'
     REDIS_PORT = 19783

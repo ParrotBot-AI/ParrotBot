@@ -974,7 +974,7 @@ class AnsweringScoringController(crudController):
 
     async def model_scoring(self, sheet_id, question_id):
         # search for pattern
-        logger.info(f"Sheet:{sheet_id}-question{question_id} - 开始模型打分任务")
+        logger.info(f"Sheet:{sheet_id}-Question:{question_id} - 开始模型打分任务")
         import requests
         with db_session('core') as session:
             redis = RedisWrapper("core_cache")
@@ -1055,13 +1055,14 @@ class AnsweringScoringController(crudController):
                         prompt = f"""Prompt: {q_record.question_title}"""
                         if q_record.voice_content:
                             prompt += f"""Source: {q_record.question_content}; {q_record.voice_content}"""
+
+                        logger.info(f"Sheet:{sheet_id}-Question:{question_id} 开始访问speaking模型")
                         r = requests.post(url, json={
                             "prompt": prompt,
                             "audioLink": answer_voice_link,
                             "gradeType": "Independent Speaking"
-                        })
+                        }, timeout=600)
 
-                        logger.info(f"Sheet:{sheet_id}-Question:{question_id} 开始访问speaking模型")
                         if r.json()['code'] == 10000:
                             res_data = r.json()['data']
                             score = res_data.get("Overall")
@@ -1097,7 +1098,7 @@ class AnsweringScoringController(crudController):
                             "prompt": prompt,
                             "content": answer,
                             "gradeType": "Academic Discussion" if q_record.section_id == 12 else "Integrated Writing"
-                        })
+                        }, timeout=600)
 
                         if r.json()['code'] == 10000:
                             res_data = r.json()['data']
@@ -1661,8 +1662,12 @@ class TransactionsController(crudController):
 
     def _get_all_resources_under_exams(self, exam_id, account_id, page=0, limit=20):
         with db_session('core') as session:
-            start = time.time()
             # 首先查找所有相关的exams
+            redis = RedisWrapper("core_cache")
+            cache_resource = redis.get(f"Resource-{exam_id}")
+            if cache_resource:
+                pass
+
             exam_record = (
                 session.query(Exams)
                 .filter(or_(Exams.id == exam_id, Exams.father_exam == exam_id))
@@ -2046,13 +2051,10 @@ class TransactionsController(crudController):
                             }
                             resources_dic[result.resource_id]['section'].append(question_record)
 
-                # pprint.pprint(resources_dic)
-
                 print(time.time() - start)
                 return True, list(resources_dic.values())
             else:
-                return False, "未查找到相关考试信息"
-
+                return False, "未查找到相关考试资源信息"
 
 class InitController(crudController):
     """
@@ -2630,9 +2632,8 @@ class InitController(crudController):
 
 
 if __name__ == '__main__':
-    #
-    #init = TransactionsController()
-    #pprint.pprint(init._get_all_resources_under_exams(1, 27))
+    init = TransactionsController()
+    # pprint.pprint(init._get_all_resources_under_exams(1, 27))
     # pprint.pprint(init.get_recent_pattern_scores(20, 14))
     # pprint.pprint(init._get_all_resources_under_patterns(pattern_id=13, account_id=20))
     # init = InitController()
@@ -2656,7 +2657,7 @@ if __name__ == '__main__':
     # res = init.create_mock_answer_sheet(account_id=27)
     # pprint.pprint(res)
     # sheet_id = res[1]['sheet_id']
-    pprint.pprint(init.get_test_answers(sheet_id=1158))
+    # pprint.pprint(init.get_test_answers(sheet_id=1158))
     # pprint.pprint(init.get_mock_answer_sheet(sheet_id=906))
 
     # 暂停、继续试卷
@@ -2668,7 +2669,7 @@ if __name__ == '__main__':
     # print(init.update_question_answer(sheet_id=sheet_id, question_id=5, answer=[0, 0, 1, 0], duration=200))
 
     # 中途批改
-    # print(asyncio.run(AnsweringScoringController().model_scoring(sheet_id=617, question_id=1223)))
+    print(asyncio.run(AnsweringScoringController().model_scoring(sheet_id=1161, question_id=1555)))
 
     # 提交答案
     # pprint.pprint(init.save_answer(sheet_id=1148))
