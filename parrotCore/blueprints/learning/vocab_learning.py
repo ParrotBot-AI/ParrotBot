@@ -285,6 +285,7 @@ def review_words(
                     if True:
                         # random generate
                         l = []
+                        print("here", 288)
                         for value in session.query(VocabBase.id).distinct():
                             if value != current_word_id:
                                 l.append(value[0])
