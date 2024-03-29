@@ -133,12 +133,22 @@ class VocabLearningController(crudController):
                 cache.delete(f"VocabsStatics:{account_id}")
 
                 # 更新user vocab 词汇:
-                user = (
+                user_r = (
                     session.query(Users)
                     .join(Accounts, Accounts.user_id == Users.id)
                     .filter(Accounts.id == account_id)
+                    .one_or_none()
+                )
+
+                if not user_r:
+                    return False, "用户信息未找到"
+
+                # 更新user vocab 词汇:
+                user = (
+                    session.query(Users)
+                    .filter(Users.id == user_r.id)
                     .update({
-                        Users.vocab_level: Users.vocab_level + jump_words_len if Users.vocab_level is not None else jump_words_len,
+                        Users.vocab_level: Users.vocab_level + 1 if Users.vocab_level is not None else 1,
                         Users.last_update_time: datetime.now(timezone.utc).astimezone(
                             timezone(timedelta(hours=8))),
 

@@ -572,7 +572,6 @@ def redo_words_study(
                 if statistic_cache:
                     statistic_cache['today_day_study'] += 1
                     statistic_cache['total_study'] += 1
-                    print(statistic_cache['vocab'], type(statistic_cache['vocab']), 575)
                     statistic_cache['vocab'] += 1
 
                     if tody in statistic_cache['series']:
@@ -609,13 +608,20 @@ def redo_words_study(
                 )
                 session.add(VocabsLearningRecords(**study_add))
 
-                print("here", 612)
+                user_r = (
+                    session.query(Users)
+                    .join(Accounts, Accounts.user_id == Users.id)
+                    .filter(Accounts.id == account_id)
+                    .one_or_none()
+                )
+
+                if not user_r:
+                    return False, "用户信息未找到"
 
                 # 更新user vocab 词汇:
                 user = (
                     session.query(Users)
-                    .join(Accounts, Accounts.user_id == Users.id)
-                    .filter(Accounts.id == account_id)
+                    .filter(Users.id == user_r.id)
                     .update({
                         Users.vocab_level: Users.vocab_level + 1 if Users.vocab_level is not None else 1,
                         Users.last_update_time: datetime.now(timezone.utc).astimezone(
@@ -738,14 +744,24 @@ def redo_review_study(
 
                 # study word, correct word 2 条记录
                 # user vocab 词汇:
-                user = (
+                user_r = (
                     session.query(Users)
                     .join(Accounts, Accounts.user_id == Users.id)
                     .filter(Accounts.id == account_id)
+                    .one_or_none()
+                )
+
+                if not user_r:
+                    return False, "用户信息未找到"
+
+                # 更新user vocab 词汇:
+                user = (
+                    session.query(Users)
+                    .filter(Users.id == user_r.id)
                     .update({
-                        Users.vocab_level: Users.vocab_level+1 if Users.vocab_level is not None else 1,
+                        Users.vocab_level: Users.vocab_level + 1 if Users.vocab_level is not None else 1,
                         Users.last_update_time: datetime.now(timezone.utc).astimezone(
-                                timezone(timedelta(hours=8))),
+                            timezone(timedelta(hours=8))),
 
                     })
                 )

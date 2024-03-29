@@ -53,7 +53,7 @@ class Users(BASES['core']):
     school = Column(String(30), nullable=True)
     region = Column(String(20), nullable=True)
     task_complete = Column(Integer, default=0)
-    vocab_level = Column(String(6), nullable=True)
+    vocab_level = Column(Integer, nullable=True)
     total_study_days = Column(Integer, default=0)
     user_plan = Column(Integer, default=0)
     create_time = Column(DateTime)
