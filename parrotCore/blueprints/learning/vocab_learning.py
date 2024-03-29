@@ -724,6 +724,7 @@ def redo_review_study(
                 if statistic_cache:
                     statistic_cache['today_day_study'] += 1
                     statistic_cache['total_study'] += 1
+                    print(type(statistic_cache['vocab']), 727)
                     statistic_cache['vocab'] += 1
 
                     if tody in statistic_cache['series']:
@@ -745,6 +746,7 @@ def redo_review_study(
 
                     })
                 )
+                print("here", 749)
 
                 study_add = dict(
                     account_id=account_id,
@@ -768,7 +770,7 @@ def redo_review_study(
                 )
 
                 rds.list_push(f"{account_id}:finished", *[word_id], side="r")
-
+                print("here", 773)
                 try:
                     session.commit()
                     redis.set(f'VocabsStatics:{account_id}', statistic_cache, 7200)
