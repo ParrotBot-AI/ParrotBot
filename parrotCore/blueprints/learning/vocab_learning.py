@@ -572,6 +572,7 @@ def redo_words_study(
                 if statistic_cache:
                     statistic_cache['today_day_study'] += 1
                     statistic_cache['total_study'] += 1
+                    print(statistic_cache['vocab'], type(statistic_cache['vocab']), 575)
                     statistic_cache['vocab'] += 1
 
                     if tody in statistic_cache['series']:
@@ -607,6 +608,8 @@ def redo_words_study(
                     time=datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))
                 )
                 session.add(VocabsLearningRecords(**study_add))
+
+                print("here", 612)
 
                 # 更新user vocab 词汇:
                 user = (
@@ -746,7 +749,6 @@ def redo_review_study(
 
                     })
                 )
-                print("here", 749)
 
                 study_add = dict(
                     account_id=account_id,
@@ -770,7 +772,6 @@ def redo_review_study(
                 )
 
                 rds.list_push(f"{account_id}:finished", *[word_id], side="r")
-                print("here", 773)
                 try:
                     session.commit()
                     redis.set(f'VocabsStatics:{account_id}', statistic_cache, 7200)
