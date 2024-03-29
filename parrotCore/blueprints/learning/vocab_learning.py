@@ -333,6 +333,7 @@ def review_words(
                         if word in each:
                             hint = each
                     response['hint'] = hint
+                    print("here", 336)
                     return True, response, True
                 else:
                     return True, response, True
