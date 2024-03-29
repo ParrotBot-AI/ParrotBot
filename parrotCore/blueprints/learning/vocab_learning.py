@@ -298,7 +298,7 @@ def review_words(
                 for i in range(len(words_return)):
                     rl[words_return[i]] = i
 
-                print("here", 301)
+                print("here", words_return, 301)
                 w_records = (
                     session.query(VocabBase)
                     .filter(VocabBase.id.in_(words_return))
@@ -333,7 +333,6 @@ def review_words(
                         if word in each:
                             hint = each
                     response['hint'] = hint
-                    print("here", 336)
                     return True, response, True
                 else:
                     return True, response, True
