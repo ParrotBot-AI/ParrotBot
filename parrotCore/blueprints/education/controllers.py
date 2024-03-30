@@ -64,7 +64,6 @@ class QuestionController(crudController):
         res, data = self._update(model=Questions, update_parameters=update_s, restrict_field="id")
         return res, data
 
-
     @staticmethod
     def select_records(group_, number):
         sorted_group = sorted(group_, key=lambda x: x['order'], reverse=True)
@@ -1080,7 +1079,8 @@ class AnsweringScoringController(crudController):
                         else:
                             score = None
                             model_answer = '{"msg":"访问AI模型失败"}'
-                            logger.info(f"Sheet:{sheet_id}-Question:{question_id} speaking响应失败：不是成功code: {r.json()['code']}:{r.json()['msg']}（gpt出错）")
+                            logger.info(
+                                f"Sheet:{sheet_id}-Question:{question_id} speaking响应失败：不是成功code: {r.json()['code']}:{r.json()['msg']}（gpt出错）")
 
                     except Exception as e:
                         score = None
@@ -1116,7 +1116,8 @@ class AnsweringScoringController(crudController):
                         else:
                             score = None
                             model_answer = '{"msg":"访问AI模型失败"}'
-                            logger.info(f"Sheet:{sheet_id}-Question:{question_id} writing 响应失败：不是成功code: {r.json()['code']}:{r.json()['msg']}（gpt出错）")
+                            logger.info(
+                                f"Sheet:{sheet_id}-Question:{question_id} writing 响应失败：不是成功code: {r.json()['code']}:{r.json()['msg']}（gpt出错）")
 
                     except Exception as e:
                         score = None
@@ -1935,12 +1936,12 @@ class TransactionsController(crudController):
                             section[result.section_id] = 1
                             resources_dic[result.resource_id]['section'] = []
                             question_dic = {
-                                    "question_id": result.question_id,
-                                    "question_name": result.question_title,
-                                    # "question_account": 10,
-                                    "order": result.order,
-                                    "remark": result.remark,
-                                    }
+                                "question_id": result.question_id,
+                                "question_name": result.question_title,
+                                # "question_account": 10,
+                                "order": result.order,
+                                "remark": result.remark,
+                            }
                             if result.question_id in grade_value:
                                 grade = grade_value[result.question_id]
                                 if grade_value[result.question_id].child_score is None:
@@ -2056,6 +2057,7 @@ class TransactionsController(crudController):
             else:
                 return False, "未查找到相关考试资源信息"
 
+
 class InitController(crudController):
     """
     问题 继承crudController
@@ -2063,6 +2065,92 @@ class InitController(crudController):
     支持所有问题相关表单(Questions, QuestionsType, Indicators, IndicatorQuestion)
     init: 先定义Indicators, QuestionsType => Questions => IndicatorQuestion
     """
+
+    def clean(self):
+        def g_answer(number, answer, stem):
+            s_l = stem.split(";")
+            length = len(s_l)
+            map = {
+                "A": 0,
+                "B": 1,
+                "C": 2,
+                "D": 3,
+                "E": 4,
+                "F": 5,
+                "G": 6,
+                "H": 7
+            }
+            if number == 1 or number == 2:
+                a = [0] * length
+                for i in answer:
+                    a[map[i]] = 1
+                return ";".join(str(v) for v in a)
+            elif number == 3 or number == 4:
+                a = []
+                for i in answer:
+                    a.append(map[i] + 1)
+                return ";".join(str(v) for v in a)
+
+            return None
+
+        file_path = "/Users/zhilinhe/Desktop/Question example.xlsx"
+        import pandas as pd
+        df = pd.read_excel(file_path, 'Sheet2')
+
+        with db_session('core') as session:
+            s_l = []
+            for index, row in df.iterrows():
+                print(f"TPO {row['source'][3:]} passage {int(row['section'])}")
+                father_record = (
+                    session.query(Questions)
+                    .filter(Questions.remark == f"TPO {row['source'][3:]} passage {int(row['section'])}")
+                    .one_or_none()
+                )
+                if father_record:
+                    section_id = father_record.section_id
+                    source_id = father_record.source
+                    new_add = dict(
+                        question_type=2,
+                        question_content=row['content'],
+                        question_stem=row['stem'].replace("；", ";"),  # here
+                        question_function_type='exams',
+                        order=int(row['order']),
+                        father_question=father_record.id,
+                        cal_method=1,
+                        max_score=2,
+                        d_level=1,
+                        is_require=1,
+                        is_cal=1,
+                        is_active=1,
+                        is_attachable=0,
+                        keywords=None,
+                        stem_weights=g_answer(2, row["correct_answer"], row['stem'].replace("；", ";")) if not pd.isnull(
+                            row['correct_answer']) else None,  # here
+                        correct_answer=g_answer(2, row["correct_answer"], row['stem'].replace("；", ";")) if not pd.isnull(
+                            row['correct_answer']) else None,  # here
+                        section_id=section_id,
+                        source=source_id,
+                        create_time=datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))),
+                        last_update_time=datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))),
+                        remark=f"TPO {row['source'][3:]} passage {int(row['section'])} question {int(row['order'])}",
+                        has_ans=1,
+                    )
+                    s_l.append(new_add)
+
+            print(len(s_l))
+            session.execute(
+                insert(Questions),
+                s_l
+            )
+            print("commit")
+
+            try:
+                session.commit()
+                return True, ""
+            except Exception as e:
+                session.rollback()
+                return False, str(e)
+
     def build_listening_resources(self):
         indexes = list(range(2, 76))
         s_l = []
@@ -2636,8 +2724,9 @@ if __name__ == '__main__':
     # pprint.pprint(init._get_all_resources_under_exams(1, 27))
     # pprint.pprint(init.get_recent_pattern_scores(20, 14))
     # pprint.pprint(init._get_all_resources_under_patterns(pattern_id=13, account_id=20))
-    # init = InitController()
-    # print(init.build_listening_questions())
+
+    init = InitController()
+    print(init.clean())
     # print(init.helper(None))
     # print(init.build_resources())
     # print(init.import_vocabs())
@@ -2652,7 +2741,7 @@ if __name__ == '__main__':
 
     # print(datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))))
 
-    init = AnsweringScoringController()
+    # init = AnsweringScoringController()
     # res = init.create_answer_sheet(account_id=27, question_ids=[1220, 1221, 1222, 1223])
     # res = init.create_mock_answer_sheet(account_id=27)
     # pprint.pprint(res)
@@ -2669,7 +2758,7 @@ if __name__ == '__main__':
     # print(init.update_question_answer(sheet_id=sheet_id, question_id=5, answer=[0, 0, 1, 0], duration=200))
 
     # 中途批改
-    print(asyncio.run(AnsweringScoringController().model_scoring(sheet_id=1161, question_id=1555)))
+    # print(asyncio.run(AnsweringScoringController().model_scoring(sheet_id=1161, question_id=1555)))
 
     # 提交答案
     # pprint.pprint(init.save_answer(sheet_id=1148))

@@ -798,6 +798,7 @@ def redo_review_study(
                     else:
                         return True, True
                 except Exception as e:
+                    session.rollback()
                     return False, "单词学习过程中入库失败."
         except Exception as e:
             return False, str(e)
@@ -831,7 +832,13 @@ def re_loop(
                 )
                 redis = RedisWrapper('core_cache')
                 redis.delete(f"TaskAccount:{task_account_id}")
-                return True, "finished"
+                try:
+                    session.commit()
+                    return True, "finished"
+                except:
+                    session.rollback()
+                    return False, "数据库出错."
+
         else:
             return False, "未找到record"
 
