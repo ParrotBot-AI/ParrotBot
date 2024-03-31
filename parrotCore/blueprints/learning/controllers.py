@@ -8,12 +8,7 @@ from blueprints.learning.models import (
     TaskFlowsConditions,
     StudyPulseRecords
 )
-from blueprints.account.models import (
-    Accounts,
-    Users,
-)
-from sqlalchemy import select, func, Date, cast, and_, text, literal_column, case
-from datetime import datetime, timedelta
+from blueprints.account.models import (Accounts, Users)
 from pprint import pprint
 from configs.environment import DATABASE_SELECTION
 from importlib import import_module
@@ -28,7 +23,7 @@ from utils.logger_tools import get_general_logger
 from blueprints.util.crud import crudController
 from blueprints.util.serializer import Serializer as s
 from datetime import datetime, timezone, timedelta, date
-from sqlalchemy import null, select, union_all, and_, or_, join, outerjoin, update, insert, func
+from sqlalchemy import null, select, union_all, and_, or_, join, outerjoin, update, insert, func, text
 import json
 from utils.redis_tools import RedisWrapper
 import os
@@ -61,7 +56,7 @@ class VocabLearningController(crudController):
         res, data = self._update(model=VocabsLearning, update_parameters=update_s, restrict_field="id")
         return res, data
 
-    def jump_to_vocabs(self, account_id, category_id, exam_id):
+    def jump_to_vocabs(self, account_id, category_id, exam_id=1):
         from blueprints.education.models import (VocabCategorys, VocabCategoryRelationships)
         redis = RedisWrapper('core_learning')
         cache = RedisWrapper('core_cache')

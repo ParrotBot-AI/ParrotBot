@@ -63,6 +63,42 @@ def create_new_vocab_tasks(account_id):
         return ArgumentExceptionResponse(msg=f'{e}')
 
 
+@bp.route('jump_vocabs/', methods=['POST'])
+def jump_vocabs():
+    try:
+        args = request.json
+        account_id = args.get('account_id')
+        category = args.get('category_id')
+        exam = args.get('exam_id')
+        res, data = VocabLearningController().jump_to_vocabs(
+            account_id=account_id,
+            category_id=category,
+            exam_id=exam
+        )
+        if res:
+            return SuccessDataResponse(data)
+        else:
+            return ArgumentExceptionResponse(msg=f'{data}')
+    except Exception as e:
+        return ArgumentExceptionResponse(msg=f'{e}')
+
+
+@bp.route('refuse_jump/<account_id>/', methods=['POST'])
+def refuse_jump(account_id):
+    try:
+        res, data = VocabLearningController().refuse_jump(
+            account_id=account_id,
+        )
+        if res:
+            return SuccessDataResponse(data)
+        else:
+            return ArgumentExceptionResponse(msg=f'{data}')
+    except Exception as e:
+        return ArgumentExceptionResponse(msg=f'{e}')
+
+
+# ----------------------------------------   任务总览  ---------------------------------------- #
+
 @bp.route('start_task/', methods=['POST'])
 def start_task():
     try:
@@ -156,19 +192,6 @@ def add_pulse_time(account_id):
 def get_checkin_info(account_id):
     try:
         res, data = StudyPulseController().get_pulse_check_information(
-            account_id=account_id,
-        )
-        if res:
-            return SuccessDataResponse(data)
-        else:
-            return ArgumentExceptionResponse(msg=f'{data}')
-    except Exception as e:
-        return ArgumentExceptionResponse(msg=f'{e}')
-
-@bp.route('refuse_jump/<account_id>/', methods=['POST'])
-def refuse_jump(account_id):
-    try:
-        res, data = VocabLearningController().refuse_jump(
             account_id=account_id,
         )
         if res:

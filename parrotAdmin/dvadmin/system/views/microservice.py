@@ -671,6 +671,26 @@ class MicroServiceRegisterViewSet(CustomModelViewSet):
         except:
             return ErrorResponse(msg='参数格式错误')
 
+    @action(methods=["POST"], detail=False, permission_classes=[IsAuthenticated])
+    def jump_vocabs(self, request):
+        try:
+            if True:
+                try:
+                    # data = dict(micro.data)
+                    url = f"http://{'127.0.0.1'}:{10981}/v1/api/learning/jump_vocabs/"
+                    r = requests.post(url, json=request.data)
+
+                    if r.json()['code'] == 10000:
+                        res_data = r.json()['data']
+                        return DetailResponse(data=res_data, msg='OK.')
+                    else:
+                        return ErrorResponse(msg=r.json()['msg'])
+                except:
+                    return ErrorResponse(msg="微服务故障")
+
+        except:
+            return ErrorResponse(msg='参数格式错误')
+
     @action(methods=["POST"], detail=False, permission_classes=[IsAuthenticated], url_path="refuse_jump_vocabs/(?P<account_id>\d+)")
     def refuse_jump_vocabs(self, request, account_id):
         try:

@@ -70,7 +70,7 @@ def fetch_past_scores(account_id):
     try:
         res = TransactionsController().get_recent_pattern_scores(
             account_id=account_id,
-            offset=14
+            offset=7
         )
         if res[0]:
             return SuccessDataResponse(res[1])

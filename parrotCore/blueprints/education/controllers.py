@@ -909,11 +909,17 @@ class AnsweringScoringController(crudController):
                     if not res:
                         return False, data
 
+                    # 获取 tag 分数
+                    res_tag, data_tag = self.get_indicators_detail(answer_sheet_id=answer_sheet_id, session=session)
+                    if not res_tag:
+                        return False, data_tag
+
                     resp, questions = self.get_test_answers(sheet_id=answer_sheet_id)
 
                     if resp:
                         l["questions_r"] = questions
                         l["score_d"] = data
+                        l["tag_d"] = data_tag
                         return True, l
                     else:
                         return False, "未找到打分试卷"
@@ -944,6 +950,11 @@ class AnsweringScoringController(crudController):
                     if not res:
                         return False, data
 
+                    # 获取 tag 分数
+                    res_tag, data_tag = self.get_indicators_detail(answer_sheet_id=answer_sheet_id, session=session)
+                    if not res_tag:
+                        return False, data_tag
+
                     # 生成答案:
 
                     re_s['score'] = t_score
@@ -953,6 +964,7 @@ class AnsweringScoringController(crudController):
                     if resp:
                         re_s["questions_r"] = questions
                         re_s["score_d"] = data
+                        re_s["tag_d"] = data_tag
                     else:
                         return False, '未找到打分试卷'
 
@@ -1522,6 +1534,41 @@ class AnsweringScoringController(crudController):
         except Exception as e:
             return False, str(e)
 
+    def get_indicators_detail(self, answer_sheet_id, session):
+        """每篇Tag的分值，sql可以与get_score_question_detail合并，但考虑到业务上的更改，暂时做分开"""
+        try:
+            raw_sql = text(f"""
+                WITH QUESTION_IN AS (
+                    SELECT
+                        Submissions.question_id,
+                        CASE WHEN Submissions.score = Submissions.max_score THEN 1 ELSE 0 END AS IsMaxScore,
+                        IQ.indicator_id,
+                        I.indicator_name
+                    FROM Submissions
+                    JOIN Questions Q ON Q.id = Submissions.question_id
+                    JOIN Indicators_Questions IQ on Q.id = IQ.question_id
+                    JOIN Indicators I on IQ.indicator_id = I.id
+                    WHERE Submissions.answer_sheet_id = {answer_sheet_id}
+                    )
+                    SELECT
+                        SUM(QUESTION_IN.IsMaxScore) AS sum,
+                        COUNT(QUESTION_IN.IsMaxScore) AS count,
+                        QUESTION_IN.indicator_name AS name
+                    FROM QUESTION_IN
+                    GROUP BY QUESTION_IN.indicator_id
+                """)
+            scores_d = session.execute(raw_sql).fetchall()
+            res = []
+            for record in scores_d:
+                e_ = {}
+                e_['name'] = record.name
+                e_['count'] = int(record.count)
+                e_['sum'] = int(record.sum)
+                res.append(e_)
+
+            return True, res
+        except Exception as e:
+            return False, str(e)
 
 class TransactionsController(crudController):
     """
@@ -1532,6 +1579,7 @@ class TransactionsController(crudController):
     """
 
     def get_recent_pattern_scores(self, account_id, offset):
+        from configs.operation import LAST_X_RECORD, WORST_X_TAGS
         with db_session('core') as session:
             account = (
                 session.query(Accounts)
@@ -1571,26 +1619,109 @@ class TransactionsController(crudController):
                 current_date = datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))
                 date_days_ago = current_date - timedelta(days=offset)
                 date_days_ago = date_days_ago.strftime("%Y-%m-%d")
-                raw_sql = text(f"""
-                    SELECT DISTINCTROW
-                        Patterns.pattern_name,
-                        ROUND(AVG(ASR.score), 2) as score
-                    FROM Patterns
-                    JOIN Sections S on Patterns.id = S.pattern_id
-                    JOIN Scores S3 on S.id = S3.section_id
-                    JOIN AnswerSheetRecord ASR on S3.answer_sheet_id = ASR.id
-                    WHERE Patterns.id IN {tuple(patterns)}
-                    AND ASR.account_id = {account_id}
+                # 过去X天
+                # raw_sql = text(f"""
+                #     SELECT DISTINCTROW
+                #         Patterns.pattern_name,
+                #         ROUND(AVG(ASR.score), 2) as score
+                #     FROM Patterns
+                #     JOIN Sections S on Patterns.id = S.pattern_id
+                #     JOIN Scores S3 on S.id = S3.section_id
+                #     JOIN AnswerSheetRecord ASR on S3.answer_sheet_id = ASR.id
+                #     WHERE Patterns.id IN {tuple(patterns)}
+                #     AND ASR.account_id = {account_id}
+                #     AND ASR.status = 0
+                #     AND ASR.last_update_time >= {date_days_ago}
+                #     AND ASR.score IS NOT NULL
+                #     GROUP BY Patterns.pattern_name;
+                # """)
+
+                # 过去X次
+                row_sql = text(f"""
+                WITH RankedASR AS (
+                    SELECT
+                        ASR.id,
+                        S.pattern_id,
+                        ASR.score,
+                        ROW_NUMBER() OVER(PARTITION BY S.pattern_id ORDER BY ASR.last_update_time DESC) AS rn
+                    FROM AnswerSheetRecord ASR
+                    JOIN Scores S3 on ASR.id = S3.answer_sheet_id
+                    JOIN Sections S on S3.section_id = S.id
+                    WHERE ASR.account_id = {account_id}
                     AND ASR.status = 0
-                    AND ASR.last_update_time >= {date_days_ago}
                     AND ASR.score IS NOT NULL
-                    GROUP BY Patterns.pattern_name;
+                )
+                SELECT
+                P.pattern_name,
+                ROUND(AVG(RASR.score), 2) as score
+                FROM Patterns P
+                JOIN Sections S on P.id = S.pattern_id
+                JOIN Scores S3 on S.id = S3.section_id
+                JOIN RankedASR RASR on S3.answer_sheet_id = RASR.id
+                WHERE P.id IN {tuple(patterns)} AND RASR.rn <= {LAST_X_RECORD}
+                GROUP BY P.pattern_name;
                 """)
-                scores = session.execute(raw_sql).fetchall()
+                scores = session.execute(row_sql).fetchall()
+
+                raw_sql = text(f"""
+                    WITH RankedASR AS (
+                        SELECT
+                            ASR.id,
+                            S.pattern_id,
+                            ASR.score,
+                            ROW_NUMBER() OVER(PARTITION BY S.pattern_id ORDER BY ASR.last_update_time DESC) AS rn
+                        FROM AnswerSheetRecord ASR
+                        JOIN Scores S3 on ASR.id = S3.answer_sheet_id
+                        JOIN Sections S on S3.section_id = S.id
+                        WHERE ASR.account_id = {account_id}
+                        AND ASR.status = 0
+                        AND ASR.score IS NOT NULL
+                    ), ScoreRecord AS (
+                        SELECT
+                            I.indicator_name AS name,
+                            SUM(CASE WHEN S.score = S.max_score THEN 1 ELSE 0 END) AS sum,
+                            COUNT(CASE WHEN S.score = S.max_score THEN 1 ELSE 0 END) AS count,
+                            SUM(CASE WHEN S.score = S.max_score THEN 1 ELSE 0 END) / COUNT(CASE WHEN S.score = S.max_score THEN 1 ELSE 0 END) AS per,
+                            ROW_NUMBER() OVER(PARTITION BY P.pattern_name ORDER BY SUM(CASE WHEN S.score = S.max_score THEN 1 ELSE 0 END) / COUNT(CASE WHEN S.score = S.max_score THEN 1 ELSE 0 END) ASC) AS rn,
+                            P.pattern_name
+                        FROM Indicators I
+                        JOIN Indicators_Questions IQ on I.id = IQ.indicator_id
+                        JOIN Questions Q on Q.id = IQ.question_id
+                        JOIN Submissions S on Q.id = S.question_id
+                        JOIN RankedASR RASR on RASR.id = S.answer_sheet_id
+                        JOIN Sections S2 on Q.section_id = S2.id
+                        JOIN Patterns P on S2.pattern_id = P.id
+                        WHERE P.id IN {tuple(patterns)} AND RASR.rn <= {LAST_X_RECORD}
+                        GROUP BY I.indicator_name, P.pattern_name
+                    )
+                    SELECT ScoreRecord.name, ScoreRecord.sum, ScoreRecord.count, ScoreRecord.per, pattern_name FROM ScoreRecord WHERE rn <= {WORST_X_TAGS};
+                """)
+                tag_details = session.execute(raw_sql).fetchall()
 
                 res = {}
                 for score in scores:
-                    res[score.pattern_name] = float(score.score)
+                    res[score.pattern_name] = {}
+                    res[score.pattern_name]['avg_s'] = float(score.score)
+
+                for rec in tag_details:
+                    if rec.pattern_name in res:
+                        if 'tag' not in res[rec.pattern_name]:
+                            res[rec.pattern_name]['tag'] = []
+                            res[rec.pattern_name]['tag'].append({
+                                "name": rec.name,
+                                "count": int(rec.count),
+                                "per": float(rec.per),
+                                "sum": int(rec.sum)
+                            })
+                        else:
+                            res[rec.pattern_name]['tag'].append({
+                                "name": rec.name,
+                                "count": int(rec.count),
+                                "per": float(rec.per),
+                                "sum": int(rec.sum)
+                            })
+                    else:
+                        pass
 
                 for record in _records:
                     if record.pattern_name not in res:
@@ -2722,11 +2853,11 @@ class InitController(crudController):
 if __name__ == '__main__':
     init = TransactionsController()
     # pprint.pprint(init._get_all_resources_under_exams(1, 27))
-    # pprint.pprint(init.get_recent_pattern_scores(20, 14))
+    pprint.pprint(init.get_recent_pattern_scores(20, 7))
     # pprint.pprint(init._get_all_resources_under_patterns(pattern_id=13, account_id=20))
 
-    init = InitController()
-    print(init.clean())
+    # init = InitController()
+    # print(init.clean())
     # print(init.helper(None))
     # print(init.build_resources())
     # print(init.import_vocabs())
@@ -2741,7 +2872,7 @@ if __name__ == '__main__':
 
     # print(datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))))
 
-    # init = AnsweringScoringController()
+    init = AnsweringScoringController()
     # res = init.create_answer_sheet(account_id=27, question_ids=[1220, 1221, 1222, 1223])
     # res = init.create_mock_answer_sheet(account_id=27)
     # pprint.pprint(res)
@@ -2765,6 +2896,6 @@ if __name__ == '__main__':
 
     # 算分
     # start = time.time()
-    # print(init.scoring(sheet_id=1129))
-    # pprint.pprint(init.get_score(answer_sheet_id=911))
+    # print(init.scoring(sheet_id=1184, re_score=True))
+    # pprint.pprint(init.get_score(answer_sheet_id=1181))
     # print(time.time() - start)

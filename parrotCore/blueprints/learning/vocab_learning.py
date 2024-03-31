@@ -11,7 +11,7 @@ import random
 from utils import iso_ts
 from sqlalchemy import null, select, union_all, and_, or_, join, outerjoin, update, insert, delete
 from datetime import datetime, timedelta, timezone
-
+from configs.operation import WORDS_STUDY
 
 def review_fetch_words_mc(
         account_id=None,
@@ -31,6 +31,7 @@ def review_fetch_words_mc(
             .one_or_none()
         )
         if record:
+            remain = len(rds.lrange(f"{record.to_review}"))
             today_list = rds.list_pop(f"{record.to_review}", side="l")
 
             if len(today_list) == 1:
@@ -95,6 +96,15 @@ def review_fetch_words_mc(
                     target=["answer", "unknown", "study"]
                 )
                 redis_cache.set(f"Word:{current_word_id}", response, ex=86400)  # 缓存一天
+                r = (
+                    session.query(VocabsLearning)
+                    .filter(VocabsLearning.account_id == account_id)
+                    .one_or_none()
+                )
+                if r:
+                    response['today_review'] = r.today_day_review
+
+                response['remain'] = remain
                 return True, response, True
 
             elif len(today_list) == 0:
@@ -186,6 +196,17 @@ def fetch_words_mc(
                     target=["answer", "unknown", "study"]
                 )
                 redis_cache.set(f"Word:{current_word_id}", response, ex=86400)  # 缓存一天
+                r = (
+                    session.query(VocabsLearning)
+                    .filter(VocabsLearning.account_id == account_id)
+                    .one_or_none()
+                )
+                if r:
+                    response['today_study'] = r.today_day_study
+
+                curr = len(rds.lrange(f"{account_id}:wrong_group")) if rds.lrange(f"{account_id}:wrong_group") else 0
+                total = WORDS_STUDY
+                response['process'] = {"c": curr, "t": total}
                 return True, response, True
 
             elif len(today_list) == 0:
@@ -202,6 +223,8 @@ def words_gpt_fetch(
 ):
     rds = RedisWrapper('core_learning')
     list_words = rds.lrange(f"{account_id}:wrong_group")
+    rds.set(f"{account_id}:loop_study", len(list_words))
+
     from blueprints.education.models import VocabBase
     with db_session('core') as session:
         records = (
@@ -253,6 +276,8 @@ def review_words(
         if record:
             rds = RedisWrapper('core_learning')
             today_list = rds.list_pop(f"{account_id}:wrong_group", side="l")
+            remain = len(rds.lrange(f"{account_id}:wrong_group"))
+            loop_study = rds.get(f"{account_id}:loop_study")
 
             if len(today_list) == 1:
                 current_word_id = today_list[0]
@@ -333,10 +358,11 @@ def review_words(
                             hint = each
                             break
                     response['hint'] = hint
-                    return True, response, True
-                else:
-                    return True, response, True
+
+                response['process'] = {"c": loop_study - remain if loop_study else WORDS_STUDY - remain, "t": loop_study if loop_study else WORDS_STUDY}
+                return True, response, True
             elif len(today_list) == 0:
+                redis_cache.delete(f"{account_id}:loop_study")
                 return False, {}, True
             else:
                 return False, "缓存出错", True
@@ -493,7 +519,6 @@ def redo_words_study(
     from blueprints.account.models import Users, Accounts
     word_id, correct_answer, answer, unknown, study = payload['word_id'], payload['correct_answer'], payload['answer'], \
                                                       payload['unknown'], payload['study']
-    default_learn = 5
     with db_session('core') as session:
         record = (
             session.query(VocabsLearning)
@@ -523,7 +548,7 @@ def redo_words_study(
 
                 total_len = len(rds.lrange(f"{account_id}:wrong_group"))
 
-                if total_len < default_learn:
+                if total_len < WORDS_STUDY:
                     return True, False
                 else:
                     return True, True
@@ -558,7 +583,7 @@ def redo_words_study(
                     if study_left == 0:
                         return True, True
 
-                    if total_len < default_learn:
+                    if total_len < WORDS_STUDY:
                         return True, False
                     else:
                         return True, True
@@ -626,7 +651,6 @@ def redo_words_study(
                         Users.vocab_level: Users.vocab_level + 1 if Users.vocab_level is not None else 1,
                         Users.last_update_time: datetime.now(timezone.utc).astimezone(
                             timezone(timedelta(hours=8))),
-
                     })
                 )
 
