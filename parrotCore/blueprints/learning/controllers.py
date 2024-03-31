@@ -1090,7 +1090,7 @@ class TaskController(crudController):
                     learn_records = (
                         session.query(TaskAccounts)
                         .filter(TaskAccounts.task_id == 8)
-                        .filter(TaskAccounts.account_id == account_id)
+                        .filter(TaskAccounts.account_id == record.account_id)
                         .filter(TaskAccounts.create_time > start_of_today)
                         .all()
                     )
