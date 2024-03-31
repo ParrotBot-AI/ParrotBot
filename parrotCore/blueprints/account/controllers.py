@@ -74,16 +74,22 @@ class AccountController(crudController):
                 # 注册账号
                 if response[0]:
                     res = self.register_user_exams(user_id, exam_ids, session)
-                    if res[0]:
-                        res = VocabLearningController().init_vocabs_learnings(user_id)
-                        if res[0]:
-                            res, data = VocabLearningController().init_vocabs_books(user_id)
-                            if res:
-                                return True, 'OK.'
-                            else:
-                                return False, data
-                        else:
-                            return False, res[1]
+                    if not res[0]:
+                        return False, res[1]
+
+                    res = VocabLearningController().init_vocabs_learnings(user_id)
+                    if not res[0]:
+                        return False, res[1]
+
+                    res, data = VocabLearningController().init_vocabs_books(user_id)
+                    if not res:
+                        return False, data
+
+                    # 创建vocab task
+                    # res, data = VocabLearningController().init_tasks(user_id)
+                    # if not res:
+                    #     return False, data
+                    return True, 'OK.'
                 else:
                     return False, response[1]
 
@@ -151,7 +157,7 @@ class AccountController(crudController):
 
 if __name__ == '__main__':
     test = AccountController()
-    user_id = 30
+    user_id = 36
     print(test.register_user(user_id, [1]))
     # print(test.update_questionary(27, param={
     #     "current_status": "high_school",

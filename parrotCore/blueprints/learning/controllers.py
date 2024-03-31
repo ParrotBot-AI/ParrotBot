@@ -520,6 +520,20 @@ class VocabLearningController(crudController):
             else:
                 return False, "未找到该账号单词"
 
+    def init_tasks(self, user_id):
+        user = self._retrieve(model=Users, restrict_field='user_id', restrict_value=user_id)
+        index_id = s.serialize_dic(user, self.default_not_show)['id']
+        with db_session('core') as session:
+            accs = (
+                session.query(Accounts)
+                .filter(Accounts.user_id == index_id)
+                .all()
+            )
+            accounts_ids = [record.id for record in accs]
+            for each_a in accounts_ids:
+                self.create_new_vocab_tasks(each_a)
+
+
     def init_vocabs_books(self, user_id):
         from blueprints.education.models import VocabCategorys, VocabCategoryRelationships
         redis = RedisWrapper('core_learning')
@@ -624,6 +638,7 @@ class VocabLearningController(crudController):
                             s_l.append(new_task)
                             s_l.append(new_task_)
 
+                        print(len(s_l), 641)
                         if len(s_l) > 0:
                             session.execute(
                                 insert(TaskAccounts),
@@ -1142,8 +1157,8 @@ class TaskController(crudController):
 
 
 if __name__ == "__main__":
-    account_id = 20
-    # pprint(VocabLearningController().create_new_vocab_tasks(account_id=20))
+    account_id = 50
+    # pprint(VocabLearningController().create_new_vocab_tasks(account_id=50))
     # pprint(VocabLearningController().fetch_account_vocab(37))
     # pprint(StudyPulseController().get_pulse_check_information(account_id=27))
 
