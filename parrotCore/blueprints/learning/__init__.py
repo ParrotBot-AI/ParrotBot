@@ -70,11 +70,17 @@ def jump_vocabs():
         account_id = args.get('account_id')
         category = args.get('category_id')
         exam = args.get('exam_id')
-        res, data = VocabLearningController().jump_to_vocabs(
-            account_id=account_id,
-            category_id=category,
-            exam_id=exam
-        )
+        if not exam:
+            res, data = VocabLearningController().jump_to_vocabs(
+                account_id=account_id,
+                category_id=category,
+            )
+        else:
+            res, data = VocabLearningController().jump_to_vocabs(
+                account_id=account_id,
+                category_id=category,
+                exam_id=exam
+            )
         if res:
             return SuccessDataResponse(data)
         else:
