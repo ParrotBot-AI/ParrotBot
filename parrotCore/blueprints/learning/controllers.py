@@ -47,8 +47,9 @@ class VocabLearningController(crudController):
         cache_resp = redis.get(f'VocabsStatics:{account_id}')
         if cache_resp:
             if "refuse_skip" in cache_resp:
-                print("here", 50)
                 cache_resp['refuse_skip'] = True
+                redis.set(f'VocabsStatics:{account_id}', 7200)
+
 
         update_s = {
             "account_id": account_id,
@@ -147,7 +148,6 @@ class VocabLearningController(crudController):
                         Users.vocab_level: Users.vocab_level + 1 if Users.vocab_level is not None else 1,
                         Users.last_update_time: datetime.now(timezone.utc).astimezone(
                             timezone(timedelta(hours=8))),
-
                     })
                 )
 
@@ -164,6 +164,7 @@ class VocabLearningController(crudController):
             try:
                 session.commit()
                 cache.delete(f"VocabsStatics:{account_id}")
+                print("here")
                 return True, "跳过成功"
             except Exception as e:
                 session.rollback()
