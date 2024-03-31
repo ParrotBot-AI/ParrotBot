@@ -50,7 +50,6 @@ class VocabLearningController(crudController):
                 cache_resp['refuse_skip'] = True
                 redis.set(f'VocabsStatics:{account_id}', cache_resp, 7200)
 
-
         update_s = {
             "account_id": account_id,
             "refuse_skip": True
@@ -128,7 +127,6 @@ class VocabLearningController(crudController):
                         redis.list_move(f"{record.in_process}", f"{record.today_learn}")
 
 
-
                 # 更新user vocab 词汇:
                 user_r = (
                     session.query(Users)
@@ -141,13 +139,13 @@ class VocabLearningController(crudController):
                     return False, "用户信息未找到"
 
                 # 更新user vocab 词汇:
+                print(user_r.vocab_level + jump_words_len)
                 user = (
                     session.query(Users)
                     .filter(Users.id == user_r.id)
                     .update({
-                        Users.vocab_level: Users.vocab_level + 1 if Users.vocab_level is not None else 1,
-                        Users.last_update_time: datetime.now(timezone.utc).astimezone(
-                            timezone(timedelta(hours=8))),
+                        Users.vocab_level: user_r.vocab_level + jump_words_len if user_r.vocab_level is not None else jump_words_len,
+                        Users.last_update_time: datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))),
                     })
                 )
 
@@ -169,6 +167,9 @@ class VocabLearningController(crudController):
             except Exception as e:
                 session.rollback()
                 return False, {str(e)}
+
+    def reset_vocabs(self, account_id):
+        pass
 
     def add_new_word_category(self, category_id):
         from blueprints.education.models import (VocabCategoryRelationships)
