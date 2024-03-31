@@ -82,6 +82,19 @@ def jump_vocabs():
     except Exception as e:
         return ArgumentExceptionResponse(msg=f'{e}')
 
+@bp.route('reset_vocabs/<account_id>/', methods=['POST'])
+def reset_vocabs(account_id):
+    try:
+        res, data = VocabLearningController().reset_vocabs(
+            account_id=account_id,
+        )
+        if res:
+            return SuccessDataResponse(data)
+        else:
+            return ArgumentExceptionResponse(msg=f'{data}')
+    except Exception as e:
+        return ArgumentExceptionResponse(msg=f'{e}')
+
 
 @bp.route('refuse_jump/<account_id>/', methods=['POST'])
 def refuse_jump(account_id):

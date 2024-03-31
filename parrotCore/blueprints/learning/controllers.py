@@ -71,6 +71,12 @@ class VocabLearningController(crudController):
                 return False, "未找到该用户"
 
             cate = record.current_category
+
+            cate_r = (
+                session.query(VocabCategorys)
+                .filter(VocabCategorys.id == cate)
+                .one_or_none()
+            )
             records = (
                 session.query(VocabCategorys)
                 .filter(or_(VocabCategorys.id == cate, VocabCategorys.id == category_id))
@@ -105,9 +111,8 @@ class VocabLearningController(crudController):
                 jump_words = (
                     session.query(VocabCategoryRelationships)
                     .join(VocabCategorys, VocabCategoryRelationships.category_id == VocabCategorys.id)
-                    .filter(VocabCategorys.exam_id == exam_id)
-                    .filter(and_(VocabCategorys.order < _r, VocabCategorys.order >= cate))
-                    # .filter(VocabCategoryRelationships.category_id.in_(jump_ids))
+                    .filter(or_(VocabCategorys.exam_id == exam_id, VocabCategorys.exam_id == None))
+                    .filter(and_(VocabCategorys.order < _r, VocabCategorys.order >= cate_r.order))
                     .all()
                 )
                 jump_words_len = len(jump_words)
@@ -139,7 +144,6 @@ class VocabLearningController(crudController):
                     return False, "用户信息未找到"
 
                 # 更新user vocab 词汇:
-                print(user_r.vocab_level + jump_words_len)
                 user = (
                     session.query(Users)
                     .filter(Users.id == user_r.id)
@@ -162,14 +166,107 @@ class VocabLearningController(crudController):
             try:
                 session.commit()
                 cache.delete(f"VocabsStatics:{account_id}")
-                print("here")
                 return True, "跳过成功"
             except Exception as e:
                 session.rollback()
                 return False, {str(e)}
 
     def reset_vocabs(self, account_id):
-        pass
+        from blueprints.education.models import (VocabCategorys, VocabCategoryRelationships)
+        redis = RedisWrapper('core_learning')
+        cache = RedisWrapper('core_cache')
+        with db_session('core') as session:
+            record = (
+                session.query(VocabsLearning)
+                .filter(VocabsLearning.account_id == account_id)
+                .one_or_none()
+            )
+            if not record:
+                return False, "未找到该用户"
+
+            redis.delete(f"{record.today_learn}")
+            redis.delete(f"{record.in_process}")
+            redis.delete(f"{record.unknown}")
+            redis.delete(f"{record.finished}")
+            redis.delete(f"{record.to_review}")
+
+            in_process = redis.lrange(f"{record.in_process}")
+
+            new_cate = 1  # 默认从第一个category开始
+            acc = (
+                session.query(Accounts)
+                .filter(Accounts.id == record.account_id)
+                .one_or_none()
+            )
+            if acc:
+                exam = acc.exam_id
+                cate_records = (
+                    session.query(VocabCategorys)
+                    .filter(or_(VocabCategorys.exam_id == exam, VocabCategorys.exam_id == None))
+                    .order_by(VocabCategorys.order.asc())
+                    .all()
+                )
+
+                for r in cate_records:
+                    words = (
+                        session.query(VocabCategoryRelationships)
+                        .filter(VocabCategoryRelationships.category_id == r.id)
+                        .all()
+                    )
+                    input_list = [x.word_id for x in words]
+                    if len(input_list) > 0:
+                        import random
+                        random.shuffle(input_list)
+                        l = redis.list_push(f"{record.in_process}", *input_list, side="r")
+
+                # 移动amount词汇到today里面
+                for _ in range(record.amount):
+                    redis.list_move(f"{record.in_process}", f"{record.today_learn}")
+
+                update_parameters = dict(
+                    current_category=new_cate,
+                    is_skip_remind=None,
+                    refuse_skip=None
+                )
+                default_dic = {
+                    'last_update_time': datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))}
+
+                update_ = (
+                    session.query(VocabsLearning)
+                    .filter(VocabsLearning.account_id == record.account_id)
+                    .update({**update_parameters, **default_dic})
+                )
+
+                # 更新user vocab 词汇:
+                user_r = (
+                    session.query(Users)
+                    .join(Accounts, Accounts.user_id == Users.id)
+                    .filter(Accounts.id == account_id)
+                    .one_or_none()
+                )
+
+                if not user_r:
+                    return False, "用户信息未找到"
+
+                # 更新user vocab 词汇:
+                user = (
+                    session.query(Users)
+                    .filter(Users.id == user_r.id)
+                    .update({
+                        Users.vocab_level: 0,
+                        Users.last_update_time: datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))),
+                    })
+                )
+            else:
+                return False, "未知账户"
+
+            try:
+                session.commit()
+                cache.delete(f"VocabsStatics:{account_id}")
+                return True, "OK"
+            except Exception as e:
+                session.rollback()
+                return False, str(e)
 
     def add_new_word_category(self, category_id):
         from blueprints.education.models import (VocabCategoryRelationships)
@@ -354,10 +451,10 @@ class VocabLearningController(crudController):
 
             try:
                 session.commit()
-                return True, logger.info("用户每日任务词表更新成功.")
+                return True, "OK"
             except Exception as e:
                 session.rollback()
-                return False, logger.info(f"用户每日任务词表更新失败：{str(e)}.")
+                return False, str(e)
 
     def fetch_vocabs_level(self, account_id, exam_id=None):
         with db_session('core') as session:
@@ -516,7 +613,7 @@ class VocabLearningController(crudController):
                         resp['status_book'] = data
 
                     # 缓存
-                    redis.set(f'VocabsStatics:{account_id}', resp, 7200)
+                    # redis.set(f'VocabsStatics:{account_id}', resp, 7200)
 
                     return True, resp
                 else:
@@ -1161,21 +1258,26 @@ class TaskController(crudController):
 
 
 if __name__ == "__main__":
-    account_id = 50
-    # pprint(VocabLearningController().create_new_vocab_tasks(account_id=50))
-    # pprint(VocabLearningController().fetch_account_vocab(37))
+    account_id = 27
+    # pprint(VocabLearningController().create_new_vocab_tasks(account_id=27))
+    # pprint(VocabLearningController().fetch_account_vocab(27))
+    # pprint(VocabLearningController().reset_vocabs(account_id=27))
+    # pprint(VocabLearningController().jump_to_vocabs(account_id=27, category_id=2))
+    # pprint(VocabLearningController().fetch_account_vocab(27))
     # pprint(StudyPulseController().get_pulse_check_information(account_id=27))
 
     # pprint(TaskController().fetch_account_tasks(account_id=account_id, after_time=get_today_midnight(), active=True))
-    today = datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))
-    time = datetime(today.year, today.month, today.day, 0, 0)
-    res, data = TaskController().fetch_account_tasks(
-        account_id=account_id,
-        after_time=time,
-        type=1,
-        is_complete=0,
-    )
-    pprint(data)
+    # today = datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))
+    # time = datetime(today.year, today.month, today.day, 0, 0)
+    # res, data = TaskController().fetch_account_tasks(
+    #     account_id=account_id,
+    #     after_time=time,
+    #     type=1,
+    #     is_complete=0,
+    # )
+    # pprint(data)
+
+    # pprint(TaskController().start_task(task_account_id=167))
 
     # 背单词
     # 1.先用5个

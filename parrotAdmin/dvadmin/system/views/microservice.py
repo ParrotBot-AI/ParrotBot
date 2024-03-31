@@ -710,3 +710,24 @@ class MicroServiceRegisterViewSet(CustomModelViewSet):
 
         except:
             return ErrorResponse(msg='参数格式错误')
+
+    @action(methods=["POST"], detail=False, permission_classes=[IsAuthenticated],
+            url_path="reset_vocabs/(?P<account_id>\d+)")
+    def reset_vocabs(self, request, account_id):
+        try:
+            if True:
+                try:
+                    # data = dict(micro.data)
+                    url = f"http://{'127.0.0.1'}:{10981}/v1/api/learning/reset_vocabs/{account_id}/"
+                    r = requests.post(url)
+
+                    if r.json()['code'] == 10000:
+                        res_data = r.json()['data']
+                        return DetailResponse(data=res_data, msg='OK.')
+                    else:
+                        return ErrorResponse(msg=r.json()['msg'])
+                except:
+                    return ErrorResponse(msg="微服务故障")
+
+        except:
+            return ErrorResponse(msg='参数格式错误')
