@@ -95,7 +95,7 @@ class VocabLearningController(crudController):
             else:
                 records = (
                     session.query(VocabCategorys)
-                    .filter(VocabCategorys.exam_id == exam_id)
+                    .filter(or_(VocabCategorys.exam_id == exam_id, VocabCategorys.exam_id == None))
                     .filter(VocabCategorys.order >= _r)
                     .all()
                 )
@@ -131,6 +131,9 @@ class VocabLearningController(crudController):
                     for _ in range(record.amount):
                         redis.list_move(f"{record.in_process}", f"{record.today_learn}")
 
+                print(f'input list: {len(input_list)}', 133)
+                print(f'in_process after jump: {len(redis.lrange(f"{record.in_process}"))}', 134)
+                print(f'today after jump: {len(redis.lrange(f"{record.today_learn}"))}', 135)
 
                 # 更新user vocab 词汇:
                 user_r = (
@@ -634,7 +637,6 @@ class VocabLearningController(crudController):
             for each_a in accounts_ids:
                 self.create_new_vocab_tasks(each_a)
 
-
     def init_vocabs_books(self, user_id):
         from blueprints.education.models import VocabCategorys, VocabCategoryRelationships
         redis = RedisWrapper('core_learning')
@@ -1124,7 +1126,7 @@ class TaskController(crudController):
                 if resp:
                     # cache the chain
                     redis = RedisWrapper('core_cache')
-                    redis.set(f"TaskAccount:{task_account_id}", res, ex=1 * 24 * 60 * 60) # 一天后自动过期
+                    redis.set(f"TaskAccount:{task_account_id}", res, ex=1 * 24 * 60 * 60)  # 一天后自动过期
                     if return_c:
                         # to do 更新 start time
                         u_record = (
@@ -1168,7 +1170,7 @@ class TaskController(crudController):
 
                     if return_c:
                         redis = RedisWrapper('core_cache')
-                        redis.set(f"TaskAccount:{task_account_id}", response, ex=1 * 24 * 60 * 60) #一天后自动过期
+                        redis.set(f"TaskAccount:{task_account_id}", response, ex=1 * 24 * 60 * 60)  # 一天后自动过期
                         return True, {
                             "payload": data
                         }
@@ -1263,9 +1265,9 @@ if __name__ == "__main__":
     account_id = 20
     # pprint(VocabLearningController().create_new_vocab_tasks(account_id=27))
     # pprint(VocabLearningController().fetch_account_vocab(27))
-    # pprint(VocabLearningController().reset_vocabs(account_id=27))
-    # pprint(VocabLearningController().jump_to_vocabs(account_id=27, category_id=2))
-    # pprint(VocabLearningController().fetch_account_vocab(27))
+    # pprint(VocabLearningController().reset_vocabs(account_id=37))
+    # pprint(VocabLearningController().jump_to_vocabs(account_id=37, category_id=2))
+    # pprint(VocabLearningController().fetch_account_vocab(37))
     # pprint(StudyPulseController().get_pulse_check_information(account_id=27))
 
     # pprint(TaskController().fetch_account_tasks(account_id=account_id, after_time=get_today_midnight(), active=True))
@@ -1279,7 +1281,7 @@ if __name__ == "__main__":
     # )
     # pprint(data)
 
-    pprint(TaskController().start_task(task_account_id=154))
+    # pprint(TaskController().start_task(task_account_id=154))
 
     # 背单词
     # 1.先用5个
