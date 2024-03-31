@@ -47,6 +47,7 @@ class VocabLearningController(crudController):
         cache_resp = redis.get(f'VocabsStatics:{account_id}')
         if cache_resp:
             if "refuse_skip" in cache_resp:
+                print("here", 50)
                 cache_resp['refuse_skip'] = True
 
         update_s = {
