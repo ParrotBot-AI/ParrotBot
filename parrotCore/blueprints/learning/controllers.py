@@ -517,6 +517,7 @@ class VocabLearningController(crudController):
                         order=r.order,
                         counts=r.counts
                     ))
+                print(total_amount, number_to_finish, number_today, 520)
                 at_level = total_amount - (number_to_finish + number_today)
 
                 # 响应结果
