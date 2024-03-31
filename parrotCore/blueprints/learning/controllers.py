@@ -189,8 +189,7 @@ class VocabLearningController(crudController):
             redis.delete(f"{record.unknown}")
             redis.delete(f"{record.finished}")
             redis.delete(f"{record.to_review}")
-
-            in_process = redis.lrange(f"{record.in_process}")
+            redis.delete(f"{account_id}:wrong_group")
 
             new_cate = 1  # 默认从第一个category开始
             acc = (
