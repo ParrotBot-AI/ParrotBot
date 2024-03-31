@@ -40,7 +40,6 @@ SERVICES_MAP = {
     'ParrotCoreDaily': DailyService,
 }
 
-
 def run_service(service_name, action):
     """
     action: start | stop | run | enable | disable | status

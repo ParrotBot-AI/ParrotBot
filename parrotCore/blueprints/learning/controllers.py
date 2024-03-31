@@ -53,7 +53,7 @@ class VocabLearningController(crudController):
             "account_id": account_id,
             "refuse_skip": True
         }
-        res, data = self._update(model=VocabsLearning, update_parameters=update_s, restrict_field="id")
+        res, data = self._update(model=VocabsLearning, update_parameters=update_s, restrict_field="account_id")
         return res, data
 
     def jump_to_vocabs(self, account_id, category_id, exam_id=1):
@@ -125,7 +125,7 @@ class VocabLearningController(crudController):
                     for _ in range(record.amount):
                         redis.list_move(f"{record.in_process}", f"{record.today_learn}")
 
-                cache.delete(f"VocabsStatics:{account_id}")
+
 
                 # 更新user vocab 词汇:
                 user_r = (
@@ -162,6 +162,7 @@ class VocabLearningController(crudController):
 
             try:
                 session.commit()
+                cache.delete(f"VocabsStatics:{account_id}")
                 return True, "跳过成功"
             except Exception as e:
                 session.rollback()
@@ -612,7 +613,6 @@ class VocabLearningController(crudController):
                             .filter(TaskAccounts.create_time > start_of_today)
                             .all()
                         )
-                        print(record.account_id, len(tasks), 614)
                         if len(tasks) == 0:
                             # 添加任务
                             new_task = dict(
