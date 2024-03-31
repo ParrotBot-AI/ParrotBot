@@ -611,6 +611,7 @@ class VocabLearningController(crudController):
                             .filter(TaskAccounts.create_time > start_of_today)
                             .all()
                         )
+                        print(record.account_id, len(tasks), 614)
                         if len(tasks) == 0:
                             # 添加任务
                             new_task = dict(
@@ -638,7 +639,6 @@ class VocabLearningController(crudController):
                             s_l.append(new_task)
                             s_l.append(new_task_)
 
-                        print(len(s_l), 641)
                         if len(s_l) > 0:
                             session.execute(
                                 insert(TaskAccounts),
