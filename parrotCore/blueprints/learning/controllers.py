@@ -100,7 +100,7 @@ class VocabLearningController(crudController):
                     .all()
                 )
                 cate_ids = [x.id for x in records]
-                print("category", cate_ids, "r", _r)
+                print("category", cate_ids, "r", _r, "exam_id", exam_id)
 
                 words = (
                     session.query(VocabCategoryRelationships)
