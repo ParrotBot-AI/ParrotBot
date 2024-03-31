@@ -215,6 +215,7 @@ class VocabsService:
                             tasks = (
                                 session.query(TaskAccounts)
                                 .filter(or_(TaskAccounts.task_id == 8, TaskAccounts.task_id == 9))
+                                .filter(TaskAccounts.account_id == record.account_id)
                                 .filter(TaskAccounts.create_time > start_of_today)
                                 .all()
                             )
@@ -243,7 +244,7 @@ class VocabsService:
                                 s_l.append(new_task)
                                 s_l.append(new_task_)
 
-            if len(s_l)>0:
+            if len(s_l) > 0:
                 session.execute(
                     insert(TaskAccounts),
                     s_l
