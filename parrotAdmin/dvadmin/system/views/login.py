@@ -131,9 +131,25 @@ class LoginSerializer(TokenObtainPairWithoutPasswordSerializer):
     default_error_messages = {"no_active_account": _("账号/密码错误")}
 
     def register_mic(self, u_id):
-        admin = AdminStream()
-        response = admin.core_register(user_id=str(u_id))
-        return response
+        import requests
+        try:
+            # data = dict(micro.data)
+            url = f"http://{'127.0.0.1'}:{10981}/v1/api/account/register_user/"
+            r = requests.post(url, json={
+                "user_id": u_id,
+            })
+
+            if r.json()['code'] == 10000:
+                res_data = r.json()['data']
+                return True, "OK"
+            else:
+                return False, r.json()['msg']
+        except:
+            return False, "微服务故障"
+
+        # admin = AdminStream()
+        # response = admin.core_register(user_id=str(u_id))
+        # return response
 
     def login(self, attrs, phone=None):
         if phone:
@@ -256,10 +272,13 @@ class LoginSerializer(TokenObtainPairWithoutPasswordSerializer):
                                 except ObjectDoesNotExist:
                                     print("Role does not exist.")
 
-                            # 注册用户到 microservices
-                            self.register_mic(user.id)
-
-                            return self.login(attrs, phone)
+                            # 注册用户到 microservices, 支持异步
+                            res, data = self.register_mic(user.id)
+                            if res:
+                                # 登录
+                                return self.login(attrs, phone)
+                            else:
+                                return ErrorResponse(msg=data)
                     else:
                         raise CustomValidationError("验证码不匹配, 请重新发送")
                 else:
@@ -310,11 +329,13 @@ class LoginSerializer(TokenObtainPairWithoutPasswordSerializer):
                         except ObjectDoesNotExist:
                             print("Role does not exist.")
 
-                    # 注册用户到 microservices
-                    self.register_mic(user.id)
-
-                    # 登录
-                    return self.login(attrs)
+                    # 注册用户到 microservices, 支持异步
+                    res, data = self.register_mic(user.id)
+                    if res:
+                        # 登录
+                        return self.login(attrs)
+                    else:
+                        return ErrorResponse(msg=data)
             else:
                 user = Users.objects.filter(username=attrs['username']).first()
                 if user:

@@ -25,7 +25,7 @@ def get_menu_exam():
 def register_user():
     try:
         args = request.json
-        exam_ids = args.get('exam_ids')  # list
+        exam_ids = args.get('exam_ids', [1])  # list
         user_id = args.get('user_id')
         res = AccountController().register_user(
             user_id=user_id,
