@@ -1090,11 +1090,12 @@ class TaskController(crudController):
                     learn_records = (
                         session.query(TaskAccounts)
                         .filter(TaskAccounts.task_id == 8)
+                        .filter(TaskAccounts.account_id == account_id)
                         .filter(TaskAccounts.create_time > start_of_today)
                         .all()
                     )
                     for learn_record in learn_records:
-                        if not learn_record.loop <= learn_record.current_loop:
+                        if not learn_record.is_complete == 1:
                             return False, '今日还有未完成的单词学习任务'
 
         current_task, pointer = None, None
@@ -1118,6 +1119,7 @@ class TaskController(crudController):
                 # 运行下一步返回参数函数
                 module = import_module(module)
                 function = getattr(module, method)
+                print(function.__name__)
                 resp, data, return_c = function(record.account_id)
                 if resp:
                     # cache the chain
@@ -1258,7 +1260,7 @@ class TaskController(crudController):
 
 
 if __name__ == "__main__":
-    account_id = 27
+    account_id = 20
     # pprint(VocabLearningController().create_new_vocab_tasks(account_id=27))
     # pprint(VocabLearningController().fetch_account_vocab(27))
     # pprint(VocabLearningController().reset_vocabs(account_id=27))
@@ -1277,7 +1279,7 @@ if __name__ == "__main__":
     # )
     # pprint(data)
 
-    # pprint(TaskController().start_task(task_account_id=167))
+    pprint(TaskController().start_task(task_account_id=154))
 
     # 背单词
     # 1.先用5个

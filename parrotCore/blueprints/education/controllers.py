@@ -1537,6 +1537,21 @@ class AnsweringScoringController(crudController):
     def get_indicators_detail(self, answer_sheet_id, session):
         """每篇Tag的分值，sql可以与get_score_question_detail合并，但考虑到业务上的更改，暂时做分开"""
         try:
+            sec = {}
+            raw_sql = text(f"""
+            SELECT
+                S.id,
+                S.section_name
+            FROM Submissions
+            JOIN Questions Q ON Q.id = Submissions.question_id
+            JOIN Sections S on Q.section_id = S.id
+            WHERE Submissions.answer_sheet_id = {answer_sheet_id};   
+            """)
+            records = session.execute(raw_sql).fetchall()
+            for record in records:
+                if record.id not in sec:
+                    sec[record.id] = record.section_name
+
             raw_sql = text(f"""
                 WITH QUESTION_IN AS (
                     SELECT
@@ -1558,13 +1573,47 @@ class AnsweringScoringController(crudController):
                     GROUP BY QUESTION_IN.indicator_id
                 """)
             scores_d = session.execute(raw_sql).fetchall()
-            res = []
+            res = {}
+            res["all"] = []
             for record in scores_d:
                 e_ = {}
                 e_['name'] = record.name
                 e_['count'] = int(record.count)
                 e_['sum'] = int(record.sum)
-                res.append(e_)
+                res["all"].append(e_)
+
+            for key in sec.keys():
+                raw_sql = text(f"""
+                WITH QUESTION_IN AS (
+                    SELECT
+                        Submissions.question_id,
+                        CASE WHEN Submissions.score = Submissions.max_score THEN 1 ELSE 0 END AS IsMaxScore,
+                        IQ.indicator_id,
+                        I.indicator_name
+                    FROM Submissions
+                    JOIN Questions Q ON Q.id = Submissions.question_id
+                    JOIN Sections S on Q.section_id = S.id
+                    JOIN Indicators_Questions IQ on Q.id = IQ.question_id
+                    JOIN Indicators I on IQ.indicator_id = I.id
+                    WHERE Submissions.answer_sheet_id = {answer_sheet_id}
+                    AND S.id = {key}
+                )
+                SELECT
+                    SUM(QUESTION_IN.IsMaxScore) AS sum,
+                    COUNT(QUESTION_IN.IsMaxScore) AS count,
+                    QUESTION_IN.indicator_name AS name
+                FROM QUESTION_IN
+                GROUP BY QUESTION_IN.indicator_id
+                """)
+                sub_scores_d = session.execute(raw_sql).fetchall()
+                res[sec[key]] = []
+
+                for record in sub_scores_d:
+                    e_ = {}
+                    e_['name'] = record.name
+                    e_['count'] = int(record.count)
+                    e_['sum'] = int(record.sum)
+                    res[sec[key]].append(e_)
 
             return True, res
         except Exception as e:
@@ -2853,7 +2902,7 @@ class InitController(crudController):
 if __name__ == '__main__':
     init = TransactionsController()
     # pprint.pprint(init._get_all_resources_under_exams(1, 27))
-    pprint.pprint(init.get_recent_pattern_scores(20, 7))
+    # pprint.pprint(init.get_recent_pattern_scores(20, 7))
     # pprint.pprint(init._get_all_resources_under_patterns(pattern_id=13, account_id=20))
 
     # init = InitController()
@@ -2897,5 +2946,5 @@ if __name__ == '__main__':
     # 算分
     # start = time.time()
     # print(init.scoring(sheet_id=1184, re_score=True))
-    # pprint.pprint(init.get_score(answer_sheet_id=1181))
+    pprint.pprint(init.get_score(answer_sheet_id=1185))
     # print(time.time() - start)
