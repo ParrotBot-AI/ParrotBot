@@ -131,9 +131,9 @@ class VocabLearningController(crudController):
                     for _ in range(record.amount if record.amount < len(input_list) else len(input_list)):
                         redis.list_move(f"{record.in_process}", f"{record.today_learn}")
 
-                print(f'input list: {len(input_list)}', 133)
-                print(f'in_process after jump: {len(redis.lrange(f"{record.in_process}"))}', 134)
-                print(f'today after jump: {len(redis.lrange(f"{record.today_learn}"))}', 135)
+                # print(f'input list: {len(input_list)}', 133)
+                # print(f'in_process after jump: {len(redis.lrange(f"{record.in_process}"))}', 134)
+                # print(f'today after jump: {len(redis.lrange(f"{record.today_learn}"))}', 135)
 
                 # 更新user vocab 词汇:
                 user_r = (
@@ -535,16 +535,20 @@ class VocabLearningController(crudController):
                 return False, "词表未生成"
 
     def fetch_past_5_days_list(self, t_interval, account_id):
+        now_cst = (datetime.utcnow() + timedelta(hours=8)).strftime('%Y-%m-%d')
+        current_date_cst = now_cst
+        date_series_sql_parts = [f"UNION ALL SELECT '{current_date_cst}' - INTERVAL {i} DAY\n" for i in range(t_interval)]
+        date_series_sql = " ".join(date_series_sql_parts)
         with db_session('core') as session:
-            date_series_sql = " ".join(
-                [f"UNION ALL SELECT CURDATE() - INTERVAL {i} DAY\n" for i in range(1, t_interval)])
+            # date_series_sql = " ".join(
+            #     [f"UNION ALL SELECT CURDATE() - INTERVAL {i} DAY\n" for i in range(1, t_interval)])
             raw_sql = text(f"""
             SELECT
               DateSeries.day,
               SUM(Data.wrong_word) AS w_c,
               SUM(Data.correct_word) AS c_c
             FROM (
-              SELECT CURDATE() as 'day'
+              SELECT '{current_date_cst}' as 'day'
               {date_series_sql}
             ) DateSeries
             LEFT JOIN (
@@ -554,7 +558,7 @@ class VocabLearningController(crudController):
                 correct_word_id IS NOT NULL AS correct_word
               FROM VocabsLearningRecords
               WHERE account_id = {account_id}
-                AND time >= CURDATE() - INTERVAL {t_interval - 1} DAY
+                AND time >= '{current_date_cst}' - INTERVAL {t_interval - 1} DAY
             ) AS Data ON DateSeries.day = Data.day
             GROUP BY DateSeries.day
             ORDER BY DateSeries.day ASC;
@@ -606,9 +610,9 @@ class VocabLearningController(crudController):
                     results = self.fetch_past_5_days_list(t_interval=5, account_id=account_id)
                     s_l = {}
                     for result in results:
-                        s_l[result.day.strftime('%Y-%m-%d')] = {}
-                        s_l[result.day.strftime('%Y-%m-%d')]['wrong_words'] = int(result.w_c) if result.w_c else 0,
-                        s_l[result.day.strftime('%Y-%m-%d')]['correct_words'] = int(result.c_c) if result.c_c else 0,
+                        s_l[result.day] = {}
+                        s_l[result.day]['wrong_words'] = int(result.w_c) if result.w_c else 0,
+                        s_l[result.day]['correct_words'] = int(result.c_c) if result.c_c else 0,
 
                     resp['series'] = s_l
                     res, data = self.fetch_vocabs_level(account_id, account.exam_id)
@@ -1267,7 +1271,7 @@ if __name__ == "__main__":
     # pprint(VocabLearningController().fetch_account_vocab(27))
     # pprint(VocabLearningController().reset_vocabs(account_id=37))
     # pprint(VocabLearningController().jump_to_vocabs(account_id=37, category_id=2))
-    # pprint(VocabLearningController().fetch_account_vocab(37))
+    pprint(VocabLearningController().fetch_account_vocab(37))
     # pprint(StudyPulseController().get_pulse_check_information(account_id=27))
 
     # pprint(TaskController().fetch_account_tasks(account_id=account_id, after_time=get_today_midnight(), active=True))

@@ -598,6 +598,7 @@ def redo_words_study(
                     statistic_cache['today_day_study'] += 1
                     statistic_cache['total_study'] += 1
                     statistic_cache['vocab'] += 1
+                    statistic_cache["status_book"]["level_status"] += 1
 
                     if tody in statistic_cache['series']:
                         if type(statistic_cache['series'][tody]['correct_words']) == list:
@@ -757,8 +758,8 @@ def redo_review_study(
                 if statistic_cache:
                     statistic_cache['today_day_study'] += 1
                     statistic_cache['total_study'] += 1
-                    print(type(statistic_cache['vocab']), 727)
                     statistic_cache['vocab'] += 1
+                    statistic_cache['status_book']["level_status"] += 1
 
                     if tody in statistic_cache['series']:
                         if type(statistic_cache['series'][tody]['correct_words']) == list:
