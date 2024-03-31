@@ -1582,6 +1582,7 @@ class AnsweringScoringController(crudController):
                 e_['sum'] = int(record.sum)
                 res["all"].append(e_)
 
+            count = 1
             for key in sec.keys():
                 raw_sql = text(f"""
                 WITH QUESTION_IN AS (
@@ -1606,14 +1607,16 @@ class AnsweringScoringController(crudController):
                 GROUP BY QUESTION_IN.indicator_id
                 """)
                 sub_scores_d = session.execute(raw_sql).fetchall()
-                res[sec[key]] = []
+                res[str(count)] = []
 
                 for record in sub_scores_d:
                     e_ = {}
                     e_['name'] = record.name
                     e_['count'] = int(record.count)
                     e_['sum'] = int(record.sum)
-                    res[sec[key]].append(e_)
+                    res[str(count)].append(e_)
+
+                count += 1
 
             return True, res
         except Exception as e:
