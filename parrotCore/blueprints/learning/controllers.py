@@ -128,7 +128,7 @@ class VocabLearningController(crudController):
                     import random
                     random.shuffle(input_list)
                     l = redis.list_push(f"{record.in_process}", *input_list, side="r")
-                    for _ in range(record.amount if record.amount > len(input_list) else len(input_list)):
+                    for _ in range(record.amount if record.amount < len(input_list) else len(input_list)):
                         redis.list_move(f"{record.in_process}", f"{record.today_learn}")
 
                 print(f'input list: {len(input_list)}', 133)
