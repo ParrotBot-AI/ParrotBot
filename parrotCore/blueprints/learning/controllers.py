@@ -613,7 +613,7 @@ class VocabLearningController(crudController):
                         resp['status_book'] = data
 
                     # 缓存
-                    # redis.set(f'VocabsStatics:{account_id}', resp, 7200)
+                    redis.set(f'VocabsStatics:{account_id}', resp, 7200)
 
                     return True, resp
                 else:
