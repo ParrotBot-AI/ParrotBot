@@ -185,6 +185,7 @@ def get_today_task(user_id):
                     _res = _res + data
                 else:
                     return ArgumentExceptionResponse(msg=f'{data}')
+
             return SuccessDataResponse(_res)
         except Exception as e:
             return ArgumentExceptionResponse(msg=f'{e}')
