@@ -613,6 +613,7 @@ def redo_words_study(
                     .one_or_none()
                 )
                 if word:
+                    print(word.category_id, cate, 616)
                     if word.category_id > cate:
                         record = (
                             session.query(VocabsLearning)
