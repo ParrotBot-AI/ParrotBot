@@ -618,8 +618,9 @@ def redo_words_study(
                         record = (
                             session.query(VocabsLearning)
                             .filter(VocabsLearning.id == account_id)
-                            .update({VocabsLearning.current_category == word.category_id})
+                            .update({VocabsLearning.current_category:word.category_id})
                         )
+                        print("here", 623)
                         if statistic_cache:
                             statistic_cache['status_book']["current_level"] = word.category_id
                             statistic_cache['status_book']["level_status"] = 0
@@ -627,8 +628,6 @@ def redo_words_study(
                             for each in statistic_cache['status_book']['level_book']:
                                 if each['id'] == word.category_id:
                                     statistic_cache['status_book']["level_total"] = each['counts']
-
-                print("here", 629)
 
                 # study word, correct word 2 条记录
                 study_add = dict(
