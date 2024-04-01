@@ -10,6 +10,7 @@ from blueprints.education.models import (
 )
 
 from configs.environment import DATABASE_SELECTION
+from configs.operation import MEMBER_DAY_OFF
 
 if DATABASE_SELECTION == 'postgre':
     from configs.postgre_config import get_db_session as db_session
@@ -30,6 +31,49 @@ class AccountController(crudController):
     account 继承crudController
     调用CRUD: _create; _retrieve; _update; _delete
     """
+    def account_additional_info(self, account_id):
+        with db_session('core') as session:
+            res = {}
+            record = (
+                session.query(Accounts)
+                .filter(Accounts.id == account_id)
+                .one_or_none()
+            )
+            if record:
+                user = (
+                    session.query(Users)
+                    .filter(Users.id == record.user_id)
+                    .one_or_none()
+                )
+                if not user:
+                    return False, "没有对应的user"
+
+                res['study_day'] = user.total_study_days
+                now = datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))).replace(tzinfo=None)
+                print(user.plan_due_time, user.id)
+                if user.plan_due_time:
+                    diff = user.plan_due_time - now
+                    if diff.days < 0:
+                        res['vip_due'] = None
+                    else:
+                        res['vip_due'] = diff.days
+                else:
+                    res['vip_due'] = None
+
+                if record.next_test_time:
+                    diff = record.next_test_time - now
+                    if diff.days  < 0:
+                        res['test_due'] = None
+                    else:
+                        res['test_due'] = diff.days
+                else:
+                    res['test_due'] = None
+                res['est_score'] = record.estimate_score
+
+                return True, res
+            else:
+                return False,"未找到用户"
+
     def update_questionary(self, account_id, param):
         if "id" not in param:
             param['id'] = account_id
@@ -69,7 +113,14 @@ class AccountController(crudController):
             if record:
                 return self.register_user_exams(user_id, exam_ids, session)
             else:
-                user = {"user_id": user_id}
+                now = datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))
+                end_day = now + timedelta(days=MEMBER_DAY_OFF)
+                end_time = end_day.replace(hour=23, minute=59, second=59)
+                user = {
+                    "user_id": user_id,
+                    "user_plan": 1,
+                    "plan_due_time": end_time,
+                }
                 response = self._create(model=Users, create_params=user, restrict_field='user_id')
                 # 注册账号
                 if response[0]:
@@ -104,7 +155,6 @@ class AccountController(crudController):
             return True, s.serialize_list(records)
 
     def get_user_accounts(self, user_id, exam_id=None):
-        print("here", 103)
         with db_session('core') as session:
             record = (
                 session.query(Users)
@@ -158,7 +208,8 @@ class AccountController(crudController):
 if __name__ == '__main__':
     test = AccountController()
     user_id = 36
-    print(test.register_user(user_id, [1]))
+    # print(test.register_user(user_id, [1]))
+    print(test.account_additional_info(account_id=27))
     # print(test.update_questionary(27, param={
     #     "current_status": "high_school",
     #     "purpose": "study_board",

@@ -2248,7 +2248,42 @@ class InitController(crudController):
     支持所有问题相关表单(Questions, QuestionsType, Indicators, IndicatorQuestion)
     init: 先定义Indicators, QuestionsType => Questions => IndicatorQuestion
     """
-    pass
+    def clean_stem(self):
+        u_r = []
+        with db_session('core') as session:
+            # 阅读文本
+            questions = (
+                session.query(Questions)
+                .filter(Questions.question_stem != None)
+                .all()
+            )
+            # print(len(questions))
+            count = 0
+            for ques in questions:
+                if ques.correct_answer is not None:
+                    if len(ques.question_stem.split(";")) != len(ques.correct_answer.split(";")):
+                        print(ques.id, len(ques.question_stem.split(";")))
+                        count += 1
+                        ur = {
+                            "q_id":ques.id,
+                            "error_feedback": f'该题目选项与答案错位，选项数量：{len(ques.question_stem.split(";"))} -> 答案数量: {len(ques.correct_answer.split(";"))}, 请与答案保持一致;'
+                        }
+                        u_r.append(ur)
+
+            # print(count, 2279)
+            print(len(u_r))
+
+            session.execute(
+                update(Questions).where(Questions.id == bindparam('q_id')).values(
+                    error_feedback=bindparam("error_feedback"),
+                ),
+                u_r
+            )
+
+            try:
+                session.commit()
+            except:
+                session.rollback()
 
 
 if __name__ == '__main__':
@@ -2263,14 +2298,16 @@ if __name__ == '__main__':
     # init.get_test_answers_history(account_id=7)
     # pass
 
+    # print(InitController().clean_stem())
+
     # print(datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))))
 
     init = AnsweringScoringController()
-    # res = init.create_answer_sheet(account_id=27, question_ids=[1220, 1221, 1222, 1223])
+    # res = init.create_answer_sheet(account_id=37, question_ids=[6669])
     # res = init.create_mock_answer_sheet(account_id=27)
     # pprint.pprint(res)
     # sheet_id = res[1]['sheet_id']
-    # pprint.pprint(init.get_test_answers(sheet_id=1158))
+    # pprint.pprint(init.get_test_answers(sheet_id=sheet_id))
     # pprint.pprint(init.get_mock_answer_sheet(sheet_id=906))
 
     # 暂停、继续试卷
@@ -2282,7 +2319,7 @@ if __name__ == '__main__':
     # print(init.update_question_answer(sheet_id=sheet_id, question_id=5, answer=[0, 0, 1, 0], duration=200))
 
     # 中途批改
-    # print(asyncio.run(AnsweringScoringController().model_scoring(sheet_id=1161, question_id=1555)))
+    # print(asyncio.run(AnsweringScoringController().model_scoring(sheet_id=1216, question_id=1516)))
 
     # 提交答案
     # pprint.pprint(init.save_answer(sheet_id=1148))
@@ -2290,5 +2327,5 @@ if __name__ == '__main__':
     # 算分
     # start = time.time()
     # print(init.scoring(sheet_id=1184, re_score=True))
-    # pprint.pprint(init.get_score(answer_sheet_id=1185))
+    # pprint.pprint(init.get_score(answer_sheet_id=1218))
     # print(time.time() - start)

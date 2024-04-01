@@ -790,7 +790,6 @@ def redo_review_study(
 
                     })
                 )
-
                 study_add = dict(
                     account_id=account_id,
                     study_word_id=word_id,
@@ -850,6 +849,7 @@ def re_loop(
                     .filter(TaskAccounts.id == task_account_id)
                     .update({
                         TaskAccounts.is_complete: 1,
+                        TaskAccounts.status: 2,
                         TaskAccounts.finished_time: datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))),
                         TaskAccounts.last_update_time: datetime.now(timezone.utc).astimezone(
                             timezone(timedelta(hours=8))),

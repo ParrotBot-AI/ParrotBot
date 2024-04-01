@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Integer, DateTime, ForeignKey, Enum
+from sqlalchemy import Column, String, Integer, DateTime, ForeignKey, Enum, Float
 from sqlalchemy import UniqueConstraint
 from configs.environment import DATABASE_SELECTION
 import enum
@@ -56,6 +56,7 @@ class Users(BASES['core']):
     vocab_level = Column(Integer, nullable=True)
     total_study_days = Column(Integer, default=0)
     user_plan = Column(Integer, default=0)
+    plan_due_time = Column(DateTime)
     create_time = Column(DateTime)
     last_update_time = Column(DateTime)
 
@@ -86,6 +87,7 @@ class Accounts(BASES['core']):
     purpose = Column(Enum(purpose), nullable=True)
     study_type = Column(Enum(study), nullable=True)
     next_test_time = Column(DateTime)
+    estimate_score = Column(Float)
 
     create_time = Column(DateTime)
     last_update_time = Column(DateTime)

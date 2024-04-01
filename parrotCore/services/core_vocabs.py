@@ -221,14 +221,18 @@ class VocabsService:
                             )
                             if len(tasks) == 0:
                                 # 添加任务
+                                from configs.operation import STUDY_LOOP
                                 new_task = dict(
                                     account_id=record.account_id,
                                     task_id=8,  # 背单词
                                     is_active=1,
                                     create_time=datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))),
                                     last_update_time=datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))),
-                                    loop=1,
+                                    loop=STUDY_LOOP,
                                     current_loop=0,
+                                    level=0,
+                                    due_time=datetime.now(timezone.utc).astimezone(
+                                        timezone(timedelta(hours=8))).replace(hour=23, minute=59, second=59),
                                     learning_type=1,
                                 )
                                 new_task_ = dict(
@@ -237,8 +241,11 @@ class VocabsService:
                                     is_active=1,
                                     create_time=datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))),
                                     last_update_time=datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))),
-                                    loop=1,
+                                    loop=STUDY_LOOP,
                                     current_loop=0,
+                                    level=0,
+                                    due_time=datetime.now(timezone.utc).astimezone(
+                                        timezone(timedelta(hours=8))).replace(hour=23, minute=59, second=59),
                                     learning_type=1,
                                 )
                                 s_l.append(new_task)

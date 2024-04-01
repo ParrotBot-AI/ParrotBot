@@ -88,6 +88,7 @@ def jump_vocabs():
     except Exception as e:
         return ArgumentExceptionResponse(msg=f'{e}')
 
+
 @bp.route('reset_vocabs/<account_id>/', methods=['POST'])
 def reset_vocabs(account_id):
     try:
@@ -210,13 +211,22 @@ def add_pulse_time(account_id):
 
 @bp.route('get_checkin_info/<account_id>/', methods=['GET'])
 def get_checkin_info(account_id):
+    from blueprints.account import AccountController
     try:
         res, data = StudyPulseController().get_pulse_check_information(
             account_id=account_id,
         )
-        if res:
-            return SuccessDataResponse(data)
-        else:
+        if not res:
             return ArgumentExceptionResponse(msg=f'{data}')
+
+        res_, data_ = AccountController().account_additional_info(
+            account_id=account_id,
+        )
+        if not res_:
+            return ArgumentExceptionResponse(msg=f'{data}')
+
+        data['info'] = data_
+        return SuccessDataResponse(data)
+
     except Exception as e:
         return ArgumentExceptionResponse(msg=f'{e}')

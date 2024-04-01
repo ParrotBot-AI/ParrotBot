@@ -81,6 +81,7 @@ class DailyService:
                         session.query(TaskAccounts)
                         .filter(TaskAccounts.account_id == account_id)
                         .filter(TaskAccounts.create_time >= start_of_today)
+                        .filter(TaskAccounts.level == 0)
                         .all()
                     )
                     task_complete += sum([1 for x in tasks_accounts if x.is_complete == 1])

@@ -29,7 +29,7 @@ from utils.redis_tools import RedisWrapper
 import os
 import sys
 
-from configs.operation import DAILY_STUDY_TIME_TARGET, DAILY_STUDY_LOGIN_COUNT_TARGET, NON_MEMBER_VOCAB_GREEN_TIME
+from configs.operation import DAILY_STUDY_TIME_TARGET, DAILY_STUDY_LOGIN_COUNT_TARGET, NON_MEMBER_VOCAB_GREEN_TIME, STUDY_LOOP
 
 current_file_path = os.path.abspath(__file__)
 parent_directory = os.path.dirname(current_file_path)
@@ -317,8 +317,10 @@ class VocabLearningController(crudController):
                             is_active=1,
                             create_time=datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))),
                             last_update_time=datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))),
-                            loop=1,
+                            loop=2,
                             current_loop=0,
+                            level=0,
+                            due_time=datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))).replace(hour=23, minute=59, second=59),
                             learning_type=1,
                         )
                         new_task_ = dict(
@@ -328,6 +330,8 @@ class VocabLearningController(crudController):
                             create_time=datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))),
                             last_update_time=datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))),
                             loop=1,
+                            level=0,
+                            due_time=datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))).replace(hour=23, minute=59, second=59),
                             current_loop=0,
                             learning_type=1,
                         )
@@ -728,7 +732,7 @@ class VocabLearningController(crudController):
                                 create_time=datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))),
                                 last_update_time=datetime.now(timezone.utc).astimezone(
                                     timezone(timedelta(hours=8))),
-                                loop=1,
+                                loop=STUDY_LOOP,
                                 current_loop=1,
                                 learning_type=1,
                             )
@@ -739,7 +743,7 @@ class VocabLearningController(crudController):
                                 create_time=datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))),
                                 last_update_time=datetime.now(timezone.utc).astimezone(
                                     timezone(timedelta(hours=8))),
-                                loop=1,
+                                loop=STUDY_LOOP,
                                 current_loop=1,
                                 learning_type=1,
                             )
@@ -930,6 +934,7 @@ class TaskController(crudController):
                     tas['task_name'] = record.task_name
                     tas['task_id'] = record.id
                     tas['order'] = record.order
+                    tas['status'] = record.status
                     tas['is_complete'] = task.is_complete
                     tas['complete_p'] = task.complete_percentage
                     resp.append(tas)
@@ -1088,7 +1093,7 @@ class TaskController(crudController):
 
                 now = datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))
                 start_of_today = datetime(now.year, now.month, now.day)
-                if record.create_time < start_of_today:
+                if record.create_time < start_of_today or record.due_time < now:
                     return False, '任务已过期'
 
                 if res['task_name'] == "复习旧单词":
@@ -1139,6 +1144,7 @@ class TaskController(crudController):
                             .update({
                                 TaskAccounts.started_time: datetime.now(timezone.utc).astimezone(
                                     timezone(timedelta(hours=8))),
+                                TaskAccounts.status:1
                             })
                         )
                         try:
@@ -1267,7 +1273,7 @@ class TaskController(crudController):
 
 if __name__ == "__main__":
     account_id = 37
-    # pprint(VocabLearningController().create_new_vocab_tasks(account_id=27))
+    pprint(VocabLearningController().create_new_vocab_tasks(account_id=27))
     # pprint(VocabLearningController().fetch_account_vocab(27))
     # pprint(VocabLearningController().reset_vocabs(account_id=37))
     # pprint(VocabLearningController().jump_to_vocabs(account_id=37, category_id=2))
@@ -1275,15 +1281,15 @@ if __name__ == "__main__":
     # pprint(StudyPulseController().get_pulse_check_information(account_id=27))
 
     # pprint(TaskController().fetch_account_tasks(account_id=account_id, after_time=get_today_midnight(), active=True))
-    today = datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))
-    time = datetime(today.year, today.month, today.day, 0, 0)
-    res, data = TaskController().fetch_account_tasks(
-        account_id=account_id,
-        after_time=time,
-        type=1,
-        is_complete=0,
-    )
-    pprint(data)
+    # today = datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))
+    # time = datetime(today.year, today.month, today.day, 0, 0)
+    # res, data = TaskController().fetch_account_tasks(
+    #     account_id=account_id,
+    #     after_time=time,
+    #     type=1,
+    #     is_complete=0,
+    # )
+    # pprint(data)
 
     # pprint(TaskController().start_task(task_account_id=154))
 

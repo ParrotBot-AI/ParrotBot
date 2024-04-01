@@ -147,11 +147,14 @@ class TaskAccounts(BASES['core']):
     id = Column(Integer, autoincrement=True, primary_key=True)
     account_id = Column(Integer, nullable=False)
     task_id = Column(Integer, ForeignKey('Tasks.id', ondelete='CASCADE'), nullable=False)
+    status = Column(Integer, default=0)  # 0为未开始，1为进行中, 2为完成
     is_active = Column(Boolean, default=True)
     is_complete = Column(Boolean, default=False)
     complete_percentage = Column(Float, default=0)
     started_time = Column(DateTime, nullable=True)
     finished_time = Column(DateTime, nullable=True)
+    due_time = Column(DateTime, nullable=True)
+    level = Column(Integer, default=0)  # 0为日级，1为周级task
     loop = Column(Integer, default=1)
     current_loop = Column(Integer, default=1)
     create_time = Column(DateTime)
