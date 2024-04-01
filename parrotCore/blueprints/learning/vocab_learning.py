@@ -615,10 +615,10 @@ def redo_words_study(
                 if word:
                     print(word.category_id, cate, 616)
                     if word.category_id > cate:
-                        record = (
+                        cate_record = (
                             session.query(VocabsLearning)
                             .filter(VocabsLearning.id == account_id)
-                            .update({VocabsLearning.current_category:word.category_id})
+                            .update({VocabsLearning.current_category: word.category_id})
                         )
                         print("here", 623)
                         if statistic_cache:
