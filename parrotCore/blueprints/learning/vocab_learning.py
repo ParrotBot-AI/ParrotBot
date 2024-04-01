@@ -623,6 +623,7 @@ def redo_words_study(
                         if statistic_cache:
                             statistic_cache['status_book']["current_level"] = word.category_id
                             statistic_cache['status_book']["level_status"] = 0
+                            print("here", statistic_cache['status_book']['level_book'], 626)
                             for each in statistic_cache['status_book']['level_book']:
                                 if each['id'] == word.category_id:
                                     statistic_cache['status_book']["level_total"] = each['counts']
