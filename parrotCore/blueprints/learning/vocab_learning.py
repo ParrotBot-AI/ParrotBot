@@ -9,7 +9,6 @@ elif DATABASE_SELECTION == 'mysql':
 from utils.redis_tools import RedisWrapper
 import random
 from utils import iso_ts
-from sqlalchemy import null, select, union_all, and_, or_, join, outerjoin, update, insert, delete
 from datetime import datetime, timedelta, timezone
 from configs.operation import WORDS_STUDY
 

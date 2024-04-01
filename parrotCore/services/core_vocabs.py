@@ -35,12 +35,9 @@ from configs.operation import JUMP_NEED_PERCENTAGE, JUMP_NEED_STUDY_AMOUNT
 logger = get_general_logger('vocab_log', path=abspath('logs', 'vocab_service'))
 
 
-class VocabsService:
+class TasksService:
     # 每日定时任务，单词本管理
     # 单词本保持 !!!右进左出!!!!!
-
-    def __init__(self):
-        pass
 
     def check_accounts_words_book(self):
         # 检查是否存在单词本，如果不存在，添加单词本
@@ -129,7 +126,8 @@ class VocabsService:
                         update_parameters = dict(
                             current_category=new_cate
                         )
-                        default_dic = {'last_update_time': datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))}
+                        default_dic = {
+                            'last_update_time': datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))}
                         update_ = (
                             session.query(VocabsLearning)
                             .filter(VocabsLearning.account_id == record.account_id)
@@ -162,10 +160,12 @@ class VocabsService:
                         .all()
                     )
                     if len(words_records) > 0:
-                        redis.list_push(f"{record.to_review}", *list(set([x.wrong_word_id for x in words_records])), side="r")
+                        redis.list_push(f"{record.to_review}", *list(set([x.wrong_word_id for x in words_records])),
+                                        side="r")
 
                     # 3. 更新statis
-                    default_dic = {'last_update_time': datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))}
+                    default_dic = {
+                        'last_update_time': datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))}
 
                     update_parameters = dict(
                         last_day_review=record.today_day_review,
@@ -186,7 +186,63 @@ class VocabsService:
                 session.rollback()
                 return False, logger.info(f"用户每日任务词表更新失败：{str(e)}.")
 
-    def generate_new_tasks(self):
+    def deal_weekly_tasks(self):
+        today_date = datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))
+        is_monday = today_date.weekday() == 0
+        start_of_today = datetime(today_date.year, today_date.month, today_date.day)
+
+        if not is_monday:
+            return True, logger.info("未到生成周度任务时间（不是周一凌晨）")
+
+        s_l = []
+        with db_session('core') as session:
+            account_records = (
+                session.query(Accounts.id, Users.user_plan)
+                .join(Users, Accounts.user_id == Users.id)
+                .all()
+            )
+            for record in account_records:
+                if record.user_plan != 0 and record.user_plan is not None:
+                    tasks = (
+                        session.query(TaskAccounts)
+                        .filter(TaskAccounts.task_id == 10)
+                        .filter(TaskAccounts.account_id == record.id)
+                        .filter(TaskAccounts.create_time > start_of_today)
+                        .all()
+                    )
+                    if len(tasks) == 0:
+                        # calculate new sunday nighttime:
+                        days_to_add = 6 - today_date.weekday() if today_date.weekday() < 6 else 0
+                        next_sunday = today_date + timedelta(days=days_to_add)
+                        next_sunday_end = next_sunday.replace(hour=23, minute=59, second=59, microsecond=0)
+                        new_task = dict(
+                            account_id=record.id,
+                            task_id=10,  # 模考
+                            is_active=1,
+                            create_time=datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))),
+                            last_update_time=datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))),
+                            loop=1,
+                            current_loop=0,
+                            level=1,  # 周度任务
+                            due_time=next_sunday_end,
+                            learning_type=2,
+                        )
+                        s_l.append(new_task)
+
+            if len(s_l) > 0:
+                session.execute(
+                    insert(TaskAccounts),
+                    s_l
+                )
+                try:
+                    session.commit()
+                    return True, logger.info("创建用户周度任务成功.")
+                except Exception as e:
+                    return False, logger.info(f"创建用户周度任务失败:{str(e)}.")
+            else:
+                return True, logger.info("创建用户周度任务成功,无需更新.")
+
+    def generate_new_vocab_tasks(self):
         with db_session('core') as session:
             records = (
                 session.query(VocabsLearning)
@@ -227,7 +283,8 @@ class VocabsService:
                                     task_id=8,  # 背单词
                                     is_active=1,
                                     create_time=datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))),
-                                    last_update_time=datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))),
+                                    last_update_time=datetime.now(timezone.utc).astimezone(
+                                        timezone(timedelta(hours=8))),
                                     loop=STUDY_LOOP,
                                     current_loop=0,
                                     level=0,
@@ -240,8 +297,9 @@ class VocabsService:
                                     task_id=9,  # 复习单词
                                     is_active=1,
                                     create_time=datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))),
-                                    last_update_time=datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))),
-                                    loop=STUDY_LOOP,
+                                    last_update_time=datetime.now(timezone.utc).astimezone(
+                                        timezone(timedelta(hours=8))),
+                                    loop=1,
                                     current_loop=0,
                                     level=0,
                                     due_time=datetime.now(timezone.utc).astimezone(
@@ -285,15 +343,16 @@ class VocabsService:
                         VocabsLearning.current_category
                     )
                     .join(VocabCategoryRelationships,
-                        (VocabCategoryRelationships.word_id == VocabsLearningRecords.correct_word_id) |
-                        (VocabCategoryRelationships.word_id == VocabsLearningRecords.wrong_word_id))
+                          (VocabCategoryRelationships.word_id == VocabsLearningRecords.correct_word_id) |
+                          (VocabCategoryRelationships.word_id == VocabsLearningRecords.wrong_word_id))
                     .join(VocabsLearning, VocabsLearningRecords.account_id == VocabsLearning.account_id)
                     .join(VocabCategorys, VocabsLearning.current_category == VocabCategorys.id)
                     .filter(VocabsLearningRecords.account_id == account_id)
                     .all()
                 )
                 total_current_study = sum([1 for x in vocabs_records if x.study_word_id is not None])
-                correct_number = len(list(set([x.correct_word_id for x in vocabs_records if x.correct_word_id is not None])))
+                correct_number = len(
+                    list(set([x.correct_word_id for x in vocabs_records if x.correct_word_id is not None])))
                 wrong_number = len(list(set([x.wrong_word_id for x in vocabs_records if x.wrong_word_id is not None])))
                 if total_current_study > JUMP_NEED_STUDY_AMOUNT:
                     if correct_number / (correct_number + wrong_number) * 100 > JUMP_NEED_PERCENTAGE:
@@ -324,7 +383,6 @@ class VocabsService:
             except Exception as e:
                 return False, logger.info("用户词汇升级检查失败.")
 
-
     def run(self):
         # 1.先查看单词本与账户是否匹配 (X)
         # 2.每日的缓存数据移入主数据库, 包括（暂时保留）
@@ -333,14 +391,16 @@ class VocabsService:
         # 3.每日生成新的单词本 (X)
         # 4.生成新的单词任务 (X)
         # 5.检测用户是否需要跳级词汇， 目前满足条件 (该阶段学满35个 & 该阶段有90%的正确率)
-        logger.info(">>>>>>>>>> 开始自动化单词服务 <<<<<<<<<")
+        # 6.生成周度任务
+        logger.info(">>>>>>>>>> 开始自动化用户任务服务 <<<<<<<<<")
         self.check_accounts_words_book()
         self.generate_new_words()
-        self.generate_new_tasks()
+        self.generate_new_vocab_tasks()
         self.check_whether_jump()
-        logger.info(">>>>>>>>>> 单词自动化服务结束 <<<<<<<<<")
+        self.deal_weekly_tasks()
+        logger.info(">>>>>>>>>> 单词自动化用户任务服务结束 <<<<<<<<<")
 
 
 if __name__ == "__main__":
-    # 定时晚上12:01点执行，前期不考虑速度 -> 3与4后期可以两个线程异步进行
-    VocabsService().run()
+    # 定时晚上12:01点执行，前期不考虑速度 -> 后期可以多线程异步进行
+    TasksService().run()

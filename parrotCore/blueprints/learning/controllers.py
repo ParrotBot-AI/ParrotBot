@@ -36,6 +36,7 @@ parent_directory = os.path.dirname(current_file_path)
 if parent_directory not in sys.path:
     sys.path.append(parent_directory)
 import vocab_learning
+import task_learning
 
 logger = get_general_logger('account', path=abspath('logs', 'core_web'))
 
@@ -935,6 +936,7 @@ class TaskController(crudController):
                     tas['task_id'] = record.id
                     tas['order'] = record.order
                     tas['status'] = task.status
+                    tas['level'] = task.level
                     tas['is_complete'] = task.is_complete
                     tas['complete_p'] = task.complete_percentage
                     resp.append(tas)
@@ -1137,7 +1139,6 @@ class TaskController(crudController):
                     redis = RedisWrapper('core_cache')
                     redis.set(f"TaskAccount:{task_account_id}", res, ex=1 * 24 * 60 * 60)  # 一天后自动过期
                     if return_c:
-                        # to do 更新 start time
                         u_record = (
                             session.query(TaskAccounts)
                             .filter(TaskAccounts.id == task_account_id)
@@ -1154,6 +1155,8 @@ class TaskController(crudController):
                             }
                         except Exception as e:
                             return False, f"{str(e)}."
+                    else:
+                        return False, data
                 else:
                     return False, data
 
@@ -1273,7 +1276,7 @@ class TaskController(crudController):
 
 if __name__ == "__main__":
     account_id = 37
-    pprint(VocabLearningController().create_new_vocab_tasks(account_id=27))
+    # pprint(VocabLearningController().create_new_vocab_tasks(account_id=27))
     # pprint(VocabLearningController().fetch_account_vocab(27))
     # pprint(VocabLearningController().reset_vocabs(account_id=37))
     # pprint(VocabLearningController().jump_to_vocabs(account_id=37, category_id=2))
@@ -1317,10 +1320,16 @@ if __name__ == "__main__":
     #
     # print(flow.rec_module_outcome(task_account_id=15, payload=payload)[1])
 
-    # 复习单词
+    #
     # flow = TaskController()
-    # resp, payload = flow.start_task(task_account_id=5)
+    # 周度模考任务
+    # resp, payload = flow.start_task(task_account_id=203)
+    # pprint(payload)
+    # payload = {'payload':{"finished": True}}
+    # resp, payload = flow.rec_module_outcome(task_account_id=203, payload=payload)
     # print(payload)
+
+    # 复习单词
     # 1. F
     # payload = {'payload': {'word_id': 37473, 'word': 'grind', 'stem': ['n. 槽', 'v. 磨（碎）；磨利', 'v. 刮；擦 n. 刮；擦伤；擦痕', 'v. 掘，挖；采掘'], 'word_ids': [40069, 37473, 37353, 36791], 'correct_answer': [0, 1, 0, 0], 'answer': [0, 0, 0, 0], 'unknown': False, 'study': False, 'target': ['answer', 'unknown', 'study']}}
     # 2. T

@@ -50,7 +50,6 @@ class AccountController(crudController):
 
                 res['study_day'] = user.total_study_days
                 now = datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))).replace(tzinfo=None)
-                print(user.plan_due_time, user.id)
                 if user.plan_due_time:
                     diff = user.plan_due_time - now
                     if diff.days < 0:

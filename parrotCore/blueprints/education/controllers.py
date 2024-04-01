@@ -2319,7 +2319,7 @@ if __name__ == '__main__':
     # print(init.update_question_answer(sheet_id=sheet_id, question_id=5, answer=[0, 0, 1, 0], duration=200))
 
     # 中途批改
-    # print(asyncio.run(AnsweringScoringController().model_scoring(sheet_id=1216, question_id=1516)))
+    # print(asyncio.run(AnsweringScoringController().model_scoring(sheet_id=1224, question_id=1519)))
 
     # 提交答案
     # pprint.pprint(init.save_answer(sheet_id=1148))

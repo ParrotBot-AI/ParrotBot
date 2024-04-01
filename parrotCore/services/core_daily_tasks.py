@@ -22,6 +22,39 @@ logger = get_general_logger('daily_log', path=abspath('logs', 'daily_service'))
 
 class DailyService:
     # 每日定时任务，每日事务处理
+    def user_plan_monitor(self):
+        from blueprints.account.models import Users
+        now = datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))).replace(tzinfo=None)
+        with db_session('core') as session:
+            records = (
+                session.query(Users)
+                .all()
+            )
+            s_l = []
+            for user in records:
+                if user.plan_due_time is not None and user.plan_due_time < now:
+                    # 变为普通用户
+                    r = {
+                        "u_id": user.id,
+                        "user_plan": 0
+                    }
+                    s_l.append(r)
+
+            if len(s_l) == 0:
+                return True, logger.info("无需更新用户plan任务，成功.")
+
+            session.execute(
+                update(Users).where(Users.id == bindparam('u_id')).values(
+                    user_plan=bindparam('user_plan'),
+                ),
+                s_l
+            )
+
+            try:
+                session.commit()
+                return True, logger.info("用户plan任务，成功.")
+            except Exception as e:
+                return False, logger.info(f"用户plan任务，失败.")
 
     def clean_model_usage(self):
         from blueprints.account.models import Accounts
@@ -80,8 +113,8 @@ class DailyService:
                     tasks_accounts = (
                         session.query(TaskAccounts)
                         .filter(TaskAccounts.account_id == account_id)
-                        .filter(TaskAccounts.create_time >= start_of_today)
-                        .filter(TaskAccounts.level == 0)
+                        .filter(and_(TaskAccounts.due_time < now, TaskAccounts.due_time >= start_of_today))
+                        # .filter(TaskAccounts.level == 0)
                         .all()
                     )
                     task_complete += sum([1 for x in tasks_accounts if x.is_complete == 1])
@@ -134,7 +167,7 @@ class DailyService:
                         .one_or_none()
                     )
                     if tasks_account:
-                        if tasks_account.create_time < start_of_today:
+                        if tasks_account.due_time <= start_of_today:
                             redis.delete(key)
 
             return True, logger.info("移除过期任务记录成功.")
@@ -180,16 +213,18 @@ class DailyService:
 
 
     def run(self):
+        # 0. 查看用户的会员记录是否过期
         # 1.清除用户的当日的model_use记录，设置为0
         # 2.更新用户total study day和task_complete记录
         # 3.清除过期的缓存里过期的task
         # 4.保存，清除过期的试卷
-        logger.info(">>>>>>>>>> 开始每日事务服务 <<<<<<<<<")
+        logger.info(">>>>>>>>>> 开始每日系统事务服务 <<<<<<<<<")
+        self.user_plan_monitor()
         self.clean_model_usage()
         self.users_tasks()
         self.clean_old_tasks()
         self.clean_old_sheets()
-        logger.info(">>>>>>>>>> 每日事务服自动化服务结束 <<<<<<<<<")
+        logger.info(">>>>>>>>>> 每日系统事务服自动化服务结束 <<<<<<<<<")
 
 
 if __name__ == "__main__":
