@@ -209,7 +209,11 @@ def fetch_words_mc(
                 return True, response, True
 
             elif len(today_list) == 0:
-                return False, {}, True
+                # 整个都学习完了
+                if len(rds.lrange(f"{record.in_proccess}")) == 0:
+                    return False, "词汇已学习完毕", True
+                else:
+                    return False, "今日已达学习上限", True
             else:
                 return False, "缓存出错", True
         else:
@@ -223,7 +227,7 @@ def words_gpt_fetch(
     rds = RedisWrapper('core_learning')
     list_words = rds.lrange(f"{account_id}:wrong_group")
     rds.set(f"{account_id}:loop_study", len(list_words))
-
+    from blueprints.learning.models import VocabsLearning
     from blueprints.education.models import VocabBase
     with db_session('core') as session:
         records = (
@@ -253,6 +257,17 @@ def words_gpt_fetch(
             execute=False,
             target=['execute', 'response']
         )
+        r = (
+            session.query(VocabsLearning)
+            .filter(VocabsLearning.account_id == account_id)
+            .one_or_none()
+        )
+        if r:
+            payload['today_study'] = r.today_day_study
+
+        curr = len(rds.lrange(f"{account_id}:wrong_group")) if rds.lrange(f"{account_id}:wrong_group") else 0
+        total = WORDS_STUDY
+        payload['process'] = {"c": curr, "t": total}
         return True, payload, True
 
 
@@ -362,7 +377,7 @@ def review_words(
                 return True, response, True
             elif len(today_list) == 0:
                 redis_cache.delete(f"{account_id}:loop_study")
-                return False, {}, True
+                return False, "复习已完成", True
             else:
                 return False, "缓存出错", True
         else:
