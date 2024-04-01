@@ -446,7 +446,7 @@ def reviews_redo_words_study(
 
                 try:
                     session.commit()
-                    redis.set(f'VocabsStatics:{account_id}', statistic_cache, 7200)
+                    redis.set(f'VocabsStatics:{account_id}', statistic_cache, 3600)
 
                     # 如果今天的已经复习了,下一步
                     if total_len > 0:
@@ -492,7 +492,7 @@ def reviews_redo_words_study(
 
                 try:
                     session.commit()
-                    redis.set(f'VocabsStatics:{account_id}', statistic_cache, 7200)
+                    redis.set(f'VocabsStatics:{account_id}', statistic_cache, 3600)
                     total_len = len(rds.lrange(f"{record.to_review}"))
                     if total_len > 0:
                         return True, False
@@ -576,7 +576,7 @@ def redo_words_study(
                 study_left = len(rds.lrange(f"{record.today_learn}"))
                 try:
                     session.commit()
-                    redis.set(f'VocabsStatics:{account_id}', statistic_cache, 7200)
+                    redis.set(f'VocabsStatics:{account_id}', statistic_cache, 3600)
 
                     # 如果今天的已经学完了，直接请求model,下一步
                     if study_left == 0:
@@ -605,26 +605,25 @@ def redo_words_study(
                         elif type(statistic_cache['series'][tody]['correct_words']) == int:
                             statistic_cache['series'][tody]['correct_words'] += 1
 
-                print("here", 608)
-
                 word = (
                     session.query(VocabCategoryRelationships)
                     .filter(VocabCategoryRelationships.word_id == word_id)
                     .one_or_none()
                 )
                 if word:
-                    print(word.category_id, cate, 616)
                     if word.category_id > cate:
                         cate_record = (
                             session.query(VocabsLearning)
                             .filter(VocabsLearning.id == account_id)
-                            .update({VocabsLearning.current_category: word.category_id})
+                            .update({
+                                VocabsLearning.current_category: word.category_id
+                            })
                         )
-                        print("here", 623)
+                        session.commit()
+                        print('here', 623)
                         if statistic_cache:
                             statistic_cache['status_book']["current_level"] = word.category_id
-                            statistic_cache['status_book']["level_status"] = 0
-                            print("here", statistic_cache['status_book']['level_book'], 626)
+                            statistic_cache['status_book']["level_status"] = 1
                             for each in statistic_cache['status_book']['level_book']:
                                 if each['id'] == word.category_id:
                                     statistic_cache['status_book']["level_total"] = each['counts']
@@ -658,7 +657,6 @@ def redo_words_study(
                             timezone(timedelta(hours=8))),
                     })
                 )
-                print("here", 660)
 
                 # 更新learning （大量写入，可能会导致瓶颈）
                 update_p = dict(
@@ -674,11 +672,10 @@ def redo_words_study(
                 )
 
                 rds.list_push(f"{account_id}:finished", *[word_id], side="r")
-                print("here", 676)
                 try:
                     session.commit()
                     if statistic_cache:
-                        redis.set(f'VocabsStatics:{account_id}', statistic_cache, 7200)
+                        redis.set(f'VocabsStatics:{account_id}', statistic_cache, 3600)
                     return True, False
                 except Exception as e:
                     return False, "单词学习过程中入库失败."
@@ -753,7 +750,7 @@ def redo_review_study(
                 study_left = len(rds.lrange(f"{record.total_study}"))
                 try:
                     session.commit()
-                    redis.set(f'VocabsStatics:{account_id}', statistic_cache, 7200)
+                    redis.set(f'VocabsStatics:{account_id}', statistic_cache, 3600)
                     return True, False
 
                 except Exception as e:
@@ -820,7 +817,7 @@ def redo_review_study(
                 rds.list_push(f"{account_id}:finished", *[word_id], side="r")
                 try:
                     session.commit()
-                    redis.set(f'VocabsStatics:{account_id}', statistic_cache, 7200)
+                    redis.set(f'VocabsStatics:{account_id}', statistic_cache, 3600)
 
                     study_left = len(rds.lrange(f"{account_id}:wrong_group"))
                     if study_left > 0:

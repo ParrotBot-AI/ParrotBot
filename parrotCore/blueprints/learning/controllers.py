@@ -98,15 +98,10 @@ class VocabLearningController(crudController):
                     session.query(VocabCategorys)
                     .filter(or_(VocabCategorys.exam_id == exam_id, VocabCategorys.exam_id == None))
                     .filter(VocabCategorys.order >= _r)
+                    .order_by(VocabCategorys.order.asc())
                     .all()
                 )
                 cate_ids = [x.id for x in records]
-
-                words = (
-                    session.query(VocabCategoryRelationships)
-                    .filter(VocabCategoryRelationships.category_id.in_(cate_ids))
-                    .all()
-                )
 
                 # 查看跳了多少词
                 jump_words = (
@@ -119,22 +114,25 @@ class VocabLearningController(crudController):
                 jump_words_len = len(jump_words)
 
                 # 重构词表
-                input_list = [x.word_id for x in words]
-                in_process = redis.lrange(f"{record.in_process}")
-                redis.list_pop(f"{record.in_process}", "l", len(in_process))
-                today = redis.lrange(f"{record.today_learn}")
-                redis.list_pop(f"{record.today_learn}", "l", len(today))
+                redis.delete(f"{record.today_learn}")
+                redis.delete(f"{record.in_process}")
 
-                if len(input_list) > 0:
-                    import random
-                    random.shuffle(input_list)
-                    l = redis.list_push(f"{record.in_process}", *input_list, side="r")
-                    for _ in range(record.amount if record.amount < len(input_list) else len(input_list)):
-                        redis.list_move(f"{record.in_process}", f"{record.today_learn}")
+                total = 0
+                for r in cate_ids:
+                    words = (
+                        session.query(VocabCategoryRelationships)
+                        .filter(VocabCategoryRelationships.category_id == r)
+                        .all()
+                    )
+                    input_list = [x.word_id for x in words]
+                    total += len(input_list)
+                    if len(input_list) > 0:
+                        import random
+                        random.shuffle(input_list)
+                        l = redis.list_push(f"{record.in_process}", *input_list, side="r")
 
-                # print(f'input list: {len(input_list)}', 133)
-                # print(f'in_process after jump: {len(redis.lrange(f"{record.in_process}"))}', 134)
-                # print(f'today after jump: {len(redis.lrange(f"{record.today_learn}"))}', 135)
+                for _ in range(record.amount if record.amount < total else total):
+                    redis.list_move(f"{record.in_process}", f"{record.today_learn}")
 
                 # 更新user vocab 词汇:
                 user_r = (
@@ -1278,8 +1276,8 @@ if __name__ == "__main__":
     account_id = 37
     # pprint(VocabLearningController().create_new_vocab_tasks(account_id=27))
     # pprint(VocabLearningController().fetch_account_vocab(27))
-    # pprint(VocabLearningController().reset_vocabs(account_id=37))
-    # pprint(VocabLearningController().jump_to_vocabs(account_id=37, category_id=2))
+    pprint(VocabLearningController().reset_vocabs(account_id=37))
+    pprint(VocabLearningController().jump_to_vocabs(account_id=37, category_id=2))
     # pprint(VocabLearningController().fetch_account_vocab(37))
     # pprint(StudyPulseController().get_pulse_check_information(account_id=27))
 
