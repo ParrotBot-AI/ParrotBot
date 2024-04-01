@@ -1093,7 +1093,7 @@ class TaskController(crudController):
 
                 now = datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))
                 start_of_today = datetime(now.year, now.month, now.day)
-                if record.create_time < start_of_today or record.due_time < now:
+                if record.create_time < start_of_today:
                     return False, '任务已过期'
 
                 if res['task_name'] == "复习旧单词":
