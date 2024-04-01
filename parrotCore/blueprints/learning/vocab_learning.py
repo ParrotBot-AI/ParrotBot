@@ -605,6 +605,8 @@ def redo_words_study(
                         elif type(statistic_cache['series'][tody]['correct_words']) == int:
                             statistic_cache['series'][tody]['correct_words'] += 1
 
+                print("here", 608)
+
                 word = (
                     session.query(VocabCategoryRelationships)
                     .filter(VocabCategoryRelationships.word_id == word_id)
@@ -623,6 +625,8 @@ def redo_words_study(
                             for each in statistic_cache['status_book']['level_book']:
                                 if each['id'] == word.category_id:
                                     statistic_cache['status_book']["level_total"] = each['counts']
+
+                print("here", 629)
 
                 # study word, correct word 2 条记录
                 study_add = dict(
@@ -653,6 +657,7 @@ def redo_words_study(
                             timezone(timedelta(hours=8))),
                     })
                 )
+                print("here", 660)
 
                 # 更新learning （大量写入，可能会导致瓶颈）
                 update_p = dict(
@@ -668,6 +673,7 @@ def redo_words_study(
                 )
 
                 rds.list_push(f"{account_id}:finished", *[word_id], side="r")
+                print("here", 676)
                 try:
                     session.commit()
                     if statistic_cache:
