@@ -424,21 +424,8 @@ class UserViewSet(CustomModelViewSet):
                 except:
                     return ErrorResponse(msg='服务器故障')
 
-            data['tdy'] = _res_data
-
-            # tomm_t = [
-            #     {
-            #         'id': 12,
-            #         'task_name': '复习阅读204',
-            #         'status': 0,
-            #     },
-            #     {
-            #         'id': 12,
-            #         'task_name': '背诵单词200',
-            #         'status': 0,
-            #     },
-            # ]
-            data['tmr'] = []
+            data['tdy'] = [x for x in _res_data if x['level'] == 0]
+            data['wk'] = [x for x in _res_data if x['level'] == 1]
             return DetailResponse(data=data, msg="获取成功")
         else:
             ErrorResponse(msg="请传入正确id值")
