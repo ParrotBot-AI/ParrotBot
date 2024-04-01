@@ -934,7 +934,7 @@ class TaskController(crudController):
                     tas['task_name'] = record.task_name
                     tas['task_id'] = record.id
                     tas['order'] = record.order
-                    tas['status'] = record.status
+                    tas['status'] = task.status
                     tas['is_complete'] = task.is_complete
                     tas['complete_p'] = task.complete_percentage
                     resp.append(tas)
