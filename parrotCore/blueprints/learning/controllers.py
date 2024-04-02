@@ -872,8 +872,9 @@ class StudyPulseController(crudController):
 
             # 打开状态：
             status = []
-            remaining_week = [end_date + timedelta(days=i) for i in range(7 - end_date.weekday())]
-            sorted_week = sorted(remaining_week, key=lambda x: x.weekday())
+            full_week = [end_date - timedelta(days=end_date.weekday()) + timedelta(days=i) for i in range(7)]
+            # remaining_week = [end_date + timedelta(days=i) for i in range(7 - end_date.weekday())]
+            sorted_week = sorted(full_week, key=lambda x: x.weekday())
 
             for date in sorted_week:
                 if date.strftime('%Y-%m-%d') in new:
@@ -1279,7 +1280,7 @@ if __name__ == "__main__":
     # pprint(VocabLearningController().reset_vocabs(account_id=37))
     # pprint(VocabLearningController().jump_to_vocabs(account_id=37, category_id=2))
     # pprint(VocabLearningController().fetch_account_vocab(37))
-    # pprint(StudyPulseController().get_pulse_check_information(account_id=27))
+    pprint(StudyPulseController().get_pulse_check_information(account_id=37))
 
     # pprint(TaskController().fetch_account_tasks(account_id=account_id, after_time=get_today_midnight(), active=True))
     # today = datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))

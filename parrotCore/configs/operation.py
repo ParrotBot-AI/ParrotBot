@@ -1,5 +1,5 @@
 # 打卡
-DAILY_STUDY_TIME_TARGET = 60 * 20  # 单位为秒 （20分钟）
+DAILY_STUDY_TIME_TARGET = 60 * 30  # 单位为秒 （20分钟）
 DAILY_STUDY_LOGIN_COUNT_TARGET = 3  # 3次登陆
 
 # 访问模型次数
