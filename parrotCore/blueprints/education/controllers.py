@@ -1190,8 +1190,8 @@ class AnsweringScoringController(crudController):
                 # 给所有的children打分
                 if len(children_record) > 0 or record.end_time is None:
                     success = True
-                    for _ in range(len(children_record)):
-                        res, data = self.scoring(sheet_id=children_record.id, re_score=re_score)
+                    for c_record in children_record:
+                        res, data = self.scoring(sheet_id=c_record.id, re_score=re_score)
                         if not res:
                             success = False
                             break
@@ -2326,6 +2326,6 @@ if __name__ == '__main__':
 
     # 算分
     # start = time.time()
-    # print(init.scoring(sheet_id=1184, re_score=True))
-    # pprint.pprint(init.get_score(answer_sheet_id=1218))
+    # print(init.scoring(sheet_id=1285))
+    pprint.pprint(init.get_score(answer_sheet_id=1285))
     # print(time.time() - start)
