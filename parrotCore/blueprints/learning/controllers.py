@@ -1276,8 +1276,8 @@ if __name__ == "__main__":
     account_id = 37
     # pprint(VocabLearningController().create_new_vocab_tasks(account_id=27))
     # pprint(VocabLearningController().fetch_account_vocab(27))
-    pprint(VocabLearningController().reset_vocabs(account_id=37))
-    pprint(VocabLearningController().jump_to_vocabs(account_id=37, category_id=2))
+    # pprint(VocabLearningController().reset_vocabs(account_id=37))
+    # pprint(VocabLearningController().jump_to_vocabs(account_id=37, category_id=2))
     # pprint(VocabLearningController().fetch_account_vocab(37))
     # pprint(StudyPulseController().get_pulse_check_information(account_id=27))
 

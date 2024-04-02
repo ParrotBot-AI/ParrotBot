@@ -1,5 +1,3 @@
-import pprint
-
 from configs.environment import DATABASE_SELECTION
 
 if DATABASE_SELECTION == 'postgre':
@@ -440,10 +438,8 @@ def reviews_redo_words_study(
 
             if correct_answer != answer:
                 # wrong word 1 条记录
-
                 if statistic_cache:
                     if tody in statistic_cache['series']:
-                        print("wrong", 789)
                         if type(statistic_cache['series'][tody]['wrong_words']) == list:
                             statistic_cache['series'][tody]['wrong_words'][0] += 1
                         elif type(statistic_cache['series'][tody]['wrong_words']) == int:
@@ -480,7 +476,6 @@ def reviews_redo_words_study(
                     statistic_cache['total_review'] += 1
 
                     if tody in statistic_cache['series']:
-                        print("right", 789)
                         if type(statistic_cache['series'][tody]['correct_words']) == list:
                             statistic_cache['series'][tody]['correct_words'][0] += 1
                         elif type(statistic_cache['series'][tody]['correct_words']) == int:
@@ -573,7 +568,6 @@ def redo_words_study(
                 # wrong word 1 条记录
                 if statistic_cache:
                     if tody in statistic_cache['series']:
-                        print("wrong", 789)
                         if type(statistic_cache['series'][tody]['wrong_words']) == list:
                             statistic_cache['series'][tody]['wrong_words'][0] += 1
                         elif type(statistic_cache['series'][tody]['wrong_words']) == int:
@@ -618,7 +612,6 @@ def redo_words_study(
                     statistic_cache["status_book"]["level_status"] += 1
 
                     if tody in statistic_cache['series']:
-                        print("right", 789)
                         if type(statistic_cache['series'][tody]['correct_words']) == list:
                             statistic_cache['series'][tody]['correct_words'][0] += 1
                         elif type(statistic_cache['series'][tody]['correct_words']) == int:
@@ -749,7 +742,6 @@ def redo_review_study(
                 # 还不对，继续添加到最后
                 if statistic_cache:
                     if tody in statistic_cache['series']:
-                        print("wrong", 789)
                         if type(statistic_cache['series'][tody]['wrong_words']) == list:
                             statistic_cache['series'][tody]['wrong_words'][0] += 1
                         elif type(statistic_cache['series'][tody]['wrong_words']) == int:
@@ -791,7 +783,6 @@ def redo_review_study(
                             statistic_cache['status_book']["level_status"] += 1
 
                     if tody in statistic_cache['series']:
-                        print("right", 789)
                         if type(statistic_cache['series'][tody]['correct_words']) == list:
                             statistic_cache['series'][tody]['correct_words'][0] += 1
                         elif type(statistic_cache['series'][tody]['correct_words']) == int:
