@@ -885,7 +885,7 @@ class StudyPulseController(crudController):
                         "count_target": counter_target,
                         "study_time": new[date.strftime('%Y-%m-%d')]['study_time'],
                         "time_target": time_target,
-                        "lock": False
+                        "lock": False if date.weekday() <= end_date.weekday() else True
                     }
                 else:
                     record = {
@@ -895,7 +895,7 @@ class StudyPulseController(crudController):
                         "count_target": counter_target,
                         "study_time": 0,
                         "time_target": time_target,
-                        "lock": True
+                        "lock": False if date.weekday() <= end_date.weekday() else True
                     }
                 status.append(record)
 
