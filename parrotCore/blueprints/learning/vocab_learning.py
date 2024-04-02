@@ -629,12 +629,9 @@ def redo_words_study(
                     if word.category_id > cate:
                         cate_record = (
                             session.query(VocabsLearning)
-                            .filter(VocabsLearning.id == account_id)
-                            .update({
-                                VocabsLearning.current_category: word.category_id
-                            })
+                            .filter(VocabsLearning.account_id == account_id)
+                            .update({VocabsLearning.current_category: word.category_id})
                         )
-                        session.commit()
                         print('here', 623)
                         if statistic_cache:
                             statistic_cache['status_book']["current_level"] = word.category_id
