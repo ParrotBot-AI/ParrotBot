@@ -2303,7 +2303,7 @@ if __name__ == '__main__':
     # print(datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))))
 
     init = AnsweringScoringController()
-    # res = init.create_answer_sheet(account_id=37, question_ids=[6669])
+    res = init.create_answer_sheet(account_id=20, question_ids=[1683, 1686, 1684, 1687, 1685, 1688], father_sheet=1245)
     # res = init.create_mock_answer_sheet(account_id=27)
     # pprint.pprint(res)
     # sheet_id = res[1]['sheet_id']

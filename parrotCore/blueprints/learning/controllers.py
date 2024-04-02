@@ -829,6 +829,7 @@ class StudyPulseController(crudController):
         date_range = [start_date + timedelta(days=x) for x in range((end_date - start_date).days + 1)]
         with db_session('core') as session:
             # 查看过去7天登录次数和学习时间：
+            end_ = datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))
             records = (
                 session.query(
                     func.date(StudyPulseRecords.create_time).label('date'),
@@ -838,7 +839,7 @@ class StudyPulseController(crudController):
                 .filter(StudyPulseRecords.account_id == account_id)
                 .filter(and_(
                     StudyPulseRecords.create_time >= start_date,
-                    StudyPulseRecords.create_time <= end_date))
+                    StudyPulseRecords.create_time <= end_))
                 .group_by(
                     func.date(StudyPulseRecords.create_time)
                 )
@@ -847,6 +848,7 @@ class StudyPulseController(crudController):
                 )
                 .all()
             )
+            # print(records)
             date_dic = []
             # 将查询结果转换为字典，便于快速查找
             results_dict = {result[0]: result for result in records}
@@ -1280,7 +1282,7 @@ if __name__ == "__main__":
     # pprint(VocabLearningController().reset_vocabs(account_id=37))
     # pprint(VocabLearningController().jump_to_vocabs(account_id=37, category_id=2))
     # pprint(VocabLearningController().fetch_account_vocab(37))
-    pprint(StudyPulseController().get_pulse_check_information(account_id=37))
+    pprint(StudyPulseController().get_pulse_check_information(account_id=20))
 
     # pprint(TaskController().fetch_account_tasks(account_id=account_id, after_time=get_today_midnight(), active=True))
     # today = datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))
