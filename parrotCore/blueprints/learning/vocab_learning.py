@@ -632,7 +632,6 @@ def redo_words_study(
                             .filter(VocabsLearning.account_id == account_id)
                             .update({VocabsLearning.current_category: word.category_id})
                         )
-                        print('here', 623)
                         if statistic_cache:
                             statistic_cache['status_book']["current_level"] = word.category_id
                             statistic_cache['status_book']["level_status"] = 1
@@ -718,6 +717,7 @@ def redo_review_study(
         **kwargs
 ):
     from blueprints.learning.models import VocabsLearning, VocabsLearningRecords
+    from blueprints.education.models import VocabCategoryRelationships
     from blueprints.account.models import Users, Accounts
     word_id, correct_answer, answer = payload['word_id'], payload['correct_answer'], payload['answer']
     with db_session('core') as session:
@@ -735,6 +735,7 @@ def redo_review_study(
             statistic_cache = redis.get(f'VocabsStatics:{account_id}')
             now = datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))
             tody = now.strftime('%Y-%m-%d')
+            cate = record.current_category
 
             # wrong_word = rds.list_pop(f"{account_id}:wrong_group", side='l')
             #
@@ -774,7 +775,15 @@ def redo_review_study(
                     statistic_cache['today_day_study'] += 1
                     statistic_cache['total_study'] += 1
                     statistic_cache['vocab'] += 1
-                    statistic_cache['status_book']["level_status"] += 1
+                    # 操作防止在复习过程中完成了跳级, 导致数对不上
+                    word = (
+                        session.query(VocabCategoryRelationships)
+                        .filter(VocabCategoryRelationships.word_id == word_id)
+                        .one_or_none()
+                    )
+                    if word:
+                        if word.category_id == cate:
+                            statistic_cache['status_book']["level_status"] += 1
 
                     if tody in statistic_cache['series']:
                         if type(statistic_cache['series'][tody]['correct_words']) == list:
