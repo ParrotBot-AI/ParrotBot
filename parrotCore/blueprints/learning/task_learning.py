@@ -8,6 +8,8 @@ from utils.redis_tools import RedisWrapper
 from utils import iso_ts
 from datetime import datetime, timedelta, timezone
 import pprint
+
+
 # =====================================In Function (3 outputs)=================================#
 def fetch_mock_resource(
         account_id=None,
@@ -121,6 +123,3 @@ def re_loop(
 
         else:
             return False, "未找到record"
-
-
-

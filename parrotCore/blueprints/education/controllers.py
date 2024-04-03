@@ -1843,7 +1843,6 @@ class TransactionsController(crudController):
 
             else:
                 return 'Invalid Pattern Id'
-
     def _get_all_resources_under_exams(self, exam_id, account_id, page=0, limit=20):
         with db_session('core') as session:
             # 首先查找所有相关的exams
@@ -2262,7 +2261,6 @@ class InitController(crudController):
             for ques in questions:
                 if ques.correct_answer is not None:
                     if len(ques.question_stem.split(";")) != len(ques.correct_answer.split(";")):
-                        print(ques.id, len(ques.question_stem.split(";")))
                         count += 1
                         ur = {
                             "q_id":ques.id,
@@ -2271,7 +2269,7 @@ class InitController(crudController):
                         u_r.append(ur)
 
             # print(count, 2279)
-            print(len(u_r))
+            # print(len(u_r))
 
             session.execute(
                 update(Questions).where(Questions.id == bindparam('q_id')).values(
@@ -2296,14 +2294,12 @@ if __name__ == '__main__':
     # print(init.get_test_answers(sheet_id=7))
     # pprint.pprint(init.save_answer(sheet_id=7))
     # init.get_test_answers_history(account_id=7)
-    # pass
-
-    # print(InitController().clean_stem())
+    pass
 
     # print(datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))))
 
-    init = AnsweringScoringController()
-    res = init.create_answer_sheet(account_id=20, question_ids=[1683, 1686, 1684, 1687, 1685, 1688], father_sheet=1245)
+    # init = AnsweringScoringController()
+    # res = init.create_answer_sheet(account_id=20, question_ids=[1683, 1686, 1684, 1687, 1685, 1688], father_sheet=1245)
     # res = init.create_mock_answer_sheet(account_id=27)
     # pprint.pprint(res)
     # sheet_id = res[1]['sheet_id']
@@ -2327,5 +2323,5 @@ if __name__ == '__main__':
     # 算分
     # start = time.time()
     # print(init.scoring(sheet_id=1285))
-    pprint.pprint(init.get_score(answer_sheet_id=1285))
+    # pprint.pprint(init.get_score(answer_sheet_id=1285))
     # print(time.time() - start)

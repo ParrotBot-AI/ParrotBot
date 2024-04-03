@@ -122,7 +122,7 @@ class DailyService:
                     study_records = (
                         session.query(StudyPulseRecords)
                         .filter(StudyPulseRecords.account_id == account_id)
-                        .filter(StudyPulseRecords.create_time >= start_of_today)
+                        .filter(StudyPulseRecords.create_time >= yes)
                         .all()
                     )
                     if (len(study_records)) > 1:
@@ -131,7 +131,7 @@ class DailyService:
                 update_u = {
                     "u_id":user.id,
                     "task_complete": user.task_complete + task_complete,
-                    "total_study_days": user.total_study_days if user.total_study_days is not None else 0 + study
+                    "total_study_days": user.total_study_days + study if user.total_study_days is not None else 0 + study
                 }
                 u_r.append(update_u)
 

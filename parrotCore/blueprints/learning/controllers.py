@@ -523,7 +523,7 @@ class VocabLearningController(crudController):
                         order=r.order,
                         counts=r.counts
                     ))
-                print(total_amount, number_to_finish, number_today, 520)
+                # print(total_amount, number_to_finish, number_today, 520)
                 at_level = total_amount - (number_to_finish + number_today)
 
                 # 响应结果
@@ -732,6 +732,9 @@ class VocabLearningController(crudController):
                                 last_update_time=datetime.now(timezone.utc).astimezone(
                                     timezone(timedelta(hours=8))),
                                 loop=STUDY_LOOP,
+                                level=0,
+                                due_time=datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))).replace(
+                                    hour=23, minute=59, second=59),
                                 current_loop=1,
                                 learning_type=1,
                             )
@@ -742,12 +745,43 @@ class VocabLearningController(crudController):
                                 create_time=datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))),
                                 last_update_time=datetime.now(timezone.utc).astimezone(
                                     timezone(timedelta(hours=8))),
-                                loop=STUDY_LOOP,
+                                loop=1,
+                                level=0,
+                                due_time=datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))).replace(
+                                    hour=23, minute=59, second=59),
                                 current_loop=1,
                                 learning_type=1,
                             )
                             s_l.append(new_task)
                             s_l.append(new_task_)
+
+                            # 初始化周度任务
+                            tasks = (
+                                session.query(TaskAccounts)
+                                .filter(TaskAccounts.task_id == 10)
+                                .filter(TaskAccounts.account_id == record.id)
+                                .filter(TaskAccounts.create_time > start_of_today)
+                                .all()
+                            )
+                            if len(tasks) == 0:
+                                today_date = datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))
+                                days_to_add = 6 - today_date.weekday() if today_date.weekday() < 6 else 0
+                                next_sunday = today_date + timedelta(days=days_to_add)
+                                next_sunday_end = next_sunday.replace(hour=23, minute=59, second=59, microsecond=0)
+                                new_task = dict(
+                                    account_id=record.id,
+                                    task_id=10,  # 模考
+                                    is_active=1,
+                                    create_time=datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))),
+                                    last_update_time=datetime.now(timezone.utc).astimezone(
+                                        timezone(timedelta(hours=8))),
+                                    loop=1,
+                                    current_loop=0,
+                                    level=1,  # 周度任务
+                                    due_time=next_sunday_end,
+                                    learning_type=2,
+                                )
+                                s_l.append(new_task)
 
                         if len(s_l) > 0:
                             session.execute(
@@ -1282,7 +1316,7 @@ if __name__ == "__main__":
     # pprint(VocabLearningController().reset_vocabs(account_id=37))
     # pprint(VocabLearningController().jump_to_vocabs(account_id=37, category_id=2))
     # pprint(VocabLearningController().fetch_account_vocab(37))
-    pprint(StudyPulseController().get_pulse_check_information(account_id=20))
+    # pprint(StudyPulseController().get_pulse_check_information(account_id=20))
 
     # pprint(TaskController().fetch_account_tasks(account_id=account_id, after_time=get_today_midnight(), active=True))
     # today = datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))
