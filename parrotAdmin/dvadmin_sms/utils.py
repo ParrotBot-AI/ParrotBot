@@ -29,6 +29,7 @@ def send_sms(phone, code, send_type="mobilelogin"):
     if not template_code:
         raise CustomValidationError('短信模板未找到')
     provider = dispatch.get_system_config_values("sms.provider") or False  # 服务商
+    print(provider, 32)
     if provider == "aliyun":
         sample = AliBabaCloudSample(
             access_key_id=dispatch.get_system_config_values("sms.app_id"),
@@ -51,10 +52,14 @@ def send_sms(phone, code, send_type="mobilelogin"):
                                template_param=str(code),
                                sms_sdk_app_id=dispatch.get_system_config_values("sms.sms_sdk_app_id"))
     elif provider == 'huawei':
+        print(dispatch.get_system_config_values("sms.app_id"), 55)
+        print(dispatch.get_system_config_values("sms.app_key"), 56)
+        print(template_code, 57)
         sample = HuaweiCloudSample(
             access_key_id=dispatch.get_system_config_values("sms.app_id"),
             access_key_secret=dispatch.get_system_config_values("sms.app_key")
         )
+
         return sample.send_sms(sign_name=dispatch.get_system_config_values("sms.signature") or '鹦鹉智学',
                                template_code=template_code,
                                phone_numbers=phone,
