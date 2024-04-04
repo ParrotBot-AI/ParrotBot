@@ -43,6 +43,7 @@ class HuaweiCloudSample:
     def send_sms(self, sign_name, template_code, phone_numbers, template_param) -> (bool, str):
         header = {'Authorization': 'WSSE realm="SDP",profile="UsernameToken",type="Appkey"',
                   'X-WSSE': self.buildWSSEHeader(self.access_key_id, self.access_key_secret)}
+        print(header, 46)
         # 请求Body
         formData = {
             'from': self.sender,
