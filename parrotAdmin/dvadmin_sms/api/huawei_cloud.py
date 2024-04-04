@@ -18,7 +18,7 @@ class HuaweiCloudSample:
         '''
         self.access_key_id = access_key_id
         self.access_key_secret = access_key_secret
-        self.sender = "8823120828568"
+        self.sender = "8824032015014"
         # 选填,短信状态报告接收地址,推荐使用域名,为空或者不填表示不接收状态报告
         self.statusCallBack = ""
         # huawei sms 服务url

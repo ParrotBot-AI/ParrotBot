@@ -74,7 +74,6 @@ class SmsSendSmsView(APIView):
         else:
             code = random.randint(100000, 999999)
             # 发送手机号登录验证码
-            print("here", 77)
             status, msg = send_sms(phone=phone, code=code, send_type=send_type)
             if not status:
                 return ErrorResponse(msg=f"{msg},发送失败，请联系管理员!")
