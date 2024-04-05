@@ -535,7 +535,7 @@ class AnsweringScoringController(crudController):
             )
             return s.serialize_list(records)
 
-    def get_test_answers(self, sheet_id, contin=False):
+    def get_test_answers(self, sheet_id, contin=False, redo=False):
         # 获取问卷答题信息，
         # status = 0为已完成答题，批改问卷
         # status = 1为正在答题
@@ -600,7 +600,6 @@ class AnsweringScoringController(crudController):
 
                     # 如若有缓存
                     if cache_dict:
-                        print("here", 603)
                         cache_question = cache_dict['questions']
                         refine_questions = [x for x in cache_question.values() if x['father_id'] != -1]
                         root_questions = [x for x in cache_question.values() if x['father_id'] == -1]
@@ -649,7 +648,6 @@ class AnsweringScoringController(crudController):
                                 question_dic[each.question_id]['f'] = None
 
                             if each.model_answer is not None:
-                                print("model", 651)
                                 question_dic[each.question_id]['m'] = each.model_answer
                             else:
                                 question_dic[each.question_id]['m'] = None
@@ -679,7 +677,8 @@ class AnsweringScoringController(crudController):
                         }
                         response['questions'] = res_questions
                         redis_cli = RedisWrapper('core_cache')
-                        redis_cli.set(f'Sheet-non-{sheet_id}', redis_dic, ex=600)
+                        if not redo:
+                            redis_cli.set(f'Sheet-non-{sheet_id}', redis_dic, ex=600)
 
                         if contin:
                             try:
@@ -915,7 +914,7 @@ class AnsweringScoringController(crudController):
                     if not res_tag:
                         return False, data_tag
 
-                    resp, questions = self.get_test_answers(sheet_id=answer_sheet_id)
+                    resp, questions = self.get_test_answers(sheet_id=answer_sheet_id, redo=re_score)
 
                     if resp:
                         l["questions_r"] = questions
@@ -961,7 +960,7 @@ class AnsweringScoringController(crudController):
                     re_s['score'] = t_score
                     re_s['type'] = re_s['type'].value
                     re_s["status"] = 0
-                    resp, questions = self.get_test_answers(sheet_id=answer_sheet_id)
+                    resp, questions = self.get_test_answers(sheet_id=answer_sheet_id, redo=re_score)
                     if resp:
                         re_s["questions_r"] = questions
                         re_s["score_d"] = data
@@ -1367,7 +1366,6 @@ class AnsweringScoringController(crudController):
                                     question['score'] = result.score
                     except Exception as e:
                         # 如果数据源问题道题出错，先默认为0，待修改后，可以重新计分
-                        print(str(e), 1371)
                         question['score'] = None
 
                     questions.append(question)
@@ -2081,7 +2079,8 @@ class TransactionsController(crudController):
                                 ROW_NUMBER() OVER(PARTITION BY Q.id ORDER BY ASR.create_time DESC) AS rn,
                                 COALESCE(QCC.child_count, 0) AS child_question_count,
                                 SUB.child_score,
-                                Q.remark
+                                Q.remark，
+                                ASR.id AS sheet_id
                               FROM Submissions S
                               JOIN AnswerSheetRecord ASR ON S.answer_sheet_id = ASR.id
                               JOIN Questions Q ON S.question_id = Q.id
@@ -2131,14 +2130,17 @@ class TransactionsController(crudController):
                                     question_dic['last_record'] = grade.score
                                     question_dic['total'] = grade.max_score
                                     question_dic['status'] = grade.status
+                                    question_dic['sheet_id'] = grade.sheet_id
                                 else:
                                     question_dic['last_record'] = grade.child_score
                                     question_dic['total'] = grade.child_question_count
                                     question_dic['status'] = grade.status
+                                    question_dic['sheet_id'] = grade.sheet_id
                             else:
                                 question_dic['last_record'] = None
                                 question_dic['total'] = None
                                 question_dic['status'] = None
+                                question_dic['sheet_id'] = None
 
                             question_record = {
                                 "section_id": result.section_id,
@@ -2160,14 +2162,17 @@ class TransactionsController(crudController):
                                     question_dic['last_record'] = grade.score
                                     question_dic['total'] = grade.max_score
                                     question_dic['status'] = grade.status
+                                    question_dic['sheet_id'] = grade.sheet_id
                                 else:
                                     question_dic['last_record'] = grade.child_score
                                     question_dic['total'] = grade.child_question_count
                                     question_dic['status'] = grade.status
+                                    question_dic['sheet_id'] = grade.sheet_id
                             else:
                                 question_dic['last_record'] = None
                                 question_dic['total'] = None
                                 question_dic['status'] = None
+                                question_dic['sheet_id'] = None
 
                             question_record = {
                                 "section_id": result.section_id,
@@ -2191,14 +2196,17 @@ class TransactionsController(crudController):
                                     question_dic['last_record'] = grade.score
                                     question_dic['total'] = grade.max_score
                                     question_dic['status'] = grade.status
+                                    question_dic['sheet_id'] = grade.sheet_id
                                 else:
                                     question_dic['last_record'] = grade.child_score
                                     question_dic['total'] = grade.child_question_count
                                     question_dic['status'] = grade.status
+                                    question_dic['sheet_id'] = grade.sheet_id
                             else:
                                 question_dic['last_record'] = None
                                 question_dic['total'] = None
                                 question_dic['status'] = None
+                                question_dic['sheet_id'] = None
 
                             question_record = {
                                 "section_id": result.section_id,
@@ -2220,14 +2228,17 @@ class TransactionsController(crudController):
                                     question_dic['last_record'] = grade.score
                                     question_dic['total'] = grade.max_score
                                     question_dic['status'] = grade.status
+                                    question_dic['sheet_id'] = grade.sheet_id
                                 else:
                                     question_dic['last_record'] = grade.child_score
                                     question_dic['total'] = grade.child_question_count
                                     question_dic['status'] = grade.status
+                                    question_dic['sheet_id'] = grade.sheet_id
                             else:
                                 question_dic['last_record'] = None
                                 question_dic['total'] = None
                                 question_dic['status'] = None
+                                question_dic['sheet_id'] = None
                             question_record = {
                                 "section_id": result.section_id,
                                 "section_name": result.section_name,
