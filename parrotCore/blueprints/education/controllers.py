@@ -648,7 +648,6 @@ class AnsweringScoringController(crudController):
                                 question_dic[each.question_id]['f'] = None
 
                             if each.model_answer is not None:
-                                print("here")
                                 question_dic[each.question_id]['m'] = each.model_answer
                             else:
                                 question_dic[each.question_id]['m'] = None
@@ -1337,7 +1336,6 @@ class AnsweringScoringController(crudController):
                         else:
                             # 手动/模型 计分方法
                             if re_score:
-                                print(re_score, 1313)
                                 score = getattr(grading_instance, question['cal_fun'])(
                                     sheet_id=sheet_id,
                                     question_id=question['question_id'],
@@ -1353,6 +1351,7 @@ class AnsweringScoringController(crudController):
                                     redis = RedisWrapper('core_cache')
                                     grading_record = redis.get(f"InGrading-{sheet_id}-{question['question_id']}")
                                     if grading_record:
+                                        print('score', 1354)
                                         question['score'] = None
                                     else:
                                         print(re_score, 1358)
