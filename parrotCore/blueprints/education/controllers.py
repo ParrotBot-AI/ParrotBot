@@ -278,7 +278,7 @@ class QuestionController(crudController):
             if r:
                 sections[key] = r.no_questions
 
-        # refine_questions.sort(key=lambda x: x['section_id'])
+        refine_questions.sort(key=lambda x: x['section_id'])
         # Group by 'section_id' and process each group
         grouped_records = groupby(refine_questions, key=itemgetter('section_id'))
         selected_records = []
@@ -2294,12 +2294,12 @@ if __name__ == '__main__':
     # print(init.get_test_answers(sheet_id=7))
     # pprint.pprint(init.save_answer(sheet_id=7))
     # init.get_test_answers_history(account_id=7)
-    print(InitController().clean_stem())
+    # print(InitController().clean_stem())
 
     # print(datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))))
 
-    # init = AnsweringScoringController()
-    # res = init.create_answer_sheet(account_id=20, question_ids=[218, 216], father_sheet=1314)
+    init = AnsweringScoringController()
+    # res = init.create_answer_sheet(account_id=37, question_ids=[223, 224])
     # res = init.create_mock_answer_sheet(account_id=27)
     # pprint.pprint(res)
     # sheet_id = res[1]['sheet_id']
@@ -2318,10 +2318,9 @@ if __name__ == '__main__':
     # print(asyncio.run(AnsweringScoringController().model_scoring(sheet_id=1224, question_id=1519)))
 
     # 提交答案
-    # pprint.pprint(init.save_answer(sheet_id=1148))
+    # pprint.pprint(init.save_answer(sheet_id=sheet_id))
 
     # 算分
     # start = time.time()
-    # print(init.scoring(sheet_id=1288, re_score=True))
-    # pprint.pprint(init.get_score(answer_sheet_id=1285))
-    # print(time.time() - start)
+    # print(init.scoring(sheet_id=sheet_id))
+    # print(init.get_score(answer_sheet_id=sheet_id))
