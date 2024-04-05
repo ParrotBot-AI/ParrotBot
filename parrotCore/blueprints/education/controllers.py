@@ -1310,7 +1310,6 @@ class AnsweringScoringController(crudController):
                     # 自动计分
                     try:
                         if result.cal_m_q == 1:
-                            print(re_score, 1313)
                             if re_score:
                                 score = getattr(grading_instance, question['cal_fun'])(
                                     answer=question['answer'],
@@ -1323,7 +1322,6 @@ class AnsweringScoringController(crudController):
                                 question['score'] = score
                             else:
                                 if result.score is None:
-                                    print("here", 1326)
                                     score = getattr(grading_instance, question['cal_fun'])(
                                         answer=question['answer'],
                                         correct=question['correct'],
@@ -1339,6 +1337,7 @@ class AnsweringScoringController(crudController):
                         else:
                             # 手动/模型 计分方法
                             if re_score:
+                                print(re_score, 1313)
                                 score = getattr(grading_instance, question['cal_fun'])(
                                     sheet_id=sheet_id,
                                     question_id=question['question_id'],
@@ -1349,12 +1348,14 @@ class AnsweringScoringController(crudController):
                                 )
                                 question['score'] = score
                             else:
+                                print(re_score, 1351)
                                 if result.score is None:
                                     redis = RedisWrapper('core_cache')
                                     grading_record = redis.get(f"InGrading-{sheet_id}-{question['question_id']}")
                                     if grading_record:
                                         question['score'] = None
                                     else:
+                                        print(re_score, 1358)
                                         score = getattr(grading_instance, question['cal_fun'])(
                                             sheet_id=sheet_id,
                                             question_id=question['question_id'],
@@ -1368,7 +1369,7 @@ class AnsweringScoringController(crudController):
                                     question['score'] = result.score
                     except Exception as e:
                         # 如果数据源问题道题出错，先默认为0，待修改后，可以重新计分
-                        print(str(e))
+                        print(str(e), 1371)
                         question['score'] = None
 
                     questions.append(question)
