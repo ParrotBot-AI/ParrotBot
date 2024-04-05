@@ -1310,6 +1310,7 @@ class AnsweringScoringController(crudController):
                     # 自动计分
                     try:
                         if result.cal_m_q == 1:
+                            print(re_score, 1313)
                             if re_score:
                                 score = getattr(grading_instance, question['cal_fun'])(
                                     answer=question['answer'],
@@ -1322,6 +1323,7 @@ class AnsweringScoringController(crudController):
                                 question['score'] = score
                             else:
                                 if result.score is None:
+                                    print("here", 1326)
                                     score = getattr(grading_instance, question['cal_fun'])(
                                         answer=question['answer'],
                                         correct=question['correct'],
@@ -1350,7 +1352,6 @@ class AnsweringScoringController(crudController):
                                 if result.score is None:
                                     redis = RedisWrapper('core_cache')
                                     grading_record = redis.get(f"InGrading-{sheet_id}-{question['question_id']}")
-                                    print(grading_record, 156)
                                     if grading_record:
                                         question['score'] = None
                                     else:
@@ -1364,7 +1365,6 @@ class AnsweringScoringController(crudController):
                                         )
                                         question['score'] = score
                                 else:
-                                    print("here", 1366)
                                     question['score'] = result.score
                     except Exception as e:
                         # 如果数据源问题道题出错，先默认为0，待修改后，可以重新计分
