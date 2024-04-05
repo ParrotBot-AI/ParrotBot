@@ -2079,7 +2079,7 @@ class TransactionsController(crudController):
                                 ROW_NUMBER() OVER(PARTITION BY Q.id ORDER BY ASR.create_time DESC) AS rn,
                                 COALESCE(QCC.child_count, 0) AS child_question_count,
                                 SUB.child_score,
-                                Q.remark，
+                                Q.remark,
                                 ASR.id AS sheet_id
                               FROM Submissions S
                               JOIN AnswerSheetRecord ASR ON S.answer_sheet_id = ASR.id
@@ -2297,10 +2297,10 @@ class InitController(crudController):
 
 
 if __name__ == '__main__':
-    # init = TransactionsController()
+    init = TransactionsController()
     # pprint.pprint(init._get_all_resources_under_exams(1, 27))
     # pprint.pprint(init.get_recent_pattern_scores(20, 7))
-    # pprint.pprint(init._get_all_resources_under_patterns(pattern_id=13, account_id=20))
+    pprint.pprint(init._get_all_resources_under_patterns(pattern_id=11, account_id=20))
 
     # pprint.pprint(init.create_answer_sheet(account_id=7))
     # print(init.get_test_answers(sheet_id=7))
@@ -2335,4 +2335,4 @@ if __name__ == '__main__':
     # 算分
     # start = time.time()
     # print(init.scoring(sheet_id=sheet_id))
-    print(init.get_score(answer_sheet_id=1757))
+    # print(init.get_score(answer_sheet_id=1757))
