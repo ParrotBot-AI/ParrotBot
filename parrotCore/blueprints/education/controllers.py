@@ -600,6 +600,7 @@ class AnsweringScoringController(crudController):
 
                     # 如若有缓存
                     if cache_dict:
+                        print("here", 603)
                         cache_question = cache_dict['questions']
                         refine_questions = [x for x in cache_question.values() if x['father_id'] != -1]
                         root_questions = [x for x in cache_question.values() if x['father_id'] == -1]
