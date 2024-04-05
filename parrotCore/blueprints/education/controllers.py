@@ -578,7 +578,6 @@ class AnsweringScoringController(crudController):
 
                         res_questions = tree.print_tree()
                         response['questions'] = res_questions
-                        print(time.time() - start)
                         return True, response
 
                     else:
@@ -649,6 +648,7 @@ class AnsweringScoringController(crudController):
                                 question_dic[each.question_id]['f'] = None
 
                             if each.model_answer is not None:
+                                print("here")
                                 question_dic[each.question_id]['m'] = each.model_answer
                             else:
                                 question_dic[each.question_id]['m'] = None
@@ -1350,10 +1350,10 @@ class AnsweringScoringController(crudController):
                                 if result.score is None:
                                     redis = RedisWrapper('core_cache')
                                     grading_record = redis.get(f"InGrading-{sheet_id}-{question['question_id']}")
+                                    print(grading_record, 156)
                                     if grading_record:
                                         question['score'] = None
                                     else:
-                                        print("here")
                                         score = getattr(grading_instance, question['cal_fun'])(
                                             sheet_id=sheet_id,
                                             question_id=question['question_id'],
@@ -1364,9 +1364,11 @@ class AnsweringScoringController(crudController):
                                         )
                                         question['score'] = score
                                 else:
+                                    print("here", 1366)
                                     question['score'] = result.score
-                    except:
+                    except Exception as e:
                         # 如果数据源问题道题出错，先默认为0，待修改后，可以重新计分
+                        print(str(e))
                         question['score'] = None
 
                     questions.append(question)
@@ -2323,4 +2325,4 @@ if __name__ == '__main__':
     # 算分
     # start = time.time()
     # print(init.scoring(sheet_id=sheet_id))
-    # print(init.get_score(answer_sheet_id=sheet_id))
+    print(init.get_score(answer_sheet_id=1757))
