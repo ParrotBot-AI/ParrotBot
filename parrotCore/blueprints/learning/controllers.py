@@ -944,7 +944,7 @@ class StudyPulseController(crudController):
 
 
 class TaskController(crudController):
-    def fetch_account_tasks(self, account_id, after_time=None, active=None, type=None, is_complete=None):
+    def fetch_account_tasks(self, account_id, after_time=None, active=None, type=None, is_complete=None, level=None):
         with db_session('core') as session:
             query = session.query(TaskAccounts).filter(TaskAccounts.account_id == account_id)
             if active is not None:
@@ -953,6 +953,8 @@ class TaskController(crudController):
                 query = query.filter(TaskAccounts.create_time > after_time)
             if type is not None:
                 query = query.filter(TaskAccounts.learning_type == type)
+            if level is not None:
+                query = query.filter(TaskAccounts.level == level)
 
             if is_complete is not None:
                 query = query.filter(TaskAccounts.is_complete == is_complete)  # 获取还未完成的

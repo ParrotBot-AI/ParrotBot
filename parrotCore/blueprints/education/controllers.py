@@ -584,6 +584,7 @@ class AnsweringScoringController(crudController):
                         # 没有迁移至数据库
                         return False, "无法找到题目缓存"
                 else:
+                    print("here", 587)
                     start = time.time()
                     redis_cli = RedisWrapper('core_cache')
                     cache_dict = redis_cli.get(f'Sheet-non-{sheet_id}')
@@ -600,6 +601,7 @@ class AnsweringScoringController(crudController):
 
                     # 如若有缓存
                     if cache_dict:
+                        print("有缓存", 604)
                         cache_question = cache_dict['questions']
                         refine_questions = [x for x in cache_question.values() if x['father_id'] != -1]
                         root_questions = [x for x in cache_question.values() if x['father_id'] == -1]
@@ -678,6 +680,7 @@ class AnsweringScoringController(crudController):
                         response['questions'] = res_questions
                         redis_cli = RedisWrapper('core_cache')
                         if not redo:
+                            print(redo, 681)
                             redis_cli.set(f'Sheet-non-{sheet_id}', redis_dic, ex=600)
 
                         if contin:

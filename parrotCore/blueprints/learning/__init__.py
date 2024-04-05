@@ -179,13 +179,27 @@ def get_today_task(user_id):
                     account_id=account.id,
                     after_time=time,
                 )
-                if res:
-                    for each in data:
-                        each['exam_id'] = account.exam_id
 
-                    _res = _res + data
-                else:
+                if not res:
                     return ArgumentExceptionResponse(msg=f'{data}')
+
+                for each in data:
+                    each['exam_id'] = account.exam_id
+                _res = _res + data
+
+                days_until_monday = today.weekday()  # Monday is 0, so if today is Monday, this would be 0
+                monday_midnight = today - timedelta(days=days_until_monday, hours=today.hour, minutes=today.minute, seconds=today.second, microseconds=today.microsecond)
+                res, data = TaskController().fetch_account_tasks(
+                    account_id=account.id,
+                    after_time=monday_midnight,
+                    level=1,
+                )
+                if not res:
+                    return ArgumentExceptionResponse(msg=f'{data}')
+
+                for each in data:
+                    each['exam_id'] = account.exam_id
+                _res = _res + data
 
             return SuccessDataResponse(_res)
         except Exception as e:
@@ -230,3 +244,6 @@ def get_checkin_info(account_id):
 
     except Exception as e:
         return ArgumentExceptionResponse(msg=f'{e}')
+
+if __name__ == "__main__":
+    print(get_today_task(16))
