@@ -51,7 +51,6 @@ class Worker:
                 for msg_id, msg in msgs:
                     # Submit each message to the executor for processing
                     self._executor.submit(self._process_message, stream, msg_id, msg, listen_name)
-            logger.info("继续监听....")
 
     def _process_message(self, stream, msg_id, msg, listen_name):
         self._r = RedisWrapper(listen_name).redis_client
