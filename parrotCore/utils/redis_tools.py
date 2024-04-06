@@ -3,7 +3,7 @@ import redis
 import simplejson as json
 import ast
 from configs.redis_config import REDIS_SETTINGS
-
+import aioredis
 
 class RedisWrapper(object):
 
@@ -11,21 +11,25 @@ class RedisWrapper(object):
 
         DEFAULT_SETTING = REDIS_SETTINGS[setting_name]
 
-        host = DEFAULT_SETTING['host']
-        port = DEFAULT_SETTING['port']
-        db = DEFAULT_SETTING['db']
-        password = DEFAULT_SETTING['password']
+        self.host = DEFAULT_SETTING['host']
+        self.port = DEFAULT_SETTING['port']
+        self.db = DEFAULT_SETTING['db']
+        self.password = DEFAULT_SETTING['password']
 
-        pool = redis.ConnectionPool(
-            host=host,
-            port=port,
-            db=db,
-            password=password,
+        self.pool = redis.ConnectionPool(
+            host=self.host,
+            port=self.port,
+            db=self.db,
+            password=self.password,
         )
-        self.redis_client = redis.Redis(connection_pool=pool)
+        self.redis_client = redis.Redis(connection_pool=self.pool)
+
+    async def connect(self, setting_name='core_cache'):
+        DEFAULT_SETTING = REDIS_SETTINGS[setting_name]
+        redis_url = f"redis://:{DEFAULT_SETTING['password']}@{DEFAULT_SETTING['host']}:{DEFAULT_SETTING['port']}/{DEFAULT_SETTING['db']}"
+        self.redis_client = await aioredis.create_redis_pool(redis_url, minsize=1, maxsize=20)
 
     def write_to_redis(self, key, value=None):
-
         if value is None:
             value = dict()
 

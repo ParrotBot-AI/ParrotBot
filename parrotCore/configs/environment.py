@@ -3,3 +3,4 @@
 ENV_PATH = "/root/enter/envs/parrotbot/bin"
 DEBUG = True
 DATABASE_SELECTION = "mysql"
+MAX_STREAM_WORKER = 20

@@ -1,9 +1,11 @@
 from tools.streaming.revents import Worker
+from tools.streaming.async_revents import Worker as AsyncWorker
+from tools.streaming.thread_revents import Worker as ThreadWorker
 from blueprints.account.controllers import AccountController
 from blueprints.education.controllers import AnsweringScoringController
 
 import asyncio
-core_worker = Worker()
+core_worker = ThreadWorker()
 
 
 @core_worker.on('broker', "account_register")
@@ -50,13 +52,31 @@ def save_study_time(account_id=None, study_time=None, **kwargs):
 @core_worker.on('broker', "grade_single_prob")
 def grade_single_prob(sheet_id=None, question_id=None):
     if sheet_id and question_id:
-        asyncio.run(AnsweringScoringController().model_scoring(sheet_id=sheet_id, question_id=question_id))
-        print(f"Grade for {sheet_id} question {question_id}.")
+        res, data = AnsweringScoringController().model_scoring(sheet_id=sheet_id, question_id=question_id)
+        if res:
+            print(f"Grade for {sheet_id} question {question_id} succeed")
+            return True
+        print(f"Grade for {sheet_id} question {question_id} failed.")
         return True
     else:
-        print(f"Grade for {sheet_id} question {question_id}. failed.")
+        print(f"Grade for {sheet_id} question {question_id} failed.")
+        return True
 
+async def monitor_tasks():
+    while True:
+        tasks = [t for t in asyncio.all_tasks() if not t.done()]
+        print(f"Current running tasks: {len(tasks)}")
+        await asyncio.sleep(1)
+
+async def async_main():
+    print("开始监听....")
+    asyncio.create_task(monitor_tasks())
+    await core_worker.listen(listen_name='broker')
 
 def main():
     print("开始监听....")
+    core_worker.listen(listen_name='broker')
+
+def thread_main():
+    print("开始异步监听....")
     core_worker.listen(listen_name='broker')

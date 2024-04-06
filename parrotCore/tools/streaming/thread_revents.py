@@ -3,66 +3,61 @@ from datetime import datetime
 import functools
 from utils.redis_tools import RedisWrapper
 from typing import Dict, Any
+import threading
+from concurrent.futures import ThreadPoolExecutor
+from utils.logger_tools import get_general_logger
+from utils import abspath
+from configs.environment import MAX_STREAM_WORKER
 
+logger = get_general_logger('stream_log', path=abspath('logs', 'core_stream'))
 
 class Worker:
-    # streams = {
-    #   "bar": {
-    #       "update": Foo.foo_action
-    #   },
-    # }
-
     def __init__(self):
         self._events = {}
+        self._executor = ThreadPoolExecutor(max_workers=MAX_STREAM_WORKER)
 
     def consume_past_messages(self, listen_name="broker"):
+        threading.Thread(target=self._consume_past_messages_thread, args=(listen_name,)).start()
+
+    def _consume_past_messages_thread(self, listen_name):
         self._r = RedisWrapper(listen_name).redis_client
         streams = " ".join(self._events.keys())
-        # 消费掉之前的属于自己的message
         messages = self._r.xread({streams: '0-0'}, block=None)
         for stream, msgs in messages:
             for msg_id, msg in msgs:
-                # Process the message
                 event = [[stream, [(msg_id, msg)]]]
                 if self._dispatch(event):
                     self._r.xdel(stream, msg_id)
 
     def on(self, stream, action, **options):
-        """
-        Wrapper to register a function to an event
-        """
         def decorator(func):
             self.register_event(stream, action, func, **options)
             return func
-
         return decorator
 
     def register_event(self, stream, action, func, **options):
-        """
-        Map an event to a function
-        """
         if stream in self._events.keys():
             self._events[stream][action] = func
         else:
             self._events[stream] = {action: func}
 
     def listen(self, listen_name="broker"):
-        """
-        Main event loop
-        Establish redis connection from passed parameters
-        Wait for events from the specified streams
-        Dispatch to appropriate event handler
-        """
         self._r = RedisWrapper(listen_name).redis_client
-        streams = " ".join(self._events.keys())
-        print(streams)
+        streams = {stream: '$' for stream in self._events.keys()}  # Prepare streams for xread
+
         while True:
-            event = self._r.xread({streams: "$"}, None, 0)
-            # Call function that is mapped to this event
-            if self._dispatch(event):
-                stream = event[0][0].decode('utf-8')
-                msg_id = event[0][1][0][0].decode('utf-8')
-                self._r.xdel(stream, msg_id)
+            events = self._r.xread(streams, block=5000)  # Consider adjusting the block time as needed
+            for stream, msgs in events:
+                for msg_id, msg in msgs:
+                    # Submit each message to the executor for processing
+                    self._executor.submit(self._process_message, stream, msg_id, msg, listen_name)
+            logger.info("继续监听....")
+
+    def _process_message(self, stream, msg_id, msg, listen_name):
+        self._r = RedisWrapper(listen_name).redis_client
+        result = self._dispatch([[stream, [(msg_id, msg)]]])
+        if result:
+            self._r.xdel(stream, msg_id)
 
     def _dispatch(self, event):
         """
@@ -72,7 +67,7 @@ class Worker:
         e = Event(event=event)
         if e.action in self._events[e.stream].keys():
             func = self._events[e.stream][e.action]
-            print(f"{datetime.now()} - Stream: {e.stream} - {e.event_id}: {e.action} {e.data}")
+            logger.info(f"{datetime.now()} - Stream: {e.stream} - {e.event_id}: {e.action} {e.data}")
             return func(**e.data)
         else:
             return False

@@ -1,19 +1,18 @@
+import time
+
 import redis
 from datetime import datetime
 import functools
 from utils.redis_tools import RedisWrapper
 from typing import Dict, Any
+import asyncio
+import aioredis
 
 
 class Worker:
-    # streams = {
-    #   "bar": {
-    #       "update": Foo.foo_action
-    #   },
-    # }
-
-    def __init__(self):
+    def __init__(self, max_concurrent_tasks=20):
         self._events = {}
+        self._semaphore = asyncio.Semaphore(max_concurrent_tasks)
 
     def consume_past_messages(self, listen_name="broker"):
         self._r = RedisWrapper(listen_name).redis_client
@@ -46,25 +45,36 @@ class Worker:
         else:
             self._events[stream] = {action: func}
 
-    def listen(self, listen_name="broker"):
+    async def process_event(self, event):
+        async with self._semaphore:
+            if await self._dispatch(event):
+                stream = event[0][0].decode('utf-8')
+                msg_id = event[0][1].decode('utf-8')
+                await self._r.xdel(stream, msg_id)
+
+    async def listen(self, listen_name="broker"):
         """
         Main event loop
         Establish redis connection from passed parameters
         Wait for events from the specified streams
         Dispatch to appropriate event handler
         """
-        self._r = RedisWrapper(listen_name).redis_client
-        streams = " ".join(self._events.keys())
-        print(streams)
-        while True:
-            event = self._r.xread({streams: "$"}, None, 0)
-            # Call function that is mapped to this event
-            if self._dispatch(event):
-                stream = event[0][0].decode('utf-8')
-                msg_id = event[0][1][0][0].decode('utf-8')
-                self._r.xdel(stream, msg_id)
+        wrapper = RedisWrapper(listen_name)
+        await wrapper.connect(listen_name)
+        self._r = wrapper.redis_client
+        stream_names = list(self._events.keys())
+        streams_args = []
+        for name in stream_names:
+            streams_args.append(name)
+            streams_args.append('>')
 
-    def _dispatch(self, event):
+        while True:
+            events = await self._r.xread(streams=streams_args, timeout=0, count=10)
+            for event in events:
+                asyncio.create_task(self.process_event([event]))
+            print("继续监听......")
+
+    async def _dispatch(self, event):
         """
         Call a function given an event
         If the event has been registered, the registered function will be called with the passed params.
@@ -73,7 +83,7 @@ class Worker:
         if e.action in self._events[e.stream].keys():
             func = self._events[e.stream][e.action]
             print(f"{datetime.now()} - Stream: {e.stream} - {e.event_id}: {e.action} {e.data}")
-            return func(**e.data)
+            return await func(**e.data)
         else:
             return False
 
@@ -83,7 +93,9 @@ class Event():
     Abstraction for an event
     """
 
-    def __init__(self, stream="", action="", data={}, event=None):
+    def __init__(self, stream="", action="", data=None, event=None):
+        if data is None:
+            data = {}
         self.stream = stream
         self.action = action
         self.data = data
@@ -94,8 +106,8 @@ class Event():
     def parse_event(self, event):
         # event = [[b'bar', [(b'1594764770578-0', {b'action': b'update', b'test': b'True'})]]]
         self.stream = event[0][0].decode('utf-8')
-        self.event_id = event[0][1][0][0].decode('utf-8')
-        self.data = event[0][1][0][1]
+        self.event_id = event[0][1].decode('utf-8')
+        self.data = event[0][2]
         self.action = self.data.pop(b'action').decode('utf-8')
         params = {}
         for k, v in self.data.items():

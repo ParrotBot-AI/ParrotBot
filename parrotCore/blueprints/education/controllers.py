@@ -584,7 +584,6 @@ class AnsweringScoringController(crudController):
                         # 没有迁移至数据库
                         return False, "无法找到题目缓存"
                 else:
-                    print("here", 587)
                     start = time.time()
                     redis_cli = RedisWrapper('core_cache')
                     cache_dict = redis_cli.get(f'Sheet-non-{sheet_id}')
@@ -679,8 +678,8 @@ class AnsweringScoringController(crudController):
                         }
                         response['questions'] = res_questions
                         redis_cli = RedisWrapper('core_cache')
-                        if not redo:
-                            print(redo, 681)
+                        if not redo or redis_dic['score'] is not None:
+                            print("缓存", 681)
                             redis_cli.set(f'Sheet-non-{sheet_id}', redis_dic, ex=600)
 
                         if contin:
@@ -986,7 +985,7 @@ class AnsweringScoringController(crudController):
             else:
                 return False, "未查询到考卷信息"
 
-    async def model_scoring(self, sheet_id, question_id):
+    def model_scoring(self, sheet_id, question_id):
         # search for pattern
         logger.info(f"Sheet:{sheet_id}-Question:{question_id} - 开始模型打分任务")
         import requests
@@ -2330,7 +2329,7 @@ if __name__ == '__main__':
     # print(init.update_question_answer(sheet_id=sheet_id, question_id=5, answer=[0, 0, 1, 0], duration=200))
 
     # 中途批改
-    # print(asyncio.run(AnsweringScoringController().model_scoring(sheet_id=1224, question_id=1519)))
+    # print(AnsweringScoringController().model_scoring(sheet_id=1224, question_id=1519))
 
     # 提交答案
     # pprint.pprint(init.save_answer(sheet_id=sheet_id))

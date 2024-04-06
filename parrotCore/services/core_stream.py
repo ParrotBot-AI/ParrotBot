@@ -1,4 +1,7 @@
-from tools.streaming.workers import main
+from tools.streaming.workers import main, async_main, thread_main
+import asyncio
 
 if __name__ == "__main__":
-    main()
+    # main()
+    # asyncio.run(async_main())
+    thread_main()
