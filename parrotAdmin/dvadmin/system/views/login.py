@@ -221,10 +221,9 @@ class LoginSerializer(TokenObtainPairWithoutPasswordSerializer):
             if type == 'sms':
                 phone = self.initial_data.get("mobile", None)
                 code = self.initial_data.get("code", None)
-                login_code = code
+                # login_code = code
 
-                # 暂时隐藏掉方便测试
-                # login_code = get_sms_code(phone)
+                login_code = get_sms_code(phone)
                 if login_code:
                     if login_code == code:
                         # to do, find phone number

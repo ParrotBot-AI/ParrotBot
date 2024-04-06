@@ -51,9 +51,6 @@ def send_sms(phone, code, send_type="mobilelogin"):
                                template_param=str(code),
                                sms_sdk_app_id=dispatch.get_system_config_values("sms.sms_sdk_app_id"))
     elif provider == 'huawei':
-        print(dispatch.get_system_config_values("sms.app_id"), 55)
-        print(dispatch.get_system_config_values("sms.app_key"), 56)
-        print(template_code, 57)
         sample = HuaweiCloudSample(
             access_key_id=dispatch.get_system_config_values("sms.app_id"),
             access_key_secret=dispatch.get_system_config_values("sms.app_key")

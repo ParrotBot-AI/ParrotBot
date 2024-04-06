@@ -43,7 +43,6 @@ class HuaweiCloudSample:
     def send_sms(self, sign_name, template_code, phone_numbers, template_param) -> (bool, str):
         header = {'Authorization': 'WSSE realm="SDP",profile="UsernameToken",type="Appkey"',
                   'X-WSSE': self.buildWSSEHeader(self.access_key_id, self.access_key_secret)}
-        print(header, 46)
         # 请求Body
         formData = {
             'from': self.sender,
@@ -58,7 +57,6 @@ class HuaweiCloudSample:
         try:
             resp = requests.post(self.url, data=formData, headers=header, verify=False)
             # 输出json格式的字符串回包
-            print(resp.text, 60)  # 打印响应信息
             res = json.loads(resp.to_json_string(indent=2))
             if res.get('SendStatusSet')[0].get('Code') == "Ok":
                 return True, ""
