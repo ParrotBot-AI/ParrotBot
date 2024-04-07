@@ -678,8 +678,9 @@ class AnsweringScoringController(crudController):
                         }
                         response['questions'] = res_questions
                         redis_cli = RedisWrapper('core_cache')
+                        print(redo, redis_dic['score'], 681)
                         if not redo and redis_dic['score'] is not None:
-                            print("缓存", redo, redis_dic['score'], 681)
+                            print("缓存", 683)
                             redis_cli.set(f'Sheet-non-{sheet_id}', redis_dic, ex=600)
 
                         if contin:
