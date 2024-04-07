@@ -1937,7 +1937,7 @@ class TransactionsController(crudController):
                           LEFT JOIN Resources R2 on R.father_resource = R2.id
                           WHERE ASR.account_id = {account_id}
                             AND ASR.father_sheet != -1
-                            # AND ASR.status = 0
+                            AND ASR.status = 0
                         )
                         SELECT *
                         FROM RankedSubmissions
