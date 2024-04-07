@@ -600,7 +600,6 @@ class AnsweringScoringController(crudController):
 
                     # 如若有缓存
                     if cache_dict:
-                        print("有缓存", 604)
                         cache_question = cache_dict['questions']
                         refine_questions = [x for x in cache_question.values() if x['father_id'] != -1]
                         root_questions = [x for x in cache_question.values() if x['father_id'] == -1]
@@ -678,9 +677,7 @@ class AnsweringScoringController(crudController):
                         }
                         response['questions'] = res_questions
                         redis_cli = RedisWrapper('core_cache')
-                        print(redo, redis_dic['score'], 681)
                         if not redo and redis_dic['score'] is not None:
-                            print("缓存", 683)
                             redis_cli.set(f'Sheet-non-{sheet_id}', redis_dic, ex=600)
 
                         if contin:
@@ -1145,7 +1142,6 @@ class AnsweringScoringController(crudController):
             cache_dict = redis.get(f"Sheet-{sheet_id}")
             redis.delete(f"InGrading-{sheet_id}-{question_id}")
             redis.delete(f"InGrading-{sheet_id}")
-            print(score, model_answer, 952)
             if not cache_dict:
                 update = (
                     session.query(Submissions)
@@ -2248,55 +2244,9 @@ class TransactionsController(crudController):
                                 "questions": [question_dic]
                             }
                             resources_dic[result.resource_id]['section'].append(question_record)
-
-                print(time.time() - start)
                 return True, list(resources_dic.values())
             else:
                 return False, "未查找到相关考试资源信息"
-
-
-class InitController(crudController):
-    """
-    问题 继承crudController
-    调用CRUD: _create; _retrieve; _update; _delete
-    支持所有问题相关表单(Questions, QuestionsType, Indicators, IndicatorQuestion)
-    init: 先定义Indicators, QuestionsType => Questions => IndicatorQuestion
-    """
-    def clean_stem(self):
-        u_r = []
-        with db_session('core') as session:
-            # 阅读文本
-            questions = (
-                session.query(Questions)
-                .filter(Questions.keywords != None)
-                .all()
-            )
-            # print(len(questions))
-            count = 0
-            for result in questions:
-                try:
-                    k = json.loads(result.keywords)
-                except:
-                    count += 1
-                    print(result.id)
-                    print(result.keywords)
-
-            print(count)
-
-            # print(count, 2279)
-            # print(len(u_r))
-            #
-            # session.execute(
-            #     update(Questions).where(Questions.id == bindparam('q_id')).values(
-            #         error_feedback=bindparam("error_feedback"),
-            #     ),
-            #     u_r
-            # )
-            #
-            # try:
-            #     session.commit()
-            # except:
-            #     session.rollback()
 
 
 if __name__ == '__main__':
@@ -2309,9 +2259,6 @@ if __name__ == '__main__':
     # print(init.get_test_answers(sheet_id=7))
     # pprint.pprint(init.save_answer(sheet_id=7))
     # init.get_test_answers_history(account_id=7)
-    # print(InitController().clean_stem())
-
-    # print(datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8))))
 
     init = AnsweringScoringController()
     # res = init.create_answer_sheet(account_id=37, question_ids=[223, 224])
