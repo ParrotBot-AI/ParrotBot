@@ -219,17 +219,12 @@ class LoginSerializer(TokenObtainPairWithoutPasswordSerializer):
             type_ = self.initial_data.get("type", None)
             # sms 方式登录
             if type_ == 'sms':
-                print("here", 222)
                 phone = self.initial_data.get("mobile", None)
                 code = self.initial_data.get("code", None)
                 login_code = get_sms_code(phone)
-                print(code, type(code), 225)
-                print(login_code, type(login_code), 226)
                 if login_code:
-                    print("here", 228)
-                    if login_code == code or code == 'devlogin':
+                    if str(login_code) == str(code) or str(code) == 'devlogin':
                         # to do, find phone number
-                        print("here", 231)
                         user_phone = Users.objects.filter(mobile=phone).first()
                         if user_phone:
                             return self.login(attrs, phone)
