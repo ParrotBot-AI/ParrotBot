@@ -1,3 +1,5 @@
+import pprint
+
 from flask import Blueprint, request
 from utils.response_tools import (SuccessDataResponse, ArgumentExceptionResponse)
 from blueprints.learning.controllers import VocabLearningController, TaskController, StudyPulseController
@@ -178,6 +180,7 @@ def get_today_task(user_id):
                 res, data = TaskController().fetch_account_tasks(
                     account_id=account.id,
                     after_time=time,
+                    level=0
                 )
 
                 if not res:
@@ -194,13 +197,14 @@ def get_today_task(user_id):
                     after_time=monday_midnight,
                     level=1,
                 )
+
                 if not res:
                     return ArgumentExceptionResponse(msg=f'{data}')
 
                 for each in data:
                     each['exam_id'] = account.exam_id
-                _res = _res + data
 
+                _res = _res + data
             return SuccessDataResponse(_res)
         except Exception as e:
             return ArgumentExceptionResponse(msg=f'{e}')
