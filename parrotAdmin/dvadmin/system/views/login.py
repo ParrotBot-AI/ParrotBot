@@ -216,16 +216,15 @@ class LoginSerializer(TokenObtainPairWithoutPasswordSerializer):
                         raise CustomValidationError("图片验证码错误")
 
         try:
-            type = self.initial_data.get("type", None)
+            type_ = self.initial_data.get("type", None)
             # sms 方式登录
-            if type == 'sms':
+            if type_ == 'sms':
                 print("here", 222)
                 phone = self.initial_data.get("mobile", None)
                 code = self.initial_data.get("code", None)
                 login_code = get_sms_code(phone)
-                print(code, 225)
+                print(code, type(code), 225)
                 print(login_code, type(login_code), 226)
-                print(login_code, code, 227)
                 if login_code:
                     print("here", 228)
                     if login_code == code or code == 'devlogin':
@@ -284,7 +283,7 @@ class LoginSerializer(TokenObtainPairWithoutPasswordSerializer):
                         raise CustomValidationError("验证码不匹配, 请重新发送")
                 else:
                     raise CustomValidationError("验证码未找到或已过期，请重新发送")
-            elif type == 'account':
+            elif type_ == 'account':
                 pattern = r'^\d{11}$'
                 user = None
                 if re.match(pattern, attrs['username']):
