@@ -222,9 +222,11 @@ class LoginSerializer(TokenObtainPairWithoutPasswordSerializer):
                 phone = self.initial_data.get("mobile", None)
                 code = self.initial_data.get("code", None)
                 login_code = get_sms_code(phone)
-
-                print(type(login_code), type(code), 227)
+                print(code, type(code), 225)
+                print(login_code, type(login_code), 226)
+                print(login_code, code, 227)
                 if login_code:
+                    print("here", 228)
                     if login_code == code or code == 'devlogin':
                         # to do, find phone number
                         print("here", 231)
@@ -243,12 +245,10 @@ class LoginSerializer(TokenObtainPairWithoutPasswordSerializer):
                                 "password": dispatch.get_system_config_values("base.default_password"),
                                 "email": "",
                                 "mobile": phone,
-
                                 "first_name": "",
                                 "last_name": "",
                                 "name": "",
                                 "avatar": "",
-
                                 "is_staff": False,
                                 "user_type": 1,
                                 "creator": 1,
