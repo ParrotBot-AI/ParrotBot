@@ -224,10 +224,11 @@ class LoginSerializer(TokenObtainPairWithoutPasswordSerializer):
                 # login_code = code
 
                 login_code = get_sms_code(phone)
-                print(login_code, code, 227)
+                print(type(login_code), type(code), 227)
                 if login_code:
                     if login_code == code:
                         # to do, find phone number
+                        print("here", 231)
                         user_phone = Users.objects.filter(mobile=phone).first()
                         if user_phone:
                             return self.login(attrs, phone)
