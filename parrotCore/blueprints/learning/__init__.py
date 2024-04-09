@@ -248,6 +248,3 @@ def get_checkin_info(account_id):
 
     except Exception as e:
         return ArgumentExceptionResponse(msg=f'{e}')
-
-if __name__ == "__main__":
-    print(get_today_task(16))

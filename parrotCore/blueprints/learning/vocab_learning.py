@@ -296,12 +296,16 @@ def review_words(
                 word_cache = redis_cache.get(f"Word:{current_word_id}")
                 if word_cache:
                     word = word_cache['word']
+
                     if model_response:
-                        hint = None
-                        resp_l = model_response.split(")")
-                        for each in resp_l:
-                            if word in each:
-                                hint = each
+                        import re
+                        pattern = r'[^！？。]+[！？。]'
+                        sentences = re.findall(pattern, model_response)
+                        parentheses_pattern = r'\(.*?\)'
+                        for sentence in sentences:
+                            s = re.sub(parentheses_pattern, '', sentence)
+                            if word in s:
+                                hint = s
                                 break
                         word_cache['hint'] = hint
                         return True, word_cache, True
@@ -363,11 +367,14 @@ def review_words(
                 )
                 redis_cache.set(f"Word:{current_word_id}", response, ex=86400)  # 缓存一天
                 if model_response:
-                    hint = None
-                    resp_l = model_response.split(")")
-                    for each in resp_l:
-                        if eng in each:
-                            hint = each
+                    import re
+                    pattern = r'[^！？。]+[！？。]'
+                    sentences = re.findall(pattern, model_response)
+                    parentheses_pattern = r'\(.*?\)'
+                    for sentence in sentences:
+                        s = re.sub(parentheses_pattern, '', sentence)
+                        if eng in s:
+                            hint = s
                             break
                     response['hint'] = hint
 
@@ -887,7 +894,3 @@ def re_loop(
 
         else:
             return False, "未找到record"
-
-
-if __name__ == "__main__":
-    print(fetch_words_mc(account_id=27))
