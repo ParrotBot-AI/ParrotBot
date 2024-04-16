@@ -300,6 +300,7 @@ def review_words(
                     if model_response:
                         import re
                         pattern = r'[^！？。]+[！？。]'
+                        hint = None
                         sentences = re.findall(pattern, model_response)
                         parentheses_pattern = r'\(.*?\)'
                         for sentence in sentences:
@@ -371,6 +372,7 @@ def review_words(
                     pattern = r'[^！？。]+[！？。]'
                     sentences = re.findall(pattern, model_response)
                     parentheses_pattern = r'\(.*?\)'
+                    hint = None
                     for sentence in sentences:
                         s = re.sub(parentheses_pattern, '', sentence)
                         if eng in s:

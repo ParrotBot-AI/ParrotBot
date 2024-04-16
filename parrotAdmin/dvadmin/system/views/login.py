@@ -223,7 +223,7 @@ class LoginSerializer(TokenObtainPairWithoutPasswordSerializer):
                 code = self.initial_data.get("code", None)
                 login_code = get_sms_code(phone)
                 if login_code:
-                    if str(login_code) == str(code) or str(code) == 'devlogin':
+                    if str(login_code) == str(code):
                         # to do, find phone number
                         user_phone = Users.objects.filter(mobile=phone).first()
                         if user_phone:
