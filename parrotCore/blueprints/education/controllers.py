@@ -872,7 +872,7 @@ class AnsweringScoringController(crudController):
                         if record.score is not None:
                             score += record.score
                         else:
-                            self.get_score(record.id)
+                            self.get_score(record.id, re_score=True)
                             current_child = (
                                 session.query(AnswerSheetRecord)
                                 .filter(AnswerSheetRecord.id == record.id)
