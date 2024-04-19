@@ -309,6 +309,9 @@ def review_words(
                                 hint = s
                                 break
                         word_cache['hint'] = hint
+                        word_cache['after_model'] = True
+                        word_cache['process'] = {"c": loop_study - remain if loop_study else WORDS_STUDY - remain,
+                                               "t": loop_study if loop_study else WORDS_STUDY}
                         return True, word_cache, True
                     else:
                         return True, word_cache, True
