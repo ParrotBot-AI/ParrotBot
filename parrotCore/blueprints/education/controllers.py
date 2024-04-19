@@ -872,7 +872,17 @@ class AnsweringScoringController(crudController):
                         if record.score is not None:
                             score += record.score
                         else:
-                            success = False
+                            self.get_score(record.id)
+                            current_child = (
+                                session.query(AnswerSheetRecord)
+                                .filter(AnswerSheetRecord.id == record.id)
+                                .one_or_none()
+                            )
+                            if current_child.score is not None:
+                                score += current_child.score
+                            else:
+                                success = False
+
                         if record.max_score is not None:
                             max_score += record.max_score
 
