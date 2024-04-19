@@ -265,7 +265,7 @@ def words_gpt_fetch(
 
         curr = len(rds.lrange(f"{account_id}:wrong_group")) if rds.lrange(f"{account_id}:wrong_group") else 0
         total = WORDS_STUDY
-        payload['process'] = {"c": curr, "t": total}
+        payload['process'] = {"c": 0, "t": curr}
         return True, payload, True
 
 
