@@ -342,7 +342,6 @@ class LoginSerializer(TokenObtainPairWithoutPasswordSerializer):
             #     attrs.update({'password': 'test12138'})
             # if user:
             #     return self.login(attrs)
-            print(str(e), 351)
             raise CustomValidationError("登录认证失败")
 
 

@@ -473,23 +473,37 @@ class UserViewSet(CustomModelViewSet):
     def change_password(self, request, *args, **kwargs):
         """密码修改"""
         data = request.data
+        phone = data.get("phone")
+        code = data.get("code")
+
         old_pwd = data.get("oldPassword")
         new_pwd = data.get("newPassword")
         new_pwd2 = data.get("newPassword2")
-        if old_pwd is None or new_pwd is None or new_pwd2 is None:
-            return ErrorResponse(msg="参数不能为空")
-        if new_pwd != new_pwd2:
-            return ErrorResponse(msg="两次密码不匹配")
-        verify_password = check_password(old_pwd, self.request.user.password)
-        if not verify_password:
-            verify_password = check_password(hashlib.md5(old_pwd.encode(encoding='UTF-8')).hexdigest(),
-                                             self.request.user.password)
-        if verify_password:
-            request.user.password = make_password(new_pwd)
-            request.user.save()
-            return DetailResponse(data=None, msg="修改成功")
+        # 手机修改
+        if phone:
+            login_code = get_sms_code(phone)
+            if login_code:
+                if str(login_code) == str(code):
+                    request.user.password = make_password(new_pwd)
+                    request.user.save()
+                    return DetailResponse(data=None, msg="修改成功")
+            return ErrorResponse(msg="验证码错误")
         else:
-            return ErrorResponse(msg="旧密码不正确")
+            if old_pwd is None or new_pwd is None or new_pwd2 is None:
+                return ErrorResponse(msg="参数不能为空")
+            if new_pwd != new_pwd2:
+                return ErrorResponse(msg="两次密码不匹配")
+
+            verify_password = check_password(old_pwd, self.request.user.password)
+            if not verify_password:
+                verify_password = check_password(hashlib.md5(old_pwd.encode(encoding='UTF-8')).hexdigest(),
+                                                 self.request.user.password)
+            if verify_password:
+                request.user.password = make_password(new_pwd)
+                request.user.save()
+                return DetailResponse(data=None, msg="修改成功")
+            else:
+                return ErrorResponse(msg="旧密码不正确")
 
     @action(methods=["PUT"], detail=True, permission_classes=[IsAuthenticated])
     def reset_to_default_password(self, request, *args, **kwargs):

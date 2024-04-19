@@ -203,7 +203,7 @@ def fetch_words_mc(
 
                 curr = len(rds.lrange(f"{account_id}:wrong_group")) if rds.lrange(f"{account_id}:wrong_group") else 0
                 total = WORDS_STUDY
-                response['process'] = {"c": curr, "t": total}
+                response['process'] = {"c": curr, "t": total if total >= curr else curr}
                 return True, response, True
 
             elif len(today_list) == 0:
@@ -380,6 +380,7 @@ def review_words(
                             break
                     response['hint'] = hint
 
+                response['after_model'] = True
                 response['process'] = {"c": loop_study - remain if loop_study else WORDS_STUDY - remain, "t": loop_study if loop_study else WORDS_STUDY}
                 return True, response, True
             elif len(today_list) == 0:
